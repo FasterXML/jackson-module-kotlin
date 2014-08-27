@@ -1,4 +1,3 @@
-jackson-module-kotlin
-=====================
+# Overview
 
-Module that adds support for reading/writing Kotlin (http://blog.jetbrains.com/kotlin/) values
+Module that adds support for reading/writing [Kotlin](http://blog.jetbrains.com/kotlin/) values.
