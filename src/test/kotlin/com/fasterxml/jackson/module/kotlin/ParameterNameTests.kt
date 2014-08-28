@@ -19,6 +19,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.junit.Ignore
 
 public class TestJacksonWithKotlin {
+    // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
+
     private trait TestFields {
         val name: String
         val age: Int
@@ -27,38 +29,12 @@ public class TestJacksonWithKotlin {
         val createdDt: DateTime
     }
 
-    private class FailWithoutJsonCreator(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
-        [JsonIgnore]
-        override val wrongName = renamed // here for the test validation only
-    }
-
-    private data class StateObjectAsDataClassExplicitJsonCreator [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
-        [JsonIgnore]
-        override val wrongName = renamed // here for the test validation only
-    }
-
-    private data class StateObjectAsDataClassWithJsonCreatorAndJsonProperty [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
-
-    private class StateObjectAsNormalClass [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
-
-    private class StateObjectWithPartialFieldsInConstructor [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String) : TestFields {
-        JsonProperty("renamed") override var wrongName: Boolean = false
-        override var createdDt: DateTime by Delegates.notNull()
-    }
-
-    private data class StateObjectAsDataClassConfusingConstructor [JsonCreator] (nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int = DateTime().getYear() - yearOfBirth, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
-
-    private class StateObjectWithFactory(val namey: String, val agey: Int, val primaryAddressy: String, val wrongNamey: Boolean, val createdDty: DateTime) : TestFields {
-        class object {
-            public [JsonCreator] fun create(name: String, age: Int, primaryAddress: String, JsonProperty("renamed") wrongName: Boolean, createdDt: DateTime): StateObjectWithFactory {
-                return StateObjectWithFactory(name, age, primaryAddress, wrongName, createdDt)
-            }
-        }
-        override val name = namey
-        override val age = agey
-        override val primaryAddress = primaryAddressy
-        override val wrongName = wrongNamey
-        override val createdDt = createdDty
+    private fun validate(stateObj: TestFields) {
+        assertThat(stateObj.name, equalTo("Frank"))
+        assertThat(stateObj.age, equalTo(30))
+        assertThat(stateObj.primaryAddress, equalTo("something here"))
+        assertThat(stateObj.wrongName, equalTo(true))
+        assertThat(stateObj.createdDt, equalTo(DateTime(2014, 8, 1, 12, 11, 30, 0, DateTimeZone.UTC)))
     }
 
     private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2014-08-01T12:11:30.000Z"}"""
@@ -83,12 +59,9 @@ public class TestJacksonWithKotlin {
         mapper
     }
 
-    private fun validate(stateObj: TestFields) {
-        assertThat(stateObj.name, equalTo("Frank"))
-        assertThat(stateObj.age, equalTo(30))
-        assertThat(stateObj.primaryAddress, equalTo("something here"))
-        assertThat(stateObj.wrongName, equalTo(true))
-        assertThat(stateObj.createdDt, equalTo(DateTime(2014, 8, 1, 12, 11, 30, 0, DateTimeZone.UTC)))
+    private class FailWithoutJsonCreator(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
+        [JsonIgnore]
+        override val wrongName = renamed // here for the test validation only
     }
 
     [Ignore(value = "Failing with the wrong exception currently, see https://github.com/FasterXML/jackson-module-paranamer/issues/11")]
@@ -111,7 +84,10 @@ public class TestJacksonWithKotlin {
             validate(stateObj)
     }
 
-    // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
+    private data class StateObjectAsDataClassExplicitJsonCreator [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
+        [JsonIgnore]
+        override val wrongName = renamed // here for the test validation only
+    }
 
     Test fun testDataClassWithExplicitJsonCreator() {
         // data class with explicit JsonCreator and no parameters with JsonProperty
@@ -124,6 +100,8 @@ public class TestJacksonWithKotlin {
         assertThat(test1out.getBuffer().toString(), equalTo(normalCasedJson))
     }
 
+    private data class StateObjectAsDataClassWithJsonCreatorAndJsonProperty [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+
     Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
         // data class with JsonCreator and JsonProperty
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsDataClassWithJsonCreatorAndJsonProperty>())!!
@@ -133,10 +111,17 @@ public class TestJacksonWithKotlin {
         assertThat(test1out, equalTo(normalCasedJson))
     }
 
+    private class StateObjectAsNormalClass [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+
     Test fun testNormalClassWithJsonCreator() {
         // normal class
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsNormalClass>())!!
         validate(stateObj)
+    }
+
+    private class StateObjectWithPartialFieldsInConstructor [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String) : TestFields {
+        JsonProperty("renamed") override var wrongName: Boolean = false
+        override var createdDt: DateTime by Delegates.notNull()
     }
 
     Test fun testNormalClassWithPartialConstructorJsonCreator() {
@@ -144,6 +129,8 @@ public class TestJacksonWithKotlin {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithPartialFieldsInConstructor>())!!
         validate(stateObj)
     }
+
+    private data class StateObjectAsDataClassConfusingConstructor [JsonCreator] (nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int = DateTime().getYear() - yearOfBirth, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
@@ -161,6 +148,19 @@ public class TestJacksonWithKotlin {
 
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)
         assertThat(test1out, equalTo(pascalCasedJson))
+    }
+
+    private class StateObjectWithFactory(val namey: String, val agey: Int, val primaryAddressy: String, val wrongNamey: Boolean, val createdDty: DateTime) : TestFields {
+        class object {
+            public [JsonCreator] fun create(name: String, age: Int, primaryAddress: String, JsonProperty("renamed") wrongName: Boolean, createdDt: DateTime): StateObjectWithFactory {
+                return StateObjectWithFactory(name, age, primaryAddress, wrongName, createdDt)
+            }
+        }
+        override val name = namey
+        override val age = agey
+        override val primaryAddress = primaryAddressy
+        override val wrongName = wrongNamey
+        override val createdDt = createdDty
     }
 
     [Ignore(value = "Factory Methods not supported yet")]
