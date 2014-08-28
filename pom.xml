@@ -50,6 +50,7 @@
             ,com.fasterxml.jackson.databind
             ,com.fasterxml.jackson.databind.introspect
             ,com.fasterxml.jackson.databind.module
+            ,com.fasterxml.jackson.annotation
             ,jet.runtime.typeinfo
             ,kotlin
             ,kotlin.jvm.internal
