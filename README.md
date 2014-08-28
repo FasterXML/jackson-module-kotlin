@@ -39,3 +39,11 @@ You can intermix non-field values in the constructor and [JsonProperty] annotati
 ```
 
 Note that using Delegates.notNull() will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
+
+# Support for Kotlin Built-in classes
+
+These Kotlin classes are treated as-if they have JsonCreator annotation and are supported by default:
+
+* Pair
+* Triple
+
