@@ -21,3 +21,4 @@ target
 *.ipr
 *.iws
 /target
+/.gradle/

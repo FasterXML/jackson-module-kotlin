@@ -1,0 +1,147 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-parent</artifactId>
+        <version>2.4.1</version>
+    </parent>
+    <groupId>com.fasterxml.jackson.module</groupId>
+    <artifactId>jackson-module-kotlin</artifactId>
+    <name>jackson-module-kotlin</name>
+    <version>2.4.3-SNAPSHOT</version>
+    <packaging>bundle</packaging>
+    <description>Add-on module for Jackson (http://jackson.codehaus.org) to support
+        Kotlin language, specifically introspection of method/constructor parameter names,
+        without having to add explicit property name annotation.
+    </description>
+    <developers>
+        <developer>
+            <id>jaysonminard</id>
+            <name>Jayson Minard</name>
+            <email>jayson.minard@gmail.com</email>
+        </developer>
+    </developers>
+    <url>https://github.com/FasterXML/jackson-module-kotlin</url>
+    <scm>
+        <connection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</connection>
+        <developerConnection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</developerConnection>
+        <url>https://github.com/FasterXML/jackson-module-kotlin</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <properties>
+        <version.jackson.core>2.4.2</version.jackson.core>
+        <version.jackson.annotations>2.4.0</version.jackson.annotations>
+        <version.jackson.joda>2.4.2</version.jackson.joda>
+        <version.junit>4.11</version.junit>
+        <version.kotlin>0.8.11</version.kotlin>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Generate PackageVersion.java into this directory. -->
+        <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
+        <packageVersion.package>${project.groupId}.kotlin</packageVersion.package>
+
+        <!-- Configuration properties for the OSGi maven-bundle-plugin -->
+        <osgi.import>
+            com.fasterxml.jackson.core
+            ,com.fasterxml.jackson.core.util
+            ,com.fasterxml.jackson.databind
+            ,com.fasterxml.jackson.databind.introspect
+            ,com.fasterxml.jackson.databind.module
+            ,jet.runtime.typeinfo
+            ,kotlin
+            ,kotlin.jvm.internal
+            ,kotlin.reflect.jvm.internal
+        </osgi.import>
+        <osgi.export>${project.groupId}.kotlin.*;version=${project.version}
+        </osgi.export>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${version.jackson.core}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${version.jackson.annotations}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${version.kotlin}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- only for testing... -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-joda</artifactId>
+            <version>${version.jackson.joda}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${version.junit}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <version>${version.kotlin}</version>
+
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>process-test-sources</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <!-- Inherited from oss-base. Generate PackageVersion.java.-->
+                <groupId>com.google.code.maven-replacer-plugin</groupId>
+                <artifactId>replacer</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-packageVersion</id>
+                        <phase>generate-sources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <inherited>true</inherited>
+                <configuration>
+                    <showDeprecation>true</showDeprecation>
+                    <showWarnings>true</showWarnings>
+                    <optimize>true</optimize>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
