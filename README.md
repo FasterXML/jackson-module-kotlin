@@ -44,12 +44,12 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 
 These Kotlin classes are treated as-if they have JsonCreator annotation and are supported by default:
 
-* Pair
-* Triple
-* IntRange
-* DoubleRange
-* CharRange
-* ByteRange
-* ShortRange
-* LongRange
-* FloatRange
+* Pair _(first, second)_
+* Triple _(first, second, third)_
+* IntRange _(start, end)_
+* DoubleRange _(start, end)_
+* CharRange _(start, end)_
+* ByteRange _(start, end)_
+* ShortRange _(start, end)_
+* LongRange _(start, end)_
+* FloatRange _(start, end)_
