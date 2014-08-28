@@ -1,6 +1,5 @@
 package com.fasterxml.jackson.module.kotlin
 
-
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.joda.time.DateTime
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -102,6 +101,16 @@ public class TestJacksonWithKotlin {
         }
     }
 
+    Test fun doNotFailWithoutJsonCreatorExperimental() {
+            val mapper: ObjectMapper = ObjectMapper()
+            mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
+            mapper.registerModule(JodaModule())
+            mapper.registerModule(KotlinModule(false)) // TODO: experimental, ignore JsonCreator requirement because Jackson doesn't check either
+            val stateObj = mapper.readValue(normalCasedJson, javaClass<FailWithoutJsonCreator>())!!
+            validate(stateObj)
+    }
+
     // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
 
     Test fun testDataClassWithExplicitJsonCreator() {
@@ -120,10 +129,8 @@ public class TestJacksonWithKotlin {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsDataClassWithJsonCreatorAndJsonProperty>())!!
         validate(stateObj)
 
-        val test1out = StringWriter()
-        normalCasedMapper.writeValue(test1out, stateObj)
-
-        assertThat(test1out.getBuffer().toString(), equalTo(normalCasedJson))
+        val test1out = normalCasedMapper.writeValueAsString(stateObj)
+        assertThat(test1out, equalTo(normalCasedJson))
     }
 
     Test fun testNormalClassWithJsonCreator() {
@@ -152,10 +159,8 @@ public class TestJacksonWithKotlin {
         val stateObj = pascalCasedMapper.readValue(pascalCasedJson, javaClass<StateObjectAsDataClassExplicitJsonCreator>())!!
         validate(stateObj)
 
-        val test2out = StringWriter()
-        pascalCasedMapper.writeValue(test2out, stateObj)
-
-        assertThat(test2out.getBuffer().toString(), equalTo(pascalCasedJson))
+        val test1out = pascalCasedMapper.writeValueAsString(stateObj)
+        assertThat(test1out, equalTo(pascalCasedJson))
     }
 
     [Ignore(value = "Factory Methods not supported yet")]
@@ -169,5 +174,4 @@ public class TestJacksonWithKotlin {
         validate(stateObj)
     }
 }
-
 

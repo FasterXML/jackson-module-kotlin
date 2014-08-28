@@ -22,3 +22,4 @@ target
 *.iws
 /target
 /.gradle/
+/gradle/
