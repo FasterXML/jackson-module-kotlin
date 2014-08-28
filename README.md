@@ -46,4 +46,10 @@ These Kotlin classes are treated as-if they have JsonCreator annotation and are 
 
 * Pair
 * Triple
-
+* IntRange
+* DoubleRange
+* CharRange
+* ByteRange
+* ShortRange
+* LongRange
+* FloatRange
