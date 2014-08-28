@@ -72,6 +72,7 @@
             <version>${version.jackson.annotations}</version>
         </dependency>
 
+        <!-- TODO: this is not OSGI ready, does that break OSGI bundling? -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
