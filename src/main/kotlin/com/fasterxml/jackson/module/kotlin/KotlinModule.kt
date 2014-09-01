@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import jet.runtime.typeinfo.JetValueParameter
 import kotlin.jvm.internal.KotlinClass
-import com.fasterxml.jackson.annotation.JsonCreator
 import java.util.HashSet
 
-public class KotlinModule(val requireJsonCreatorAnnotation: Boolean = true) : SimpleModule(PackageVersion.VERSION) {
+public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     class object {
         private val serialVersionUID = 1L;
     }
+    val requireJsonCreatorAnnotation: Boolean = false
 
     val impliedClasses = HashSet<Class<*>>(setOf(
             javaClass<Pair<*, *>>(),
@@ -61,7 +61,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     override public fun hasCreatorAnnotation(member: Annotated?): Boolean {
         if (member is AnnotatedParameter) {
             // pretend some built-in Kotlin classes have the JsonCreator annotation
-            return module.impliedClasses.contains(member.getDeclaringClass()!!)
+            // return module.impliedClasses.contains(member.getDeclaringClass()!!)
+            return false
         } else {
             return false
         }
@@ -69,12 +70,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
         if (param.getDeclaringClass()!!.getAnnotation(javaClass<KotlinClass>()) != null) {
-            if (!module.requireJsonCreatorAnnotation ||
-                    param.getOwner()!!.hasAnnotation(javaClass<JsonCreator>()) ||
-                    module.impliedClasses.contains(param.getDeclaringClass()!!)) {
-                // TODO: this will change in the near future to full runtime type information
-                return param.getAnnotation(javaClass<JetValueParameter>())?.name()
-            }
+            // TODO: this will change in the near future to full runtime type information
+            return param.getAnnotation(javaClass<JetValueParameter>())?.name()
         }
         return null
     }

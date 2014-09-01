@@ -15,7 +15,7 @@ class TestJacksonWithKotlinBuiltins {
         mapper
     }
 
-    private data class ClassWithPair [JsonCreator] (val name: Pair<String, String>, val age: Int)
+    private data class ClassWithPair(val name: Pair<String, String>, val age: Int)
     Test fun testPair() {
         val json = """{"name":{"first":"John","second":"Smith"},"age":30}"""
         val testObj = ClassWithPair(Pair("John", "Smith"), 30)
@@ -25,7 +25,7 @@ class TestJacksonWithKotlinBuiltins {
         assertThat(stateObj, equalTo(testObj))
     }
 
-    private data class ClassWithPairMixedTypes [JsonCreator] (val person: Pair<String, Int>)
+    private data class ClassWithPairMixedTypes(val person: Pair<String, Int>)
     Test fun testPairMixedTypes() {
         val json = """{"person":{"first":"John","second":30}}"""
         val testObj = ClassWithPairMixedTypes(Pair("John", 30))
@@ -35,7 +35,7 @@ class TestJacksonWithKotlinBuiltins {
         assertThat(stateObj, equalTo(testObj))
     }
 
-    private data class ClassWithTriple [JsonCreator] (val name: Triple<String, String, String>, val age: Int)
+    private data class ClassWithTriple(val name: Triple<String, String, String>, val age: Int)
     Test fun testTriple() {
         val json = """{"name":{"first":"John","second":"Davey","third":"Smith"},"age":30}"""
         val testObj = ClassWithTriple(Triple("John", "Davey", "Smith"), 30)
@@ -45,7 +45,7 @@ class TestJacksonWithKotlinBuiltins {
         assertThat(stateObj, equalTo(testObj))
     }
 
-    private data class ClassWithRanges [JsonCreator] (val ages: IntRange, val distance: DoubleRange)
+    private data class ClassWithRanges(val ages: IntRange, val distance: DoubleRange)
     Test fun testRanges() {
         val json = """{"ages":{"start":18,"end":40},"distance":{"start":5.5,"end":50.0}}"""
         val testObj = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))

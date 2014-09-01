@@ -59,30 +59,44 @@ public class TestJacksonWithKotlin {
         mapper
     }
 
-    private class FailWithoutJsonCreator(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
+    // ==================
+
+    private class DefaultAndSpecificConstructor(override var name: String = "", override var age: Int = 0) : TestFields {
+        [JsonProperty("renamed")]
+        override var wrongName: Boolean = false
+
+        override var primaryAddress: String = ""
+        override var createdDt: DateTime = DateTime()
+    }
+
+    Test fun NoFailWithDefaultAndSpecificConstructor() {
+        val mapper: ObjectMapper = ObjectMapper()
+        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+        mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
+        mapper.registerModule(JodaModule())
+        mapper.registerModule(KotlinModule())
+        val stateObj = mapper.readValue(normalCasedJson, javaClass<DefaultAndSpecificConstructor>())!!
+        validate(stateObj)
+    }
+
+    // ==================
+
+    private class NoFailWithoutJsonCreator(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
         [JsonIgnore]
         override val wrongName = renamed // here for the test validation only
     }
 
-    [Ignore(value = "Failing with the wrong exception currently, see https://github.com/FasterXML/jackson-module-paranamer/issues/11")]
-    Test fun failWithoutJsonCreator() {
-        try {
-            normalCasedMapper.readValue(normalCasedJson, javaClass<FailWithoutJsonCreator>())!!
-            fail("without a JsonCreator annotation, the class should fail to find suitable constructor")
-        } catch (ex: JsonMappingException) {
-            assertThat(ex.getMessage(), containsString("No suitable constructor found"))
-        }
-    }
-
-    Test fun doNotFailWithoutJsonCreatorExperimental() {
+    Test fun doNotFailWithoutJsonCreator() {
             val mapper: ObjectMapper = ObjectMapper()
             mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
             mapper.registerModule(JodaModule())
-            mapper.registerModule(KotlinModule(false)) // TODO: experimental, ignore JsonCreator requirement because Jackson doesn't check either
-            val stateObj = mapper.readValue(normalCasedJson, javaClass<FailWithoutJsonCreator>())!!
+            mapper.registerModule(KotlinModule())
+            val stateObj = mapper.readValue(normalCasedJson, javaClass<NoFailWithoutJsonCreator>())!!
             validate(stateObj)
     }
+
+    // ==================
 
     private data class StateObjectAsDataClassExplicitJsonCreator [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
         [JsonIgnore]
@@ -100,6 +114,8 @@ public class TestJacksonWithKotlin {
         assertThat(test1out.getBuffer().toString(), equalTo(normalCasedJson))
     }
 
+    // ==================
+
     private data class StateObjectAsDataClassWithJsonCreatorAndJsonProperty [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
@@ -111,6 +127,8 @@ public class TestJacksonWithKotlin {
         assertThat(test1out, equalTo(normalCasedJson))
     }
 
+    // ==================
+
     private class StateObjectAsNormalClass [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testNormalClassWithJsonCreator() {
@@ -119,7 +137,9 @@ public class TestJacksonWithKotlin {
         validate(stateObj)
     }
 
-    private class StateObjectWithPartialFieldsInConstructor [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String) : TestFields {
+    // ==================
+
+    private class StateObjectWithPartialFieldsInConstructor(override val name: String, override val age: Int, override val primaryAddress: String) : TestFields {
         JsonProperty("renamed") override var wrongName: Boolean = false
         override var createdDt: DateTime by Delegates.notNull()
     }
@@ -130,7 +150,9 @@ public class TestJacksonWithKotlin {
         validate(stateObj)
     }
 
-    private data class StateObjectAsDataClassConfusingConstructor [JsonCreator] (nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int = DateTime().getYear() - yearOfBirth, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    // ==================
+
+    private data class StateObjectAsDataClassConfusingConstructor(nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int = DateTime().getYear() - yearOfBirth, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
@@ -141,6 +163,8 @@ public class TestJacksonWithKotlin {
         validate(stateObj)
     }
 
+    // ==================
+
     Test fun findingConstructorsWithPascalCasedJson() {
         // pascal cased strategy for JSON, note that explicit named JsonProperty are not renamed and must be exactly the same
         val stateObj = pascalCasedMapper.readValue(pascalCasedJson, javaClass<StateObjectAsDataClassExplicitJsonCreator>())!!
@@ -149,6 +173,9 @@ public class TestJacksonWithKotlin {
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)
         assertThat(test1out, equalTo(pascalCasedJson))
     }
+
+
+    // ==================
 
     private class StateObjectWithFactory(val namey: String, val agey: Int, val primaryAddressy: String, val wrongNamey: Boolean, val createdDty: DateTime) : TestFields {
         class object {
