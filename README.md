@@ -13,8 +13,19 @@ This module is not yet released, but can be built manually using Maven -- until 
 For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
 
 To use, just register the Kotlin module with your ObjectMapper instance:
+
 ```kotlin
-ObjectMapper().registerModule(KotlinModule())
+val mapper = ObjectMapper().registerModule(KotlinModule())
+```
+
+or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
+
+```kotlin
+val mapper = jacksonObjectMapper()
+```
+
+```kotlin
+val mapper = ObjectMapper().registerKotlinModule()
 ```
 
 A data class example:

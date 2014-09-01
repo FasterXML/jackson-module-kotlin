@@ -8,12 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.annotation.JsonCreator
 
 class TestJacksonWithKotlinBuiltins {
-    private val mapper = run {
-        val mapper: ObjectMapper = ObjectMapper()
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
-        mapper.registerModule(KotlinModule())
-        mapper
-    }
+    private val mapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)!!
 
     private data class ClassWithPair(val name: Pair<String, String>, val age: Int)
     Test fun testPair() {

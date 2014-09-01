@@ -40,24 +40,17 @@ public class TestJacksonWithKotlin {
     private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2014-08-01T12:11:30.000Z"}"""
     private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2014-08-01T12:11:30.000Z"}"""
 
-    private val normalCasedMapper = run {
-        val mapper: ObjectMapper = ObjectMapper()
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
-        mapper.registerModule(JodaModule())
-        mapper.registerModule(KotlinModule())
-        mapper
-    }
+    private val normalCasedMapper = jacksonObjectMapper()
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)!!
+            .configure(SerializationFeature.INDENT_OUTPUT, false)!!
+            .registerModule(JodaModule())!!
 
-    private val pascalCasedMapper: ObjectMapper = run {
-        val mapper: ObjectMapper = ObjectMapper()
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
-        mapper.registerModule(JodaModule())
-        mapper.registerModule(KotlinModule())
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE);
-        mapper
-    }
+
+    private val pascalCasedMapper = jacksonObjectMapper()
+              .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)!!
+              .configure(SerializationFeature.INDENT_OUTPUT, false)!!
+              .registerModule(JodaModule())!!
+              .setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE)!!
 
     // ==================
 
@@ -70,12 +63,7 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun NoFailWithDefaultAndSpecificConstructor() {
-        val mapper: ObjectMapper = ObjectMapper()
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
-        mapper.registerModule(JodaModule())
-        mapper.registerModule(KotlinModule())
-        val stateObj = mapper.readValue(normalCasedJson, javaClass<DefaultAndSpecificConstructor>())!!
+        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<DefaultAndSpecificConstructor>())!!
         validate(stateObj)
     }
 
@@ -87,12 +75,7 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun doNotFailWithoutJsonCreator() {
-            val mapper: ObjectMapper = ObjectMapper()
-            mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            mapper.configure(SerializationFeature.INDENT_OUTPUT, false)
-            mapper.registerModule(JodaModule())
-            mapper.registerModule(KotlinModule())
-            val stateObj = mapper.readValue(normalCasedJson, javaClass<NoFailWithoutJsonCreator>())!!
+            val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<NoFailWithoutJsonCreator>())!!
             validate(stateObj)
     }
 
