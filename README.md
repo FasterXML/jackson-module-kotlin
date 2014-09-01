@@ -56,3 +56,5 @@ These Kotlin classes are supported with the follow fields for serialization/dese
 * ShortRange _(start, end)_
 * LongRange _(start, end)_
 * FloatRange _(start, end)_
+
+(others are likely to work, but may not be tuned for Jackson)
