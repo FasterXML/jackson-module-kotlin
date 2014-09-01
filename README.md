@@ -45,7 +45,7 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
  
 # Support for Kotlin Built-in classes
 
-These Kotlin classes are supported with the follow fields for serialization/deserialization:
+These Kotlin classes are supported with the following fields for serialization/deserialization:
 
 * Pair _(first, second)_
 * Triple _(first, second, third)_
