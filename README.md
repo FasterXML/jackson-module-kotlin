@@ -2,11 +2,26 @@
 
 Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org) classes and data classes.  Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.  With this module, the primary non-default constructor can be used.
 
-Compatible with Jackson 2.4 and newer, and Kotlin 0.8.11 (M8 release).
-
 # Status
 
-This module is not yet released, but can be built manually using Maven -- until added to a Maven repo.
+A release candidate is available on Maven Central:
+
+* Release 2.4.2-rc1 (compatible with Kotlin 0.8.11 [M8 release] and Jackson 2.4.x)
+
+Gradle:
+```
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.4.2-rc1'
+```
+
+Maven:
+```xml
+<dependency>
+    <groupId>com.fasterxml.jackson.module</groupId>
+    <artifactId>jackson-module-kotlin</artifactId>
+    <version>2.4.2-rc1</version>
+</dependency>
+```
+
 
 # Usage
 
