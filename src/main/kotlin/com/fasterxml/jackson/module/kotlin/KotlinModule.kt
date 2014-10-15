@@ -23,14 +23,14 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     ))
 
     override public fun setupModule(context: SetupContext?) {
-        super.setupModule(context!!)
+        super.setupModule(context)
 
         fun addMixin(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
-            context.setMixInAnnotations(clazz, mixin)
+            context?.setMixInAnnotations(clazz, mixin)
         }
 
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
+        context?.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
         addMixin(javaClass<IntRange>(), javaClass<RangeMixin<*>>())
@@ -61,7 +61,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     override public fun hasCreatorAnnotation(member: Annotated?): Boolean {
         if (member is AnnotatedParameter) {
             // pretend some built-in Kotlin classes have the JsonCreator annotation
-            // return module.impliedClasses.contains(member.getDeclaringClass()!!)
+            // return module.impliedClasses.contains(member.getDeclaringClass())
             return false
         } else {
             return false
@@ -69,7 +69,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     }
 
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.getDeclaringClass()!!.getAnnotation(javaClass<KotlinClass>()) != null) {
+        if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
             // TODO: this will change in the near future to full runtime type information
             return param.getAnnotation(javaClass<JetValueParameter>())?.name()
         }
