@@ -7,7 +7,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 A release candidate is available on Maven Central:
 
 * Release 2.4.2-rc1 (compatible with Kotlin 0.8.11 [M8 release] and Jackson 2.4.x)
-* Master branch (unreleased, compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
+* Snapshot 2.4.3-SNAPSHOT / Master branch (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x) See notes below for using Snapshot releases.
 
 Gradle:
 ```
@@ -23,6 +23,27 @@ Maven:
 </dependency>
 ```
 
+To use the snapshot release, you need to add the Sonatype snapshot repo to your Gradle or Maven build file, or [download the JAR directly](https://oss.sonatype.org/content/repositories/snapshots/com/fasterxml/jackson/module/jackson-module-kotlin/2.4.3-SNAPSHOT/).
+
+Gradle:
+```
+repositories {
+  maven {
+    url 'https://oss.sonatype.org/content/repositories/snapshots'
+  }
+}
+```
+
+Maven:
+```xml
+<repositories>
+   <repository>
+      <id>sonatype-snapshots-repo</id>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
+   </repository>
+</repositories>
+```
 
 # Usage
 
