@@ -7,6 +7,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 A release candidate is available on Maven Central:
 
 * Release 2.4.2-rc1 (compatible with Kotlin 0.8.11 [M8 release] and Jackson 2.4.x)
+* Master branch (unreleased, compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
 Gradle:
 ```
