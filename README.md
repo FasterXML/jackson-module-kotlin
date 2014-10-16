@@ -48,7 +48,7 @@ A data class example:
 data class MyStateObject(val name: String, val age: Int)
 
 fun jsonToMyStateObject(json: String): MyStateObject {
-    val mapper = ObjectMapper().registerModule(KotlinModule())
+    val mapper = jacksonObjectMapper()
     return mapper.readValue(json, javaClass<MyStateObject>())
 }
 ```
