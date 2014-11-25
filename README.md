@@ -67,7 +67,7 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 # Caveats
 
 * The [JsonCreator] annotation is optional for the constructor unless Kotlin introduces secondary constructors in the future.  So this could change.
-* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
+* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.9.206, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
  
 # Support for Kotlin Built-in classes
 
