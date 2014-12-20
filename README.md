@@ -9,6 +9,10 @@ Releases are available on Maven Central:
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 * Release 2.4.2-rc1 (compatible with Kotlin 0.8.11 [M8 release] and Jackson 2.4.x)
 
+And soon:
+
+* Release 2.4.5-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
+
 Gradle:
 ```
 compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.4.4'
@@ -47,11 +51,25 @@ A data class example:
 ```kotlin
 data class MyStateObject(val name: String, val age: Int)
 
-fun jsonToMyStateObject(json: String): MyStateObject {
-    val mapper = jacksonObjectMapper()
-    return mapper.readValue(json, javaClass<MyStateObject>())
+...
+val mapper = jacksonObjectMapper()
+val state = mapper.readValue(json, javaClass<MyStateObject>())
 }
 ```
+
+In Kotlin M10 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  So for Jackson-Kotlin-Module in 2.4.5 and with Kotlin M10, you can:
+```kotlin
+data class MyStateObject(val name: String, val age: Int)
+
+...
+val mapper = jacksonObjectMapper()
+val state = mapper.readValue(json)
+}
+```
+
+Soon, hopefully in Kotlin M11, we can remove the need for TypeReference in some cases!
+
+# Annotations
 
 You can intermix non-field values in the constructor and [JsonProperty] annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
 
