@@ -57,14 +57,15 @@ val state = mapper.readValue(json, javaClass<MyStateObject>())
 }
 ```
 
-In Kotlin M10 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  So for Jackson-Kotlin-Module in 2.4.5 and with Kotlin M10, you can:
+In Kotlin M10 you do not need the javaClass parameter if the class type is inferable (i.e. member or variable has declared type), it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  So for Jackson-Kotlin-Module in 2.4.5 and with Kotlin M10, you can:
 ```kotlin
-data class MyStateObject(val name: String, val age: Int)
+val state: MyStateObject = mapper.readValue(json)
+```
 
-...
-val mapper = jacksonObjectMapper()
-val state = mapper.readValue(json)
-}
+or
+
+```kotlin
+val state = mapper.readValue<MyStateObject>(json)
 ```
 
 Soon, hopefully in Kotlin M11, we can remove the need for TypeReference in some cases!
