@@ -12,6 +12,7 @@ Releases are available on Maven Central:
 And soon:
 
 * Release 2.4.5-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
+* Release 2.5-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
 
 Gradle:
 ```
