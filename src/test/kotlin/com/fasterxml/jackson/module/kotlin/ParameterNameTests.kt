@@ -63,7 +63,7 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun NoFailWithDefaultAndSpecificConstructor() {
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<DefaultAndSpecificConstructor>())
+        val stateObj: DefaultAndSpecificConstructor = normalCasedMapper.readValue(normalCasedJson)
         validate(stateObj)
     }
 

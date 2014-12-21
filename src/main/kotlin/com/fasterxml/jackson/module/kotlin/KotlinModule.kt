@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import jet.runtime.typeinfo.JetValueParameter
 import kotlin.jvm.internal.KotlinClass
 import java.util.HashSet
+import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     class object {
@@ -45,10 +46,12 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
 }
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : NopAnnotationIntrospector() {
+    /*
     override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
         // This should not do introspection here, only for explicit naming by annotations
         return null
     }
+    */
 
     // since 2.4
     override public fun findImplicitPropertyName(member: AnnotatedMember?): String? {
@@ -59,10 +62,15 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     }
 
     override public fun hasCreatorAnnotation(member: Annotated?): Boolean {
-        if (member is AnnotatedParameter) {
-            // pretend some built-in Kotlin classes have the JsonCreator annotation
-            // return module.impliedClasses.contains(member.getDeclaringClass())
-            return false
+        if (member is AnnotatedConstructor) {
+            // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
+            return if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
+                val allAnnotated = (member.getAnnotated().getParameterAnnotations().all { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
+                allAnnotated
+            }
+            else {
+                false
+            }
         } else {
             return false
         }
