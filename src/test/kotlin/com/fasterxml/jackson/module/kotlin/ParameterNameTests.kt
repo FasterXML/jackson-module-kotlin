@@ -47,10 +47,10 @@ public class TestJacksonWithKotlin {
 
 
     private val pascalCasedMapper = jacksonObjectMapper()
-              .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-              .configure(SerializationFeature.INDENT_OUTPUT, false)
-              .registerModule(JodaModule())
-              .setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE)
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+            .configure(SerializationFeature.INDENT_OUTPUT, false)
+            .registerModule(JodaModule())
+            .setPropertyNamingStrategy(PropertyNamingStrategy.PASCAL_CASE_TO_CAMEL_CASE)
 
     // ==================
 
@@ -63,7 +63,7 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun NoFailWithDefaultAndSpecificConstructor() {
-        val stateObj: DefaultAndSpecificConstructor = normalCasedMapper.readValue(normalCasedJson)
+        val stateObj = normalCasedMapper.readValue<DefaultAndSpecificConstructor>(normalCasedJson)
         validate(stateObj)
     }
 
@@ -75,8 +75,8 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun doNotFailWithoutJsonCreator() {
-            val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<NoFailWithoutJsonCreator>())
-            validate(stateObj)
+        val stateObj = normalCasedMapper.readValue<NoFailWithoutJsonCreator>(normalCasedJson)
+        validate(stateObj)
     }
 
     // ==================
@@ -88,7 +88,7 @@ public class TestJacksonWithKotlin {
 
     Test fun testDataClassWithExplicitJsonCreator() {
         // data class with explicit JsonCreator and no parameters with JsonProperty
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsDataClassExplicitJsonCreator>())
+        val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassExplicitJsonCreator>(normalCasedJson)
         validate(stateObj)
 
         val test1out = StringWriter()
@@ -103,7 +103,7 @@ public class TestJacksonWithKotlin {
 
     Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
         // data class with JsonCreator and JsonProperty
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsDataClassWithJsonCreatorAndJsonProperty>())
+        val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassWithJsonCreatorAndJsonProperty>(normalCasedJson)
         validate(stateObj)
 
         val test1out = normalCasedMapper.writeValueAsString(stateObj)
@@ -116,7 +116,7 @@ public class TestJacksonWithKotlin {
 
     Test fun testNormalClassWithJsonCreator() {
         // normal class
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsNormalClass>())
+        val stateObj = normalCasedMapper.readValue<StateObjectAsNormalClass>(normalCasedJson)
         validate(stateObj)
     }
 
@@ -129,7 +129,7 @@ public class TestJacksonWithKotlin {
 
     Test fun testNormalClassWithPartialConstructorJsonCreator() {
         // normal class with some fields not in constructor
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithPartialFieldsInConstructor>())
+        val stateObj = normalCasedMapper.readValue<StateObjectWithPartialFieldsInConstructor>(normalCasedJson)
         validate(stateObj)
     }
 
@@ -142,7 +142,7 @@ public class TestJacksonWithKotlin {
         // the unrecognized fields in the constructor.  Does not work with default values for parameters, because a null does not get converted to the
         // default.
 
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectAsDataClassConfusingConstructor>())
+        val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassConfusingConstructor>(normalCasedJson)
         validate(stateObj)
     }
 
@@ -150,7 +150,7 @@ public class TestJacksonWithKotlin {
 
     Test fun findingConstructorsWithPascalCasedJson() {
         // pascal cased strategy for JSON, note that explicit named JsonProperty are not renamed and must be exactly the same
-        val stateObj = pascalCasedMapper.readValue(pascalCasedJson, javaClass<StateObjectAsDataClassExplicitJsonCreator>())
+        val stateObj = pascalCasedMapper.readValue<StateObjectAsDataClassExplicitJsonCreator>(pascalCasedJson)
         validate(stateObj)
 
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)

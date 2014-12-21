@@ -57,11 +57,11 @@ val state = mapper.readValue(json, javaClass<MyStateObject>())
 }
 ```
 
-In Kotlin M10 and Jackson 2.4.5+ you will not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
+In Kotlin M10 and since Jackson 2.4.5 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
 ```kotlin
-val state: MyStateObject = mapper.readValue(json)
-// or
 val state = mapper.readValue<MyStateObject>(json)
+// or
+val state: MyStateObject = mapper.readValue(json)
 // or
 myMemberWithType = mapper.readValue(json)
 ```

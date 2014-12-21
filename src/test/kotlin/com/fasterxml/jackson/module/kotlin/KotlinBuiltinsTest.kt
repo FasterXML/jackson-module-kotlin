@@ -16,7 +16,7 @@ class TestJacksonWithKotlinBuiltins {
         val testObj = ClassWithPair(Pair("John", "Smith"), 30)
 
         assertThat(mapper.writeValueAsString(testObj), equalTo(json))
-        val stateObj = mapper.readValue(json, javaClass<ClassWithPair>())
+        val stateObj = mapper.readValue<ClassWithPair>(json)
         assertThat(stateObj, equalTo(testObj))
     }
 
@@ -26,7 +26,7 @@ class TestJacksonWithKotlinBuiltins {
         val testObj = ClassWithPairMixedTypes(Pair("John", 30))
 
         assertThat(mapper.writeValueAsString(testObj), equalTo(json))
-        val stateObj = mapper.readValue(json, javaClass<ClassWithPairMixedTypes>())
+        val stateObj = mapper.readValue<ClassWithPairMixedTypes>(json)
         assertThat(stateObj, equalTo(testObj))
     }
 
@@ -36,7 +36,7 @@ class TestJacksonWithKotlinBuiltins {
         val testObj = ClassWithTriple(Triple("John", "Davey", "Smith"), 30)
 
         assertThat(mapper.writeValueAsString(testObj), equalTo(json))
-        val stateObj = mapper.readValue(json, javaClass<ClassWithTriple>())
+        val stateObj = mapper.readValue<ClassWithTriple>(json)
         assertThat(stateObj, equalTo(testObj))
     }
 
@@ -46,7 +46,7 @@ class TestJacksonWithKotlinBuiltins {
         val testObj = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))
 
         assertThat(mapper.writeValueAsString(testObj), equalTo(json))
-        val stateObj = mapper.readValue(json, javaClass<ClassWithRanges>())
+        val stateObj = mapper.readValue<ClassWithRanges>(json)
         assertThat(stateObj, equalTo(testObj))
     }
 }
