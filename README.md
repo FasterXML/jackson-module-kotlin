@@ -6,13 +6,12 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+* Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
-* Release 2.4.2-rc1 (compatible with Kotlin 0.8.11 [M8 release] and Jackson 2.4.x)
 
-And soon:
+And also available as release candidate:
 
-* Release 2.4.5-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
-* Release 2.5-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
+* Release 2.5.0-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x release candidates)
 
 Gradle:
 ```
@@ -24,7 +23,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.4.4</version>
+    <version>2.4.4-1</version>
 </dependency>
 ```
 
@@ -58,7 +57,7 @@ val state = mapper.readValue(json, javaClass<MyStateObject>())
 }
 ```
 
-In Kotlin M10 and since Jackson 2.4.5 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
+In Kotlin M10 and since Jackson Kotlin Module 2.4.4-1 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
 ```kotlin
 val state = mapper.readValue<MyStateObject>(json)
 // or
@@ -66,8 +65,6 @@ val state: MyStateObject = mapper.readValue(json)
 // or
 myMemberWithType = mapper.readValue(json)
 ```
-
-Soon, hopefully in Kotlin M11, we can remove the need for TypeReference in some cases!
 
 # Annotations
 
