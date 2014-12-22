@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.4.4-1 (21-Dec-2014)
+
+Update to latest Kotlin version (M10)
+
 2.4.4 (25-Nov-2014)
 
 No changes since 2.4.3
