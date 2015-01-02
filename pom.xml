@@ -30,9 +30,9 @@
     </scm>
 
     <properties>
-        <version.jackson.annotations>2.5.0-rc1</version.jackson.annotations>
-        <version.jackson.core>2.5.0-rc1</version.jackson.core>
-        <version.jackson.joda>2.5.0-rc1</version.jackson.joda>
+        <version.jackson.annotations>2.5.0</version.jackson.annotations>
+        <version.jackson.core>2.5.0</version.jackson.core>
+        <version.jackson.joda>2.5.0-SNAPSHOT</version.jackson.joda>
         <version.junit>4.11</version.junit>
         <version.kotlin>0.10.4</version.kotlin>
 
