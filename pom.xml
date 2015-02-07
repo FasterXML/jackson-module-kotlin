@@ -32,7 +32,9 @@
     <properties>
         <version.jackson.annotations>2.5.0</version.jackson.annotations>
         <version.jackson.core>2.5.1</version.jackson.core>
-        <version.jackson.joda>${version.jackson.core}</version.jackson.joda>
+
+        <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
+        <version.jackson.joda>${version.jackson.annotations}</version.jackson.joda>
         <version.junit>4.11</version.junit>
         <version.kotlin>0.10.4</version.kotlin>
 
