@@ -4,6 +4,8 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 # Status
 
+[![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
+
 Releases are available on Maven Central:
 
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
