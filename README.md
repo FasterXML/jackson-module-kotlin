@@ -8,12 +8,9 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+* Release 2.5.1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
-
-And also available as release candidate:
-
-* Release 2.5.0-rc1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x release candidates)
 
 Gradle:
 ```
@@ -25,7 +22,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.4.4-1</version>
+    <version>2.5.1</version>
 </dependency>
 ```
 
@@ -84,7 +81,7 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 # Caveats
 
 * The [JsonCreator] annotation is optional for the constructor unless Kotlin introduces secondary constructors in the future.  So this could change.
-* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.9.206, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
+* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.10.770, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
  
 # Support for Kotlin Built-in classes
 
