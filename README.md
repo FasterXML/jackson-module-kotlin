@@ -16,7 +16,7 @@ Coming Soon:
 
 * Release 2.5.1.1 (Compatible with Kotlinb 0.11.91 [M11 release] and Jackson 2.5.x)
 
-NOTE:  for M11, secondary constructor support has NOT been tested, only primary constructor as before.  Future updates will look at new language features and Kotlin reflection.
+NOTE:  for M11, if you have more than 2 constructors that are viable matches to the JSON properties, the class will fail using this module.
 
 Gradle:
 ```

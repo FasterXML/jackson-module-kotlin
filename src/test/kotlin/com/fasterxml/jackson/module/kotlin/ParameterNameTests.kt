@@ -17,6 +17,7 @@ import kotlin.test.fail
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.junit.Ignore
+import kotlin.platform.platformStatic
 
 public class TestJacksonWithKotlin {
     // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
@@ -160,10 +161,10 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectWithFactory(val namey: String, val agey: Int, val primaryAddressy: String, val wrongNamey: Boolean, val createdDty: DateTime) : TestFields {
-        class object {
-            public [JsonCreator] fun create(name: String, age: Int, primaryAddress: String, JsonProperty("renamed") wrongName: Boolean, createdDt: DateTime): StateObjectWithFactory {
-                return StateObjectWithFactory(name, age, primaryAddress, wrongName, createdDt)
+    private class StateObjectWithFactory private (namey: String, agey: Int, primaryAddressy: String, wrongNamey: Boolean, createdDty: DateTime) : TestFields {
+        companion object {
+            [platformStatic] public [JsonCreator] fun create([JsonProperty("name")] nameThing: String, [JsonProperty("age")] age: Int, [JsonProperty("primaryAddress")] primaryAddress: String, [JsonProperty("renamed")] wrongName: Boolean, [JsonProperty("createdDt")] createdDt: DateTime): StateObjectWithFactory {
+                return StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
             }
         }
         override val name = namey
@@ -173,13 +174,8 @@ public class TestJacksonWithKotlin {
         override val createdDt = createdDty
     }
 
-    [Ignore(value = "Factory Methods not supported yet")]
+    [Ignore(value = "Not sure why this doesn't work, but isn't a huge case and has never worked")]
     Test fun findingFactoryMethod() {
-        /*
-         TODO: this will not work since Kotlin does not have static methods, have to find a way to make factory methods
-         work from class objects, maybe a TypeInstantiator would work
-         StateObjectWithFactory.object$.create method is the actual factory when compiled
-        */
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactory>())
         validate(stateObj)
     }

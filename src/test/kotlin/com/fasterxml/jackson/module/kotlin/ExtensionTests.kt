@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 data class BasicPerson(val name: String, val age: Int)
 
 class ExtensionTests {
-    val json = """{"name":"John Smith", "age":30}"""
+    val json = """{"name":"John Smith","age":30}"""
     var person: BasicPerson? = null
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
