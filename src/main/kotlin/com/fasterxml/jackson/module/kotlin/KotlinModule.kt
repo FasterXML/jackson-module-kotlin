@@ -13,7 +13,7 @@ import java.util.HashSet
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
-    class object {
+    companion object {
         private val serialVersionUID = 1L;
     }
     val requireJsonCreatorAnnotation: Boolean = false

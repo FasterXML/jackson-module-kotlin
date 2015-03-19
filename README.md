@@ -12,6 +12,12 @@ Releases are available on Maven Central:
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
+Coming Soon:
+
+* Release 2.5.1.1 (Compatible with Kotlinb 0.11.91 [M11 release] and Jackson 2.5.x)
+
+NOTE:  for M11, secondary constructor support has NOT been tested, only primary constructor as before.  Future updates will look at new language features and Kotlin reflection.
+
 Gradle:
 ```
 compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.4.4'
