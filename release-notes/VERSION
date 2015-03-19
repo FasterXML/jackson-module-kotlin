@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.5.1-1 (19-Mar-2015)
+
+Fixes to pass all unit tests, update to latest Kotlin version.
+
 2.5.1 (06-Feb-2015)
 2.5.0 (01-Jan-2015)
 
