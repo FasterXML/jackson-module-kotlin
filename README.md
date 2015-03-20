@@ -8,15 +8,12 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+* Release 2.5.1.1.KotlinM11 (Compatible with Kotlinb 0.11.91 M11 release and Jackson 2.5.x)
 * Release 2.5.1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
-Coming Soon:
-
-* Release 2.5.1.1 (Compatible with Kotlinb 0.11.91 [M11 release] and Jackson 2.5.x)
-
-NOTE:  for M11, if you have more than 2 constructors that are viable matches to the JSON properties, the class will fail using this module.
+NOTE:  With **Kotlin M11**, if you have more than 2 constructors that are viable matches to the JSON properties, the class will fail using this module.
 
 Gradle:
 ```
