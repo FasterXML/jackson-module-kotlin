@@ -17,15 +17,14 @@ NOTE:  With **Kotlin M11**, if you have more than 2 constructors that are viable
 
 Gradle:
 ```
-compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.4.4'
-```
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.5.1.1.KotlinM11'
 
 Maven:
 ```xml
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.5.1</version>
+    <version>2.5.1.1.KotlinM11</version>
 </dependency>
 ```
 
