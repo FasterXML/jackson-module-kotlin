@@ -31,7 +31,7 @@
 
     <properties>
         <version.jackson.annotations>2.5.0</version.jackson.annotations>
-        <version.jackson.core>2.5.1</version.jackson.core>
+        <version.jackson.core>2.5.2</version.jackson.core>
 
         <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
         <version.jackson.joda>${version.jackson.annotations}</version.jackson.joda>
