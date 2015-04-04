@@ -53,7 +53,7 @@ data class MyStateObject(val name: String, val age: Int)
 
 ...
 val mapper = jacksonObjectMapper()
-val state = mapper.readValue<MyStateObject>(json)
+val state = mapper.readValue(json, javaClass<MyStateObject>())
 
 ```
 
