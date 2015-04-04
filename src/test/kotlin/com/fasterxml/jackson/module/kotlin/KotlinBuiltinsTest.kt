@@ -6,7 +6,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
-class TestJacksonWithKotlinBuiltins {
+public class TestJacksonWithKotlinBuiltins {
     private val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
     private data class ClassWithPair(val name: Pair<String, String>, val age: Int)

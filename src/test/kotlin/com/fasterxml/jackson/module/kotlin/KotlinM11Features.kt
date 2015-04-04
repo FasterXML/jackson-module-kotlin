@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.m11
+package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -12,7 +12,7 @@ import org.junit.Test
 
 data class DataClassPerson(val name: String, val age: Int)
 
-class M11Tests {
+public class TestM11Changes {
     val mapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
@@ -144,8 +144,7 @@ class M11Tests {
         val name: String = name
         var age: Int = 0
         [JsonCreator] constructor(name: String, age: Int) : this(name) {
-            println("used?")
-           this.age = age
+            this.age = age
         }
     }
 

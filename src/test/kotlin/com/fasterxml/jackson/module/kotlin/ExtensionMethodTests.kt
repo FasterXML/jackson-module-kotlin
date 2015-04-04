@@ -6,7 +6,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
-class ExtensionMethodTests {
+public class TestExtensionMethods {
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
     data class BasicPerson(val name: String, val age: Int)

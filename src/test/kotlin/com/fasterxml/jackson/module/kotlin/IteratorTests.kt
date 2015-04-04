@@ -11,7 +11,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 
-class IteratorTests {
+public class TestIteratorSubclass {
     class TinyPerson(val name: String, val age: Int)
     class KotlinPersonIterator(private val personList: List<TinyPerson>) : Iterator<TinyPerson> by personList.iterator() {}
 
