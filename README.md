@@ -13,11 +13,10 @@ Releases are available on Maven Central:
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
-NOTE:  With **Kotlin M11**, if you have more than 2 constructors that are viable matches to the JSON properties, the correct constructor requires `JsonCreator` annotation.  `platformStatic` factory methods also require `JsonCreator` to be seen.  Otherwise `JsonCreator` is optional.
-
 Gradle:
 ```
 compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.5.1.1.KotlinM11'
+```
 
 Maven:
 ```xml
@@ -31,6 +30,8 @@ Maven:
 # Usage
 
 For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
+
+**NOTE:**  If you have more than 2 constructors that are viable matches to the JSON properties, the correct constructor requires `JsonCreator` annotation.  `platformStatic` factory methods also require `JsonCreator` to be seen.  Otherwise `JsonCreator` is optional.
 
 To use, just register the Kotlin module with your ObjectMapper instance:
 
@@ -48,18 +49,20 @@ val mapper = jacksonObjectMapper()
 val mapper = ObjectMapper().registerKotlinModule()
 ```
 
-A data class example:
+A simple data class example:
 ```kotlin
 data class MyStateObject(val name: String, val age: Int)
 
 ...
 val mapper = jacksonObjectMapper()
-val state = mapper.readValue(json, javaClass<MyStateObject>())
-}
+val state = mapper.readValue<MyStateObject>(json)
+
 ```
 
-In Kotlin M10 and since Jackson Kotlin Module 2.4.4-1 you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
+In Kotlin M10+ you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
 ```kotlin
+import com.fasterxml.jackson.module.kotlin.*
+
 val state = mapper.readValue<MyStateObject>(json)
 // or
 val state: MyStateObject = mapper.readValue(json)
@@ -82,8 +85,9 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 
 # Caveats
 
-* The [JsonCreator] annotation is optional for the constructor unless there is more than one constructor in which case if both are valid, this must be added.  Or to use a factory static method, it must be annotated `[platformStatic]` and with `[JsonCreator]`
-* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.11.91, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
+* The [JsonCreator] annotation is optional unless you have more than one constructor that is valid, or use a static factory method (which also must have `platformStatic` annotation)
+* Currently we use parameter name information in Kotlin that is compatible with Kotlin M8 through M11
+* Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see Issue #4 for easy workarounds.
  
 # Support for Kotlin Built-in classes
 
