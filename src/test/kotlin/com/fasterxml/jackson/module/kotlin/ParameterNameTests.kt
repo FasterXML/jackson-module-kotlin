@@ -25,14 +25,14 @@ public class TestJacksonWithKotlin {
         val primaryAddress: String
         val wrongName: Boolean
         val createdDt: DateTime
-    }
 
-    private fun validate(stateObj: TestFields) {
-        assertThat(stateObj.name, equalTo("Frank"))
-        assertThat(stateObj.age, equalTo(30))
-        assertThat(stateObj.primaryAddress, equalTo("something here"))
-        assertThat(stateObj.wrongName, equalTo(true))
-        assertThat(stateObj.createdDt, equalTo(DateTime(2014, 8, 1, 12, 11, 30, 0, DateTimeZone.UTC)))
+        fun validate(nameField: String = name, ageField: Int = age, addressField: String = primaryAddress, wrongNameField: Boolean = wrongName, createDtField: DateTime = createdDt) {
+            assertThat(nameField, equalTo("Frank"))
+            assertThat(ageField, equalTo(30))
+            assertThat(addressField, equalTo("something here"))
+            assertThat(wrongNameField, equalTo(true))
+            assertThat(createDtField, equalTo(DateTime(2014, 8, 1, 12, 11, 30, 0, DateTimeZone.UTC)))
+        }
     }
 
     private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2014-08-01T12:11:30.000Z"}"""
@@ -62,7 +62,7 @@ public class TestJacksonWithKotlin {
 
     Test fun NoFailWithDefaultAndSpecificConstructor() {
         val stateObj = normalCasedMapper.readValue<DefaultAndSpecificConstructor>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
     }
 
     // ==================
@@ -74,7 +74,7 @@ public class TestJacksonWithKotlin {
 
     Test fun doNotFailWithoutJsonCreator() {
         val stateObj = normalCasedMapper.readValue<NoFailWithoutJsonCreator>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate(wrongNameField = stateObj.renamed)
     }
 
     // ==================
@@ -87,7 +87,7 @@ public class TestJacksonWithKotlin {
     Test fun testDataClassWithExplicitJsonCreator() {
         // data class with explicit JsonCreator and no parameters with JsonProperty
         val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassExplicitJsonCreator>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate(wrongNameField = stateObj.renamed)
 
         val test1out = StringWriter()
         normalCasedMapper.writeValue(test1out, stateObj)
@@ -102,7 +102,7 @@ public class TestJacksonWithKotlin {
     Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
         // data class with JsonCreator and JsonProperty
         val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassWithJsonCreatorAndJsonProperty>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
 
         val test1out = normalCasedMapper.writeValueAsString(stateObj)
         assertThat(test1out, equalTo(normalCasedJson))
@@ -115,7 +115,7 @@ public class TestJacksonWithKotlin {
     Test fun testNormalClassWithJsonCreator() {
         // normal class
         val stateObj = normalCasedMapper.readValue<StateObjectAsNormalClass>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
     }
 
     // ==================
@@ -128,7 +128,7 @@ public class TestJacksonWithKotlin {
     Test fun testNormalClassWithPartialConstructorJsonCreator() {
         // normal class with some fields not in constructor
         val stateObj = normalCasedMapper.readValue<StateObjectWithPartialFieldsInConstructor>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
     }
 
     // ==================
@@ -141,7 +141,7 @@ public class TestJacksonWithKotlin {
         // default.
 
         val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassConfusingConstructor>(normalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
     }
 
     // ==================
@@ -149,7 +149,7 @@ public class TestJacksonWithKotlin {
     Test fun findingConstructorsWithPascalCasedJson() {
         // pascal cased strategy for JSON, note that explicit named JsonProperty are not renamed and must be exactly the same
         val stateObj = pascalCasedMapper.readValue<StateObjectAsDataClassExplicitJsonCreator>(pascalCasedJson)
-        validate(stateObj)
+        stateObj.validate()
 
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)
         assertThat(test1out, equalTo(pascalCasedJson))
@@ -158,22 +158,21 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectWithFactory private (namey: String, agey: Int, primaryAddressy: String, wrongNamey: Boolean, createdDty: DateTime) : TestFields {
+    private class StateObjectWithFactory private (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
+        var factoryUsed: Boolean = false
         companion object {
             [platformStatic] public [JsonCreator] fun create([JsonProperty("name")] nameThing: String, [JsonProperty("age")] age: Int, [JsonProperty("primaryAddress")] primaryAddress: String, [JsonProperty("renamed")] wrongName: Boolean, [JsonProperty("createdDt")] createdDt: DateTime): StateObjectWithFactory {
-                return StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
+                val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
+                obj.factoryUsed = true
+                return obj
             }
         }
-        override val name = namey
-        override val age = agey
-        override val primaryAddress = primaryAddressy
-        override val wrongName = wrongNamey
-        override val createdDt = createdDty
     }
 
     Test fun findingFactoryMethod() {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactory>())
-        validate(stateObj)
+        stateObj.validate()
+        assertThat(stateObj.factoryUsed, equalTo(true))
     }
 
     private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
