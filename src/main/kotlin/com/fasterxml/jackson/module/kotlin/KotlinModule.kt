@@ -1,16 +1,12 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember
-import com.fasterxml.jackson.databind.introspect.Annotated
-import com.fasterxml.jackson.databind.PropertyName
-import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
-import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.Module.SetupContext
-import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
+import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.module.SimpleModule
 import jet.runtime.typeinfo.JetValueParameter
-import kotlin.jvm.internal.KotlinClass
 import java.util.HashSet
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
+import kotlin.jvm.internal.KotlinClass
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
@@ -23,15 +19,15 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
             javaClass<Triple<*, *, *>>()
     ))
 
-    override public fun setupModule(context: SetupContext?) {
+    override public fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
         fun addMixin(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
-            context?.setMixInAnnotations(clazz, mixin)
+            context.setMixInAnnotations(clazz, mixin)
         }
 
-        context?.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
         addMixin(javaClass<IntRange>(), javaClass<RangeMixin<*>>())
@@ -41,9 +37,9 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         addMixin(javaClass<ShortRange>(), javaClass<RangeMixin<*>>())
         addMixin(javaClass<LongRange>(), javaClass<RangeMixin<*>>())
         addMixin(javaClass<FloatRange>(), javaClass<RangeMixin<*>>())
-
     }
 }
+
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : NopAnnotationIntrospector() {
     /*
@@ -54,22 +50,26 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     */
 
     // since 2.4
-    override public fun findImplicitPropertyName(member: AnnotatedMember?): String? {
+    override public fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
         }
         return null
     }
 
-    override public fun hasCreatorAnnotation(member: Annotated?): Boolean {
+    override public fun hasCreatorAnnotation(member: Annotated): Boolean {
+        // don't add a JsonCreator to any constructor if one is declared already
+
         if (member is AnnotatedConstructor) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            return if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
-                val allAnnotated = (member.getAnnotated().getParameterAnnotations().all { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
-                allAnnotated
+            if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
+                val anyConstructorHasJsonCreator = member.getDeclaringClass().getConstructors().any { it.getAnnotation(javaClass<JsonCreator>()) != null }
+                val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(javaClass<JsonCreator>()) != null }
+                val areAllParametersValid = (member.getAnnotated().getParameterAnnotations().all { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
+                return !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
             }
             else {
-                false
+                return false
             }
         } else {
             return false

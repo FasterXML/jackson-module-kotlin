@@ -1,13 +1,13 @@
 package com.fasterxml.jackson.module.kotlin.m11
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.junit.Test
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.equalTo
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.*
-import org.junit.Ignore
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Test
 
 
 data class DataClassPerson(val name: String, val age: Int)
@@ -136,12 +136,12 @@ class M11Tests {
     class TestPerson8(name: String) {
         val name: String = name
         var age: Int = 0
-        constructor(name: String, age: Int) : this(name) {
+        [JsonCreator] constructor(name: String, age: Int) : this(name) {
             println("used?")
            this.age = age
         }
     }
-    [Ignore("This cannot be solved unless we can see in the plugin all possible constructors and pick the 'best' to tell jackson")]
+
     Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""

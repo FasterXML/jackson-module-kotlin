@@ -1,18 +1,17 @@
 package com.fasterxml.jackson.module.kotlin
 
-import org.junit.Test
-import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.CoreMatchers.equalTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Test
 
-data class BasicPerson(val name: String, val age: Int)
-
-class ExtensionTests {
+class ExtensionMethodTests {
     val json = """{"name":"John Smith","age":30}"""
     var person: BasicPerson? = null
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
+    data class BasicPerson(val name: String, val age: Int)
 
     Test fun testAllInferenceForms() {
         val inferRightSide = mapper.readValue<BasicPerson>(json)

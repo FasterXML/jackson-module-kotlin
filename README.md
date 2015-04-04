@@ -13,7 +13,7 @@ Releases are available on Maven Central:
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
-NOTE:  With **Kotlin M11**, if you have more than 2 constructors that are viable matches to the JSON properties, the class will fail using this module.
+NOTE:  With **Kotlin M11**, if you have more than 2 constructors that are viable matches to the JSON properties, the correct constructor requires `JsonCreator` annotation.  `platformStatic` factory methods also require `JsonCreator` to be seen.  Otherwise `JsonCreator` is optional.
 
 Gradle:
 ```
@@ -82,8 +82,8 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 
 # Caveats
 
-* The [JsonCreator] annotation is optional for the constructor unless Kotlin introduces secondary constructors in the future.  So this could change.
-* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.10.770, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
+* The [JsonCreator] annotation is optional for the constructor unless there is more than one constructor in which case if both are valid, this must be added.  Or to use a factory static method, it must be annotated `[platformStatic]` and with `[JsonCreator]`
+* Currently runtime type information in Kotlin is compatible with Kotlin 0.8.11 through 0.11.91, and in the future will use the upcoming Kotlin runtime type information which may require an update to this library.
  
 # Support for Kotlin Built-in classes
 

@@ -1,23 +1,20 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import org.joda.time.DateTime
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.datatype.joda.JodaModule
-import java.io.StringWriter
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
-import org.junit.Test
-import org.hamcrest.MatcherAssert.*
-import org.hamcrest.CoreMatchers.*
-import org.joda.time.DateTimeZone
-import com.fasterxml.jackson.databind.SerializationFeature
-import kotlin.properties.Delegates
 import com.fasterxml.jackson.annotation.JsonCreator
-import kotlin.test.fail
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.junit.Ignore
+import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.joda.JodaModule
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.joda.time.DateTime
+import org.joda.time.DateTimeZone
+import org.junit.Test
+import java.io.StringWriter
 import kotlin.platform.platformStatic
+import kotlin.properties.Delegates
+import kotlin.test.fail
 
 public class TestJacksonWithKotlin {
     // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
@@ -174,10 +171,26 @@ public class TestJacksonWithKotlin {
         override val createdDt = createdDty
     }
 
-    [Ignore(value = "Not sure why this doesn't work, but isn't a huge case and has never worked")]
     Test fun findingFactoryMethod() {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactory>())
         validate(stateObj)
+    }
+
+    private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
+        companion object {
+            [platformStatic] public [JsonCreator] fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
+                return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
+            }
+        }
+    }
+
+    Test fun findingFactoryMethod2() {
+        try {
+            val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactoryNoParamAnnotations>())
+        }
+        catch (ex: Exception) {
+            fail("Exception not expected")
+        }
     }
 }
 

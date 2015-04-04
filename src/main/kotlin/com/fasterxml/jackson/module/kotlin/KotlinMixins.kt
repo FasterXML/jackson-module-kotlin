@@ -7,4 +7,3 @@ internal abstract class RangeMixin<T : Comparable<T>> [JsonCreator] (override pu
     JsonIgnore override abstract fun isEmpty(): Boolean
     JsonIgnore abstract fun getIncrement(): T
 }
-

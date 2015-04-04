@@ -1,11 +1,10 @@
 package com.fasterxml.jackson.module.kotlin
 
-import org.junit.Test
-import org.hamcrest.MatcherAssert.*
-import org.hamcrest.CoreMatchers.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.annotation.JsonCreator
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Test
 
 class TestJacksonWithKotlinBuiltins {
     private val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
