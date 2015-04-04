@@ -31,8 +31,6 @@ Maven:
 
 For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
 
-**NOTE:**  If you have more than 2 constructors that are viable matches to the JSON properties, the correct constructor requires `JsonCreator` annotation.  `platformStatic` factory methods also require `JsonCreator` to be seen.  Otherwise `JsonCreator` is optional.
-
 To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
@@ -72,7 +70,7 @@ myMemberWithType = mapper.readValue(json)
 
 # Annotations
 
-You can intermix non-field values in the constructor and [JsonProperty] annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
+You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
 
 ```kotlin
    class StateObjectWithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
@@ -85,7 +83,7 @@ Note that using Delegates.notNull() will ensure that the value is never null whe
 
 # Caveats
 
-* The [JsonCreator] annotation is optional unless you have more than one constructor that is valid, or use a static factory method (which also must have `platformStatic` annotation)
+* The `JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
 * Currently we use parameter name information in Kotlin that is compatible with Kotlin M8 through M11
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see Issue #4 for easy workarounds.
  
