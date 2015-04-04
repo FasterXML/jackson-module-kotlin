@@ -12,40 +12,40 @@ class TestJacksonWithKotlinBuiltins {
     private data class ClassWithPair(val name: Pair<String, String>, val age: Int)
     Test fun testPair() {
         val json = """{"name":{"first":"John","second":"Smith"},"age":30}"""
-        val testObj = ClassWithPair(Pair("John", "Smith"), 30)
+        val expected = ClassWithPair(Pair("John", "Smith"), 30)
 
-        assertThat(mapper.writeValueAsString(testObj), equalTo(json))
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
         val stateObj = mapper.readValue<ClassWithPair>(json)
-        assertThat(stateObj, equalTo(testObj))
+        assertThat(stateObj, equalTo(expected))
     }
 
     private data class ClassWithPairMixedTypes(val person: Pair<String, Int>)
     Test fun testPairMixedTypes() {
         val json = """{"person":{"first":"John","second":30}}"""
-        val testObj = ClassWithPairMixedTypes(Pair("John", 30))
+        val expected = ClassWithPairMixedTypes(Pair("John", 30))
 
-        assertThat(mapper.writeValueAsString(testObj), equalTo(json))
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
         val stateObj = mapper.readValue<ClassWithPairMixedTypes>(json)
-        assertThat(stateObj, equalTo(testObj))
+        assertThat(stateObj, equalTo(expected))
     }
 
     private data class ClassWithTriple(val name: Triple<String, String, String>, val age: Int)
     Test fun testTriple() {
         val json = """{"name":{"first":"John","second":"Davey","third":"Smith"},"age":30}"""
-        val testObj = ClassWithTriple(Triple("John", "Davey", "Smith"), 30)
+        val expected = ClassWithTriple(Triple("John", "Davey", "Smith"), 30)
 
-        assertThat(mapper.writeValueAsString(testObj), equalTo(json))
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
         val stateObj = mapper.readValue<ClassWithTriple>(json)
-        assertThat(stateObj, equalTo(testObj))
+        assertThat(stateObj, equalTo(expected))
     }
 
     private data class ClassWithRanges(val ages: IntRange, val distance: DoubleRange)
     Test fun testRanges() {
         val json = """{"ages":{"start":18,"end":40},"distance":{"start":5.5,"end":50.0}}"""
-        val testObj = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))
+        val expected = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))
 
-        assertThat(mapper.writeValueAsString(testObj), equalTo(json))
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
         val stateObj = mapper.readValue<ClassWithRanges>(json)
-        assertThat(stateObj, equalTo(testObj))
+        assertThat(stateObj, equalTo(expected))
     }
 }

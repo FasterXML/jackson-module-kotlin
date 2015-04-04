@@ -15,85 +15,90 @@ data class DataClassPerson(val name: String, val age: Int)
 class M11Tests {
     val mapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
-    class TestPerson1(val name: String, val age: Int)
+    private class Class_With_One_Constructor(val name: String, val age: Int)
+
     Test fun testNormalClass_One_Constructor() {
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson1("John Smith", 30)
+        val expectedPerson = Class_With_One_Constructor("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson1>(actualJson)
+        val newPerson  = mapper.readValue<Class_With_One_Constructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson.name, equalTo(expectedPerson.name))
         assertThat(newPerson.age, equalTo(expectedPerson.age))
     }
 
-    data class TestPerson2(val name: String, val age: Int)
+    private data class Class_Data_Annotation_With_One_Constructor(val name: String, val age: Int)
+
     Test fun testDataClass_One_Constructor() {
 
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson2("John Smith", 30)
+        val expectedPerson = Class_Data_Annotation_With_One_Constructor("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson2>(actualJson)
+        val newPerson  = mapper.readValue<Class_Data_Annotation_With_One_Constructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson, equalTo(expectedPerson))
     }
 
-    data class TestPerson3(val name: String, val age: Int) {
+    private data class Class_With_Init_Constructor(val name: String, val age: Int) {
         val otherThing: String
         init {
             otherThing = "franky"
         }
     }
+
     Test fun testDataClass_Init_Constructor() {
 
         val expectedJson = """{"name":"John Smith","age":30,"otherThing":"franky"}"""
-        val expectedPerson = TestPerson3("John Smith", 30)
+        val expectedPerson = Class_With_Init_Constructor("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson3>(actualJson)
+        val newPerson  = mapper.readValue<Class_With_Init_Constructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson, equalTo(expectedPerson))
     }
 
-    data class TestPerson4(val name: String, val age: Int) {
+    private data class Class_With_Init_Constructor_And_Ignored_Property(val name: String, val age: Int) {
         [JsonIgnore] val otherThing: String
         init {
             otherThing = "franky"
         }
     }
+
     Test fun testDataClass_Init_Constructor_And_Ignored_Property() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson4("John Smith", 30)
+        val expectedPerson = Class_With_Init_Constructor_And_Ignored_Property("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson4>(actualJson)
+        val newPerson  = mapper.readValue<Class_With_Init_Constructor_And_Ignored_Property>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson, equalTo(expectedPerson))
     }
 
-    data class TestPerson5(val name: String, age: Int) {
+    private data class Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter(val name: String, age: Int) {
         val age: Int = age
     }
+
     Test fun testDataClass_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson5("John Smith", 30)
+        val expectedPerson = Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson5>(actualJson)
+        val newPerson  = mapper.readValue<Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson, equalTo(expectedPerson))
     }
 
-    class TestPerson6 {
+    private class ClassFor_testDataClass_WithOnlySecondaryConstructor {
         val name: String
         val age: Int
         constructor(name: String, age: Int) {
@@ -101,13 +106,14 @@ class M11Tests {
             this.age = age
         }
     }
+
     Test fun testDataClass_WithOnlySecondaryConstructor() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson6("John Smith", 30)
+        val expectedPerson = ClassFor_testDataClass_WithOnlySecondaryConstructor("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson6>(actualJson)
+        val newPerson  = mapper.readValue<ClassFor_testDataClass_WithOnlySecondaryConstructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson.name, equalTo(expectedPerson.name))
@@ -115,25 +121,26 @@ class M11Tests {
     }
 
 
-    class TestPerson7(val name: String, val age: Int) {
+    private class Class_WithPrimaryAndSecondaryConstructor(val name: String, val age: Int) {
         constructor(nameAndAge: String) : this(nameAndAge.substringBefore(':'), nameAndAge.substringAfter(':').toInt()) {
 
         }
     }
+
     Test fun testDataClass_WithPrimaryAndSecondaryConstructor() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson7("John Smith", 30)
+        val expectedPerson = Class_WithPrimaryAndSecondaryConstructor("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson7>(actualJson)
+        val newPerson  = mapper.readValue<Class_WithPrimaryAndSecondaryConstructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson.name, equalTo(expectedPerson.name))
         assertThat(newPerson.age, equalTo(expectedPerson.age))
     }
 
-    class TestPerson8(name: String) {
+    private class Class_WithPrimaryAndSecondaryConstructorAnnotated(name: String) {
         val name: String = name
         var age: Int = 0
         [JsonCreator] constructor(name: String, age: Int) : this(name) {
@@ -145,10 +152,10 @@ class M11Tests {
     Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
-        val expectedPerson = TestPerson8("John Smith", 30)
+        val expectedPerson = Class_WithPrimaryAndSecondaryConstructorAnnotated("John Smith", 30)
 
         val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<TestPerson8>(actualJson)
+        val newPerson  = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson.name, equalTo(expectedPerson.name))
