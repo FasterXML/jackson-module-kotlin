@@ -70,11 +70,12 @@ myMemberWithType = mapper.readValue(json)
 
 # Annotations
 
-You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
+You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call.  An example of these concepts:
 
 ```kotlin
+   JsonInclude(JsonInclude.Include.NON_EMPTY)
    class StateObjectWithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
-        JsonProperty("address") var primaryAddress: String? = null
+        JsonProperty("address") var primaryAddress: String = "" // does not have to be nullable
         var createdDt: DateTime by Delegates.notNull()
     }
 ```
