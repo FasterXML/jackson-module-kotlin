@@ -8,14 +8,14 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
-* Release 2.5.1.1.KotlinM11 (Compatible with Kotlinb 0.11.91 M11 release and Jackson 2.5.x)
+* Release 2.5.3 (Compatible with Kotlinb 0.11.91 M11 release and Jackson 2.5.x)
 * Release 2.5.1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
 * Release 2.4.4 (compatible with Kotlin 0.9.66 [M9 release] and Jackson 2.4.x)
 
 Gradle:
 ```
-compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.5.1.1.KotlinM11'
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.5.3'
 ```
 
 Maven:
@@ -23,7 +23,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.5.1.1.KotlinM11</version>
+    <version>2.5.3</version>
 </dependency>
 ```
 
