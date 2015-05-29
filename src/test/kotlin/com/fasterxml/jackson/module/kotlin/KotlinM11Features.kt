@@ -2,12 +2,14 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
+import kotlin.properties.Delegates
+import kotlin.test.fail
 
 
 data class DataClassPerson(val name: String, val age: Int)
@@ -159,7 +161,41 @@ public class TestM11Changes {
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson.name, equalTo(expectedPerson.name))
         assertThat(newPerson.age, equalTo(expectedPerson.age))
+
+        val jsonWithNoAge = """{"name":"John Smith"}"""
+        val personNoAge  = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>(jsonWithNoAge)
+
+        assertThat(personNoAge.age, equalTo(0))
+        assertThat(personNoAge.name, equalTo("John Smith"))
     }
 
+    JsonInclude(JsonInclude.Include.NON_EMPTY)
+    class Class_WithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
+        JsonProperty("address") var primaryAddress: String = ""
+        var phone: String by Delegates.notNull()
+    }
 
+    Test fun testClass_WithPartialFieldsInConstructor() {
+        val expectedJson = """{"name":"John Smith","age":30,"phone":"1234567890"}"""
+        val expectedPerson = Class_WithPartialFieldsInConstructor("John Smith", 30)
+        expectedPerson.phone = "1234567890"
+
+        val actualJson = mapper.writeValueAsString(expectedPerson)
+        val newPerson = mapper.readValue<Class_WithPartialFieldsInConstructor>(actualJson)
+
+        assertThat(actualJson, equalTo(expectedJson))
+        assertThat(newPerson.name, equalTo(expectedPerson.name))
+        assertThat(newPerson.years, equalTo(expectedPerson.years))
+        assertThat(newPerson.phone, equalTo(expectedPerson.phone))
+        assertThat(newPerson.primaryAddress, equalTo(expectedPerson.primaryAddress))
+
+        val jsonWithNullPhone = """{"name":"John Smith","age":30}"""
+        val person = mapper.readValue<Class_WithPartialFieldsInConstructor>(jsonWithNullPhone)
+
+        try {
+            person.phone
+            fail("While person can be deserialized without a phone, phone must be set before attempting to access it")
+        } catch(e: IllegalStateException) { // expected
+        }
+    }
 }
