@@ -20,7 +20,7 @@ public class TestIteratorSubclass {
     Test fun testKotlinIterator() {
         val expectedJson = """[{"name":"Fred","age":10},{"name":"Max","age":11}]"""
         val people = KotlinPersonIterator(listOf(TinyPerson("Fred", 10), TinyPerson("Max", 11)))
-        val kotlinJson = mapper.writerFor<ObjectWriter>(object : TypeReference<Iterator<TinyPerson>>() {}).writeValueAsString(people)
+	    val kotlinJson = mapper.writerFor(object : TypeReference<Iterator<TinyPerson>>() {}).writeValueAsString(people)
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
