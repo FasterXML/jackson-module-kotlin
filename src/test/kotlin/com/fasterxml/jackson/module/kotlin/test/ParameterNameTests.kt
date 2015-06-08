@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin
+package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.fasterxml.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.joda.time.DateTime
@@ -19,7 +20,7 @@ import kotlin.test.fail
 public class TestJacksonWithKotlin {
     // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
 
-    private trait TestFields {
+    private interface TestFields {
         val name: String
         val age: Int
         val primaryAddress: String
@@ -53,7 +54,7 @@ public class TestJacksonWithKotlin {
     // ==================
 
     private class DefaultAndSpecificConstructor(override var name: String = "", override var age: Int = 0) : TestFields {
-        [JsonProperty("renamed")]
+        @JsonProperty("renamed")
         override var wrongName: Boolean = false
 
         override var primaryAddress: String = ""
@@ -68,7 +69,7 @@ public class TestJacksonWithKotlin {
     // ==================
 
     private class NoFailWithoutJsonCreator(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
-        [JsonIgnore]
+        @JsonIgnore
         override val wrongName = renamed // here for the test validation only
     }
 
@@ -79,8 +80,8 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private data class StateObjectAsDataClassExplicitJsonCreator [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
-        [JsonIgnore]
+    private data class StateObjectAsDataClassExplicitJsonCreator @JsonCreator constructor(override val name: String, override val age: Int, override val primaryAddress: String, val renamed: Boolean, override val createdDt: DateTime) : TestFields {
+        @JsonIgnore
         override val wrongName = renamed // here for the test validation only
     }
 
@@ -97,7 +98,7 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private data class StateObjectAsDataClassWithJsonCreatorAndJsonProperty [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private data class StateObjectAsDataClassWithJsonCreatorAndJsonProperty @JsonCreator constructor(override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
         // data class with JsonCreator and JsonProperty
@@ -110,7 +111,7 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectAsNormalClass [JsonCreator] (override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private class StateObjectAsNormalClass @JsonCreator constructor(override val name: String, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testNormalClassWithJsonCreator() {
         // normal class
@@ -133,7 +134,7 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private data class StateObjectAsDataClassConfusingConstructor(nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int = DateTime().getYear() - yearOfBirth, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private data class StateObjectAsDataClassConfusingConstructor constructor (nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int, override val primaryAddress: String, JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
@@ -161,7 +162,7 @@ public class TestJacksonWithKotlin {
     private class StateObjectWithFactory private (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
-            [platformStatic] public [JsonCreator] fun create([JsonProperty("name")] nameThing: String, [JsonProperty("age")] age: Int, [JsonProperty("primaryAddress")] primaryAddress: String, [JsonProperty("renamed")] wrongName: Boolean, [JsonProperty("createdDt")] createdDt: DateTime): StateObjectWithFactory {
+            @platformStatic public @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
                 val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
                 obj.factoryUsed = true
                 return obj
@@ -177,7 +178,7 @@ public class TestJacksonWithKotlin {
 
     private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
         companion object {
-            [platformStatic] public [JsonCreator] fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
+            @platformStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
                 return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
             }
         }

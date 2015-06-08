@@ -8,6 +8,8 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+* Pending 2.5.x / 2.6.x from Master
+
 * Release 2.5.1.1.KotlinM11 (Compatible with Kotlinb 0.11.91 M11 release and Jackson 2.5.x)
 * Release 2.5.1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.5.x)
 * Release 2.4.4-1 (compatible with Kotlin 0.10.4 [M10 release] and Jackson 2.4.x)
@@ -26,6 +28,10 @@ Maven:
     <version>2.5.1.1.KotlinM11</version>
 </dependency>
 ```
+
+# KNOWN PROBLEMS
+
+In M12 of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
 
 # Usage
 

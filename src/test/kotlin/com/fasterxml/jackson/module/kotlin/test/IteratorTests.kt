@@ -1,10 +1,11 @@
-package com.fasterxml.jackson.module.kotlin
+package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
+import com.fasterxml.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Ignore
@@ -17,10 +18,12 @@ public class TestIteratorSubclass {
 
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
+
     Test fun testKotlinIterator() {
         val expectedJson = """[{"name":"Fred","age":10},{"name":"Max","age":11}]"""
         val people = KotlinPersonIterator(listOf(TinyPerson("Fred", 10), TinyPerson("Max", 11)))
-        val kotlinJson = mapper.writerFor<ObjectWriter>(object : TypeReference<Iterator<TinyPerson>>() {}).writeValueAsString(people)
+        val typeRef = object : TypeReference<Iterator<TinyPerson>>() {}
+        val kotlinJson = mapper.writerFor<ObjectWriter>(typeRef).writeValueAsString(people)
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
@@ -32,7 +35,7 @@ public class TestIteratorSubclass {
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
-    class Company(val name: String, [JsonSerialize(`as` = javaClass<java.util.Iterator<TinyPerson>>())] val people: KotlinPersonIterator)
+    class Company(val name: String, @JsonSerialize(`as` = java.util.Iterator::class) val people: KotlinPersonIterator)
 
     Test fun testKotlinIteratorAsField() {
         val expectedJson = """{"name":"KidVille","people":[{"name":"Fred","age":10},{"name":"Max","age":11}]}"""
