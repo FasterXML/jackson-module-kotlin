@@ -1,9 +1,9 @@
-package com.fasterxml.jackson.module.kotlin
+package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.*
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -64,7 +64,7 @@ public class TestM11Changes {
     }
 
     private data class Class_With_Init_Constructor_And_Ignored_Property(val name: String, val age: Int) {
-        [JsonIgnore] val otherThing: String
+        @JsonIgnore val otherThing: String
         init {
             otherThing = "franky"
         }
@@ -143,7 +143,7 @@ public class TestM11Changes {
     private class Class_WithPrimaryAndSecondaryConstructorAnnotated(name: String) {
         val name: String = name
         var age: Int = 0
-        [JsonCreator] constructor(name: String, age: Int) : this(name) {
+        @JsonCreator constructor(name: String, age: Int) : this(name) {
             this.age = age
         }
     }

@@ -36,7 +36,7 @@
         <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
         <version.jackson.joda>${version.jackson.annotations}</version.jackson.joda>
         <version.junit>4.11</version.junit>
-        <version.kotlin>0.11.91.4</version.kotlin>
+        <version.kotlin>0.12.213</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 

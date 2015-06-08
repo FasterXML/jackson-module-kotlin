@@ -52,6 +52,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     // since 2.4
     override public fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
+
+
             return findKotlinParameterName(member)
         }
         return null
@@ -65,8 +67,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
             if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
                 val anyConstructorHasJsonCreator = member.getDeclaringClass().getConstructors().any { it.getAnnotation(javaClass<JsonCreator>()) != null }
                 val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(javaClass<JsonCreator>()) != null }
-                val areAllParametersValid = (member.getAnnotated().getParameterAnnotations().all { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
-                return !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
+                val areAllParametersValid = member.getParameterCount() == (member.getAnnotated().getParameterAnnotations().count { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
+                val implyCreatorAnnotation = !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
+                return implyCreatorAnnotation
             }
             else {
                 return false
@@ -79,7 +82,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
         if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
             // TODO: this will change in the near future to full runtime type information
-            return param.getAnnotation(javaClass<JetValueParameter>())?.name()
+            val nameAnnotation: JetValueParameter? = param.getAnnotation(javaClass<JetValueParameter>())
+            val name: String? = nameAnnotation?.name()
+            return name
         }
         return null
     }
