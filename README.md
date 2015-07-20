@@ -39,6 +39,10 @@ Maven:
 </dependency>
 ```
 
+# KNOWN PROBLEMS
+
+In M12 of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
+
 # Usage
 
 For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
