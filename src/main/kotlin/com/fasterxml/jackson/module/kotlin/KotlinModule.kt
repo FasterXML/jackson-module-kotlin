@@ -9,8 +9,14 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
+import kotlin.platform.platformStatic
 import kotlin.reflect.declaredFunctions
 import kotlin.reflect.functions
+import kotlin.reflect.jvm.internal.KClassImpl
+import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
+import kotlin.reflect.jvm.internal.impl.types.TypeSubstitution
+import kotlin.reflect.jvm.internal.impl.incremental.components.LookupLocation
+import kotlin.reflect.jvm.internal.impl.name.Name
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlin
 import kotlin.reflect.jvm.kotlinFunction
@@ -98,14 +104,42 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
             val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
 
             val member = param.owner.member
-            val kCallable = if (member is Constructor<*>) {
-               (member as Constructor<Any>).kotlinFunction
+            val name = if (member is Constructor<*>) {
+               (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
             } else if (member is Method) {
-               (member as Method).kotlinFunction
+                val temp = member.kotlinFunction
+                if (temp == null && member.getAnnotation(javaClass<platformStatic>()) != null) {
+                    // TODO: is returning null for static functions
+                    // this is a huge work around for https://youtrack.jetbrains.com/issue/KT-8800
+
+                    val kClassImpl = kClass as KClassImpl<Any>
+
+                    val descriptor = KotlinReflectWorkaround.getCompanionClassDescriptor(kClassImpl)
+                    if (descriptor != null) {
+                        val members = descriptor.getMemberScope(TypeSubstitution.EMPTY)
+                        val function = members.getFunctions(Name.identifier(member.name), LookupLocation.NO_LOCATION).filter {
+                            if (member.getParameterTypes().size() == it.valueParameters.size() &&
+                                KotlinReflectWorkaround.getClassDescriptor(member.returnType.kotlin as KClassImpl).defaultType == it.returnType) {
+                                val hasSameParamTypes = member.getParameterTypes().zip(it.valueParameters).all {
+                                    KotlinReflectWorkaround.getClassDescriptor(it.first.kotlin as KClassImpl).defaultType == it.second.type
+                                }
+                                hasSameParamTypes
+                            }
+                            else {
+                                false
+                            }
+                        }.firstOrNull()
+                        function?.valueParameters?.get(param.index)?.name?.asString()
+                    } else {
+                        null
+                    }
+                } else {
+                    temp?.parameters?.get(param.index)?.name
+                }
             } else {
                 null
             }
-            return kCallable?.parameters?.get(param.index)?.name
+            return name
         }
         return null
     }
