@@ -159,7 +159,7 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectWithFactory private (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
+    private class StateObjectWithFactory private constructor (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
             @platformStatic public @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
@@ -189,6 +189,7 @@ public class TestJacksonWithKotlin {
             val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactoryNoParamAnnotations>())
         }
         catch (ex: Exception) {
+            ex.printStackTrace()
             fail("Exception not expected")
         }
     }

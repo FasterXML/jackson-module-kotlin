@@ -5,8 +5,17 @@ import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
 import jet.runtime.typeinfo.JetValueParameter
+import java.lang.reflect.Constructor
+import java.lang.reflect.Method
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
+import kotlin.reflect.declaredFunctions
+import kotlin.reflect.functions
+import kotlin.reflect.jvm.javaMethod
+import kotlin.reflect.jvm.kotlin
+import kotlin.reflect.jvm.kotlinFunction
+import kotlin.reflect.memberProperties
+import kotlin.reflect.primaryConstructor
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
@@ -52,39 +61,51 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     // since 2.4
     override public fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
-
-
             return findKotlinParameterName(member)
         }
         return null
     }
 
+    private val jsonCreator = javaClass<JsonCreator>()
+
+    @suppress("UNCHECKED_CAST")
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
         if (member is AnnotatedConstructor) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
             if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
-                val anyConstructorHasJsonCreator = member.getDeclaringClass().getConstructors().any { it.getAnnotation(javaClass<JsonCreator>()) != null }
-                val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(javaClass<JsonCreator>()) != null }
-                val areAllParametersValid = member.getParameterCount() == (member.getAnnotated().getParameterAnnotations().count { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
-                val implyCreatorAnnotation = !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
-                return implyCreatorAnnotation
+                val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
+                val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
+
+                if (kConstructor != null) {
+                    val isPrimaryConstructor = kClass.primaryConstructor == kConstructor
+                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == jsonCreator } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
+                    val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(jsonCreator) != null }
+                    val areAllParametersValid = kConstructor.parameters.size() == kConstructor.parameters.count { it.name != null }
+                    val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
+
+                    return implyCreatorAnnotation
+                }
             }
-            else {
-                return false
-            }
-        } else {
-            return false
         }
+        return false
     }
 
+    @suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
         if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
-            // TODO: this will change in the near future to full runtime type information
-            val nameAnnotation: JetValueParameter? = param.getAnnotation(javaClass<JetValueParameter>())
-            val name: String? = nameAnnotation?.name()
-            return name
+            val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
+
+            val member = param.owner.member
+            val kCallable = if (member is Constructor<*>) {
+               (member as Constructor<Any>).kotlinFunction
+            } else if (member is Method) {
+               (member as Method).kotlinFunction
+            } else {
+                null
+            }
+            return kCallable?.parameters?.get(param.index)?.name
         }
         return null
     }
