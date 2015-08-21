@@ -117,7 +117,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                     val descriptor = KotlinReflectWorkaround.getCompanionClassDescriptor(kClassImpl)
                     if (descriptor != null) {
                         val members = descriptor.getMemberScope(TypeSubstitution.EMPTY)
-                        val function = members.getFunctions(Name.identifier(member.name), NoLookupLocation.FROM_REFLECTION).filter {
+                        val function = members.getFunctions(Name.identifier(member.name), NoLookupLocation.FROM_REFLECTION).filter {  // TODO: ask about LookupLocations ...
                             if (member.getParameterTypes().size() == it.valueParameters.size() &&
                                 KotlinReflectWorkaround.getClassDescriptor(member.returnType.kotlin as KClassImpl).defaultType == it.returnType) {
                                 val hasSameParamTypes = member.getParameterTypes().zip(it.valueParameters).all {
