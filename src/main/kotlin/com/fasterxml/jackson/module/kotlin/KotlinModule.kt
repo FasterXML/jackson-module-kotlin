@@ -15,7 +15,7 @@ import kotlin.reflect.functions
 import kotlin.reflect.jvm.internal.KClassImpl
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
 import kotlin.reflect.jvm.internal.impl.types.TypeSubstitution
-import kotlin.reflect.jvm.internal.impl.incremental.components.LookupLocation
+import kotlin.reflect.jvm.internal.impl.incremental.components.NoLookupLocation
 import kotlin.reflect.jvm.internal.impl.name.Name
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlin
@@ -103,7 +103,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
         if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
             val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
 
-            val member = param.owner.member
+            val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
             } else if (member is Method) {
@@ -117,7 +117,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                     val descriptor = KotlinReflectWorkaround.getCompanionClassDescriptor(kClassImpl)
                     if (descriptor != null) {
                         val members = descriptor.getMemberScope(TypeSubstitution.EMPTY)
-                        val function = members.getFunctions(Name.identifier(member.name), LookupLocation.NO_LOCATION).filter {
+                        val function = members.getFunctions(Name.identifier(member.name), NoLookupLocation.FROM_REFLECTION).filter {
                             if (member.getParameterTypes().size() == it.valueParameters.size() &&
                                 KotlinReflectWorkaround.getClassDescriptor(member.returnType.kotlin as KClassImpl).defaultType == it.returnType) {
                                 val hasSameParamTypes = member.getParameterTypes().zip(it.valueParameters).all {
