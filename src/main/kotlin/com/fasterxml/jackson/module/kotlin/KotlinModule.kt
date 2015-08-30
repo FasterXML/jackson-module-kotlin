@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
-import jet.runtime.typeinfo.JetValueParameter
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
 import kotlin.platform.platformStatic
-import kotlin.reflect.declaredFunctions
-import kotlin.reflect.functions
+import kotlin.reflect.*
 import kotlin.reflect.jvm.internal.KClassImpl
 import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
 import kotlin.reflect.jvm.internal.impl.types.TypeSubstitution
@@ -20,18 +18,17 @@ import kotlin.reflect.jvm.internal.impl.name.Name
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlin
 import kotlin.reflect.jvm.kotlinFunction
-import kotlin.reflect.memberProperties
-import kotlin.reflect.primaryConstructor
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
         private val serialVersionUID = 1L;
     }
+
     val requireJsonCreatorAnnotation: Boolean = false
 
     val impliedClasses = HashSet<Class<*>>(setOf(
-            javaClass<Pair<*, *>>(),
-            javaClass<Triple<*, *, *>>()
+            Pair::class.java,
+            Triple::class.java
     ))
 
     override public fun setupModule(context: SetupContext) {
@@ -45,13 +42,13 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
-        addMixin(javaClass<IntRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<DoubleRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<CharRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<ByteRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<ShortRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<LongRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<FloatRange>(), javaClass<RangeMixin<*>>())
+        addMixin(IntRange::class.java, RangeMixin::class.java)
+        addMixin(DoubleRange::class.java, RangeMixin::class.java)
+        addMixin(CharRange::class.java, RangeMixin::class.java)
+        addMixin(ByteRange::class.java, RangeMixin::class.java)
+        addMixin(ShortRange::class.java, RangeMixin::class.java)
+        addMixin(LongRange::class.java, RangeMixin::class.java)
+        addMixin(FloatRange::class.java, RangeMixin::class.java)
     }
 }
 
@@ -72,7 +69,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
         return null
     }
 
-    private val jsonCreator = javaClass<JsonCreator>()
+    private val jsonCreator = JsonCreator::class.java
 
     @suppress("UNCHECKED_CAST")
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
@@ -80,7 +77,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
         if (member is AnnotatedConstructor) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
+            if (member.getParameterCount() > 0 && member.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
                 val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
                 val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
 
@@ -100,42 +97,18 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
     @suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
+        if (param.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
             val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
 
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
-               (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
+                (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
             } else if (member is Method) {
                 val temp = member.kotlinFunction
-                if (temp == null && member.getAnnotation(javaClass<platformStatic>()) != null) {
-                    // TODO: is returning null for static functions
-                    // this is a huge work around for https://youtrack.jetbrains.com/issue/KT-8800
 
-                    val kClassImpl = kClass as KClassImpl<Any>
-
-                    val descriptor = KotlinReflectWorkaround.getCompanionClassDescriptor(kClassImpl)
-                    if (descriptor != null) {
-                        val members = descriptor.getMemberScope(TypeSubstitution.EMPTY)
-                        val function = members.getFunctions(Name.identifier(member.name), NoLookupLocation.FROM_REFLECTION).filter {  // TODO: ask about LookupLocations ...
-                            if (member.getParameterTypes().size() == it.valueParameters.size() &&
-                                KotlinReflectWorkaround.getClassDescriptor(member.returnType.kotlin as KClassImpl).defaultType == it.returnType) {
-                                val hasSameParamTypes = member.getParameterTypes().zip(it.valueParameters).all {
-                                    KotlinReflectWorkaround.getClassDescriptor(it.first.kotlin as KClassImpl).defaultType == it.second.type
-                                }
-                                hasSameParamTypes
-                            }
-                            else {
-                                false
-                            }
-                        }.firstOrNull()
-                        function?.valueParameters?.get(param.index)?.name?.asString()
-                    } else {
-                        null
-                    }
-                } else {
-                    temp?.parameters?.get(param.index)?.name
-                }
+                val firstParamKind = temp?.parameters?.firstOrNull()?.kind
+                val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index+1 else param.index
+                temp?.parameters?.get(idx)?.name
             } else {
                 null
             }

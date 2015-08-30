@@ -171,7 +171,7 @@ public class TestJacksonWithKotlin {
     }
 
     Test fun findingFactoryMethod() {
-        val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactory>())
+        val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactory::class.java)
         stateObj.validate()
         assertThat(stateObj.factoryUsed, equalTo(true))
     }
@@ -186,7 +186,25 @@ public class TestJacksonWithKotlin {
 
     Test fun findingFactoryMethod2() {
         try {
-            val stateObj = normalCasedMapper.readValue(normalCasedJson, javaClass<StateObjectWithFactoryNoParamAnnotations>())
+            val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryNoParamAnnotations::class.java)
+        }
+        catch (ex: Exception) {
+            ex.printStackTrace()
+            fail("Exception not expected")
+        }
+    }
+
+    private class StateObjectWithJvmStaticFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
+        companion object {
+            @jvmStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
+                return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
+            }
+        }
+    }
+
+    Test fun findingFactoryMethod3() {
+        try {
+            val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithJvmStaticFactoryNoParamAnnotations::class.java)
         }
         catch (ex: Exception) {
             ex.printStackTrace()
