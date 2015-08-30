@@ -35,6 +35,7 @@ public class TestIteratorSubclass {
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
+    @suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
     class Company(val name: String, @JsonSerialize(`as` = java.util.Iterator::class) val people: KotlinPersonIterator)
 
     Test fun testKotlinIteratorAsField() {
