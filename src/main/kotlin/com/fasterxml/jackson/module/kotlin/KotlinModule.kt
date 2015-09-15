@@ -8,15 +8,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
-import kotlin.platform.platformStatic
 import kotlin.reflect.*
-import kotlin.reflect.jvm.internal.KClassImpl
-import kotlin.reflect.jvm.internal.impl.descriptors.ClassDescriptor
-import kotlin.reflect.jvm.internal.impl.types.TypeSubstitution
-import kotlin.reflect.jvm.internal.impl.incremental.components.NoLookupLocation
-import kotlin.reflect.jvm.internal.impl.name.Name
-import kotlin.reflect.jvm.javaMethod
-import kotlin.reflect.jvm.kotlin
 import kotlin.reflect.jvm.kotlinFunction
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
