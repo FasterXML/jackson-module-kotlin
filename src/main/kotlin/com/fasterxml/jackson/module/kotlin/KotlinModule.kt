@@ -71,7 +71,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
     private val jsonCreator = JsonCreator::class.java
 
-    @suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST")
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
@@ -95,7 +95,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
         return false
     }
 
-    @suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
         if (param.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
             val kClass = (param.getDeclaringClass() as Class<Any>).kotlin

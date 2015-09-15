@@ -19,7 +19,7 @@ public class TestIteratorSubclass {
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
 
-    Test fun testKotlinIterator() {
+    @Test fun testKotlinIterator() {
         val expectedJson = """[{"name":"Fred","age":10},{"name":"Max","age":11}]"""
         val people = KotlinPersonIterator(listOf(TinyPerson("Fred", 10), TinyPerson("Max", 11)))
         val typeRef = object : TypeReference<Iterator<TinyPerson>>() {}
@@ -27,18 +27,17 @@ public class TestIteratorSubclass {
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
-    Ignore("Failing, but need change in Jackson to allow this to work.")
-    Test fun testKotlinIteratorFails() {
+    @Ignore("Failing, but need change in Jackson to allow this to work.")
+    @Test fun testKotlinIteratorFails() {
         val expectedJson = """[{"name":"Fred","age":10},{"name":"Max","age":11}]"""
         val people = KotlinPersonIterator(listOf(TinyPerson("Fred", 10), TinyPerson("Max", 11)))
         val kotlinJson = mapper.writeValueAsString(people)
         assertThat(kotlinJson, equalTo(expectedJson))
     }
 
-    @suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-    class Company(val name: String, @JsonSerialize(`as` = java.util.Iterator::class) val people: KotlinPersonIterator)
+    class Company(val name: String, @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN") @JsonSerialize(`as` = java.util.Iterator::class) val people: KotlinPersonIterator)
 
-    Test fun testKotlinIteratorAsField() {
+    @Test fun testKotlinIteratorAsField() {
         val expectedJson = """{"name":"KidVille","people":[{"name":"Fred","age":10},{"name":"Max","age":11}]}"""
         val people = KotlinPersonIterator(listOf(TinyPerson("Fred", 10), TinyPerson("Max", 11)))
         val company = Company("KidVille", people)

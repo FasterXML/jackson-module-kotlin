@@ -12,7 +12,7 @@ public class TestExtensionMethods {
 
     data class BasicPerson(val name: String, val age: Int)
 
-    Test fun testAllInferenceForms() {
+    @Test fun testAllInferenceForms() {
         val json = """{"name":"John Smith","age":30}"""
 
         val inferRightSide = mapper.readValue<BasicPerson>(json)
