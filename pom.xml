@@ -151,6 +151,52 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${version.plugin.bundle}</version>
+                <configuration>
+                    <instructions>
+                        <!--
+                         | stops the "uses" clauses being added to "Export-Package" manifest entry
+                        -->
+                        <_nouses>true</_nouses>
+                        <!--
+                         | Stop the JAVA_1_n_HOME variables from being treated as headers by Bnd
+                        -->
+                        <_removeheaders>Include-Resource,JAVA_1_3_HOME,JAVA_1_4_HOME,JAVA_1_5_HOME,JAVA_1_6_HOME,JAVA_1_7_HOME</_removeheaders>
+                        <_versionpolicy>${osgi.versionpolicy}</_versionpolicy>
+                        <Bundle-Name>${project.name}</Bundle-Name>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Description>${project.description}</Bundle-Description>
+                        <Export-Package>${osgi.export}</Export-Package>
+                        <Private-Package>${osgi.private}</Private-Package>
+                        <Import-Package>${osgi.import}</Import-Package>
+                        <DynamicImport-Package>${osgi.dynamicImport}</DynamicImport-Package>
+                        <Bundle-DocURL>${project.url}</Bundle-DocURL>
+                        <Bundle-RequiredExecutionEnvironment>${osgi.requiredExecutionEnvironment}</Bundle-RequiredExecutionEnvironment>
+
+                        <Implementation-Build-Date>${maven.build.timestamp}</Implementation-Build-Date>
+                        <X-Compile-Source-JDK>${javac.src.version}</X-Compile-Source-JDK>
+                        <X-Compile-Target-JDK>${javac.target.version}</X-Compile-Target-JDK>
+
+                        <Implementation-Title>${project.name}</Implementation-Title>
+                        <Implementation-Version>${project.version}</Implementation-Version>
+                        <Implementation-Vendor-Id>${project.groupId}</Implementation-Vendor-Id>
+                        <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+
+                        <Specification-Title>${project.name}</Specification-Title>
+                        <Specification-Version>${project.version}</Specification-Version>
+                        <Specification-Vendor>${project.organization.name}</Specification-Vendor>
+
+                        <!-- workaround for Kotlin M13 bundle files -->
+                        <Include-Resource>
+                            /=src/main/resources/,
+                            META-INF=target/classes/META-INF
+                        </Include-Resource>
+                    </instructions>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
