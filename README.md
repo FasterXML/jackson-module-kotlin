@@ -8,26 +8,19 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+Kotlin M13
+* Release 2.6.2 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
+* 
 Kotlin M12
-* Release 2.6.0-rc1 (Comptabiel wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
+* Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
 * Release 2.5.3.1 (Compatible with Kotlin 0.12.x M12 release and Jackson 2.5.x)
 
-(In M12 of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.)
+(In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.)
 
-Kotlin M11
-* Release 2.5.3 (Compatible with Kotlin 0.11.91.x M11 release and Jackson 2.5.x)
-* Release 2.5.1.1.KotlinM11 (Compatible with Kotlin 0.11.91.x M11 release and Jackson 2.5.x)
-
-Kotlin M10
-* Release 2.5.1 (compatible with Kotlin 0.10.4 M10 release and Jackson 2.5.x)
-* Release 2.4.4-1 (compatible with Kotlin 0.10.4 M10 release and Jackson 2.4.x)
-
-Kotlin M9
-* Release 2.4.4 (compatible with Kotlin 0.9.66 M9 release and Jackson 2.4.x)
 
 Gradle:
 ```
-compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.5.3.1'
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2'
 ```
 
 Maven:
@@ -35,13 +28,13 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.5.3.1</version>
+    <version>2.6.2</version>
 </dependency>
 ```
 
 # KNOWN PROBLEMS
 
-In M12 of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
+In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
 
 # Usage
 
@@ -65,17 +58,12 @@ val mapper = ObjectMapper().registerKotlinModule()
 
 A simple data class example:
 ```kotlin
+import com.fasterxml.jackson.module.kotlin.*
+
 data class MyStateObject(val name: String, val age: Int)
 
 ...
 val mapper = jacksonObjectMapper()
-val state = mapper.readValue(json, javaClass<MyStateObject>())
-
-```
-
-In Kotlin M10+ you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
-```kotlin
-import com.fasterxml.jackson.module.kotlin.*
 
 val state = mapper.readValue<MyStateObject>(json)
 // or
