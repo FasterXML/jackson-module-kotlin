@@ -10,7 +10,7 @@ Releases are available on Maven Central:
 
 Kotlin M13
 * Release 2.6.2 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
-* 
+
 Kotlin M12
 * Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
 * Release 2.5.3.1 (Compatible with Kotlin 0.12.x M12 release and Jackson 2.5.x)
