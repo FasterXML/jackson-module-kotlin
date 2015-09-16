@@ -11,7 +11,7 @@ public class TestJacksonWithKotlinBuiltins {
     private val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
     private data class ClassWithPair(val name: Pair<String, String>, val age: Int)
-    Test fun testPair() {
+    @Test fun testPair() {
         val json = """{"name":{"first":"John","second":"Smith"},"age":30}"""
         val expected = ClassWithPair(Pair("John", "Smith"), 30)
 
@@ -21,7 +21,7 @@ public class TestJacksonWithKotlinBuiltins {
     }
 
     private data class ClassWithPairMixedTypes(val person: Pair<String, Int>)
-    Test fun testPairMixedTypes() {
+    @Test fun testPairMixedTypes() {
         val json = """{"person":{"first":"John","second":30}}"""
         val expected = ClassWithPairMixedTypes(Pair("John", 30))
 
@@ -31,7 +31,7 @@ public class TestJacksonWithKotlinBuiltins {
     }
 
     private data class ClassWithTriple(val name: Triple<String, String, String>, val age: Int)
-    Test fun testTriple() {
+    @Test fun testTriple() {
         val json = """{"name":{"first":"John","second":"Davey","third":"Smith"},"age":30}"""
         val expected = ClassWithTriple(Triple("John", "Davey", "Smith"), 30)
 
@@ -41,7 +41,7 @@ public class TestJacksonWithKotlinBuiltins {
     }
 
     private data class ClassWithRanges(val ages: IntRange, val distance: DoubleRange)
-    Test fun testRanges() {
+    @Test fun testRanges() {
         val json = """{"ages":{"start":18,"end":40},"distance":{"start":5.5,"end":50.0}}"""
         val expected = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))
 

@@ -17,7 +17,7 @@ public class TestM11Changes {
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
 
-    Test fun testNormalClass_One_Constructor() {
+    @Test fun testNormalClass_One_Constructor() {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_One_Constructor("John Smith", 30)
 
@@ -31,7 +31,7 @@ public class TestM11Changes {
 
     private data class Class_Data_Annotation_With_One_Constructor(val name: String, val age: Int)
 
-    Test fun testDataClass_One_Constructor() {
+    @Test fun testDataClass_One_Constructor() {
 
 
         val expectedJson = """{"name":"John Smith","age":30}"""
@@ -51,7 +51,7 @@ public class TestM11Changes {
         }
     }
 
-    Test fun testDataClass_Init_Constructor() {
+    @Test fun testDataClass_Init_Constructor() {
 
         val expectedJson = """{"name":"John Smith","age":30,"otherThing":"franky"}"""
         val expectedPerson = Class_With_Init_Constructor("John Smith", 30)
@@ -70,7 +70,7 @@ public class TestM11Changes {
         }
     }
 
-    Test fun testDataClass_Init_Constructor_And_Ignored_Property() {
+    @Test fun testDataClass_Init_Constructor_And_Ignored_Property() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_Init_Constructor_And_Ignored_Property("John Smith", 30)
@@ -86,7 +86,7 @@ public class TestM11Changes {
         val age: Int = age
     }
 
-    Test fun testDataClass_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter() {
+    @Test fun testDataClass_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter("John Smith", 30)
@@ -107,7 +107,7 @@ public class TestM11Changes {
         }
     }
 
-    Test fun testDataClass_WithOnlySecondaryConstructor() {
+    @Test fun testDataClass_WithOnlySecondaryConstructor() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = ClassFor_testDataClass_WithOnlySecondaryConstructor("John Smith", 30)
@@ -127,7 +127,7 @@ public class TestM11Changes {
         }
     }
 
-    Test fun testDataClass_WithPrimaryAndSecondaryConstructor() {
+    @Test fun testDataClass_WithPrimaryAndSecondaryConstructor() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_WithPrimaryAndSecondaryConstructor("John Smith", 30)
@@ -148,7 +148,7 @@ public class TestM11Changes {
         }
     }
 
-    Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
+    @Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
 
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_WithPrimaryAndSecondaryConstructorAnnotated("John Smith", 30)

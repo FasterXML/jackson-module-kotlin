@@ -4,19 +4,23 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
-import jet.runtime.typeinfo.JetValueParameter
+import java.lang.reflect.Constructor
+import java.lang.reflect.Method
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
+import kotlin.reflect.*
+import kotlin.reflect.jvm.kotlinFunction
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
         private val serialVersionUID = 1L;
     }
+
     val requireJsonCreatorAnnotation: Boolean = false
 
     val impliedClasses = HashSet<Class<*>>(setOf(
-            javaClass<Pair<*, *>>(),
-            javaClass<Triple<*, *, *>>()
+            Pair::class.java,
+            Triple::class.java
     ))
 
     override public fun setupModule(context: SetupContext) {
@@ -30,13 +34,13 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
-        addMixin(javaClass<IntRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<DoubleRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<CharRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<ByteRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<ShortRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<LongRange>(), javaClass<RangeMixin<*>>())
-        addMixin(javaClass<FloatRange>(), javaClass<RangeMixin<*>>())
+        addMixin(IntRange::class.java, RangeMixin::class.java)
+        addMixin(DoubleRange::class.java, RangeMixin::class.java)
+        addMixin(CharRange::class.java, RangeMixin::class.java)
+        addMixin(ByteRange::class.java, RangeMixin::class.java)
+        addMixin(ShortRange::class.java, RangeMixin::class.java)
+        addMixin(LongRange::class.java, RangeMixin::class.java)
+        addMixin(FloatRange::class.java, RangeMixin::class.java)
     }
 }
 
@@ -52,38 +56,54 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     // since 2.4
     override public fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
-
-
             return findKotlinParameterName(member)
         }
         return null
     }
 
+    private val jsonCreator = JsonCreator::class.java
+
+    @Suppress("UNCHECKED_CAST")
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
         if (member is AnnotatedConstructor) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 &&  member.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
-                val anyConstructorHasJsonCreator = member.getDeclaringClass().getConstructors().any { it.getAnnotation(javaClass<JsonCreator>()) != null }
-                val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(javaClass<JsonCreator>()) != null }
-                val areAllParametersValid = member.getParameterCount() == (member.getAnnotated().getParameterAnnotations().count { it.any { it.annotationType() ==  javaClass<JetValueParameter>() }})
-                val implyCreatorAnnotation = !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
-                return implyCreatorAnnotation
+            if (member.getParameterCount() > 0 && member.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
+                val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
+                val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
+
+                if (kConstructor != null) {
+                    val isPrimaryConstructor = kClass.primaryConstructor == kConstructor
+                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == jsonCreator } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
+                    val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(jsonCreator) != null }
+                    val areAllParametersValid = kConstructor.parameters.size() == kConstructor.parameters.count { it.name != null }
+                    val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
+
+                    return implyCreatorAnnotation
+                }
             }
-            else {
-                return false
-            }
-        } else {
-            return false
         }
+        return false
     }
 
+    @Suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.getDeclaringClass().getAnnotation(javaClass<KotlinClass>()) != null) {
-            // TODO: this will change in the near future to full runtime type information
-            val nameAnnotation: JetValueParameter? = param.getAnnotation(javaClass<JetValueParameter>())
-            val name: String? = nameAnnotation?.name()
+        if (param.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
+            val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
+
+            val member = param.getOwner().getMember()
+            val name = if (member is Constructor<*>) {
+                (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
+            } else if (member is Method) {
+                val temp = member.kotlinFunction
+
+                val firstParamKind = temp?.parameters?.firstOrNull()?.kind
+                val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index+1 else param.index
+                temp?.parameters?.get(idx)?.name
+            } else {
+                null
+            }
             return name
         }
         return null
