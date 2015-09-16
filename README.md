@@ -15,12 +15,15 @@ Kotlin M12
 * Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
 * Release 2.5.3.1 (Compatible with Kotlin 0.12.x M12 release and Jackson 2.5.x)
 
+Releases require that you have included Kotlin stdlib and reflect libraries already.
+
 (In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.)
 
 
 Gradle:
 ```
 compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2'
+runtime "org.jetbrains.kotlin:kotlin-reflect:0.13.1513"
 ```
 
 Maven:
@@ -29,6 +32,12 @@ Maven:
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <version>2.6.2</version>
+</dependency>
+<dependency>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-reflect</artifactId>
+    <version>0.13.1513</version>
+    <scope>runtime</scope>
 </dependency>
 ```
 
