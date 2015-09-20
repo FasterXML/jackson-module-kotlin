@@ -94,13 +94,23 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
-                (member as Constructor<Any>).kotlinFunction?.parameters?.get(param.index)?.name
+                val ctor = (member as Constructor<Any>)
+                if (ctor.kotlinFunction?.parameters?.size() ?: 0 > 0) {
+                    ctor.kotlinFunction?.parameters?.get(param.index)?.name
+                } else {
+                    null
+                }
             } else if (member is Method) {
-                val temp = member.kotlinFunction
+                try {
+                    val temp = member.kotlinFunction
 
-                val firstParamKind = temp?.parameters?.firstOrNull()?.kind
-                val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index+1 else param.index
-                temp?.parameters?.get(idx)?.name
+                    val firstParamKind = temp?.parameters?.firstOrNull()?.kind
+                    val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index + 1 else param.index
+                    temp?.parameters?.get(idx)?.name
+                }
+                catch (ex: KotlinReflectionInternalError) {
+                    null
+                }
             } else {
                 null
             }

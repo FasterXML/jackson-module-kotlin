@@ -13,8 +13,10 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.Test
 import java.io.StringWriter
+import java.util.*
 import kotlin.platform.platformStatic
 import kotlin.properties.Delegates
+import kotlin.test.assertEquals
 import kotlin.test.fail
 
 public class TestJacksonWithKotlin {
@@ -210,6 +212,19 @@ public class TestJacksonWithKotlin {
             ex.printStackTrace()
             fail("Exception not expected")
         }
+    }
+
+
+    // GH #14 failing due to this enum type
+    data class Gh14FailureWithEnum(var something: String = "hi", var someEnum: LaunchType = LaunchType.ACTIVITY)
+
+    enum class LaunchType {
+        ACTIVITY
+    }
+
+    @Test fun testGithub14() {
+        val json = normalCasedMapper.writeValueAsString(Gh14FailureWithEnum())
+        assertEquals("""{"something":"hi","someEnum":"ACTIVITY"}""", json)
     }
 }
 
