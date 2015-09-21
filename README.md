@@ -9,7 +9,8 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 Releases are available on Maven Central:
 
 Kotlin M13
-* Release 2.6.2 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
+* Release 2.6.2-1 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
+* Release 2.6.2 (upgrade Kotlin module to 2.6.2-1, important bug fix in updated version)
 
 Kotlin M12
 * Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
