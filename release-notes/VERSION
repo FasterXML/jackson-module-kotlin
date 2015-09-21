@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.6.1-1 (21-Sep-2015)
+
+Critical fixes to issues found in 2.6.2.
+
 2.6.2 (16-Sep-2015)
 
 Upgrade to Kotlin M13.
