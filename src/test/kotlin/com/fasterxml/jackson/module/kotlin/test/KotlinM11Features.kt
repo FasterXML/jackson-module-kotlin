@@ -82,7 +82,7 @@ public class TestM11Changes {
         assertThat(newPerson, equalTo(expectedPerson))
     }
 
-    private data class Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter(val name: String, age: Int) {
+    private class Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter(val name: String, age: Int) {
         val age: Int = age
     }
 
@@ -95,7 +95,8 @@ public class TestM11Changes {
         val newPerson  = mapper.readValue<Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
-        assertThat(newPerson, equalTo(expectedPerson))
+        assertThat(newPerson.name, equalTo(expectedPerson.name))
+        assertThat(newPerson.age, equalTo(expectedPerson.age))
     }
 
     private class ClassFor_testDataClass_WithOnlySecondaryConstructor {

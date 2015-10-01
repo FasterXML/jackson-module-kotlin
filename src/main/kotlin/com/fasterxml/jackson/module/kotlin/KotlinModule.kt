@@ -90,8 +90,6 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     @Suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
         if (param.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
-            val kClass = (param.getDeclaringClass() as Class<Any>).kotlin
-
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)

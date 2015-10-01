@@ -36,7 +36,7 @@
         <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
         <version.jackson.joda>${version.jackson.annotations}</version.jackson.joda>
         <version.junit>4.11</version.junit>
-        <version.kotlin>0.13.1513</version.kotlin>
+        <version.kotlin>0.14.449</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -86,7 +86,7 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
             <version>${version.kotlin}</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!-- only for testing... -->
@@ -154,6 +154,4 @@
             </plugin>
         </plugins>
     </build>
-
-
 </project>

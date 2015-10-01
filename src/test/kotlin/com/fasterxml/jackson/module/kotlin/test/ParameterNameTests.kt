@@ -136,7 +136,7 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private data class StateObjectAsDataClassConfusingConstructor constructor (nonField: String?, override val name: String, yearOfBirth: Int, override val age: Int, override val primaryAddress: String, @JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private class StateObjectAsDataClassConfusingConstructor constructor (@Suppress("UNUSED_PARAMETER") nonField: String?, override val name: String, @Suppress("UNUSED_PARAMETER") yearOfBirth: Int, override val age: Int, override val primaryAddress: String, @JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
 
     @Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
@@ -164,7 +164,7 @@ public class TestJacksonWithKotlin {
     private class StateObjectWithFactory private constructor (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
-            @platformStatic public @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
+            @JvmStatic public @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
                 val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
                 obj.factoryUsed = true
                 return obj
@@ -179,7 +179,9 @@ public class TestJacksonWithKotlin {
     }
 
     private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
+        @Suppress("DEPRECATED_SYMBOL_WITH_MESSAGE")
         companion object {
+            // TODO: Intentionally using deprecated until dropped from Kotlin
             @platformStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
                 return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
             }
@@ -188,7 +190,7 @@ public class TestJacksonWithKotlin {
 
     @Test fun findingFactoryMethod2() {
         try {
-            val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryNoParamAnnotations::class.java)
+            normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryNoParamAnnotations::class.java)
         }
         catch (ex: Exception) {
             ex.printStackTrace()
@@ -206,7 +208,7 @@ public class TestJacksonWithKotlin {
 
     @Test fun findingFactoryMethod3() {
         try {
-            val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithJvmStaticFactoryNoParamAnnotations::class.java)
+            normalCasedMapper.readValue(normalCasedJson, StateObjectWithJvmStaticFactoryNoParamAnnotations::class.java)
         }
         catch (ex: Exception) {
             ex.printStackTrace()
