@@ -1,16 +1,18 @@
+[![Kotlin M14](https://img.shields.io/badge/Kotlin-M14%20%40%200.14.449-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
+
 # Overview
 
 Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org) classes and data classes.  Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.  With this module, single constructor classes can be used automatically, and those with secondary constructors or static factories are also supported.
 
 # Status
 
-[![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
-
 Releases are available on Maven Central:
+
+Kotlin M14
+* release 2.6.2-2 (compatible with Kotlin 0.14.x M14 release and Jackson 2.6.x)
 
 Kotlin M13
 * Release 2.6.2-1 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
-* Release 2.6.2 (upgrade Kotlin module to 2.6.2-1, important bug fix in updated version)
 
 Kotlin M12
 * Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
@@ -23,8 +25,8 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2'
-runtime "org.jetbrains.kotlin:kotlin-reflect:0.13.1513"
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2-2'
+runtime "org.jetbrains.kotlin:kotlin-reflect:0.14.449"
 ```
 
 Maven:
@@ -32,12 +34,12 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.6.2</version>
+    <version>2.6.2-2</version>
 </dependency>
 <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-reflect</artifactId>
-    <version>0.13.1513</version>
+    <version>0.14.449</version>
     <scope>runtime</scope>
 </dependency>
 ```
