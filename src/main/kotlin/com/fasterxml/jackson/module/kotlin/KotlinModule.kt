@@ -93,7 +93,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
-                if (ctor.kotlinFunction?.parameters?.size() ?: 0 > 0) {
+                val ctorParmCount = ctor.parameterTypes.size()
+                val ktorParmCount = ctor.kotlinFunction?.parameters?.size() ?: 0
+                if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
                     ctor.kotlinFunction?.parameters?.get(param.index)?.name
                 } else {
                     null
@@ -104,7 +106,13 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
                     val firstParamKind = temp?.parameters?.firstOrNull()?.kind
                     val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index + 1 else param.index
-                    temp?.parameters?.get(idx)?.name
+                    val parmCount = temp?.parameters?.size() ?: 0
+                    if (parmCount > idx) {
+                        temp?.parameters?.get(idx)?.name
+                    }
+                    else {
+                        null
+                    }
                 }
                 catch (ex: KotlinReflectionInternalError) {
                     null
