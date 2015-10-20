@@ -35,12 +35,10 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
 
         // ranges
         addMixin(IntRange::class.java, RangeMixin::class.java)
-        addMixin(DoubleRange::class.java, RangeMixin::class.java)
         addMixin(CharRange::class.java, RangeMixin::class.java)
         addMixin(ByteRange::class.java, RangeMixin::class.java)
         addMixin(ShortRange::class.java, RangeMixin::class.java)
         addMixin(LongRange::class.java, RangeMixin::class.java)
-        addMixin(FloatRange::class.java, RangeMixin::class.java)
     }
 }
 
@@ -77,7 +75,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                     val isPrimaryConstructor = kClass.primaryConstructor == kConstructor
                     val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == jsonCreator } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
                     val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(jsonCreator) != null }
-                    val areAllParametersValid = kConstructor.parameters.size() == kConstructor.parameters.count { it.name != null }
+                    val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
                     val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
 
                     return implyCreatorAnnotation
@@ -93,8 +91,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
-                val ctorParmCount = ctor.parameterTypes.size()
-                val ktorParmCount = ctor.kotlinFunction?.parameters?.size() ?: 0
+                val ctorParmCount = ctor.parameterTypes.size
+                val ktorParmCount = ctor.kotlinFunction?.parameters?.size ?: 0
                 if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
                     ctor.kotlinFunction?.parameters?.get(param.index)?.name
                 } else {
@@ -106,7 +104,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
                     val firstParamKind = temp?.parameters?.firstOrNull()?.kind
                     val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index + 1 else param.index
-                    val parmCount = temp?.parameters?.size() ?: 0
+                    val parmCount = temp?.parameters?.size ?: 0
                     if (parmCount > idx) {
                         temp?.parameters?.get(idx)?.name
                     }
