@@ -12,14 +12,11 @@ Kotlin 1.0.0 BETA
 * release 2.6.3-1 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
 
 Kotlin M14
+* release 2.6.3
 * release 2.6.2-3 (compatible with Kotlin 0.14.x M14 release and Jackson 2.6.x)
 
 Kotlin M13
 * Release 2.6.2-1 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
-
-Kotlin M12
-* Release 2.6.1 (Compatible wwith Kotlin 0.12.x M12 release and Jackson 2.6.x)
-* Release 2.5.3.1 (Compatible with Kotlin 0.12.x M12 release and Jackson 2.5.x)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
