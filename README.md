@@ -1,4 +1,4 @@
-[![Kotlin M14](https://img.shields.io/badge/Kotlin-M14%20%40%200.14.449-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
+[![Kotlin](https://img.shields.io/badge/Kotlin-1.0.0%2Dbeta%2D1038-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
 
 # Overview
 
@@ -7,6 +7,9 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 # Status
 
 Releases are available on Maven Central:
+
+Kotlin 1.0.0 BETA
+* release 2.6.3-1 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
 
 Kotlin M14
 * release 2.6.2-3 (compatible with Kotlin 0.14.x M14 release and Jackson 2.6.x)
@@ -34,12 +37,12 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.6.2-2</version>
+    <version>2.6.3-1</version>
 </dependency>
 <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-reflect</artifactId>
-    <version>0.14.449</version>
+    <version>1.0.0-beta-1038</version>
     <scope>runtime</scope>
 </dependency>
 ```
