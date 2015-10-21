@@ -40,10 +40,10 @@ public class TestJacksonWithKotlinBuiltins {
         assertThat(stateObj, equalTo(expected))
     }
 
-    private data class ClassWithRanges(val ages: IntRange, val distance: DoubleRange)
+    private data class ClassWithRanges(val ages: IntRange, val distance: LongRange)
     @Test fun testRanges() {
-        val json = """{"ages":{"start":18,"end":40},"distance":{"start":5.5,"end":50.0}}"""
-        val expected = ClassWithRanges(IntRange(18, 40), DoubleRange(5.5, 50.0))
+        val json = """{"ages":{"start":18,"end":40},"distance":{"start":5,"end":50}}"""
+        val expected = ClassWithRanges(IntRange(18, 40), LongRange(5, 50))
 
         assertThat(mapper.writeValueAsString(expected), equalTo(json))
         val stateObj = mapper.readValue<ClassWithRanges>(json)

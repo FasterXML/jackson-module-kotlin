@@ -13,8 +13,6 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.Test
 import java.io.StringWriter
-import java.util.*
-import kotlin.platform.platformStatic
 import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -179,10 +177,8 @@ public class TestJacksonWithKotlin {
     }
 
     private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
-        @Suppress("DEPRECATED_SYMBOL_WITH_MESSAGE")
         companion object {
-            // TODO: Intentionally using deprecated until dropped from Kotlin
-            @platformStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
+            @JvmStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
                 return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
             }
         }
@@ -197,25 +193,6 @@ public class TestJacksonWithKotlin {
             fail("Exception not expected")
         }
     }
-
-    private class StateObjectWithJvmStaticFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
-        companion object {
-            @JvmStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
-                return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
-            }
-        }
-    }
-
-    @Test fun findingFactoryMethod3() {
-        try {
-            normalCasedMapper.readValue(normalCasedJson, StateObjectWithJvmStaticFactoryNoParamAnnotations::class.java)
-        }
-        catch (ex: Exception) {
-            ex.printStackTrace()
-            fail("Exception not expected")
-        }
-    }
-
 
     // GH #14 failing due to this enum type
     data class Gh14FailureWithEnum(var something: String = "hi", var someEnum: LaunchType = LaunchType.ACTIVITY)
