@@ -84,6 +84,9 @@ val state: MyStateObject = mapper.readValue(json)
 myMemberWithType = mapper.readValue(json)
 ```
 
+With `2.6.3-2` or newer of the module all inferred types for the extension functions carry in full generic information (reified generics).
+Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
+
 # Annotations
 
 You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
