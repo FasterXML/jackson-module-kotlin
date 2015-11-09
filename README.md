@@ -9,7 +9,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 Releases are available on Maven Central:
 
 Kotlin 1.0.0 BETA
-* release 2.6.3-1 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
+* release 2.6.3-2 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
 
 Kotlin M14
 * release 2.6.3
