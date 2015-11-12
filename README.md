@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.0.0--beta--1038-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.0.0--beta--1103-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
 
 # Overview
 
@@ -8,19 +8,10 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
-Kotlin 1.0.0 BETA
-* release 2.6.3-2 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
-
-Kotlin M14
-* release 2.6.3
-* release 2.6.2-3 (compatible with Kotlin 0.14.x M14 release and Jackson 2.6.x)
-
-Kotlin M13
-* Release 2.6.2-1 (Compatible with Kotlin 0.13.x M13 release and Jackson 2.6.x)
+Kotlin 1.0.0 BETA 
+* release 2.6.3-3 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
-
-(In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.)
 
 
 Gradle:
