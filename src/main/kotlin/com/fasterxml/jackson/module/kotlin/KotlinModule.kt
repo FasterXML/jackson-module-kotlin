@@ -34,11 +34,11 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
-        addMixin(IntRange::class.java, RangeMixin::class.java)
-        addMixin(CharRange::class.java, RangeMixin::class.java)
-        addMixin(ByteRange::class.java, RangeMixin::class.java)
-        addMixin(ShortRange::class.java, RangeMixin::class.java)
-        addMixin(LongRange::class.java, RangeMixin::class.java)
+        addMixin(IntRange::class.java, ClosedRangeMixin::class.java)
+        addMixin(CharRange::class.java, ClosedRangeMixin::class.java)
+        addMixin(ByteRange::class.java, ClosedRangeMixin::class.java)
+        addMixin(ShortRange::class.java, ClosedRangeMixin::class.java)
+        addMixin(LongRange::class.java, ClosedRangeMixin::class.java)
     }
 }
 

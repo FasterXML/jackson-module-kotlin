@@ -2,8 +2,12 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 
-internal abstract class RangeMixin<T : Comparable<T>> @JsonCreator constructor(override public val start: T, override public val end: T) : Range<T> {
-    @JsonIgnore override abstract fun isEmpty(): Boolean
-    @JsonIgnore abstract fun getIncrement(): T
+internal abstract class ClosedRangeMixin<T> @JsonCreator constructor(public val start: T, @get:JsonProperty("end") public val endInclusive: T)  {
+    @JsonIgnore abstract public fun getEnd(): T
+    @JsonIgnore abstract public fun getFirst(): T
+    @JsonIgnore abstract public fun getLast(): T
+    @JsonIgnore abstract public fun getIncrement(): T
+    @JsonIgnore abstract public fun isEmpty(): Boolean
 }
