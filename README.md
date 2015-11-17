@@ -9,15 +9,15 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 Releases are available on Maven Central:
 
 Kotlin 1.0.0 BETA 
-* release 2.6.3-3 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
+* release 2.6.3-4 (compatible with Kotlin ABI 1.0.0 and Jackson 2.6.x)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 
 Gradle:
 ```
-compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2-3'
-runtime "org.jetbrains.kotlin:kotlin-reflect:1.0.0-beta-1103"
+compile 'com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2-4'
+runtime "org.jetbrains.kotlin:kotlin-reflect:1.0.0-beta-2423
 ```
 
 Maven:
@@ -25,12 +25,12 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.6.3-3</version>
+    <version>2.6.3-4</version>
 </dependency>
 <dependency>
     <groupId>org.jetbrains.kotlin</groupId>
     <artifactId>kotlin-reflect</artifactId>
-    <version>1.0.0-beta-1103</version>
+    <version>1.0.0-beta-2423</version>
     <scope>runtime</scope>
 </dependency>
 ```
