@@ -16,7 +16,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.6.2-4"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.6.3-4"
 runtime "org.jetbrains.kotlin:kotlin-reflect:1.0.0-beta-2423"
 ```
 
