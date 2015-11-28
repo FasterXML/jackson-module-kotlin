@@ -34,7 +34,7 @@
         <version.jackson.core>2.7.0-rc1</version.jackson.core>
 
         <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
-        <version.jackson.joda>2.7.0-rc1-SNAPSHOT</version.jackson.joda>
+        <version.jackson.joda>2.7.0-rc1</version.jackson.joda>
         <version.junit>4.11</version.junit>
         <version.kotlin>1.0.0-beta-2423</version.kotlin>
 
