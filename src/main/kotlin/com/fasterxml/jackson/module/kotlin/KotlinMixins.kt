@@ -10,4 +10,5 @@ internal abstract class ClosedRangeMixin<T> @JsonCreator constructor(public val 
     @JsonIgnore abstract public fun getLast(): T
     @JsonIgnore abstract public fun getIncrement(): T
     @JsonIgnore abstract public fun isEmpty(): Boolean
+    @JsonIgnore abstract public fun getStep(): T
 }

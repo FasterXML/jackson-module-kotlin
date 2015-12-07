@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 import java.util.HashSet
 import kotlin.jvm.internal.KotlinClass
 import kotlin.reflect.*
+import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlinFunction
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
@@ -59,8 +61,6 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
         return null
     }
 
-    private val jsonCreator = JsonCreator::class.java
-
     @Suppress("UNCHECKED_CAST")
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
@@ -73,10 +73,20 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
                 if (kConstructor != null) {
                     val isPrimaryConstructor = kClass.primaryConstructor == kConstructor
-                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == jsonCreator } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
-                    val anyStaticHasJsonCreator = member.getContextClass().getStaticMethods().any() { it.getAnnotation(jsonCreator) != null }
+                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
+
+                    val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions?.any {
+                        it.annotations.any { it.annotationType() == JvmStatic::class.java } &&
+                                it.annotations.any { it.annotationType() == JsonCreator::class.java }
+                    } ?: false
+                    val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods.any {
+                        val isStatic = Modifier.isStatic(it.modifiers)
+                        val isCreator = it.declaredAnnotations.any { it.annotationType() == JsonCreator::class.java }
+                        isStatic && isCreator
+                    }
+
                     val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
-                    val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyStaticHasJsonCreator) && areAllParametersValid
+                    val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator) && areAllParametersValid
 
                     return implyCreatorAnnotation
                 }

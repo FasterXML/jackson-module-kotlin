@@ -33,7 +33,7 @@
         <version.jackson.annotations>2.7.0-rc1</version.jackson.annotations>
         <version.jackson.core>2.7.0-rc1</version.jackson.core>
 
-        <!-- Joda only for testing, ok to use same version as annotations (not always latest) -->
+        <!-- Joda only for testing -->
         <version.jackson.joda>2.7.0-rc1</version.jackson.joda>
         <version.junit>4.11</version.junit>
         <version.kotlin>0.1-SNAPSHOT</version.kotlin>
@@ -75,7 +75,6 @@
             <version>${version.jackson.annotations}</version>
         </dependency>
 
-        <!-- TODO: this is not OSGI ready, does that break OSGI bundling? -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
