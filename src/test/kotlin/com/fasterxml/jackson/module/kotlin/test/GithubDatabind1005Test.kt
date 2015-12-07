@@ -17,7 +17,6 @@ public class TestHiddenKotlinThings {
         public val age: Int = age
     }
 
-    @Ignore("This isn't a problem with the Kotlin module unless someone refuses to use it, then constructor selection gets confused over synthetic constructors")
     @Test public fun testSyntheticGeneratedConstructorIsIgnored() {
        val thing: Something = ObjectMapper().readValue("""{"name":"fred","age":99}""")
     }
