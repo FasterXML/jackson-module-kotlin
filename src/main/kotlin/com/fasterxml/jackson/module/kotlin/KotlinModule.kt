@@ -70,7 +70,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                 val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
 
                 if (kConstructor != null) {
-                    val isPrimaryConstructor = kClass.primaryConstructor == kConstructor
+                    val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
+                                (kClass.primaryConstructor == null && kClass.constructors.size == 1)
                     val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
 
                     val anyCompanionMethodIsJsonCreator = member.getContextClass().rawType.kotlin.companionObject?.declaredFunctions?.any {
