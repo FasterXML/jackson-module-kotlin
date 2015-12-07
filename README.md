@@ -17,7 +17,6 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 Gradle:
 ```
 compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.6.3-4"
-runtime "org.jetbrains.kotlin:kotlin-reflect:1.0.0-beta-2423"
 ```
 
 Maven:
@@ -26,12 +25,6 @@ Maven:
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <version>2.6.3-4</version>
-</dependency>
-<dependency>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <artifactId>kotlin-reflect</artifactId>
-    <version>1.0.0-beta-2423</version>
-    <scope>runtime</scope>
 </dependency>
 ```
 
