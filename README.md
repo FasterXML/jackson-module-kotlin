@@ -9,6 +9,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 Releases are available on Maven Central:
 
 Kotlin 1.0.0 BETA 3
+* release 2.7.0-rc2 (for Jackson 2.7.x release candidates)
 * release 2.6.4 (for Jackson 2.6.x)
 * release 2.5.5 (for Jackson 2.5.x)
 
@@ -98,11 +99,7 @@ These Kotlin classes are supported with the following fields for serialization/d
 * Pair _(first, second)_
 * Triple _(first, second, third)_
 * IntRange _(start, end)_
-* DoubleRange _(start, end)_
 * CharRange _(start, end)_
-* ByteRange _(start, end)_
-* ShortRange _(start, end)_
 * LongRange _(start, end)_
-* FloatRange _(start, end)_
 
 (others are likely to work, but may not be tuned for Jackson)
