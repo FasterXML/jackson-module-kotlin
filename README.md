@@ -78,8 +78,8 @@ Therefore using `readValue()` extension without the `Class` parameter will reify
 You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call and therefore must be nullable with default value.  An example of these concepts:
 
 ```kotlin
-   class StateObjectWithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
-        JsonProperty("address") var primaryAddress: String? = null
+   class StateObjectWithPartialFieldsInConstructor(val name: String, @JsonProperty("age") val years: Int)    {
+        @JsonProperty("address") var primaryAddress: String? = null
         var createdDt: DateTime by Delegates.notNull()
     }
 ```
