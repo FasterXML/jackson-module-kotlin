@@ -72,15 +72,15 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                 if (kConstructor != null) {
                     val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
                                 (kClass.primaryConstructor == null && kClass.constructors.size == 1)
-                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationType() == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
+                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
 
                     val anyCompanionMethodIsJsonCreator = member.getContextClass().rawType.kotlin.companionObject?.declaredFunctions?.any {
-                        it.annotations.any { it.annotationType() == JvmStatic::class.java } &&
-                                it.annotations.any { it.annotationType() == JsonCreator::class.java }
+                        it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
+                                it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                     } ?: false
                     val anyStaticMethodIsJsonCreator = member.getContextClass().rawType.declaredMethods.any {
                         val isStatic = Modifier.isStatic(it.modifiers)
-                        val isCreator = it.declaredAnnotations.any { it.annotationType() == JsonCreator::class.java }
+                        val isCreator = it.declaredAnnotations.any { it.annotationClass.java == JsonCreator::class.java }
                         isStatic && isCreator
                     }
 

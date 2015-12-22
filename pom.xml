@@ -36,7 +36,7 @@
         <!-- Joda only for testing -->
         <version.jackson.joda>2.6.4</version.jackson.joda>
         <version.junit>4.11</version.junit>
-        <version.kotlin>1.0.0-beta-3595</version.kotlin>
+        <version.kotlin>1.0.0-beta-4583</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -86,6 +86,12 @@
             <artifactId>kotlin-reflect</artifactId>
             <version>${version.kotlin}</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${version.kotlin}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- only for testing... -->
