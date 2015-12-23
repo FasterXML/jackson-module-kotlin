@@ -4,17 +4,14 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
-2.6.3-4 (16-Nov-2015)
+2.6.4-1 (22-Dec-2015)
 
-Upgrade to Kotlin 1.0.0-beta-2423 (Beta 2)
+- Upgrade to Kotlin 1.0.0-beta-4583
 
-2.6.3-2 (29-Oct-2015)
+2.6.4 (07-Dec-2015)
 
-Minor fixes to generic type handling.
-
-2.6.3-1 (21-Oct-2015)
-
-Upgrade to Kotlin 1.0.0-beta-1038
+- Upgrade to Kotlin 1.0.0-beta-2423 (Beta 2)
+- Minor fixes to generic type handling.
 
 2.6.3 (12-Oct-2015)
 
