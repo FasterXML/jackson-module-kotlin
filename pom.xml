@@ -30,11 +30,11 @@
     </scm>
 
     <properties>
-        <version.jackson.annotations>2.6.4</version.jackson.annotations>
-        <version.jackson.core>2.6.4</version.jackson.core>
+        <version.jackson.annotations>2.6.5</version.jackson.annotations>
+        <version.jackson.core>2.6.5</version.jackson.core>
 
         <!-- Joda only for testing -->
-        <version.jackson.joda>2.6.4</version.jackson.joda>
+        <version.jackson.joda>2.6.5</version.jackson.joda>
         <version.junit>4.11</version.junit>
         <version.kotlin>1.0.0-beta-4583</version.kotlin>
 
