@@ -35,8 +35,8 @@
 
         <!-- Joda only for testing -->
         <version.jackson.joda>2.7.0</version.jackson.joda>
-        <version.junit>4.11</version.junit>
-        <version.kotlin>1.0.0-beta-4583</version.kotlin>
+        <version.junit>4.12</version.junit>
+        <version.kotlin>1.0.0-beta-4589</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
