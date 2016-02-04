@@ -13,11 +13,6 @@ Kotlin 1.0.0 RC 1036
 * release 2.6.5-1 (for Jackson 2.6.x)
 * release 2.5.5-1 (for Jackson 2.5.x)
 
-Kotlin 1.0.0 BETA 3
-* release 2.7.0-rc2 (for Jackson 2.7.x release candidates)
-* release 2.6.5 (for Jackson 2.6.x)
-* release 2.5.5 (for Jackson 2.5.x)
-
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 
