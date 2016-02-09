@@ -13,8 +13,12 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.junit.Test
 import java.io.StringWriter
+import java.util.*
 import kotlin.properties.Delegates
+import kotlin.reflect.jvm.kotlinFunction
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 public class TestJacksonWithKotlin {
@@ -204,6 +208,24 @@ public class TestJacksonWithKotlin {
     @Test fun testGithub14() {
         val json = normalCasedMapper.writeValueAsString(Gh14FailureWithEnum())
         assertEquals("""{"something":"hi","someEnum":"ACTIVITY"}""", json)
+    }
+
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+    @Test fun testFindKotlinClass() {
+        assertFalse(HashMap::class.java.isKotlinClass())
+        assertFalse(Object::class.java.isKotlinClass())
+        assertFalse(String::class.java.isKotlinClass())
+        assertFalse(ArrayList::class.java.isKotlinClass())
+        assertTrue(DefaultAndSpecificConstructor::class.java.isKotlinClass())
+        assertTrue(NoFailWithoutJsonCreator::class.java.isKotlinClass())
+        assertTrue(StateObjectAsDataClassExplicitJsonCreator::class.java.isKotlinClass())
+        assertTrue(StateObjectAsDataClassWithJsonCreatorAndJsonProperty::class.java.isKotlinClass())
+        assertTrue(StateObjectAsNormalClass::class.java.isKotlinClass())
+        assertTrue(StateObjectWithPartialFieldsInConstructor::class.java.isKotlinClass())
+        assertTrue(StateObjectAsDataClassConfusingConstructor::class.java.isKotlinClass())
+        assertTrue(StateObjectWithFactory::class.java.isKotlinClass())
+        assertTrue(StateObjectWithFactoryNoParamAnnotations::class.java.isKotlinClass())
+        assertTrue(Gh14FailureWithEnum::class.java.isKotlinClass())
     }
 }
 
