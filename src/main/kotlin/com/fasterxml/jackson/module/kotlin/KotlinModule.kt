@@ -8,10 +8,15 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.HashSet
-import kotlin.jvm.internal.KotlinClass
 import kotlin.reflect.*
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlinFunction
+
+private val metadataFqName = "kotlin.Metadata"
+
+fun Class<*>.isKotlinClass(): Boolean = this.declaredConstructors.any {
+    this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
+}
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
@@ -65,7 +70,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
         if (member is AnnotatedConstructor) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 && member.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
+            if (member.getParameterCount() > 0 && member.getDeclaringClass().isKotlinClass()) {
                 val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
                 val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
 
@@ -96,7 +101,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
 
     @Suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.getDeclaringClass().getAnnotation(KotlinClass::class.java) != null) {
+        if (param.getDeclaringClass().isKotlinClass()) {
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
