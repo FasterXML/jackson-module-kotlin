@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.0.0--rc--1036-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.0.0-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
 
 # Overview
 
@@ -6,12 +6,18 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 # Status
 
-Releases are available on Maven Central:
+Releases for Kotlin 1.0.0 will be available on Maven Central shortly.  In the meantime use the EAP repository:
 
-Kotlin 1.0.0 RC 1036
-* release 2.7.1 (for Jackson 2.7.x)
-* release 2.6.5-1 (for Jackson 2.6.x)
-* release 2.5.5-1 (for Jackson 2.5.x)
+```
+maven {
+   url  "http://dl.bintray.com/jaysonminard/kohesive"
+}
+```
+
+Kotlin 1.0.0
+* release 2.7.1-1 (for Jackson 2.7.x)
+* release 2.6.5-2 (for Jackson 2.6.x)
+* release 2.5.5-2 (for Jackson 2.5.x)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
