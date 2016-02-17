@@ -89,8 +89,21 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                         isStatic && isCreator
                     }
 
+                    // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
+                    // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
+                    // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
+
                     val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
-                    val implyCreatorAnnotation = isPrimaryConstructor && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator) && areAllParametersValid
+
+                    val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
+                                                    kConstructor.parameters[0].type == String::class.defaultType &&
+                                                    kClass.declaredMemberProperties.none {
+                                                        it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
+                                                    }
+                    val implyCreatorAnnotation = isPrimaryConstructor
+                            && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator)
+                            && areAllParametersValid
+                            && !isSingleStringConstructor
 
                     return implyCreatorAnnotation
                 }
