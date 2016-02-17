@@ -6,7 +6,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 # Status
 
-Releases for Kotlin 1.0.0 will be available on Maven Central shortly.  In the meantime use the EAP repository:
+Older versions of the Jackson-Kotlin module are not compatible with Kotlin 1.0.0.  You must update.  Releases for Kotlin 1.0.0 will be available on Maven Central shortly.  In the meantime use the EAP repository:
 
 ```
 maven {
@@ -14,10 +14,11 @@ maven {
 }
 ```
 
-Kotlin 1.0.0
-* release 2.7.1-1 (for Jackson 2.7.x)
-* release 2.6.5-2 (for Jackson 2.6.x)
-* release 2.5.5-2 (for Jackson 2.5.x)
+For Kotlin 1.0.0, use one of:
+
+* release `2.7.1-1` (for Jackson `2.7.x`)
+* release `2.6.5-2` (for Jackson `2.6.x`)
+* release `2.5.5-2` (for Jackson `2.5.x`)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
