@@ -15,6 +15,7 @@ import org.junit.Test
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
+import kotlin.reflect.jvm.kotlinFunction
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
