@@ -26,7 +26,7 @@
         <connection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</connection>
         <developerConnection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</developerConnection>
         <url>https://github.com/FasterXML/jackson-module-kotlin</url>
-        <tag>HEAD</tag>
+        <tag>jackson-module-kotlin-2.5.5-2</tag>
     </scm>
 
     <properties>
