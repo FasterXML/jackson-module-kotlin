@@ -9,7 +9,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.HashSet
 import kotlin.reflect.*
-import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlinFunction
 
 private val metadataFqName = "kotlin.Metadata"
