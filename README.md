@@ -6,7 +6,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 # Status
 
-Older versions of the Jackson-Kotlin module are not compatible with Kotlin 1.0.0.  You must update or you will have silent failures (the module cannot recognize a Kotlin class, so ignores it).  Releases for Kotlin 1.0.0 are no in Maven Central:
+Older versions of the Jackson-Kotlin module are not compatible with Kotlin 1.0.0.  You must update or you will have silent failures (the module cannot recognize a Kotlin class, so ignores it).  Releases for Kotlin 1.0.0 are now in Maven Central:
 
 For Kotlin 1.0.0, use one of:
 
