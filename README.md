@@ -19,7 +19,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.6.4"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.7.1-2"
 ```
 
 Maven:
@@ -27,7 +27,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.6.4</version>
+    <version>2.7.1-2</version>
 </dependency>
 ```
 
