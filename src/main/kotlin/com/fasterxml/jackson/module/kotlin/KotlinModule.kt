@@ -14,8 +14,7 @@ import kotlin.reflect.jvm.kotlinFunction
 private val metadataFqName = "kotlin.Metadata"
 
 fun Class<*>.isKotlinClass(): Boolean {
-    return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null ||
-           this.declaredConstructors.any { this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null }
+    return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
 }
 
 public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
