@@ -30,8 +30,8 @@
     </scm>
 
     <properties>
-        <version.jackson.annotations>2.7.2</version.jackson.annotations>
-        <version.jackson.core>2.7.2</version.jackson.core>
+        <version.jackson.annotations>2.7.3</version.jackson.annotations>
+        <version.jackson.core>2.7.3</version.jackson.core>
 
         <!-- Joda only for testing -->
         <version.jackson.joda>${version.jackson.core}</version.jackson.joda>
