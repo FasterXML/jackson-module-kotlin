@@ -14,8 +14,9 @@ import java.io.InputStream
 import java.io.Reader
 import java.net.URL
 
-public fun jacksonObjectMapper(jf: JsonFactory? = null, sp : DefaultSerializerProvider? = null, dc: DefaultDeserializationContext? = null): ObjectMapper = ObjectMapper(jf, sp, dc).registerKotlinModule()
-public fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
+public fun jacksonObjectMapper(): ObjectMapper = ObjectMapper().registerKotlinModule()
+public fun jacksonObjectMapper(jf: JsonFactory? = null, sp : DefaultSerializerProvider? = null, dc: DefaultDeserializationContext? = null) = ObjectMapper(jf, sp, dc).registerKotlinModule()
+public fun ObjectMapper.registerKotlinModule(): ObjectMapper = registerModule(KotlinModule())
 
 public inline fun <reified T: Any> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, object: TypeReference<T>() {})
 public inline fun <reified T: Any> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, object: TypeReference<T>() {})
