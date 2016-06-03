@@ -67,7 +67,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     override public fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
-        if (member is AnnotatedConstructor) {
+        if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
             if (member.getParameterCount() > 0 && member.getDeclaringClass().isKotlinClass()) {
                 val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
