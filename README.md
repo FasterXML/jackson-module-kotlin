@@ -10,7 +10,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
-* release `2.7.5` (for Jackson `2.7.x`)
+* release `2.7.4` (for Jackson `2.7.x`)
 * release `2.6.5-2` (for Jackson `2.6.x`)
 * release `2.5.5-2` (for Jackson `2.5.x`)
 
@@ -19,7 +19,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.7.5"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.7.4"
 ```
 
 Maven:
@@ -27,9 +27,13 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.7.5</version>
+    <version>2.7.4</version>
 </dependency>
 ```
+
+# KNOWN PROBLEMS
+
+In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
 
 # Usage
 
@@ -66,6 +70,9 @@ val state: MyStateObject = mapper.readValue(json)
 // or
 myMemberWithType = mapper.readValue(json)
 ```
+
+With `2.6.3-2` or newer of the module all inferred types for the extension functions carry in full generic information (reified generics).
+Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
 # Annotations
 
