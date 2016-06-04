@@ -77,11 +77,11 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                             (kClass.primaryConstructor == null && kClass.constructors.size == 1)
                     val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
 
-                    val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions?.any {
+                    val anyCompanionMethodIsJsonCreator = member.getContextClass().rawType.kotlin.companionObject?.declaredFunctions?.any {
                         it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
                                 it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                     } ?: false
-                    val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods.any {
+                    val anyStaticMethodIsJsonCreator = member.getContextClass().rawType.declaredMethods.any {
                         val isStatic = Modifier.isStatic(it.modifiers)
                         val isCreator = it.declaredAnnotations.any { it.annotationClass.java == JsonCreator::class.java }
                         isStatic && isCreator
