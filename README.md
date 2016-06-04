@@ -59,13 +59,6 @@ data class MyStateObject(val name: String, val age: Int)
 
 ...
 val mapper = jacksonObjectMapper()
-val state = mapper.readValue(json, javaClass<MyStateObject>())
-
-```
-
-In Kotlin M10+ you do not need the javaClass parameter, it is inferred for all ObjectMapper functions that are possible (and a few on ObjectReader).  Therefore you can do one of:
-```kotlin
-import com.fasterxml.jackson.module.kotlin.*
 
 val state = mapper.readValue<MyStateObject>(json)
 // or
@@ -79,18 +72,19 @@ myMemberWithType = mapper.readValue(json)
 You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call.  An example of these concepts:
 
 ```kotlin
-   JsonInclude(JsonInclude.Include.NON_EMPTY)
-   class StateObjectWithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
-        JsonProperty("address") var primaryAddress: String = "" // does not have to be nullable
-        var createdDt: DateTime by Delegates.notNull()
+   @JsonInclude(JsonInclude.Include.NON_EMPTY)
+   class StateObjectWithPartialFieldsInConstructor(val name: String, @JsonProperty("age") val years: Int)    {
+        @JsonProperty("address") lateinit var primaryAddress: String   // set after construction
+        var createdDt: DateTime by Delegates.notNull()                // set after construction
+        var neverSetProperty: String? = null                          // not in JSON so must be nullable with default
     }
 ```
 
-Note that using Delegates.notNull() will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
+Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
 
 # Caveats
 
-* The `JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
+* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
 * Currently we use parameter name information in Kotlin that is compatible with Kotlin M8 through M11
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
  

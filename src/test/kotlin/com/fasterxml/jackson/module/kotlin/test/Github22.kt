@@ -2,13 +2,12 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
-import java.io.File
-import java.io.PrintWriter
 import kotlin.test.assertEquals
 
-class StringValue constructor (s: String) {
+class StringValue constructor(s: String) {
     val other: String = s
 
     @JsonValue override fun toString() = other

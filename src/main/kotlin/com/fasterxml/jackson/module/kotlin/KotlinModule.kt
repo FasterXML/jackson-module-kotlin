@@ -1,7 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
 import java.lang.reflect.Constructor
@@ -17,7 +16,7 @@ fun Class<*>.isKotlinClass(): Boolean {
     return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
 }
 
-public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
         private val serialVersionUID = 1L;
     }
@@ -29,7 +28,7 @@ public class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
             Triple::class.java
     ))
 
-    override public fun setupModule(context: SetupContext) {
+    override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
         fun addMixin(clazz: Class<*>, mixin: Class<*>) {
@@ -56,7 +55,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     */
 
     // since 2.4
-    override public fun findImplicitPropertyName(member: AnnotatedMember): String? {
+    override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
         }
@@ -64,10 +63,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
     }
 
     @Suppress("UNCHECKED_CAST")
-    override public fun hasCreatorAnnotation(member: Annotated): Boolean {
+    override fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
-        if (member is AnnotatedConstructor) {
+        if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
             if (member.getParameterCount() > 0 && member.getDeclaringClass().isKotlinClass()) {
                 val kClass = (member.getDeclaringClass() as Class<Any>).kotlin

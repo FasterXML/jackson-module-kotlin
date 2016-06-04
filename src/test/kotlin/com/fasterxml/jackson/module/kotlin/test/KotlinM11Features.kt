@@ -2,6 +2,8 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.*
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -14,7 +16,7 @@ import kotlin.test.fail
 
 data class DataClassPerson(val name: String, val age: Int)
 
-public class TestM11Changes {
+class TestM11Changes {
     val mapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
@@ -170,13 +172,13 @@ public class TestM11Changes {
         assertThat(personNoAge.name, equalTo("John Smith"))
     }
 
-    JsonInclude(JsonInclude.Include.NON_EMPTY)
-    class Class_WithPartialFieldsInConstructor(val name: String, JsonProperty("age") val years: Int)    {
-        JsonProperty("address") var primaryAddress: String = ""
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    class Class_WithPartialFieldsInConstructor(val name: String, @JsonProperty("age") val years: Int)    {
+        @JsonProperty("address") var primaryAddress: String = ""
         var phone: String by Delegates.notNull()
     }
 
-    Test fun testClass_WithPartialFieldsInConstructor() {
+    @Test fun testClass_WithPartialFieldsInConstructor() {
         val expectedJson = """{"name":"John Smith","age":30,"phone":"1234567890"}"""
         val expectedPerson = Class_WithPartialFieldsInConstructor("John Smith", 30)
         expectedPerson.phone = "1234567890"
