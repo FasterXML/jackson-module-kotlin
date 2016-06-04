@@ -31,6 +31,8 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
+        context.addValueInstantiators(KotlinInstantiators());
+
         fun addMixin(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
             context.setMixInAnnotations(clazz, mixin)

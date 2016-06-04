@@ -137,7 +137,13 @@ class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectAsDataClassConfusingConstructor constructor (@Suppress("UNUSED_PARAMETER") nonField: String?, override val name: String, @Suppress("UNUSED_PARAMETER") yearOfBirth: Int, override val age: Int, override val primaryAddress: String, @JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private class StateObjectAsDataClassConfusingConstructor constructor (@Suppress("UNUSED_PARAMETER") nonField: String?,
+                                                                          override val name: String,
+                                                                          @Suppress("UNUSED_PARAMETER") yearOfBirth: Int,
+                                                                          override val age: Int,
+                                                                          override val primaryAddress: String,
+                                                                          @JsonProperty("renamed") override val wrongName: Boolean,
+                                                                          override val createdDt: DateTime) : TestFields
 
     @Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
