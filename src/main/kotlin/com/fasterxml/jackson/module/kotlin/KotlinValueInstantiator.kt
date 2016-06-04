@@ -25,12 +25,13 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
             is AnnotatedMethod -> (_withArgsCreator.annotated as Method).kotlinFunction
             else -> throw IllegalStateException("Expected a construtor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
+        callable.isAccessible = true
 
         val jsonParmValueList = buffer.getParameters(props) // properties in order, null for missing or actual nulled parameters
 
         // quick short circuit for special handling for no null checks needed and no optional parameters
         if (jsonParmValueList.none { it == null } && callable.parameters.none { it.isOptional }) {
-            return super.createFromObjectWith(ctxt, props, buffer)
+            return super.createFromObjectWith(ctxt, jsonParmValueList)
         }
 
         val callableParametersByName = hashMapOf<KParameter, Any?>()
@@ -38,7 +39,7 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
         callable.parameters.forEachIndexed { idx, paramDef ->
             if (paramDef.kind == KParameter.Kind.INSTANCE || paramDef.kind == KParameter.Kind.EXTENSION_RECEIVER) {
                 // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
-                return super.createFromObjectWith(ctxt, props, buffer)
+                return super.createFromObjectWith(ctxt, jsonParmValueList)
             } else {
                 val jsonProp = props.get(idx)
                 val isMissing = !buffer.hasParameter(jsonProp)
@@ -74,7 +75,7 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
 
         return if (callableParametersByName.size == jsonParmValueList.size) {
             // we didn't do anything special with default parameters, do a normal call
-            super.createFromObjectWith(ctxt, props, buffer)
+            super.createFromObjectWith(ctxt, jsonParmValueList)
         } else {
             callable.isAccessible = true
             callable.callBy(callableParametersByName)
