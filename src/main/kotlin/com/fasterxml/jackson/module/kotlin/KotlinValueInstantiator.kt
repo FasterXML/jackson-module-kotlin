@@ -1,9 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
@@ -11,10 +8,13 @@ import com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.util.ClassUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.javaConstructor
+import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.kotlinFunction
 
 class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(src) {
@@ -25,13 +25,12 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
             is AnnotatedMethod -> (_withArgsCreator.annotated as Method).kotlinFunction
             else -> throw IllegalStateException("Expected a construtor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
-        callable.isAccessible = true
 
         val jsonParmValueList = buffer.getParameters(props) // properties in order, null for missing or actual nulled parameters
 
         // quick short circuit for special handling for no null checks needed and no optional parameters
         if (jsonParmValueList.none { it == null } && callable.parameters.none { it.isOptional }) {
-            return super.createFromObjectWith(ctxt, jsonParmValueList)
+           return super.createFromObjectWith(ctxt, jsonParmValueList)
         }
 
         val callableParametersByName = hashMapOf<KParameter, Any?>()
@@ -72,12 +71,16 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
             }
         }
 
-
         return if (callableParametersByName.size == jsonParmValueList.size) {
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParmValueList)
         } else {
-            callable.isAccessible = true
+            val accessible = callable.isAccessible
+            if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
+                    (accessible && ctxt.config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS))) {
+                callable.isAccessible = true
+            }
+
             callable.callBy(callableParametersByName)
         }
 
