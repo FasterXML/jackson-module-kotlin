@@ -31,10 +31,10 @@
 
     <properties>
         <version.jackson.annotations>2.6.0</version.jackson.annotations>
-        <version.jackson.core>2.6.6</version.jackson.core>
+        <version.jackson.core>2.6.7</version.jackson.core>
 
         <!-- Joda only for testing -->
-        <version.jackson.joda>2.6.6</version.jackson.joda>
+        <version.jackson.joda>2.6.7</version.jackson.joda>
         <version.junit>4.12</version.junit>
         <version.kotlin>1.0.2</version.kotlin>
 
