@@ -4,15 +4,15 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertEquals
 
-public class TestGithub15 {
-    @Test public fun testEnumConstructorWithParm() {
+class TestGithub15 {
+    @Test fun testEnumConstructorWithParm() {
         val one = jacksonObjectMapper().readValue("\"ONE\"", TestEnum::class.java)
         assertEquals(TestEnum.ONE, one)
         val two = jacksonObjectMapper().readValue("\"TWO\"", TestEnum::class.java)
         assertEquals(TestEnum.TWO, two)
     }
 
-    @Test public fun testNormEnumWithoutParam() {
+    @Test fun testNormEnumWithoutParam() {
         val one = jacksonObjectMapper().readValue("\"ONE\"", TestOther::class.java)
         assertEquals(TestOther.ONE, one)
         val two = jacksonObjectMapper().readValue("\"TWO\"", TestOther::class.java)

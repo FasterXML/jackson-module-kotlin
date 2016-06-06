@@ -15,13 +15,12 @@ import org.junit.Test
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
-import kotlin.reflect.jvm.kotlinFunction
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-public class TestJacksonWithKotlin {
+class TestJacksonWithKotlin {
     // testing using custom serializer, JodaDateTime to be sure we don't break working with other modules or complex types
 
     private interface TestFields {
@@ -138,7 +137,13 @@ public class TestJacksonWithKotlin {
 
     // ==================
 
-    private class StateObjectAsDataClassConfusingConstructor constructor (@Suppress("UNUSED_PARAMETER") nonField: String?, override val name: String, @Suppress("UNUSED_PARAMETER") yearOfBirth: Int, override val age: Int, override val primaryAddress: String, @JsonProperty("renamed") override val wrongName: Boolean, override val createdDt: DateTime) : TestFields
+    private class StateObjectAsDataClassConfusingConstructor constructor (@Suppress("UNUSED_PARAMETER") nonField: String?,
+                                                                          override val name: String,
+                                                                          @Suppress("UNUSED_PARAMETER") yearOfBirth: Int,
+                                                                          override val age: Int,
+                                                                          override val primaryAddress: String,
+                                                                          @JsonProperty("renamed") override val wrongName: Boolean,
+                                                                          override val createdDt: DateTime) : TestFields
 
     @Test fun testDataClassWithNonFieldParametersInConstructor() {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
@@ -166,7 +171,7 @@ public class TestJacksonWithKotlin {
     private class StateObjectWithFactory private constructor (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: DateTime) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
-            @JvmStatic public @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
+            @JvmStatic @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: DateTime): StateObjectWithFactory {
                 val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
                 obj.factoryUsed = true
                 return obj
@@ -182,7 +187,7 @@ public class TestJacksonWithKotlin {
 
     private class StateObjectWithFactoryNoParamAnnotations(val name: String, val age: Int, val primaryAddress: String, val renamed: Boolean, val createdDt: DateTime) {
         companion object {
-            @JvmStatic public @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
+            @JvmStatic @JsonCreator fun create(name: String, age: Int, primaryAddress: String, renamed: Boolean, createdDt: DateTime): StateObjectWithFactoryNoParamAnnotations {
                 return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
             }
         }

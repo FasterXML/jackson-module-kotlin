@@ -2,17 +2,16 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Ignore
 import org.junit.Test
 
 
-public class TestIteratorSubclass {
+class TestIteratorSubclass {
     class TinyPerson(val name: String, val age: Int)
     class KotlinPersonIterator(private val personList: List<TinyPerson>) : Iterator<TinyPerson> by personList.iterator() {}
 

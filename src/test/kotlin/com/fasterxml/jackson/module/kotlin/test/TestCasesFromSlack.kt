@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Test
 
-public class TestCasesFromSlack1 {
+class TestCasesFromSlack1 {
     data class Host @JsonCreator constructor(
             @param:JsonProperty("id") @get:JsonProperty("id") val id: String,
             @param:JsonProperty("name") @get:JsonProperty("name") val name: String)
@@ -25,7 +25,7 @@ public class TestCasesFromSlack1 {
         going("rsvp.going"), maybe("rsvp.maybe"), interested("rsvp.interested")
     }
 
-    @Test public fun testCzarSpringThing1() {
+    @Test fun testCzarSpringThing1() {
         val event: Event = ObjectMapper().readValue("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
@@ -36,7 +36,7 @@ public class TestCasesFromSlack1 {
     }
 }
 
-public class TestCasesFromSlack2 {
+class TestCasesFromSlack2 {
     data class Host  constructor(
            val id: String,
            val name: String)
@@ -55,7 +55,7 @@ public class TestCasesFromSlack2 {
         going("rsvp.going"), maybe("rsvp.maybe"), interested("rsvp.interested")
     }
 
-    @Test public fun testCzarSpringThing2() {
+    @Test fun testCzarSpringThing2() {
         val event1: Event = jacksonObjectMapper().readValue("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
