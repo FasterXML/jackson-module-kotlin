@@ -39,4 +39,5 @@ class TestGithub25 {
         assertEquals("3", obj.otherData3)
         assertEquals("exists", obj.somethingNotNull)
     }
+
 }
