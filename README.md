@@ -31,6 +31,10 @@ Maven:
 </dependency>
 ```
 
+# KNOWN PROBLEMS
+
+In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
+
 # Usage
 
 For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
@@ -66,6 +70,9 @@ val state: MyStateObject = mapper.readValue(json)
 // or
 myMemberWithType = mapper.readValue(json)
 ```
+
+With `2.6.3-2` or newer of the module all inferred types for the extension functions carry in full generic information (reified generics).
+Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
 # Annotations
 
