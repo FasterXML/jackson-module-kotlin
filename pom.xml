@@ -30,8 +30,7 @@
     </scm>
 
     <properties>
-        <version.jackson.annotations>2.8.0.rc1</version.jackson.annotations>
-        <version.jackson.core>2.8.0.rc1</version.jackson.core>
+        <version.jackson.core>2.8.0.rc2</version.jackson.core>
 
         <!-- Joda only for testing -->
         <version.jackson.joda>${version.jackson.core}</version.jackson.joda>
@@ -73,7 +72,7 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
-            <version>${version.jackson.annotations}</version>
+            <!-- use version from parent pom -->
         </dependency>
 
         <dependency>
