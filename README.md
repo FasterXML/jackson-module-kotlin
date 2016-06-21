@@ -10,6 +10,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
+* release `2.8.0.rc2` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
 * release `2.7.5` (for Jackson `2.7.x`)
 * release `2.6.7` (for Jackson `2.6.x`)
 * release `2.5.5-2` (for Jackson `2.5.x`)
@@ -27,13 +28,9 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.7.4</version>
+    <version>2.7.5</version>
 </dependency>
 ```
-
-# KNOWN PROBLEMS
-
-In M12+ of Kotlin, keep your constructors simple, if you have default values for parameters then alternatively generated constructors might cause Jackson to not be able to select the correct constructor.  Working on this for later releases.
 
 # Usage
 
@@ -71,7 +68,7 @@ val state: MyStateObject = mapper.readValue(json)
 myMemberWithType = mapper.readValue(json)
 ```
 
-With `2.6.3-2` or newer of the module all inferred types for the extension functions carry in full generic information (reified generics).
+All inferred types for the extension functions carry in full generic information (reified generics).
 Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
 # Annotations
@@ -92,7 +89,6 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 # Caveats
 
 * The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
-* Currently we use parameter name information in Kotlin that is compatible with Kotlin M8 through M11
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
  
 # Support for Kotlin Built-in classes
