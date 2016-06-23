@@ -1,12 +1,14 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Test
 import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 
 class TestGithub25 {
+    @JsonPropertyOrder(alphabetic = true)
     class SomethingWithDelegates(val data: MutableMap<String, String> = hashMapOf()) {
         val name: String by lazy { "fred" }
         @get:JsonIgnore val ignoreMe: String by lazy { "ignored" }
