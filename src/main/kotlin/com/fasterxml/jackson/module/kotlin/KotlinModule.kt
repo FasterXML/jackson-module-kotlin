@@ -18,7 +18,7 @@ fun Class<*>.isKotlinClass(): Boolean {
 
 class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     companion object {
-        private val serialVersionUID = 1L;
+        private val serialVersionUID = 1L
     }
 
     val requireJsonCreatorAnnotation: Boolean = false
@@ -31,7 +31,7 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
-        context.addValueInstantiators(KotlinInstantiators());
+        context.addValueInstantiators(KotlinInstantiators())
 
         fun addMixin(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
