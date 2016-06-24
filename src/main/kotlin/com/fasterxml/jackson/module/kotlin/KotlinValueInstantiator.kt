@@ -1,9 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
@@ -53,7 +50,11 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
                             callableParametersByName.put(paramDef, null)
                         } else {
                             // missing value coming in as null for non-nullable type
-                            throw MissingKotlinParameterException(paramDef, "Instantiation of " + this.getValueTypeDesc() + " value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type")
+                            throw MissingKotlinParameterException(
+                                    parameter = paramDef,
+                                    processor = ctxt.parser,
+                                    msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
+                            ).wrapWithPath(this.valueClass, jsonProp.name)
                         }
                     } else {
                         // default value for datatype for non nullable type, is ok
@@ -62,7 +63,11 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
                 } else {
                     if (paramVal == null && !paramDef.type.isMarkedNullable) {
                         // value coming in as null for non-nullable type
-                        throw MissingKotlinParameterException(paramDef, "Instantiation of " + this.getValueTypeDesc() + " value failed for JSON property ${jsonProp.name} due to NULL value for creator parameter ${paramDef.name} which is a non-nullable type")
+                        throw MissingKotlinParameterException(
+                                parameter = paramDef,
+                                processor = ctxt.parser,
+                                msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to NULL value for creator parameter ${paramDef.name} which is a non-nullable type"
+                        ).wrapWithPath(this.valueClass, jsonProp.name)
                     } else {
                         // value present, and can be set
                         callableParametersByName.put(paramDef, paramVal)
