@@ -18,7 +18,7 @@ private data class WrapperWithDefaultContructor(val person: Person? = null)
 
 private data class Crowd(val people: List<Person>)
 
-class Github32 {
+class TestGithub32 {
 
     @Rule
     @JvmField
