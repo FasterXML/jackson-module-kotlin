@@ -4,6 +4,14 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.8.0 (04-Jul-2016)
+
+#26: Default values for primitive parameters
+#29: Problems deserializing object when default values for constructor parameters are used
+- Update to Kotlin 1.0.2
+- Added checks explicitly for nullable values being used in constructor or creator static methods
+  to not allow NULL values into non-nullable types
+
 2.7.5 (11-Jun-2016)
 2.7.4 (29-Apr-2016)
 2.7.3 (16-Mar-2016)
