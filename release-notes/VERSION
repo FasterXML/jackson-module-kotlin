@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.8.1 (20-Jul-2016)
+
+No changes since 2.8.0.
+
 2.8.0 (04-Jul-2016)
 
 #26: Default values for primitive parameters
