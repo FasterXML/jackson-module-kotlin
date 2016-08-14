@@ -10,8 +10,8 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
-* release `2.8.0.rc2` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
-* release `2.7.5` (for Jackson `2.7.x`)
+* release `2.8.1` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
+* release `2.7.6` (for Jackson `2.7.x`)
 * release `2.6.7` (for Jackson `2.6.x`)
 * release `2.5.5-2` (for Jackson `2.5.x`)
 
@@ -20,7 +20,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.7.5"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.7.6"
 ```
 
 Maven:
@@ -28,7 +28,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.7.5</version>
+    <version>2.7.6</version>
 </dependency>
 ```
 
