@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.cfg.PackageVersion
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
 import java.lang.reflect.Constructor
@@ -45,6 +46,17 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         addMixin(IntRange::class.java, ClosedRangeMixin::class.java)
         addMixin(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixin(LongRange::class.java, ClosedRangeMixin::class.java)
+    }
+
+    fun setNullablePrimitivesDeserializers() {
+        addDeserializer(Double::class.java, NumberDeserializers.DoubleDeserializer(Double::class.java, null))
+        addDeserializer(Float::class.java, NumberDeserializers.FloatDeserializer(Float::class.java, null))
+        addDeserializer(Long::class.java, NumberDeserializers.LongDeserializer(Long::class.java, null))
+        addDeserializer(Int::class.java, NumberDeserializers.IntegerDeserializer(Int::class.java, null))
+        addDeserializer(Short::class.java, NumberDeserializers.ShortDeserializer(Short::class.java, null))
+        addDeserializer(Byte::class.java, NumberDeserializers.ByteDeserializer(Byte::class.java, null))
+
+        addDeserializer(Char::class.java, NumberDeserializers.CharacterDeserializer(Char::class.java, null))
     }
 }
 
