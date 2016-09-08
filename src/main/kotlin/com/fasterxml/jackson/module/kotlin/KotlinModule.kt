@@ -33,7 +33,7 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
 
         context.addValueInstantiators(KotlinInstantiators())
 
-        fun addMixin(clazz: Class<*>, mixin: Class<*>) {
+        fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
             context.setMixInAnnotations(clazz, mixin)
         }
@@ -41,9 +41,10 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
 
         // ranges
-        addMixin(IntRange::class.java, ClosedRangeMixin::class.java)
-        addMixin(CharRange::class.java, ClosedRangeMixin::class.java)
-        addMixin(LongRange::class.java, ClosedRangeMixin::class.java)
+        addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)
+        addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
+        addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
+        addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
     }
 }
 
