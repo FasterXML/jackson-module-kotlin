@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -18,7 +18,15 @@ class TestGithub15 {
         val two = jacksonObjectMapper().readValue("\"TWO\"", TestOther::class.java)
         assertEquals(TestOther.TWO, two)
     }
+
+    @Test fun testClassWithEnumsNeedingConstruction() {
+        val obj: UsingEnum = jacksonObjectMapper().readValue("""{"x":"ONE","y":"TWO"}""")
+        assertEquals(TestEnum.ONE, obj.x)
+        assertEquals(TestOther.TWO, obj.y)
+    }
 }
+
+private class UsingEnum(val x: TestEnum, val y: TestOther)
 
 private enum class TestEnum(val i: Int) {
     ONE(1),
