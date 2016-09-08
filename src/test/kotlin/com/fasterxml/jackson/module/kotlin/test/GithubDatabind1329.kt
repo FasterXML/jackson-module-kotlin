@@ -9,38 +9,10 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-data class Invite(
-        val kind: InviteKind,
-        // workaround for https://github.com/FasterXML/jackson-databind/issues/999 (should be fixed in 2.8.x)
-        val kindForMapper: String? = null,
-        @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "kindForMapper", visible = false)
-        @JsonSubTypes(
-                JsonSubTypes.Type(InviteToContact::class),
-                JsonSubTypes.Type(InviteToUser::class)
-        )
-        val to: InviteTo
-)
-
-interface InviteTo
-
-@JsonTypeName("CONTACT")
-data class InviteToContact(
-        val name: String? = null
-): InviteTo
-
-@JsonTypeName("USER")
-data class InviteToUser(
-        val user: String
-): InviteTo
-
-enum class InviteKind {
-    CONTACT,
-    USER
-}
 
 class GithubDatabind1329 {
     @Test
-    @Ignore("Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module")
+  //  @Ignore("Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module")
     fun testPolymorphicWithEnum() {
         val mapper = jacksonObjectMapper()
         val invite = mapper.readValue<Invite>(
@@ -57,5 +29,34 @@ class GithubDatabind1329 {
         assertNull(invite.kindForMapper)
         assertEquals("Foo", (invite.to as InviteToContact).name)
 
+    }
+
+    data class Invite(
+            val kind: InviteKind,
+            // workaround for https://github.com/FasterXML/jackson-databind/issues/999 (should be fixed in 2.8.x)
+            val kindForMapper: String? = null,
+            @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXTERNAL_PROPERTY, property = "kindForMapper", visible = false)
+            @JsonSubTypes(
+                    JsonSubTypes.Type(InviteToContact::class),
+                    JsonSubTypes.Type(InviteToUser::class)
+            )
+            val to: InviteTo
+    )
+
+    interface InviteTo
+
+    @JsonTypeName("CONTACT")
+    data class InviteToContact(
+            val name: String? = null
+    ): InviteTo
+
+    @JsonTypeName("USER")
+    data class InviteToUser(
+            val user: String
+    ): InviteTo
+
+    enum class InviteKind {
+        CONTACT,
+        USER
     }
 }
