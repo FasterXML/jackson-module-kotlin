@@ -3,10 +3,11 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import java.util.HashSet
+import java.util.*
 import kotlin.reflect.*
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -16,7 +17,7 @@ fun Class<*>.isKotlinClass(): Boolean {
     return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
 }
 
-class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVersion.VERSION) {
     companion object {
         private val serialVersionUID = 1L
     }
@@ -31,14 +32,16 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
-        context.addValueInstantiators(KotlinInstantiators())
+        val cache = ReflectionCache(reflectionCacheSize)
+
+        context.addValueInstantiators(KotlinInstantiators(cache))
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
             context.setMixInAnnotations(clazz, mixin)
         }
 
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this))
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         // ranges
         addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)
@@ -48,8 +51,19 @@ class KotlinModule() : SimpleModule(PackageVersion.VERSION) {
     }
 }
 
+internal class ReflectionCache(reflectionCacheSize: Int) {
+    private val javaClassToKotlin = LRUMap<Class<Any>, KClass<Any>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
 
-internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : NopAnnotationIntrospector() {
+    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key) ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key) ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key) ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
+    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key) ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
+}
+
+internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) : NopAnnotationIntrospector() {
     /*
     override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
         // This should not do introspection here, only for explicit naming by annotations
@@ -72,41 +86,45 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
         if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
             if (member.getParameterCount() > 0 && member.getDeclaringClass().isKotlinClass()) {
-                val kClass = (member.getDeclaringClass() as Class<Any>).kotlin
-                val kConstructor = (member.getAnnotated() as Constructor<Any>).kotlinFunction
+                return cache.checkConstructorIsCreatorAnnotated(member) {
+                    val kClass = cache.kotlinFromJava(member.getDeclaringClass() as Class<Any>)
+                    val kConstructor = cache.kotlinFromJava(member.getAnnotated() as Constructor<Any>)
 
-                if (kConstructor != null) {
-                    val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
-                            (kClass.primaryConstructor == null && kClass.constructors.size == 1)
-                    val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java } } // member.getDeclaringClass().getConstructors().any { it.getAnnotation() != null }
+                    if (kConstructor != null) {
+                        val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
+                                (kClass.primaryConstructor == null && kClass.constructors.size == 1)
+                        val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java } }
 
-                    val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions?.any {
-                        it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
-                                it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                    } ?: false
-                    val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods.any {
-                        val isStatic = Modifier.isStatic(it.modifiers)
-                        val isCreator = it.declaredAnnotations.any { it.annotationClass.java == JsonCreator::class.java }
-                        isStatic && isCreator
+                        val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions?.any {
+                            it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
+                                    it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
+                        } ?: false
+                        val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods.any {
+                            val isStatic = Modifier.isStatic(it.modifiers)
+                            val isCreator = it.declaredAnnotations.any { it.annotationClass.java == JsonCreator::class.java }
+                            isStatic && isCreator
+                        }
+
+                        // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
+                        // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
+                        // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
+
+                        val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
+
+                        val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
+                                kConstructor.parameters[0].type == String::class.defaultType &&
+                                kClass.declaredMemberProperties.none {
+                                    it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
+                                }
+                        val implyCreatorAnnotation = isPrimaryConstructor
+                                && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator)
+                                && areAllParametersValid
+                                && !isSingleStringConstructor
+
+                        implyCreatorAnnotation
+                    } else {
+                        false
                     }
-
-                    // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
-                    // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
-                    // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
-
-                    val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
-
-                    val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
-                                                    kConstructor.parameters[0].type == String::class.defaultType &&
-                                                    kClass.declaredMemberProperties.none {
-                                                        it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
-                                                    }
-                    val implyCreatorAnnotation = isPrimaryConstructor
-                            && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator)
-                            && areAllParametersValid
-                            && !isSingleStringConstructor
-
-                    return implyCreatorAnnotation
                 }
             }
         }
@@ -135,12 +153,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule) : Nop
                     val parmCount = temp?.parameters?.size ?: 0
                     if (parmCount > idx) {
                         temp?.parameters?.get(idx)?.name
-                    }
-                    else {
+                    } else {
                         null
                     }
-                }
-                catch (ex: KotlinReflectionInternalError) {
+                } catch (ex: KotlinReflectionInternalError) {
                     null
                 }
             } else {

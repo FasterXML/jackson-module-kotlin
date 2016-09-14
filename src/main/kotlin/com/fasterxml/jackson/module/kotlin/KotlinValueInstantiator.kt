@@ -14,13 +14,13 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.kotlinFunction
 
-class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(src) {
+internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
     override fun createFromObjectWith(ctxt: DeserializationContext, props: Array<out SettableBeanProperty>, buffer: PropertyValueBuffer): Any? {
         val callable = when (_withArgsCreator) {
-            is AnnotatedConstructor -> (_withArgsCreator.annotated as Constructor<Any>).kotlinFunction
-            is AnnotatedMethod -> (_withArgsCreator.annotated as Method).kotlinFunction
-            else -> throw IllegalStateException("Expected a construtor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
+            is AnnotatedConstructor -> cache.kotlinFromJava(_withArgsCreator.annotated as Constructor<Any>)
+            is AnnotatedMethod -> cache.kotlinFromJava(_withArgsCreator.annotated as Method)
+            else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
 
         val jsonParmValueList = buffer.getParameters(props) // properties in order, null for missing or actual nulled parameters
@@ -97,11 +97,11 @@ class KotlinValueInstantiator(src: StdValueInstantiator) : StdValueInstantiator(
 
 }
 
-class KotlinInstantiators : ValueInstantiators {
+internal class KotlinInstantiators(private val cache: ReflectionCache) : ValueInstantiators {
     override fun findValueInstantiator(deserConfig: DeserializationConfig, beanDescriptor: BeanDescription, defaultInstantiator: ValueInstantiator): ValueInstantiator {
         return if (beanDescriptor.beanClass.isKotlinClass()) {
             if (defaultInstantiator is StdValueInstantiator) {
-                KotlinValueInstantiator(defaultInstantiator)
+                KotlinValueInstantiator(defaultInstantiator, cache)
             } else {
                 // TODO: return defaultInstantiator and let default method parameters and nullability go unused?  or die with exception:
                 throw IllegalStateException("KotlinValueInstantiator requires that the default ValueInstantiator is StdValueInstantiator")
