@@ -18,6 +18,9 @@ No changes since 2.8.0.
 - Added checks explicitly for nullable values being used in constructor or creator static methods
   to not allow NULL values into non-nullable types
 
+2.7.8 (26-Sep-2016)
+2.7.7 (27-Aug-2016)
+2.7.6 (23-Jul-2016)
 2.7.5 (11-Jun-2016)
 2.7.4 (29-Apr-2016)
 2.7.3 (16-Mar-2016)
