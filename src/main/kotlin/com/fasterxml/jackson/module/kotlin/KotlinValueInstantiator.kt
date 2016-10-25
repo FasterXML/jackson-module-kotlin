@@ -22,15 +22,14 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
             else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
 
-        if (callable.parameters.any { it.kind == KParameter.Kind.INSTANCE || it.kind == KParameter.Kind.EXTENSION_RECEIVER }) {
-            // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
-            return super.createFromObjectWith(ctxt, props, buffer)
-        }
-
         val callableParametersByName = hashMapOf<KParameter, Any?>()
         val jsonParamValueList = kotlin.arrayOfNulls<Any>(props.size)
 
         callable.parameters.forEachIndexed { idx, paramDef ->
+            if (paramDef.kind == KParameter.Kind.INSTANCE || paramDef.kind == KParameter.Kind.EXTENSION_RECEIVER) {
+                // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
+                return super.createFromObjectWith(ctxt, jsonParamValueList)
+            }
             val jsonProp = props.get(idx)
             val isMissing = !buffer.hasParameter(jsonProp)
 
