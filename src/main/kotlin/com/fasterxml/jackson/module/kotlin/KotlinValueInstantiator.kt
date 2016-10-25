@@ -28,7 +28,7 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
         callable.parameters.forEachIndexed { idx, paramDef ->
             if (paramDef.kind == KParameter.Kind.INSTANCE || paramDef.kind == KParameter.Kind.EXTENSION_RECEIVER) {
                 // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
-                return super.createFromObjectWith(ctxt, jsonParamValueList)
+                return super.createFromObjectWith(ctxt, props, buffer)
             }
             val jsonProp = props.get(idx)
             val isMissing = !buffer.hasParameter(jsonProp)
