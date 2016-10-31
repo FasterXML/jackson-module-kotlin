@@ -2,12 +2,10 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.reflect.primaryConstructor
 import kotlin.test.assertEquals
 
-@Ignore("need fix in https://github.com/FasterXML/jackson-databind/issues/1432")
 class Github46 {
     @Test fun `map 32 properties`() {
         // given
@@ -26,8 +24,8 @@ class Github46 {
 
     @Test fun byReflectionDo32() {
         val constructor = TestData::class.primaryConstructor!!
-        val data = TestData::class.primaryConstructor!!.callBy(
-                TestData::class.primaryConstructor!!.parameters.map {
+        val data = constructor.callBy(
+                constructor.parameters.map {
                     it to true
                 }.toMap()
         )
