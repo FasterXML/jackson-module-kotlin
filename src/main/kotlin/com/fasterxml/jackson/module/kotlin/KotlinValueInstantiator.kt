@@ -12,7 +12,6 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
-import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
@@ -23,62 +22,37 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
             else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
 
-        val jsonParmValueList = buffer.getParameters(props) // properties in order, null for missing or actual nulled parameters
-
-        // quick short circuit for special handling for no null checks needed and no optional parameters
-        if (jsonParmValueList.none { it == null } && callable.parameters.none { it.isOptional }) {
-           return super.createFromObjectWith(ctxt, jsonParmValueList)
-        }
-
         val callableParametersByName = hashMapOf<KParameter, Any?>()
+        val jsonParamValueList = kotlin.arrayOfNulls<Any>(props.size)
 
         callable.parameters.forEachIndexed { idx, paramDef ->
             if (paramDef.kind == KParameter.Kind.INSTANCE || paramDef.kind == KParameter.Kind.EXTENSION_RECEIVER) {
                 // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
-                return super.createFromObjectWith(ctxt, jsonParmValueList)
-            } else {
-                val jsonProp = props.get(idx)
-                val isMissing = !buffer.hasParameter(jsonProp)
-                val paramVal = jsonParmValueList.get(idx)
-
-                if (isMissing) {
-                    if (paramDef.isOptional) {
-                        // this is ok, optional parameter not resolved will have default parameter value of method
-                    } else if (paramVal == null) {
-                        if (paramDef.type.isMarkedNullable) {
-                            // null value for nullable type, is ok
-                            callableParametersByName.put(paramDef, null)
-                        } else {
-                            // missing value coming in as null for non-nullable type
-                            throw MissingKotlinParameterException(
-                                    parameter = paramDef,
-                                    processor = ctxt.parser,
-                                    msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
-                            ).wrapWithPath(this.valueClass, jsonProp.name)
-                        }
-                    } else {
-                        // default value for datatype for non nullable type, is ok
-                        callableParametersByName.put(paramDef, paramVal)
-                    }
-                } else {
-                    if (paramVal == null && !paramDef.type.isMarkedNullable) {
-                        // value coming in as null for non-nullable type
-                        throw MissingKotlinParameterException(
-                                parameter = paramDef,
-                                processor = ctxt.parser,
-                                msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to NULL value for creator parameter ${paramDef.name} which is a non-nullable type"
-                        ).wrapWithPath(this.valueClass, jsonProp.name)
-                    } else {
-                        // value present, and can be set
-                        callableParametersByName.put(paramDef, paramVal)
-                    }
-                }
+                return super.createFromObjectWith(ctxt, props, buffer)
             }
+            val jsonProp = props.get(idx)
+            val isMissing = !buffer.hasParameter(jsonProp)
+
+            if (isMissing && paramDef.isOptional) {
+                return@forEachIndexed
+            }
+
+            val paramVal = buffer.getParameter(jsonProp)
+            jsonParamValueList[idx] = paramVal
+
+            if (paramVal == null && !paramDef.type.isMarkedNullable) {
+                throw MissingKotlinParameterException(
+                        parameter = paramDef,
+                        processor = ctxt.parser,
+                        msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
+                ).wrapWithPath(this.valueClass, jsonProp.name)
+            }
+            callableParametersByName.put(paramDef, paramVal)
         }
 
-        return if (callableParametersByName.size == jsonParmValueList.size) {
+        return if (callableParametersByName.size == jsonParamValueList.size) {
             // we didn't do anything special with default parameters, do a normal call
-            super.createFromObjectWith(ctxt, jsonParmValueList)
+            super.createFromObjectWith(ctxt, jsonParamValueList)
         } else {
             val accessible = callable.isAccessible
             if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
