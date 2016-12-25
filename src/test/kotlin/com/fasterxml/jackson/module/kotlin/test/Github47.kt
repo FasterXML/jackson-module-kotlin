@@ -6,7 +6,6 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
-@Ignore("Waiting for fix to https://github.com/FasterXML/jackson-databind/issues/1438")
 class Github47 {
 
     class ConfigItem(val configItemId: String)
