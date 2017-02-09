@@ -33,7 +33,7 @@
         <version.jackson.core>2.8.6</version.jackson.core>
 
         <version.junit>4.12</version.junit>
-        <version.kotlin>1.0.5</version.kotlin>
+        <version.kotlin>1.0.6</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -44,16 +44,11 @@
         <!-- Configuration properties for the OSGi maven-bundle-plugin -->
         <osgi.includeResource>src/main/resources/, META-INF=target/classes/META-INF</osgi.includeResource>
         <osgi.import>
-            com.fasterxml.jackson.core
-            ,com.fasterxml.jackson.core.util
-            ,com.fasterxml.jackson.databind
-            ,com.fasterxml.jackson.databind.introspect
-            ,com.fasterxml.jackson.databind.module
-            ,com.fasterxml.jackson.annotation
-            ,jet.runtime.typeinfo
+            com.fasterxml.jackson.*
             ,kotlin
-            ,kotlin.jvm.internal
-            ,kotlin.reflect.jvm.internal
+            ,kotlin.*
+            ,kotlin.reflect
+            ,kotlin.reflect.*
         </osgi.import>
         <osgi.export>${project.groupId}.kotlin.*;version=${project.version}
         </osgi.export>
