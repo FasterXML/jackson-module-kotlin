@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.0.4-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.0.6-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://kotlinslackin.herokuapp.com)
 
 # Overview
 
@@ -10,17 +10,18 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central:
 
-* release `2.8.4` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
+* release `2.8.6` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
 * release `2.7.8` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 * release `2.6.7` (for Jackson `2.6.x`) lacking in some new features from 2.8 branch
 * release `2.5.5-2` (for Jackson `2.5.x`) lacking in some new features from 2.8 branch
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
+Special note for Kotlin 1.1 EAP, you must include `kotlin-reflect` dependency in your project directly with a matching Kotlin version or you will encounter random errors.
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.4"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.6"
 ```
 
 Maven:
@@ -28,7 +29,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.8.4</version>
+    <version>2.8.6</version>
 </dependency>
 ```
 
