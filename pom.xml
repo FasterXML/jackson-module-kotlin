@@ -33,7 +33,7 @@
         <version.jackson.core>2.9.0-SNAPSHOT</version.jackson.core>
 
         <version.junit>4.12</version.junit>
-        <version.kotlin>1.0.6</version.kotlin>
+        <version.kotlin>1.1.0</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
