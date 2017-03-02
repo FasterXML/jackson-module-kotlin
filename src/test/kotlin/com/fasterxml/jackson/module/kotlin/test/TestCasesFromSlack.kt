@@ -26,11 +26,11 @@ class TestCasesFromSlack1 {
     }
 
     @Test fun testCzarSpringThing1() {
-        val event: Event = ObjectMapper().readValue("""
+        ObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
 
-        val event2: Event = jacksonObjectMapper().readValue("""
+        jacksonObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
     }
@@ -56,7 +56,7 @@ class TestCasesFromSlack2 {
     }
 
     @Test fun testCzarSpringThing2() {
-        val event1: Event = jacksonObjectMapper().readValue("""
+        jacksonObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
     }

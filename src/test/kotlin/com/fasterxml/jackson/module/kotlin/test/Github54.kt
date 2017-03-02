@@ -20,7 +20,7 @@ class Github54 {
         entity1.entity2 = entity2
 
         val json = mapper.writeValueAsString(entity1)
-        val result = mapper.readValue<Entity1>(json)
+        mapper.readValue<Entity1>(json)
     }
 }
 

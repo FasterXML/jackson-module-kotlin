@@ -8,7 +8,11 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.util.*
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
+import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.kotlinFunction
 
 private val metadataFqName = "kotlin.Metadata"
@@ -112,7 +116,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                         val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
 
                         val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
-                                kConstructor.parameters[0].type == String::class.defaultType &&
+                                kConstructor.parameters[0].type == String::class.createType() &&
                                 kClass.declaredMemberProperties.none {
                                     it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
                                 }
