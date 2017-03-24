@@ -142,7 +142,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
                 val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = ctor.kotlinFunction?.parameters?.size ?: 0
+                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 } catch (ex: KotlinReflectionInternalError) { 0 }
                 if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
                     ctor.kotlinFunction?.parameters?.get(param.index)?.name
                 } else {
