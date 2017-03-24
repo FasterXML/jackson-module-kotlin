@@ -32,7 +32,6 @@ class FailOnNullForPrimitivesTests {
 
     @Test fun `Exception thrown if required primitive parameter not in json when FAIL_ON_NULL_FOR_PRIMITIVES is true`() {
         thrown.expect(JsonMappingException::class.java)
-        thrown.expectMessage("Can not map JSON null into type boolean")
 
         mapper.readValue<OptionalIntRequiredBoolean>("""
         {"optInt": 2}
