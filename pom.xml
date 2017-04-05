@@ -30,7 +30,7 @@
     </scm>
 
     <properties>
-        <version.jackson.core>2.8.7</version.jackson.core>
+        <version.jackson.core>2.8.8</version.jackson.core>
 
         <version.junit>4.12</version.junit>
         <version.kotlin>1.1.1</version.kotlin>
