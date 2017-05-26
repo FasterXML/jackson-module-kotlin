@@ -43,9 +43,7 @@
         <osgi.includeResource>src/main/resources/, META-INF=target/classes/META-INF</osgi.includeResource>
         <osgi.import>
             com.fasterxml.jackson.*
-            ,kotlin
             ,kotlin.*
-            ,kotlin.reflect
             ,kotlin.reflect.*
         </osgi.import>
         <osgi.export>${project.groupId}.kotlin.*;version=${project.version}
