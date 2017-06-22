@@ -45,6 +45,7 @@ class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVer
             context.setMixInAnnotations(clazz, mixin)
         }
 
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector())
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         // ranges
