@@ -107,8 +107,8 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             else -> false
         }
 
-        return context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES) &&
-                !isPrimitive && !paramType.isMarkedNullable && !param.isOptional
+        return !paramType.isMarkedNullable && !param.isOptional &&
+                !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
 
     private fun KType.isRequired(): Boolean = !isMarkedNullable
