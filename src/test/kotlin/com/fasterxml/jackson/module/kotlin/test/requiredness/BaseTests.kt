@@ -1,18 +1,21 @@
-package com.fasterxml.jackson.module.kotlin.test
+package com.fasterxml.jackson.module.kotlin.test.requiredness
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class RequirednessTest {
+class BaseTests {
 
-    private val normalCasedMapper = jacksonObjectMapper()
-            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            .configure(SerializationFeature.INDENT_OUTPUT, false)
+    private val primitivesDefaultsMapper = jacksonObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+
+    private val noPrimitiveDefaultsMapper = jacksonObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
 
     // ==================
 
@@ -24,10 +27,20 @@ class RequirednessTest {
     @Test fun inferIsRequiredFlagBasingOnPropertyNullity() {
         val testClass = SimpleDataClass::class.java
 
-        "nonNullableField".isRequiredForSerializationOf(testClass)
-        "nonNullableField".isRequiredForDeserializationOf(testClass)
-        "nullableField".isOptionalForDeserializationOf(testClass)
-        "nullableField".isOptionalForSerializationOf(testClass)
+//        "nonNullableField".isRequiredForSerializationOf(testClass, primitivesDefaultsMapper)
+        "nonNullableField".isOptionalForDeserializationOf(testClass, primitivesDefaultsMapper)
+
+//        "nullableField".isOptionalForDeserializationOf(testClass, primitivesDefaultsMapper)
+//        "nullableField".isOptionalForSerializationOf(testClass, primitivesDefaultsMapper)
+    }
+
+    @Test fun inferIsRequiredFlagBasingOnPropertyNullityDisallowPrimitivesDefaults() {
+        val testClass = SimpleDataClass::class.java
+
+        "nonNullableField".isRequiredForSerializationOf(testClass, noPrimitiveDefaultsMapper)
+        "nonNullableField".isRequiredForDeserializationOf(testClass, noPrimitiveDefaultsMapper)
+        "nullableField".isOptionalForDeserializationOf(testClass, noPrimitiveDefaultsMapper)
+        "nullableField".isOptionalForSerializationOf(testClass, noPrimitiveDefaultsMapper)
     }
 
     // ==================
@@ -138,35 +151,62 @@ class RequirednessTest {
 
     // ==================
 
-    private fun String.isRequiredForSerializationOf(type: Class<*>): Unit {
+    private data class T(val abc: Int=0)
+
+    private data class ClassWithPrimitivesWithDefaults(val i: Int = 5, val x: Int, val t: T, val k: Int? = 3)
+
+    @Test fun XYZshouldInferRequirednessOfClassWithPrimitivesWithDefaults() {
+        val testClass = ClassWithPrimitivesWithDefaults::class.java
+        "i".isOptionalForDeserializationOf(testClass)
+        "x".isRequiredForDeserializationOf(testClass)
+        "k".isOptionalForDeserializationOf(testClass)
+        "i".isRequiredForSerializationOf(testClass)
+        "x".isRequiredForSerializationOf(testClass)
+        "k".isOptionalForSerializationOf(testClass)
+    }
+
+    @Test fun SshouldInferRequirednessOfClassWithPrimitivesWithDefaults() {
+        val testClass = ClassWithPrimitivesWithDefaults::class.java
+        "t".isRequiredForDeserializationOf(testClass)
+    }
+
+    @Test fun DEshouldInferRequirednessOfClassWithPrimitivesWithDefaults() {
+        val testClass = ClassWithPrimitivesWithDefaults::class.java
+        "t".isRequiredForSerializationOf(testClass)
+    }
+    // ==================
+
+
+
+    private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper = noPrimitiveDefaultsMapper): Unit {
         assertTrue("Property $this should be required for serialization!"){
-            introspectSerialization(type).isRequired(this)
+            introspectSerialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isRequiredForDeserializationOf(type: Class<*>): Unit {
+    private fun String.isRequiredForDeserializationOf(type: Class<*>, mapper: ObjectMapper = noPrimitiveDefaultsMapper): Unit {
         assertTrue("Property $this should be required for deserialization!"){
-            introspectDeserialization(type).isRequired(this)
+            introspectDeserialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isOptionalForSerializationOf(type: Class<*>): Unit {
+    private fun String.isOptionalForSerializationOf(type: Class<*>, mapper: ObjectMapper = noPrimitiveDefaultsMapper): Unit {
         assertFalse("Property $this should be optional for serialization!"){
-            introspectSerialization(type).isRequired(this)
+            introspectSerialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isOptionalForDeserializationOf(type: Class<*>): Unit {
+    private fun String.isOptionalForDeserializationOf(type: Class<*>, mapper: ObjectMapper = noPrimitiveDefaultsMapper): Unit {
         assertFalse("Property $this should be optional for deserialization of ${type.simpleName}!"){
-            introspectDeserialization(type).isRequired(this)
+            introspectDeserialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun introspectSerialization(type: Class<*>): BeanDescription =
-            normalCasedMapper.serializationConfig.introspect(normalCasedMapper.serializationConfig.constructType(type))
+    private fun introspectSerialization(type: Class<*>, mapper: ObjectMapper): BeanDescription =
+            mapper.serializationConfig.introspect(mapper.serializationConfig.constructType(type))
 
-    private fun introspectDeserialization(type: Class<*>): BeanDescription =
-            normalCasedMapper.deserializationConfig.introspect(normalCasedMapper.deserializationConfig.constructType(type))
+    private fun introspectDeserialization(type: Class<*>, mapper: ObjectMapper): BeanDescription =
+            mapper.deserializationConfig.introspect(mapper.deserializationConfig.constructType(type))
 
     private fun BeanDescription.isRequired(propertyName: String): Boolean =
             this.findProperties().find { it.name == propertyName }!!.isRequired

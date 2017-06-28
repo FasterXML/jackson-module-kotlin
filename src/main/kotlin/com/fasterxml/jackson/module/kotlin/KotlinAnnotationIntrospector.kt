@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.introspect.AnnotatedField
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
@@ -16,11 +18,14 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaMethod
 import kotlin.reflect.jvm.javaSetter
+import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
 
 
-internal class KotlinAnnotationIntrospector : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext) : NopAnnotationIntrospector() {
+
+
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
             if (m.member.declaringClass.isKotlinClass()) {
                 when (m) {
@@ -93,7 +98,18 @@ internal class KotlinAnnotationIntrospector : NopAnnotationIntrospector() {
         }
     }
 
-    private fun KFunction<*>.isParameterRequired(index: Int): Boolean = parameters[index].type.isRequired()
+    private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
+        val param = parameters[index]
+        val paramType = param.type
+        val javaType = paramType.javaType
+        val isPrimitive = when (javaType) {
+            is Class<*> -> javaType.isPrimitive
+            else -> false
+        }
+
+        return context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES) &&
+                !isPrimitive && !paramType.isMarkedNullable && !param.isOptional
+    }
 
     private fun KType.isRequired(): Boolean = !isMarkedNullable
 
