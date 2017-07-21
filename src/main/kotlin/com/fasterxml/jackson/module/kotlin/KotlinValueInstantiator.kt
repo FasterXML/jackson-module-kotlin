@@ -1,6 +1,9 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.BeanDescription
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
@@ -12,6 +15,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.javaType
 
 internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
@@ -37,7 +41,12 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
                 return@forEachIndexed
             }
 
-            val paramVal = buffer.getParameter(jsonProp)
+            val paramVal = if (buffer.hasParameter(jsonProp) || paramDef.isPrimitive()) {
+                buffer.getParameter(jsonProp)
+            } else {
+                null
+            }
+
             jsonParamValueList[idx] = paramVal
 
             if (paramVal == null && !paramDef.type.isMarkedNullable) {
@@ -69,6 +78,13 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
         return super.createFromObjectWith(ctxt, args)
     }
 
+    private fun KParameter.isPrimitive(): Boolean {
+        val javaType = type.javaType
+        return when (javaType) {
+            is Class<*> -> javaType.isPrimitive
+            else -> false
+        }
+    }
 }
 
 internal class KotlinInstantiators(private val cache: ReflectionCache) : ValueInstantiators {
