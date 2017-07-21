@@ -12,7 +12,7 @@ Releases are available on Maven Central:
 
 * future releases `2.9.x` are for Kotlin `1.1.+` only.  All previous releases will also work for `1.1.+` if you include `kotlin-reflect` dependency at same version level.
 
-* release `2.8.7` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
+* release `2.8.9` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
 * release `2.7.9` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 * release `2.6.7` (for Jackson `2.6.x`) lacking in some new features from 2.8 branch
 * release `2.5.5-2` (for Jackson `2.5.x`) lacking in some new features from 2.8 branch
