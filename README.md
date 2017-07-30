@@ -23,7 +23,7 @@ Special note for Kotlin 1.1.0, you must include `kotlin-reflect` dependency in y
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.8.7"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
 ```
 
 Maven:
@@ -31,7 +31,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.8.7</version>
+    <version>2.9.0</version>
 </dependency>
 ```
 
