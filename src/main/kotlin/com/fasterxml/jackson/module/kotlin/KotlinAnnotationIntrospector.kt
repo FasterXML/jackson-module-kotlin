@@ -22,9 +22,7 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
 
-
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext) : NopAnnotationIntrospector() {
-
 
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
             if (m.member.declaringClass.isKotlinClass()) {
