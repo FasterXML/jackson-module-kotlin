@@ -30,8 +30,8 @@ fun Class<*>.isKotlinClass(): Boolean {
 }
 
 class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVersion.VERSION) {
-    companion object {
-        private val serialVersionUID = 1L
+    private companion object {
+        const val serialVersionUID = 1L
     }
 
     val requireJsonCreatorAnnotation: Boolean = false
