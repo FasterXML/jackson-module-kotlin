@@ -58,34 +58,17 @@ class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVer
 
 internal class ReflectionCache(reflectionCacheSize: Int) {
     private val javaClassToKotlin = LRUMap<Class<Any>, KClass<Any>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize,
-                                                                                   reflectionCacheSize)
+    private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize,
-                                                                                          reflectionCacheSize)
+    private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
 
-    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key) ?: key.kotlin.let {
-        javaClassToKotlin.putIfAbsent(key,
-                                      it) ?: it
-    }
-
-    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key) ?: key.kotlinFunction?.let {
-        javaConstructorToKotlin.putIfAbsent(key,
-                                            it) ?: it
-    }
-
-    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key) ?: key.kotlinFunction?.let {
-        javaMethodToKotlin.putIfAbsent(key,
-                                       it) ?: it
-    }
-
-    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor,
-                                           calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(
-            key) ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key) ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key) ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key) ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
+    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key) ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
 }
 
-internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) :
-        NopAnnotationIntrospector() {
+internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) : NopAnnotationIntrospector() {
     /*
     override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
         // This should not do introspection here, only for explicit naming by annotations
@@ -160,11 +143,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
                 val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = try {
-                    ctor.kotlinFunction?.parameters?.size ?: 0
-                } catch (ex: KotlinReflectionInternalError) {
-                    0
-                }
+                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 } catch (ex: KotlinReflectionInternalError) { 0 }
                 if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
                     ctor.kotlinFunction?.parameters?.get(param.index)?.name
                 } else {
