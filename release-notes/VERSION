@@ -14,6 +14,11 @@ Project: jackson-module-kotlin
 
 (please fill me)
 
+2.8.11 (24-Dec-2017)
+
+Update Kotlin dep to 1.1.61
+
+2.8.10 (24-Aug-2017)
 2.8.9 (12-Jun-2017)
 2.8.8 (05-Apr-2017)
 2.8.7 (21-Feb-2017)
