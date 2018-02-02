@@ -30,7 +30,7 @@ fun Class<*>.isKotlinClass(): Boolean {
 }
 
 class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVersion.VERSION) {
-    private companion object {
+    companion object {
         const val serialVersionUID = 1L
     }
 
