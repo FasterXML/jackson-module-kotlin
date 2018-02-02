@@ -1,6 +1,9 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.BeanDescription
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
@@ -12,6 +15,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
+import kotlin.reflect.jvm.javaType
 
 internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
@@ -22,22 +26,28 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
             else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
         } ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
 
-        val callableParametersByName = hashMapOf<KParameter, Any?>()
-        val jsonParamValueList = kotlin.arrayOfNulls<Any>(props.size)
+        var numCallableParameters = 0
+        val callableParameters = arrayOfNulls<KParameter>(props.size)
+        val jsonParamValueList = arrayOfNulls<Any>(props.size)
 
         callable.parameters.forEachIndexed { idx, paramDef ->
             if (paramDef.kind == KParameter.Kind.INSTANCE || paramDef.kind == KParameter.Kind.EXTENSION_RECEIVER) {
                 // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
                 return super.createFromObjectWith(ctxt, props, buffer)
             }
-            val jsonProp = props.get(idx)
+            val jsonProp = props[idx]
             val isMissing = !buffer.hasParameter(jsonProp)
 
             if (isMissing && paramDef.isOptional) {
                 return@forEachIndexed
             }
 
-            val paramVal = buffer.getParameter(jsonProp)
+            val paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
+                buffer.getParameter(jsonProp)
+            } else {
+                null
+            }
+
             jsonParamValueList[idx] = paramVal
 
             if (paramVal == null && !paramDef.type.isMarkedNullable) {
@@ -47,10 +57,12 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
                         msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
                 ).wrapWithPath(this.valueClass, jsonProp.name)
             }
-            callableParametersByName.put(paramDef, paramVal)
+
+            numCallableParameters++
+            callableParameters[idx] = paramDef
         }
 
-        return if (callableParametersByName.size == jsonParamValueList.size) {
+        return if (numCallableParameters == jsonParamValueList.size) {
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParamValueList)
         } else {
@@ -59,7 +71,12 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
                     (accessible && ctxt.config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS))) {
                 callable.isAccessible = true
             }
-
+            val callableParametersByName = linkedMapOf<KParameter, Any?>()
+            callableParameters.mapIndexed { idx, paramDef ->
+                if (paramDef != null) {
+                    callableParametersByName[paramDef] = jsonParamValueList[idx]
+                }
+            }
             callable.callBy(callableParametersByName)
         }
 
@@ -69,6 +86,15 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
         return super.createFromObjectWith(ctxt, args)
     }
 
+    private fun KParameter.isPrimitive(): Boolean {
+        val javaType = type.javaType
+        return when (javaType) {
+            is Class<*> -> javaType.isPrimitive
+            else -> false
+        }
+    }
+
+    private fun SettableBeanProperty.hasInjectableValueId(): Boolean = injectableValueId != null
 }
 
 internal class KotlinInstantiators(private val cache: ReflectionCache) : ValueInstantiators {

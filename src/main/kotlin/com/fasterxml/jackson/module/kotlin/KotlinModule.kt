@@ -1,7 +1,11 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
@@ -11,8 +15,11 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
-import kotlin.reflect.full.*
-
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.declaredFunctions
+import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -24,7 +31,7 @@ fun Class<*>.isKotlinClass(): Boolean {
 
 class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVersion.VERSION) {
     companion object {
-        private val serialVersionUID = 1L
+        const val serialVersionUID = 1L
     }
 
     val requireJsonCreatorAnnotation: Boolean = false
@@ -46,6 +53,7 @@ class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVer
             context.setMixInAnnotations(clazz, mixin)
         }
 
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         // ranges
@@ -117,7 +125,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                         val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
 
                         val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
-                                kConstructor.parameters[0].type == String::class.defaultType &&
+                                kConstructor.parameters[0].type == String::class.createType() &&
                                 kClass.declaredMemberProperties.none {
                                     it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
                                 }

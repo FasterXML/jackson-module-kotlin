@@ -17,6 +17,6 @@ class TestHiddenKotlinThings {
     }
 
     @Test fun testSyntheticGeneratedConstructorIsIgnored() {
-        val thing: Something = ObjectMapper().readValue("""{"name":"fred","age":99}""")
+        ObjectMapper().readValue<Something>("""{"name":"fred","age":99}""")
     }
 }

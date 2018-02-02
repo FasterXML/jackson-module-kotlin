@@ -1,11 +1,11 @@
 language: java
 
+# No more JDK 7 builds
 jdk:
-  - oraclejdk7
   - oraclejdk8
 
 # whitelist
 branches:
   only:
     - master
-    - "2.7"
+    - "2.8"

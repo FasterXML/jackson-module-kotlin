@@ -33,7 +33,7 @@
         <version.jackson.core>2.8.11</version.jackson.core>
 
         <version.junit>4.12</version.junit>
-        <version.kotlin>1.1.61</version.kotlin>
+        <version.kotlin>1.2.21</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -45,9 +45,7 @@
         <osgi.includeResource>src/main/resources/, META-INF=target/classes/META-INF</osgi.includeResource>
         <osgi.import>
             com.fasterxml.jackson.*
-            ,kotlin
             ,kotlin.*
-            ,kotlin.reflect
             ,kotlin.reflect.*
         </osgi.import>
         <osgi.export>${project.groupId}.kotlin.*;version=${project.version}
