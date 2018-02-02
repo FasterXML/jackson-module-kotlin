@@ -1,9 +1,10 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
 import org.junit.Test
-import kotlin.reflect.primaryConstructor
+import kotlin.reflect.full.primaryConstructor
 import kotlin.test.assertEquals
 
 class Github46 {
