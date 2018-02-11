@@ -27,16 +27,16 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
 
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
-            if (m.member.declaringClass.isKotlinClass()) {
-                when (m) {
-                    is AnnotatedField     -> m.hasRequiredMarker()
-                    is AnnotatedMethod    -> m.hasRequiredMarker()
-                    is AnnotatedParameter -> m.hasRequiredMarker()
-                    else                  -> null
-                }
-            } else {
-                null
+        when {
+            m.hasAnnotation(InjectsDefaultValue::class.java) -> false
+            m.member.declaringClass.isKotlinClass() -> when (m) {
+                is AnnotatedField     -> m.hasRequiredMarker()
+                is AnnotatedMethod    -> m.hasRequiredMarker()
+                is AnnotatedParameter -> m.hasRequiredMarker()
+                else                  -> null
             }
+            else -> null
+        }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? =
             (member as Field).kotlinProperty?.returnType?.isRequired()
