@@ -12,10 +12,9 @@ Releases are available on Maven Central:
 
 * future releases `2.9.x` are for Kotlin `1.1.+` only.  All previous releases will also work for `1.1.+` if you include `kotlin-reflect` dependency at same version level.
 
-* release `2.8.9` (for Jackson `2.8.x`) now supports using default values in constructor and creator methods
-* release `2.7.9` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
-* release `2.6.7` (for Jackson `2.6.x`) lacking in some new features from 2.8 branch
-* release `2.5.5-2` (for Jackson `2.5.x`) lacking in some new features from 2.8 branch
+* release `2.9.4.1` (for Jackson `2.9.x`)
+* release `2.8.11.1` (for Jackson `2.8.x`) 
+* release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
@@ -23,7 +22,7 @@ Special note for Kotlin 1.1.0, you must include `kotlin-reflect` dependency in y
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.0"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
 ```
 
 Maven:
@@ -31,7 +30,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.9.0</version>
+    <version>2.9.4.1</version>
 </dependency>
 ```
 
