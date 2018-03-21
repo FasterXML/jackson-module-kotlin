@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -141,6 +143,39 @@ class PropertyRequirednessTests {
 
         "h".isOptionalForSerializationOf(testClass, mapper)
         "h".isOptionalForDeserializationOf(testClass, mapper)
+    }
+
+    private data class Github114TestObjA(val id: String, val prop: String) {
+        companion object {
+            @JsonCreator
+            @JvmStatic
+            fun parse(@JsonProperty("id") id: String,
+                      @JsonProperty("name") name: String?) = Github114TestObjA(id, name ?: "yes")
+        }
+    }
+
+    private data class Github114TestObjB(val id: String, val prop: String) {
+        @JsonCreator constructor(
+                @JsonProperty("id") id: String,
+                @JsonProperty("name") name: String?,
+                @JsonProperty("nameFallBack") nameFallBack: String) : this(id, name ?: nameFallBack)
+    }
+
+    @Test fun shouldHandleJsonCreatorAnnotationsOnCompanionObjectMethodCorrectly() {
+        val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+        val testClassA = Github114TestObjA::class.java
+
+        "id".isRequiredForDeserializationOf(testClassA, mapper)
+        "name".isOptionalForDeserializationOf(testClassA, mapper)
+    }
+
+    @Test fun shouldHandleJsonCreatorAnnotationsOnSecondaryConstructorCorrectly() {
+        val mapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
+        val testClassB = Github114TestObjB::class.java
+
+        "id".isRequiredForDeserializationOf(testClassB, mapper)
+        "name".isOptionalForDeserializationOf(testClassB, mapper)
+        "nameFallBack".isRequiredForDeserializationOf(testClassB, mapper)
     }
 
     private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper): Unit {

@@ -22,10 +22,7 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
 
-
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext) : NopAnnotationIntrospector() {
-
-
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
             if (m.member.declaringClass.isKotlinClass()) {
                 when (m) {
@@ -92,11 +89,17 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
         return when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isParameterRequired(index)
+            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
+            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
             else              -> null
         }
     }
+
+    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean =
+            this.isParameterRequired(index)
+
+    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean =
+            this.isParameterRequired(index + 1) // Skip the companion object passed as the first param
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
         val param = parameters[index]
