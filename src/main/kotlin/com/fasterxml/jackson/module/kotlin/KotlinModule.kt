@@ -29,7 +29,7 @@ fun Class<*>.isKotlinClass(): Boolean {
     return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
 }
 
-class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
     companion object {
         const val serialVersionUID = 1L
     }
@@ -46,14 +46,14 @@ class KotlinModule(val reflectionCacheSize: Int = 512) : SimpleModule(PackageVer
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             impliedClasses.add(clazz)
             context.setMixInAnnotations(clazz, mixin)
         }
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, nullToEmptyCollection, nullToEmptyMap))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         // ranges

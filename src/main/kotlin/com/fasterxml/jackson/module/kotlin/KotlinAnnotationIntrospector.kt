@@ -23,20 +23,21 @@ import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
 
 
-internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext) : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : NopAnnotationIntrospector() {
 
 
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
-            if (m.member.declaringClass.isKotlinClass()) {
-                when (m) {
-                    is AnnotatedField     -> m.hasRequiredMarker()
-                    is AnnotatedMethod    -> m.hasRequiredMarker()
-                    is AnnotatedParameter -> m.hasRequiredMarker()
-                    else                  -> null
-                }
-            } else {
-                null
+        when {
+            nullToEmptyCollection && m.type.isCollectionLikeType -> false
+            nullToEmptyMap && m.type.isMapLikeType -> false
+            m.member.declaringClass.isKotlinClass() -> when (m) {
+                is AnnotatedField -> m.hasRequiredMarker()
+                is AnnotatedMethod -> m.hasRequiredMarker()
+                is AnnotatedParameter -> m.hasRequiredMarker()
+                else -> null
             }
+            else -> null
+        }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? =
             (member as Field).kotlinProperty?.returnType?.isRequired()

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
+import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider
 import com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
@@ -17,7 +18,7 @@ import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
-internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache) : StdValueInstantiator(src) {
+internal class KotlinValueInstantiator(src: StdValueInstantiator, private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
     override fun createFromObjectWith(ctxt: DeserializationContext, props: Array<out SettableBeanProperty>, buffer: PropertyValueBuffer): Any? {
         val callable = when (_withArgsCreator) {
@@ -42,10 +43,14 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
                 return@forEachIndexed
             }
 
-            val paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
+            var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
                 buffer.getParameter(jsonProp)
             } else {
                 null
+            }
+
+            if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
+                paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
             }
 
             jsonParamValueList[idx] = paramVal
@@ -97,11 +102,11 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
     private fun SettableBeanProperty.hasInjectableValueId(): Boolean = injectableValueId != null
 }
 
-internal class KotlinInstantiators(private val cache: ReflectionCache) : ValueInstantiators {
+internal class KotlinInstantiators(private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : ValueInstantiators {
     override fun findValueInstantiator(deserConfig: DeserializationConfig, beanDescriptor: BeanDescription, defaultInstantiator: ValueInstantiator): ValueInstantiator {
         return if (beanDescriptor.beanClass.isKotlinClass()) {
             if (defaultInstantiator is StdValueInstantiator) {
-                KotlinValueInstantiator(defaultInstantiator, cache)
+                KotlinValueInstantiator(defaultInstantiator, cache, nullToEmptyCollection, nullToEmptyMap)
             } else {
                 // TODO: return defaultInstantiator and let default method parameters and nullability go unused?  or die with exception:
                 throw IllegalStateException("KotlinValueInstantiator requires that the default ValueInstantiator is StdValueInstantiator")
