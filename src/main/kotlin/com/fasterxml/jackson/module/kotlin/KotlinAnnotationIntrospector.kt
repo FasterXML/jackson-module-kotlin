@@ -12,6 +12,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -48,7 +49,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
         val paramSetter = this.getCorrespondingSetter()
         if (paramSetter != null) {
-            return paramSetter.isParameterRequired(1) // 0 is the target object
+            return paramSetter.isParameterRequired(0)
         }
 
         // Is the member method a regular method of the data class or
@@ -59,7 +60,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
 
             if (method.isSetterLike()) {
-                return method.isParameterRequired(1)
+                return method.isParameterRequired(0)
             }
         }
 
@@ -89,20 +90,16 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
         return when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
+            is Constructor<*> -> member.kotlinFunction?.isParameterRequired(index)
+            is Method         -> member.kotlinFunction?.isParameterRequired(index)
             else              -> null
         }
     }
 
-    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean =
-            this.isParameterRequired(index)
-
-    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean =
-            this.isParameterRequired(index + 1) // Skip the companion object passed as the first param
-
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
-        val param = parameters[index]
+        // Skip the 'this' instance.
+        val paramsContainThisInstance = parameters.isNotEmpty() && parameters[0].kind == KParameter.Kind.INSTANCE
+        val param = parameters[index + if (paramsContainThisInstance) 1 else 0]
         val paramType = param.type
         val javaType = paramType.javaType
         val isPrimitive = when (javaType) {
