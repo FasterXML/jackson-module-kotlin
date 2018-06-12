@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.9.6 (12-Jun-2018)
+
+No direct changes since 2.9.5 -- but `jackson-databind` has tons!
+
 2.9.5 (26-Mar-2018)
 
 - Kotlin 1.2(.21)!
