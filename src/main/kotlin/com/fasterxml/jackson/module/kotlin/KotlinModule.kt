@@ -103,14 +103,16 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                         val propertyNames = kClass.declaredMemberProperties.map { it.name }.toSet()
 
+                        fun KFunction<*>.isPossibleSingleString(): Boolean {
+                           val result = parameters.size == 1 &&
+                                    parameters[0].name !in propertyNames &&
+                                    parameters[0].type.javaType == String::class.java &&
+                                    parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java }
+                            return result
+                        }
+
                         fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                            return this.filter {
-                                it.parameters.size > 1 ||
-                                        !(it.parameters.size == 1 &&
-                                                it.parameters[0].name !in propertyNames &&
-                                                it.parameters[0].type.javaType == String::class.java &&
-                                                it.parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java })
-                            }
+                            return this.filter {  !it.isPossibleSingleString() }
                         }
 
                         val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
@@ -129,11 +131,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                         val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
 
-                        val isSingleStringConstructor = kConstructor.parameters.size == 1 &&
-                                kConstructor.parameters[0].type == String::class.createType() &&
-                                kClass.declaredMemberProperties.none {
-                                    it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
-                                }
+                        val isSingleStringConstructor = kConstructor.isPossibleSingleString()
+
                         val implyCreatorAnnotation = isPrimaryConstructor
                                 && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
                                 && areAllParametersValid
