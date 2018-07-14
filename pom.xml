@@ -79,6 +79,11 @@
             <version>${version.kotlin}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <!-- only for testing... -->
         <dependency>
