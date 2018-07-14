@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
@@ -15,12 +16,9 @@ import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
+import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 private val metadataFqName = "kotlin.Metadata"
@@ -102,17 +100,37 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                     if (kConstructor != null) {
                         val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
                                 (kClass.primaryConstructor == null && kClass.constructors.size == 1)
-                        val anyConstructorHasJsonCreator = kClass.constructors.any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java } }
 
-                        val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions?.any {
+                        val propertyNames = kClass.declaredMemberProperties.map { it.name }.toSet()
+
+                        fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
+                            return this.filter {
+                                it.parameters.size > 1 ||
+                                        !(it.parameters.size == 1 &&
+                                                it.parameters[0].name !in propertyNames &&
+                                                it.parameters[0].type.javaType == String::class.java &&
+                                                it.parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java })
+                            }
+                        }
+
+                        val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
+                            .any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
+                        }
+
+                        val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
+                            ?.filterOutSingleStringCallables()?.any {
                             it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
                                     it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                         } ?: false
-                        val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods.any {
-                            val isStatic = Modifier.isStatic(it.modifiers)
-                            val isCreator = it.declaredAnnotations.any { it.annotationClass.java == JsonCreator::class.java }
-                            isStatic && isCreator
-                        }
+
+                        val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods
+                            .filter {   Modifier.isStatic(it.modifiers) }
+                            .map { it.kotlinFunction }
+                            .filterNotNull()
+                            .filterOutSingleStringCallables()
+                            .any {
+                                it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
+                            }
 
                         // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
                         // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
