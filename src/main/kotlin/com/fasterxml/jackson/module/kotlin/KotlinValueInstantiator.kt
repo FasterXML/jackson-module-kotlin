@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
+import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
@@ -56,7 +57,10 @@ internal class KotlinValueInstantiator(src: StdValueInstantiator, private val ca
 
             jsonParamValueList[idx] = paramVal
 
-            if (paramVal == null && !paramDef.type.isMarkedNullable) {
+            // Github #163 a generic type parameter has no Kotlin type information to be sure
+            // about nullability.
+            val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
+            if (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable) {
                 throw MissingKotlinParameterException(
                         parameter = paramDef,
                         processor = ctxt.parser,

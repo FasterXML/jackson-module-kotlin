@@ -54,4 +54,27 @@ class TestJacksonWithKotlinBuiltins {
         val stateObj = mapper.readValue<ClassWithRanges>(json)
         assertThat(stateObj, equalTo(expected))
     }
+
+    private data class ClassWithPairMixedNullableTypes(val person: Pair<String?, Int?>)
+
+    @Test fun testPairMixedNullableTypes() {
+        val json = """{"person":{"first":"John","second":null}}"""
+        val expected = ClassWithPairMixedNullableTypes(Pair("John", null))
+
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
+        val stateObj = mapper.readValue<ClassWithPairMixedNullableTypes>(json)
+        assertThat(stateObj, equalTo(expected))
+    }
+
+    private data class GenericParametersClass<A, B: Any>(val one: A, val two: B)
+    private data class GenericParameterConsumer(val thing: GenericParametersClass<String?, Int>)
+
+    @Test fun testGenericParametersInConstructor() {
+        val json = """{"thing":{"one":null,"two":123}}"""
+        val expected = GenericParameterConsumer(GenericParametersClass(null, 123))
+
+        assertThat(mapper.writeValueAsString(expected), equalTo(json))
+        val stateObj = mapper.readValue<GenericParameterConsumer>(json)
+        assertThat(stateObj, equalTo(expected))
+    }
 }
