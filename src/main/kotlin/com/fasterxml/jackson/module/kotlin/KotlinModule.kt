@@ -123,15 +123,6 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                                     it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                         } ?: false
 
-                        val anyStaticMethodIsJsonCreator = member.type.rawClass.declaredMethods
-                            .filter {   Modifier.isStatic(it.modifiers) }
-                            .map { it.kotlinFunction }
-                            .filterNotNull()
-                            .filterOutSingleStringCallables()
-                            .any {
-                                it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                            }
-
                         // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
                         // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
                         // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
@@ -144,7 +135,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                                     it.name == kConstructor.parameters[0].name && it.returnType == kConstructor.parameters[0].type
                                 }
                         val implyCreatorAnnotation = isPrimaryConstructor
-                                && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator || anyStaticMethodIsJsonCreator)
+                                && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
                                 && areAllParametersValid
                                 && !isSingleStringConstructor
 
