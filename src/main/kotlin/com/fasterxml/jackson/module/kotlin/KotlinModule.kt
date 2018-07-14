@@ -33,13 +33,6 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         const val serialVersionUID = 1L
     }
 
-    val requireJsonCreatorAnnotation: Boolean = false
-
-    val impliedClasses = hashSetOf<Class<*>>(
-            Pair::class.java,
-            Triple::class.java
-    )
-
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
@@ -48,7 +41,6 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
-            impliedClasses.add(clazz)
             context.setMixInAnnotations(clazz, mixin)
         }
 
