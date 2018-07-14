@@ -11,6 +11,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 import kotlin.properties.Delegates
+import kotlin.test.assertNull
 import kotlin.test.fail
 
 
@@ -200,5 +201,10 @@ class TestM11Changes {
             fail("While person can be deserialized without a phone, phone must be set before attempting to access it")
         } catch(e: IllegalStateException) { // expected
         }
+    }
+
+    @Test fun testNullableType() {
+        val newPerson = mapper.readValue<Class_WithPartialFieldsInConstructor?>("null")
+        assertNull(newPerson)
     }
 }
