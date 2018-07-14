@@ -56,4 +56,31 @@ class TestGithub149 {
         val mFromJson = mapper.readValue(f1AsJson, Foo::class.java)
         println(mFromJson)
     }
+
+    data class Car(
+        val id: Long,
+
+        @JsonManagedReference
+        val colors: MutableList<Color> = mutableListOf()
+
+    )
+
+    data class Color (
+        val id: Long,
+        val code: String) {
+
+        @JsonBackReference
+        lateinit var car: Car
+    }
+
+    @Test
+    fun testGithub129(){
+        val mapper = jacksonObjectMapper()
+        val c = Car(id=100)
+        val color = Color(id=100, code = "#FFFFF").apply { car = c }
+        c.colors.add(color)
+        val s = mapper.writeValueAsString(c)
+        val value = mapper.readValue(s, Car::class.java)
+        print(value)
+    }
 }
