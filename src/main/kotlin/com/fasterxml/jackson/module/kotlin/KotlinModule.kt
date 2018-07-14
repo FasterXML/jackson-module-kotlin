@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
@@ -35,6 +36,10 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
 
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
+
+        if (!context.isEnabled(MapperFeature.USE_ANNOTATIONS)) {
+            throw IllegalStateException("The Jackson Kotlin module requires USE_ANNOTATIONS to be true or it cannot function")
+        }
 
         val cache = ReflectionCache(reflectionCacheSize)
 
