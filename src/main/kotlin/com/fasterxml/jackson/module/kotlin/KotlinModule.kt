@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -26,7 +25,7 @@ import kotlin.reflect.jvm.kotlinFunction
 private val metadataFqName = "kotlin.Metadata"
 
 fun Class<*>.isKotlinClass(): Boolean {
-    return this.declaredAnnotations.singleOrNull { it.annotationClass.java.name == metadataFqName } != null
+    return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
 class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
@@ -36,10 +35,10 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
 
     val requireJsonCreatorAnnotation: Boolean = false
 
-    val impliedClasses = HashSet<Class<*>>(setOf(
+    val impliedClasses = hashSetOf<Class<*>>(
             Pair::class.java,
             Triple::class.java
-    ))
+    )
 
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
