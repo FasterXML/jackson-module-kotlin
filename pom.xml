@@ -31,7 +31,7 @@
 
     <properties>
         <version.junit>4.12</version.junit>
-        <version.kotlin>1.2.21</version.kotlin>
+        <version.kotlin>1.2.41</version.kotlin>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
