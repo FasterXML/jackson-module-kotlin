@@ -44,6 +44,35 @@ class TestGithub145 {
         @JsonCreator constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
     }
 
+    class PersonGood6 private constructor(val preName:String, val lastName:String)
+    {
+        private constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
+
+        companion object {
+            @JsonCreator @JvmStatic fun createFromJson(preNameAndLastName: String): PersonGood6
+            {
+                return PersonGood6(preNameAndLastName)
+            }
+
+            @JsonCreator  @JvmStatic fun createFromData(preName: String, lastName: String): PersonGood6 {
+                return PersonGood6(preName, lastName)
+            }
+        }
+    }
+
+
+    class PersonGood7 constructor(val preName:String, val lastName:String)
+    {
+        private constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
+
+        companion object {
+            @JsonCreator @JvmStatic fun createFromJson(preNameAndLastName: String): PersonGood7
+            {
+                return PersonGood7(preNameAndLastName)
+            }
+        }
+    }
+
 
     @Test
     fun workingTestWithoutKotlinModule()
@@ -54,7 +83,7 @@ class TestGithub145 {
     }
 
     @Test
-    fun notWorkingTestWithKotlinModule()
+    fun testOtherVariationsOfSingleAndDataConstructors()
     {
         val objectMapper = jacksonObjectMapper()
 
@@ -72,6 +101,12 @@ class TestGithub145 {
 
         val personGood5String = objectMapper.readValue<PersonGood5>(""""TestPreName,TestLastname"""")
         val personGood5Json = objectMapper.readValue<PersonGood5>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+
+        val personGood6String = objectMapper.readValue<PersonGood6>(""""TestPreName,TestLastname"""")
+        val personGood6Json = objectMapper.readValue<PersonGood6>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+
+        val personGood7String = objectMapper.readValue<PersonGood7>(""""TestPreName,TestLastname"""")
+        val personGood7Json = objectMapper.readValue<PersonGood7>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
 
     }
 }
