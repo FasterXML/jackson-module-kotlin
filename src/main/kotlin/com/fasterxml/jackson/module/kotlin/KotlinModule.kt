@@ -101,7 +101,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                         val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
                                 (kClass.primaryConstructor == null && kClass.constructors.size == 1)
 
-                        val propertyNames = kClass.declaredMemberProperties.map { it.name }.toSet()
+                        val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
                         fun KFunction<*>.isPossibleSingleString(): Boolean {
                            val result = parameters.size == 1 &&
