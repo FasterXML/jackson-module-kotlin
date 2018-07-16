@@ -10,7 +10,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 Releases are available on Maven Central and these releases are compatible with Kotlin 1.2.x:
 
-* release `2.9.4.1` (for Jackson `2.9.x`)
+* release `2.9.6` (for Jackson `2.9.x`)
 * release `2.8.11.1` (for Jackson `2.8.x`) 
 * release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 
