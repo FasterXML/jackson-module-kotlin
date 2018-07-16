@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
@@ -34,20 +35,24 @@ class TestGithub27 {
 
     @Test fun testListOfNullableInt() {
         val json = """{"samples":[1, null]}"""
-        val stateObj = mapper.readValue<ClassWithListOfInt>(json)
+        val stateObj = mapper.readValue<ClassWithListOfNullableInt>(json)
         assertThat(stateObj.samples, equalTo(listOf(1, null)))
     }
 
     private data class ClassWithListOfInt(val samples: List<Int>)
 
-    @Ignore("Would be hard to look into generics of every possible type of collection or generic object to check nullability of each item, maybe only possible for simple known collections")
-    @Test fun testListOfInt() {
+    @Test(expected = MissingKotlinParameterException::class)
+    fun testListOfInt() {
         val json = """{"samples":[1, null]}"""
-        val stateObj = mapper.readValue<ClassWithListOfInt>(json)
-        assertTrue(stateObj.samples.none {
-            @Suppress("SENSELESS_COMPARISON")
-            (it == null)
-        })
+        mapper.readValue<ClassWithListOfInt>(json)
+    }
+
+    private data class TestClass<T>(val samples: T)
+
+    @Test fun testListOfGeneric() {
+        val json = """{"samples":[1, 2]}"""
+        val stateObj = mapper.readValue<TestClass<List<Int>>>(json)
+        assertThat(stateObj.samples, equalTo(listOf(1, 2)))
     }
 
     // work around to above
