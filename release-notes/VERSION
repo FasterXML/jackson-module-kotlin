@@ -4,6 +4,16 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+FUTURE RELEASE (changes pending as of July 16, 2016)
+
+- Kotlin 1.2.51
+- no longer fail on types that do not have nullability information (i.e. generic type parameters as property types)
+- Fixes #162 where in future Jackson the Kotlin module will fail to register if data binding is misconfigured
+- Fixes #145 and #131 with better single string constructor detection
+- Fixes #137 allowing nullable types for `ObjectMapper` extension functions such as `readValue`
+- `JsonCreator` methods in companion objects can now use default parameter values
+- Fixes #167 where local types made from SAM interfaces would previously throw an `UnsupportedOperationException`
+
 2.9.6 (12-Jun-2018)
 
 No direct changes since 2.9.5 -- but `jackson-databind` has tons!
