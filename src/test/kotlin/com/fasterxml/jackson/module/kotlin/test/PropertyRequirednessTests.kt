@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -82,7 +83,8 @@ class PropertyRequirednessTests {
             val e: TestParamClass,
             val f: TestParamClass?,
             val g: TestParamClass = TestParamClass(),
-            val h: TestParamClass? = TestParamClass()
+            val h: TestParamClass? = TestParamClass(),
+            @JsonProperty("x", required = true) val x: Int?
     )
 
     @Test fun shouldHandleFalseFailOnNullForPrimitivesForDataClasses() {
@@ -112,6 +114,9 @@ class PropertyRequirednessTests {
 
         "h".isOptionalForSerializationOf(testClass, mapper)
         "h".isOptionalForDeserializationOf(testClass, mapper)
+
+        "x".isRequiredForDeserializationOf(testClass, mapper)
+        "x".isOptionalForSerializationOf(testClass, mapper)
     }
 
     @Test fun shouldHandleTrueFailOnNullForPrimitivesForDataClasses() {
@@ -141,6 +146,9 @@ class PropertyRequirednessTests {
 
         "h".isOptionalForSerializationOf(testClass, mapper)
         "h".isOptionalForDeserializationOf(testClass, mapper)
+
+        "x".isRequiredForDeserializationOf(testClass, mapper)
+        "x".isOptionalForSerializationOf(testClass, mapper)
     }
 
     private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper): Unit {

@@ -100,10 +100,10 @@ internal class KotlinValueInstantiator(
                 paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
             }
 
-            // Github #163 a generic type parameter has no Kotlin type information to be sure
-            // about nullability.
             val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
-            if (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable) {
+            val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
+            if (isMissingAndRequired ||
+                (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable)) {
                 throw MissingKotlinParameterException(
                     parameter = paramDef,
                     processor = ctxt.parser,

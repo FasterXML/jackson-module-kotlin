@@ -13,6 +13,7 @@ FUTURE RELEASE (changes pending as of July 16, 2016)
 - Fixes #137 allowing nullable types for `ObjectMapper` extension functions such as `readValue`
 - `JsonCreator` methods in companion objects can now use default parameter values
 - Fixes #167 where local types made from SAM interfaces would previously throw an `UnsupportedOperationException`
+- Fixes #168 where `JsonProperty(required=true)` was being ignored and overridden by nullability check
 
 2.9.6 (12-Jun-2018)
 

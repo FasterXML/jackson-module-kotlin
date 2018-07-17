@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.introspect.AnnotatedField
@@ -16,11 +17,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.jvm.javaMethod
-import kotlin.reflect.jvm.javaSetter
-import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
-import kotlin.reflect.jvm.kotlinProperty
+import kotlin.reflect.jvm.*
 
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext, private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : NopAnnotationIntrospector() {
@@ -44,31 +41,50 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
         }
 
-    private fun AnnotatedField.hasRequiredMarker(): Boolean? =
-            (member as Field).kotlinProperty?.returnType?.isRequired()
+    private fun AnnotatedField.hasRequiredMarker(): Boolean? {
+        val byAnnotation = (member as Field).getAnnotationsByType(JsonProperty::class.java).firstOrNull()?.required
+        val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
+
+        return requiredAnnotationOrNullability(byAnnotation, byNullability)
+    }
+
+    private fun requiredAnnotationOrNullability(byAnnotation: Boolean?, byNullability: Boolean?): Boolean? {
+        if (byAnnotation != null && byNullability != null) {
+            return byAnnotation || byNullability
+        } else if (byNullability != null) {
+            return byNullability
+        }
+        return byAnnotation
+    }
+
+    private fun Method.isRequiredByAnnotation(): Boolean? =
+        getAnnotationsByType(JsonProperty::class.java)?.firstOrNull()?.required
 
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? {
         // This could be a setter or a getter of a class property or
         // a setter-like/getter-like method.
         val paramGetter = this.getCorrespondingGetter()
         if (paramGetter != null) {
-            return paramGetter.returnType.isRequired()
+            val byAnnotation = paramGetter.javaGetter?.isRequiredByAnnotation()
+            return requiredAnnotationOrNullability(byAnnotation, paramGetter.returnType.isRequired())
         }
 
         val paramSetter = this.getCorrespondingSetter()
         if (paramSetter != null) {
-            return paramSetter.isParameterRequired(1) // 0 is the target object
+            val byAnnotation = paramSetter.javaMethod?.isRequiredByAnnotation()
+            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isParameterRequired(1)) // 0 is the target object
         }
 
         // Is the member method a regular method of the data class or
         val method = this.member.kotlinFunction
         if (method != null) {
+            val byAnnotation = method.javaMethod?.isRequiredByAnnotation()
             if (method.isGetterLike()) {
-                return method.returnType.isRequired()
+                return requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
             }
 
             if (method.isSetterLike()) {
-                return method.isParameterRequired(1)
+                return requiredAnnotationOrNullability(byAnnotation, method.isParameterRequired(1))
             }
         }
 
@@ -97,11 +113,15 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
-        return when (member) {
+        val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
+
+        val byNullability = when (member) {
             is Constructor<*> -> member.kotlinFunction?.isParameterRequired(index)
             is Method         -> member.kotlinFunction?.isParameterRequired(index)
             else              -> null
         }
+
+        return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
