@@ -17,13 +17,14 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.jvm.*
 
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext, private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : NopAnnotationIntrospector() {
 
-    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
-        cache.javaMemberIsRequired(m) {
+    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? {
+        return cache.javaMemberIsRequired(m) {
             try {
                 when {
                     nullToEmptyCollection && m.type.isCollectionLikeType -> false
@@ -40,6 +41,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                 null
             }
         }
+    }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val byAnnotation = (member as Field).getAnnotationsByType(JsonProperty::class.java).firstOrNull()?.required
@@ -72,7 +74,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         val paramSetter = this.getCorrespondingSetter()
         if (paramSetter != null) {
             val byAnnotation = paramSetter.javaMethod?.isRequiredByAnnotation()
-            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isParameterRequired(1)) // 0 is the target object
+            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isConstructorParameterRequired(1)) // 0 is the target object
         }
 
         // Is the member method a regular method of the data class or
@@ -84,7 +86,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
 
             if (method.isSetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.isParameterRequired(1))
+                return requiredAnnotationOrNullability(byAnnotation, method.isConstructorParameterRequired(1))
             }
         }
 
@@ -114,17 +116,36 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
-
         val byNullability = when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isParameterRequired(index)
+            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
+            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
             else              -> null
         }
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
 
-    private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
+    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
+        // First parameter in this case is the instance of the function.
+        // We want to adjust our index to handle this case.
+        val adjustedIndex = if (parameters[0] == instanceParameter) {
+            index+1
+        } else {
+            index
+        }
+        val param = parameters[adjustedIndex]
+        val paramType = param.type
+        val javaType = paramType.javaType
+        val isPrimitive = when (javaType) {
+            is Class<*> -> javaType.isPrimitive
+            else -> false
+        }
+
+        return !paramType.isMarkedNullable && !param.isOptional &&
+                !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
+    }
+
+    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
         val param = parameters[index]
         val paramType = param.type
         val javaType = paramType.javaType
