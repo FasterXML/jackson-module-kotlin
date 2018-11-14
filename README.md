@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.2.x-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.x-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
 
 # Overview
 
@@ -8,9 +8,9 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
 
-Releases are available on Maven Central and these releases are compatible with Kotlin 1.2.x:
+2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.
 
-* release `2.9.6` (for Jackson `2.9.x`)
+* release `2.9.7` (for Jackson `2.9.x`)
 * release `2.8.11.1` (for Jackson `2.8.x`) 
 * release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 

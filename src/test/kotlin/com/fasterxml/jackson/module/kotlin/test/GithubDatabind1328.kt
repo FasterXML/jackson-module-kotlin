@@ -12,7 +12,6 @@ import kotlin.test.assertNull
 
 class GithubDatabind1328 {
     @Test
-    @Ignore("Appears to be a bug in databind and not Kotlin module, this is here for tracking")
     fun testPolymorphicWithEnum() {
         val mapper = jacksonObjectMapper()
         val invite = mapper.readValue<Invite>(
