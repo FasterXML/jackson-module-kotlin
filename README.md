@@ -8,7 +8,8 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 
 [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
 
-2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.
+2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
+current Kotlin if you also ensure the `kotlin-reflect` depedency is included with the same version number as stdlib.
 
 * release `2.9.7` (for Jackson `2.9.x`)
 * release `2.8.11.1` (for Jackson `2.8.x`) 
@@ -26,7 +27,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.9.4.1</version>
+    <version>2.9.7</version>
 </dependency>
 ```
 
