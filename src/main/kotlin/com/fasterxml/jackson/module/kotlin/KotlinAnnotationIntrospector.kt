@@ -57,8 +57,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return byAnnotation
     }
 
-    private fun Method.isRequiredByAnnotation(): Boolean? =
-        getAnnotationsByType(JsonProperty::class.java)?.firstOrNull()?.required
+    private fun Method.isRequiredByAnnotation(): Boolean? = annotations
+        ?.firstOrNull { it.annotationClass == JsonProperty::class }
+        ?.let { it as JsonProperty }
+        ?.required
 
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? {
         // This could be a setter or a getter of a class property or
