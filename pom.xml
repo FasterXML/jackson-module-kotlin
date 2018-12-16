@@ -10,7 +10,7 @@
     <name>jackson-module-kotlin</name>
     <version>3.0.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>Add-on module for Jackson (http://jackson.codehaus.org) to support
+    <description>Add-on module for Jackson (https://github.com/FasterXML/jackson/) to support
         Kotlin language, specifically introspection of method/constructor parameter names,
         without having to add explicit property name annotation.
     </description>
