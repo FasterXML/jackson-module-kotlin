@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.introspect.*
+import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
@@ -38,10 +39,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
-        val byAnnotation = (member as Field).annotations
-            .firstOrNull { it.annotationClass == JsonProperty::class }
-            ?.let { it as JsonProperty }
-            ?.required
+        val byAnnotation = (member as Field).isRequiredByAnnotation()
         val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
@@ -56,7 +54,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return byAnnotation
     }
 
-    private fun Method.isRequiredByAnnotation(): Boolean? = annotations
+    private fun AccessibleObject.isRequiredByAnnotation(): Boolean? = annotations
         ?.firstOrNull { it.annotationClass == JsonProperty::class }
         ?.let { it as JsonProperty }
         ?.required
