@@ -14,7 +14,8 @@ class Github57 {
         val mapper = jacksonObjectMapper().registerModule(KotlinPairKeySerializerModule())
         val test = Github57Data(mapOf(Pair("p1", "p2") to "value1"))
         val jsonString = mapper.writeValueAsString(test) //works: {"map":{"(string1, string2)":"string3"}}
-        mapper.readValue<Github57Data>(jsonString)
+        val result = mapper.readValue<Github57Data>(jsonString)
+        assert(result == test)
     }
 
     class KotlinPairKeyDeserializer: KeyDeserializer() {
