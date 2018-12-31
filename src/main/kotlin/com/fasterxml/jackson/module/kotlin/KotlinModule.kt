@@ -3,11 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.introspect.Annotated
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember
-import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
-import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
+import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
@@ -84,12 +80,14 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
     private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
+    private val classIsInline = LRUMap<Class<*>, Boolean>(reflectionCacheSize, reflectionCacheSize)
 
     fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key) ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
     fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key) ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
     fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key) ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
     fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key) ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
     fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
+    fun classIsInline(key: Class<*>): Boolean = classIsInline.get(key) ?: key.isInlineClass().let { classIsInline.putIfAbsent(key, it) ?: it }
 }
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) : NopAnnotationIntrospector() {
@@ -167,6 +165,12 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                 }
             }
         }
+
+        // Support for inline classes
+        if (member is AnnotatedMethod && member.name == "box-impl") {
+            return true
+        }
+
         return false
     }
 
@@ -206,4 +210,23 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         return null
     }
 
+    override fun hasAsValue(member: Annotated): Boolean? {
+        // Support for inline classes
+        if (member is AnnotatedMethod && cache.classIsInline(member.declaringClass)) {
+            // Inline classes have exactly one non-static field
+            val field = member.declaringClass.declaredFields.single { !Modifier.isStatic(it.modifiers) }
+            val getterName = "get" + field.name.capitalize()
+            // Annotate the corresponding property with @JsonValue
+            if (member.name == getterName) {
+                return true
+            }
+        }
+        return null
+    }
 }
+
+/**
+ * Checks if the class is an inline Kotlin class.
+ * @return true if it's inline
+ */
+private fun Class<*>.isInlineClass() = declaredMethods.any { it.name == "box-impl" }
