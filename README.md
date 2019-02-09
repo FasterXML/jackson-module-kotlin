@@ -2,14 +2,14 @@
 
 # Overview
 
-Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org) classes and data classes.  Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.  With this module, single constructor classes can be used automatically, and those with secondary constructors or static factories are also supported.
+Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org) classes and data classes.  Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object. With this module, single constructor classes can be used automatically, and those with secondary constructors or static factories are also supported.
 
 # Status
 
 [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
 
-2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
-current Kotlin if you also ensure the `kotlin-reflect` depedency is included with the same version number as stdlib.
+2.9.8+ releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x. All should be compatible with
+current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
 * release `2.9.7` (for Jackson `2.9.x`)
 * release `2.8.11.1` (for Jackson `2.8.x`) 
@@ -72,7 +72,7 @@ Therefore using `readValue()` extension without the `Class` parameter will reify
 
 # Annotations
 
-You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call.  An example of these concepts:
+You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor. Any fields not present in the constructor will be set after the constructor call. An example of these concepts:
 
 ```kotlin
    @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -83,11 +83,11 @@ You can intermix non-field values in the constructor and `JsonProperty` annotati
     }
 ```
 
-Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
+Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never `null` when read, while letting it be instantiated after the construction of the class.
 
 # Caveats
 
-* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
+* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation). In these cases, annotate only one method as `JsonCreator`.
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
 * If using proguard, `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }` 
  
