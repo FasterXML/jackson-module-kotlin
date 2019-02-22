@@ -43,6 +43,8 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
 
+        context.addDeserializers(KotlinObjectInstanceDeserializers())
+
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixInAnnotations(clazz, mixin)
         }
