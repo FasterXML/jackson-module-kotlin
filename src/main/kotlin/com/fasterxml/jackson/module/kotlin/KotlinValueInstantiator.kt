@@ -96,8 +96,14 @@ internal class KotlinValueInstantiator(
                 jsonProp.valueDeserializer?.getNullValue(ctxt)
             }
 
-            if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
-                paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+            if (paramVal == null) {
+                if (paramDef.isOptional && !paramDef.type.isMarkedNullable) {
+                    //use the default argument
+                    return@forEachIndexed
+                }
+                if ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType)) {
+                    paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                }
             }
 
             val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
