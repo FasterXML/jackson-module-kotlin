@@ -7,13 +7,17 @@ import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.json.JsonMapper
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
 
-fun jacksonObjectMapper(): ObjectMapper = ObjectMapper().registerKotlinModule()
-fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
+fun jacksonObjectMapper(): ObjectMapper = JsonMapper.builder().addModule(KotlinModule()).build()
+fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(KotlinModule())
+
+// 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
+//fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
 

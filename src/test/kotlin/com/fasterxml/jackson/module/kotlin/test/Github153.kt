@@ -1,6 +1,5 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
@@ -37,8 +36,7 @@ data class MyDataElement (
 class TestGithub153 {
     val xml = """<MyPojo><elements><element value="e1"/></elements></MyPojo>"""
 
-    val mapper = XmlMapper()
-        .registerModule(KotlinModule())
+    val mapper = XmlMapper.builder().addModule(KotlinModule()).build()
 
     @Test
     fun test_class() {
