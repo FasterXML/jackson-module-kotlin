@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
@@ -44,7 +45,7 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
-            context.setMixInAnnotations(clazz, mixin)
+            context.setMixIn(clazz, mixin)
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap))
@@ -108,8 +109,16 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         return null
     }
 
+    // TODO: implement properly, instead of just delegating
+    override fun findCreatorAnnotation(config: MapperConfig<*>, member: Annotated): JsonCreator.Mode? {
+        if (hasCreatorAnnotation(member)) {
+          return JsonCreator.Mode.DEFAULT
+        }
+        return null
+    }
+
     @Suppress("UNCHECKED_CAST")
-    override fun hasCreatorAnnotation(member: Annotated): Boolean {
+    fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
         if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
