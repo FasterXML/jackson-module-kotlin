@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
+import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import java.lang.reflect.Constructor
@@ -42,8 +43,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.
      */
-    override fun findSubtypes(a: Annotated): MutableList<NamedType>? {
-
+    override fun findSubtypes(cfg : MapperConfig<*>, a: Annotated): MutableList<NamedType>? {
         val rawType = a.rawType
         if (rawType.isKotlinClass()) {
             val kClass = rawType.kotlin
@@ -53,9 +53,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                     .toMutableList()
             }
         }
-
         return null
-
     }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
