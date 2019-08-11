@@ -23,9 +23,7 @@ class ObjectSingletonTest {
         val js = mapper.writeValueAsString(Singleton)
         val newSingleton = mapper.readValue<Singleton>(js)
 
-        // NOTE: currently not the expected behaviour!
-        // NOTE: kotlin singleton property is not preserved
-        assertThat(newSingleton, not(equalTo(Singleton)))
+        assertThat(newSingleton, equalTo(Singleton))
     }
 
     @Test
