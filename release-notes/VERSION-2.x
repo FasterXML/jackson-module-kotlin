@@ -4,9 +4,11 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.10.0.pr3 (17-Sep-2019)
 
+No changes since pr2
 
-2.10.0.pr2 (not yet released)
+2.10.0.pr2 (31-Aug-2019)
 
 #239: Auto-detect sealed classes (similar to `@JsonSubTypes`)
  (suggested, contributed impl by shartte@github)
