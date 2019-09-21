@@ -18,6 +18,7 @@ No changes since pr2
 
 No changes since 2.9
 
+2.9.10 (21-Sep-2019)
 2.9.9 (16-May-2019)
 2.9.8 (15-Dec-2018)
 
