@@ -59,11 +59,16 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
-        val byAnnotation = (member as Field).getAnnotationsByType(JsonProperty::class.java).firstOrNull()?.required
+        val byAnnotation = (member as Field).isRequiredByAnnotation()
         val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
+
+    private fun AccessibleObject.isRequiredByAnnotation(): Boolean? = annotations
+        ?.firstOrNull { it.annotationClass == JsonProperty::class }
+        ?.let { it as JsonProperty }
+        ?.required
 
     private fun requiredAnnotationOrNullability(byAnnotation: Boolean?, byNullability: Boolean?): Boolean? {
         if (byAnnotation != null && byNullability != null) {
