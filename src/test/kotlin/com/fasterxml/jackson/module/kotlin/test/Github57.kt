@@ -14,13 +14,14 @@ class Github57 {
         val mapper = jacksonObjectMapper().registerModule(KotlinPairKeySerializerModule())
         val test = Github57Data(mapOf(Pair("p1", "p2") to "value1"))
         val jsonString = mapper.writeValueAsString(test) //works: {"map":{"(string1, string2)":"string3"}}
-        mapper.readValue<Github57Data>(jsonString)
+        val result = mapper.readValue<Github57Data>(jsonString)
+        assert(result == test)
     }
 
     class KotlinPairKeyDeserializer: KeyDeserializer() {
         override fun deserializeKey(key: String, context: DeserializationContext): Any {
             return if (key.startsWith('(') && key.endsWith(')')) {
-                val parts = key.substring(1, key.length-2).split(',')
+                val parts = key.substring(1, key.length-1).split(", ")
                 if (parts.size != 2) {
                     throw IllegalStateException("Pair() expects a serialized format of '(first,second)', cannot understand '$key'")
                 }
