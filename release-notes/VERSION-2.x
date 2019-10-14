@@ -10,6 +10,9 @@ Project: jackson-module-kotlin
 
 2.10.1 (not yet released)
 
+#176: Version 2.9.7 breaks compatibility with Android minSdk < 24
+ (reported jurriaan@github, fix submitted by Stéphane B)
+
 2.10.0 (26-Sep-2019)
 
 #239: Auto-detect sealed classes (similar to `@JsonSubTypes`)
