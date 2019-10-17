@@ -9,8 +9,8 @@ import org.junit.Ignore
 import org.junit.Test
 
 internal class Github124 {
+    // test for [module-kotlin#124]: broken in 2.9.3, fixed in 2.9.6
     @Test
-    @Ignore("This is as expected, cannot use the two annotations in concert")
     fun test() {
         val objMapper = jacksonObjectMapper()
 
