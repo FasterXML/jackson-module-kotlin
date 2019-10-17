@@ -12,7 +12,8 @@ import kotlin.test.assertNull
 
 class GithubDatabind1329 {
     @Test
-    @Ignore("Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module")
+// Under `failing`, no need to ignore (but can run from IDE more easily)
+//    @Ignore("Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module")
     fun testPolymorphicWithEnum() {
         val mapper = jacksonObjectMapper()
         val invite = mapper.readValue<Invite>(
