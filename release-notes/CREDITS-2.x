@@ -5,3 +5,9 @@ Kotlin module, version 2.x
 Jayson Minard, jayson.minard@gmail.com
 
 Tatu Saloranta, tatu.saloranta@iki.fi: co-author (helped setting up module)
+
+Stéphane B (StephaneBg@github)
+
+* Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
+ (2.10.1)
+ 
