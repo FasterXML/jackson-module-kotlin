@@ -4,6 +4,16 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.11.0 (not yet released)
+
+- Kotling 1.3.41 -> 1.3.50
+
+2.10.1 (not yet released)
+
+#176: Version 2.9.7 breaks compatibility with Android minSdk < 24
+ (reported jurriaan@github, fix submitted by Stéphane B)
+- Make byte code target 1.8 (can't do many things with 1.7 anyway)
+
 2.10.0 (26-Sep-2019)
 
 #239: Auto-detect sealed classes (similar to `@JsonSubTypes`)
