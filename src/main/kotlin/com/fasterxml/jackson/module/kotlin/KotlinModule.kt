@@ -108,9 +108,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
-        }   else if (member is AnnotatedMethod) {
-            if (member.declaringClass.isKotlinClass() && (member.rawReturnType == Boolean::class.javaPrimitiveType || member.rawReturnType == Boolean::class.javaObjectType)) {
-                if (cache.isKotlinGeneratedBooleanMethod(member, { it.declaringClass.declaredFields.any { f -> f.name == member.name } })) {
+        } else if (member is AnnotatedMethod) {
+            if (member.declaringClass.isKotlinClass()) {
+                if (cache.isKotlinGeneratedBooleanMethod(member) { it.declaringClass.declaredFields.any { f -> f.name == member.name } }) {
                     return member.name
                 }
             }
