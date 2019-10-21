@@ -9,10 +9,10 @@ import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
+// [module-kotlin#225]: keep Kotlin singletons as singletons
 class ObjectSingletonTest {
 
     val mapper: ObjectMapper = jacksonObjectMapper()
-            .configure(SerializationFeature.INDENT_OUTPUT, false)
 
     object Singleton {
         var content = 1 // mutable state
