@@ -11,3 +11,6 @@ Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (2.10.1)
  
+Alain Lehmann (ciderale@github)
+* Contributed fix for #225: Don't instantiate new instances of Kotlin singleton objects
+ (2.10.1)

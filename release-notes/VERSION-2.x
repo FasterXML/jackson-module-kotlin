@@ -8,6 +8,8 @@ Project: jackson-module-kotlin
 
 #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (reported jurriaan@github, fix submitted by Stéphane B)
+#225: Don't instantiate new instances of Kotlin singleton objects
+ (reported by Dico200@github; fix by Alain L)
 - Make byte code target 1.8 (can't do many things with 1.7 anyway)
 
 2.10.0 (26-Sep-2019)
