@@ -90,7 +90,7 @@ internal class KotlinValueInstantiator(
             }
 
             var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
-                buffer.getParameter(jsonProp)
+                buffer.getParameter(jsonProp) ?: return@forEachIndexed
             } else {
                 // trying to get suitable "missing" value provided by deserializer
                 jsonProp.valueDeserializer?.getNullValue(ctxt)
