@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Test
 
 class TestGithub149 {
@@ -33,28 +34,28 @@ class TestGithub149 {
 
     @Test
     fun testDeserializationOfManagedReferences() {
-        val mapper = jacksonObjectMapper()
-        mapper.setVisibility(
-            mapper.serializationConfig.defaultVisibilityChecker
-                .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
-                .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
-                .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
-        )
+        val mapper = jacksonMapperBuilder()
+                .changeDefaultVisibility { v -> v
+                            .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
+                            .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                            .withGetterVisibility(JsonAutoDetect.Visibility.NONE)
+                            .withSetterVisibility(JsonAutoDetect.Visibility.NONE)
+                            .withCreatorVisibility(JsonAutoDetect.Visibility.NONE)
+                }
+                .build();
 
         val fAtt = FooAtt("f1Att1")
         val f1 = Foo("f1", listOf(fAtt))
         fAtt.parent = f1
 
-        println(f1)
-        println("=============")
+//        println(f1)
+//        println("=============")
 
         val f1AsJson = mapper.writeValueAsString(f1)
-        println(f1AsJson)
-        println("=============")
+//        println(f1AsJson)
+//        println("=============")
         val mFromJson = mapper.readValue(f1AsJson, Foo::class.java)
-        println(mFromJson)
+//        println(mFromJson)
     }
 
     data class Car(
@@ -81,6 +82,6 @@ class TestGithub149 {
         c.colors.add(color)
         val s = mapper.writeValueAsString(c)
         val value = mapper.readValue(s, Car::class.java)
-        print(value)
+//        print(value)
     }
 }

@@ -2,7 +2,6 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.*
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -12,8 +11,9 @@ class Github47 {
 
     @Test
     fun testCaseInsensitivePropertyNames() {
-        val mapper = jacksonObjectMapper()
-        mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true)
+        val mapper = jacksonMapperBuilder()
+            .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+                .build()
 
         val jsonWithMismtachedPropertyName = """
                     {

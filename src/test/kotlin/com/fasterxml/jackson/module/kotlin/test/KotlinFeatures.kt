@@ -18,7 +18,7 @@ import kotlin.test.fail
 data class DataClassPerson(val name: String, val age: Int)
 
 class TestM11Changes {
-    val mapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
+    val mapper = jacksonObjectMapper()
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
 

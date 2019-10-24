@@ -3,9 +3,10 @@ package com.fasterxml.jackson.module.kotlin.test
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -45,8 +46,7 @@ class TestGithub239 {
         }
     ]"""
 
-    val mapper = ObjectMapper()
-            .registerModule(KotlinModule())
+    val mapper = jacksonObjectMapper()
 
     @Test
     fun test_implicit_subclasses() {

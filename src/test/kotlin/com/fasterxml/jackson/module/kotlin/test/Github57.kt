@@ -11,7 +11,8 @@ private data class Github57Data(val map: Map<Pair<String, String>, String>)
 class Github57 {
     @Test
     fun testProblemsWithMaps() {
-        val mapper = jacksonObjectMapper().registerModule(KotlinPairKeySerializerModule())
+        val mapper = jacksonMapperBuilder().addModule(KotlinPairKeySerializerModule())
+                .build()
         val test = Github57Data(mapOf(Pair("p1", "p2") to "value1"))
         val jsonString = mapper.writeValueAsString(test) //works: {"map":{"(string1, string2)":"string3"}}
         val result = mapper.readValue<Github57Data>(jsonString)

@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Test
 import kotlin.test.fail
 
@@ -15,7 +15,8 @@ class TestGithub161 {
     @Test
     fun testPrimitiveBeingZeroed() {
         val json = """{"foo":17}"""
-        val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
+        val objectMapper = jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+                .build()
         try {
             val foo = objectMapper.readValue(json, Foo::class.java)
             fail("Expected an error on the missing primitive value")

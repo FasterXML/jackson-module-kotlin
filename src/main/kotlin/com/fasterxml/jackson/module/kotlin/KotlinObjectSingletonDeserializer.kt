@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.deser.ContextualDeserializer
-import com.fasterxml.jackson.databind.deser.ResolvableDeserializer
 
 internal fun JsonDeserializer<*>.asSingletonDeserializer(singleton: Any) =
         KotlinObjectSingletonDeserializer(singleton, this)

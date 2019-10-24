@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Rule
 import org.junit.Test
@@ -14,7 +14,8 @@ class FailOnNullForPrimitivesTests {
 
     data class OptionalIntRequiredBoolean(val optInt: Int = -1, val reqBool: Boolean)
 
-    val mapper = jacksonObjectMapper().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+    val mapper = jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build()
 
     @Rule
     @JvmField

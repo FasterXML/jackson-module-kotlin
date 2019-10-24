@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -24,6 +25,8 @@ class NullToEmptyMapTest {
     }
 
     private fun createMapper(): ObjectMapper {
-        return ObjectMapper().registerModule(KotlinModule(nullToEmptyMap = true))
+        return JsonMapper.builder()
+                .addModule(KotlinModule(nullToEmptyMap = true))
+                .build()
     }
 }

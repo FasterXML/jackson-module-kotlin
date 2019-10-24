@@ -4,19 +4,18 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Ignore
 import org.junit.Test
 
-
 class TestIteratorSubclass {
     class TinyPerson(val name: String, val age: Int)
     class KotlinPersonIterator(private val personList: List<TinyPerson>) : Iterator<TinyPerson> by personList.iterator() {}
 
-    val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
-
+    val mapper: ObjectMapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
+            .build()
 
     @Test fun testKotlinIterator() {
         val expectedJson = """[{"name":"Fred","age":10},{"name":"Max","age":11}]"""

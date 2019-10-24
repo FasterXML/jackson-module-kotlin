@@ -8,7 +8,8 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class TestExtensionMethods {
-    val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
+    val mapper: ObjectMapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
+            .build()
 
     data class BasicPerson(val name: String, val age: Int)
 

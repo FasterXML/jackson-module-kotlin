@@ -40,7 +40,6 @@ class TestGithub153 {
 
     @Test
     fun test_class() {
-
         // I create a pojo from the xml using the standard classes
         val pojoFromXml = mapper.readValue(xml, MyPojo::class.java)
 
@@ -49,7 +48,6 @@ class TestGithub153 {
 
         // I compare the original xml with the xml generated from the pojo
         assertEquals(xml, xmlFromPojo)
-
     }
 
     @Test

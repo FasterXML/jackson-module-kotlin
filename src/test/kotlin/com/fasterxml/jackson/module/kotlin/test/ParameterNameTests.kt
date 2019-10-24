@@ -18,7 +18,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-class TestJacksonWithKotlin {
+class ParameterNameTests {
 
     private interface TestFields {
         val name: String
@@ -36,18 +36,19 @@ class TestJacksonWithKotlin {
         }
     }
 
-    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000+0000"}"""
-    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000+0000"}"""
+    // 24-Oct-2019, tatu: Note that format of timezone ("+0000" vs "00:00") varies between Jackson 2.x and 3.0
+    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000+00:00"}"""
+    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000+00:00"}"""
 
-    private val normalCasedMapper = jacksonObjectMapper()
-            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            .configure(SerializationFeature.INDENT_OUTPUT, false)
+    private val normalCasedMapper = jacksonMapperBuilder()
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .build()
 
 
-    private val pascalCasedMapper = jacksonObjectMapper()
-            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-            .configure(SerializationFeature.INDENT_OUTPUT, false)
-            .setPropertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
+    private val pascalCasedMapper = jacksonMapperBuilder()
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .propertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
+            .build()
 
     // ==================
 
