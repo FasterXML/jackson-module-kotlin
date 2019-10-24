@@ -46,7 +46,7 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
 
         // [module-kotlin#225]: keep Kotlin singletons as singletons
-        context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
+        context.addDeserializerModifier(KotlinBeanDeserializerModifier)
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixIn(clazz, mixin)
