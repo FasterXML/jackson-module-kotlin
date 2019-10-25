@@ -99,14 +99,13 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) : NopAnnotationIntrospector() {
     /*
-    override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
+    override public fun findNameForDeserialization(cfg : MapperConfig<*>, annotated: Annotated?): PropertyName? {
         // This should not do introspection here, only for explicit naming by annotations
         return null
     }
     */
 
-    // since 2.4
-    override fun findImplicitPropertyName(member: AnnotatedMember): String? {
+    override fun findImplicitPropertyName(cfg : MapperConfig<*>, member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
         }

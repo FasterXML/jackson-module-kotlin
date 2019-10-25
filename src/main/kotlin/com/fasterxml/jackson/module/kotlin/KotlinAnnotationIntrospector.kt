@@ -21,7 +21,7 @@ import kotlin.reflect.jvm.*
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext, private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : NopAnnotationIntrospector() {
 
-    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
+    override fun hasRequiredMarker(cfg : MapperConfig<*>, m: AnnotatedMember): Boolean? =
         cache.javaMemberIsRequired(m) {
             try {
                 when {
