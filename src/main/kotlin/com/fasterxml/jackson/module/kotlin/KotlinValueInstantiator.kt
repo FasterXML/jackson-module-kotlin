@@ -89,11 +89,15 @@ internal class KotlinValueInstantiator(
                 return@forEachIndexed
             }
 
-            var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
-                buffer.getParameter(jsonProp)
+            var paramVal:Any?
+            if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
+                paramVal = buffer.getParameter(jsonProp)
+                if (paramVal == null && paramDef.isOptional) {
+                    return@forEachIndexed
+                }
             } else {
                 // trying to get suitable "missing" value provided by deserializer
-                jsonProp.valueDeserializer?.getNullValue(ctxt)
+                paramVal = jsonProp.valueDeserializer?.getNullValue(ctxt)
             }
 
             if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
