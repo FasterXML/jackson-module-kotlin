@@ -53,6 +53,13 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
+        context.addDeserializers(KotlinDeserializers())
+        context.addSerializers(KotlinSerializers())
+
+        fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
+            context.setMixInAnnotations(clazz, mixin)
+        }
+
         // ranges
         addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
