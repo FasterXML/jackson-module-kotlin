@@ -6,6 +6,8 @@ Project: jackson-module-kotlin
 
 2.10.1 (not yet released)
 
+#80: Boolean property name starting with 'is' not serialized/deserialized properly
+ (fix contributed by Andrey L)
 #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (reported jurriaan@github, fix submitted by Stéphane B)
 #225: Don't instantiate new instances of Kotlin singleton objects

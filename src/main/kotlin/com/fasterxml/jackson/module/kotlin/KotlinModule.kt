@@ -111,6 +111,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
         } else if (member is AnnotatedMethod) {
+             // 25-Oct-2019: [module-kotlin#80] Match "isGetter" with field with same name
+             //   since Kotlin generates accessor different from Java
             if (member.declaringClass.isKotlinClass()) {
                 if (cache.isKotlinGeneratedMethod(member) { it.declaringClass.declaredFields.any { f -> f.name == member.name } }) {
                     return member.name

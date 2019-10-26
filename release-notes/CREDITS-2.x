@@ -7,10 +7,14 @@ Jayson Minard, jayson.minard@gmail.com
 Tatu Saloranta, tatu.saloranta@iki.fi: co-author (helped setting up module)
 
 Stéphane B (StephaneBg@github)
-
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (2.10.1)
  
 Alain Lehmann (ciderale@github)
 * Contributed fix for #225: Don't instantiate new instances of Kotlin singleton objects
+ (2.10.1)
+
+Andrey Lipatov (LipatovAndrey@github)
+* Contributed fix for #80: Boolean property name starting with 'is' not serialized /
+  deserialized properly
  (2.10.1)
