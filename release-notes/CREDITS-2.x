@@ -18,3 +18,11 @@ Andrey Lipatov (LipatovAndrey@github)
 * Contributed fix for #80: Boolean property name starting with 'is' not serialized /
   deserialized properly
  (2.10.1)
+
+Konstantin Volivach (kostya05983@github)
+* Contributed fix for #254: Add serializers for Sequences
+ (2.10.1)
+
+Laimonas Turauskas (Laimiux@github)
+* Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
+ (2.10.1)
