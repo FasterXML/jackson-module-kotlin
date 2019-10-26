@@ -102,7 +102,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         val paramSetter = this.getCorrespondingSetter()
         if (paramSetter != null) {
             val byAnnotation = paramSetter.javaMethod?.isRequiredByAnnotation()
-            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isParameterRequired(1)) // 0 is the target object
+            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isMethodParameterRequired(0))
         }
 
         // Is the member method a regular method of the data class or
@@ -114,7 +114,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
 
             if (method.isSetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.isParameterRequired(1))
+                return requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
             }
         }
 
@@ -146,12 +146,20 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
 
         val byNullability = when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isParameterRequired(index)
+            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
+            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
             else              -> null
         }
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
+    }
+
+    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
+        return isParameterRequired(index)
+    }
+
+    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
+        return isParameterRequired(index+1)
     }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
