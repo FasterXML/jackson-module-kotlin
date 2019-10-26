@@ -8,6 +8,9 @@ Project: jackson-module-kotlin
 
 #80: Boolean property name starting with 'is' not serialized/deserialized properly
  (fix contributed by Andrey L)
+#130: Using Kotlin Default Parameter Values when JSON value is null and Kotlin parameter
+  type is Non-Nullable
+ (fix contributed by NumezmaT@github)
 #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (reported jurriaan@github, fix submitted by Stéphane B)
 #225: Don't instantiate new instances of Kotlin singleton objects
