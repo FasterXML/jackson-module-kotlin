@@ -1,10 +1,14 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
+import org.junit.internal.runners.statements.ExpectException
 
+// @Ignore("not yet implemented, under discussion")
 class NullToDefault {
 
 	private fun createMapper() = jacksonObjectMapper()
@@ -19,17 +23,18 @@ class NullToDefault {
 
 	@Test
 	fun shouldUseDefault() {
-		val item = createMapper().readValue<TestClass>("{\n" +
-				"            \"sku\": \"974\",\n" +
-				"            \"text\": \"plain\",\n" +
-				"            \"name\": null,\n" +
-				"            \"images\": null,\n" +
-				"            \"attribute\": \"19\",\n" +
-				"            \"new_item\": \"Composition: 100% polyester; 1.75 \"" +
-				"        }")
+		val item = createMapper().readValue<TestClass>(
+				"""{
+					"sku": "974",
+					"text": "plain",
+					"name": null,
+					"images": null,
+					"attribute": "19"     
+				}""")
 
 		Assert.assertTrue(item.sku == 974)
 		Assert.assertTrue(item.text == "plain")
+		@Suppress("SENSELESS_COMPARISON")
 		Assert.assertTrue(item.name != null)
 		Assert.assertTrue(item.images == null)
 		Assert.assertTrue(item.language == "uk")
@@ -37,19 +42,20 @@ class NullToDefault {
 		Assert.assertTrue(item.order == -1)
 	}
 
-	@Test
+	@Test(expected = MissingKotlinParameterException::class)
 	fun errorIfNotDefault() {
-		val item = createMapper().readValue<TestClass>("{\n" +
-				"            \"sku\": \"974\",\n" +
-				"            \"text\": null,\n" +
-				"            \"attribute\": \"19\",\n" +
-				"            \"name\": null,\n" +
-				"            \"new_item\": \"Composition: 100% polyester; 1.75 \"" +
-				"        }")
+		val item = createMapper().readValue<TestClass>(
+				"""{
+						"sku": "974",
+						"text": null,
+						"attribute": "19",
+						"name": null     
+ 				}""")
 
 		Assert.assertTrue(item.sku == 974)
 		Assert.assertTrue(item.language == "uk")
 		Assert.assertTrue(item.attribute == 19)
+		@Suppress("SENSELESS_COMPARISON")
 		Assert.assertTrue(item.name != null)
 		Assert.assertTrue(item.order == -1)
 	}
