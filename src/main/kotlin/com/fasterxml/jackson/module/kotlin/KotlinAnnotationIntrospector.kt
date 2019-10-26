@@ -18,7 +18,14 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.*
 
 
-internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext, private val cache: ReflectionCache, private val nullToEmptyCollection: Boolean, private val nullToEmptyMap: Boolean) : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
+                                            private val cache: ReflectionCache,
+                                            private val nullToEmptyCollection: Boolean,
+                                            private val nullToEmptyMap: Boolean,
+                                            private val nullIsSameAsDefault: Boolean) : NopAnnotationIntrospector() {
+
+    // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
+    //       this likely impacts this class to be accurate about what COULD be considered required
 
     override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
         cache.javaMemberIsRequired(m) {

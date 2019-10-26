@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -11,7 +13,7 @@ import org.junit.internal.runners.statements.ExpectException
 // @Ignore("not yet implemented, under discussion")
 class NullToDefault {
 
-	private fun createMapper() = jacksonObjectMapper()
+	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper().registerModule(KotlinModule(nullisSameAsDefault = allowDefaultingByNull))
 
 	private data class TestClass(val sku: Int = -1,
 								 val text: String,
@@ -22,8 +24,29 @@ class NullToDefault {
 								 val order: Int = -1)
 
 	@Test
-	fun shouldUseDefault() {
-		val item = createMapper().readValue<TestClass>(
+	fun shouldUseNullAsDefault() {
+		val item = createMapper(true).readValue<TestClass>(
+				"""{
+					"sku": "974",
+					"text": "plain",
+					"name": null,
+					"images": null,
+					"attribute": "19"     
+				}""")
+
+		Assert.assertTrue(item.sku == 974)
+		Assert.assertTrue(item.text == "plain")
+		@Suppress("SENSELESS_COMPARISON")
+		Assert.assertTrue(item.name != null)
+		Assert.assertTrue(item.images == null)
+		Assert.assertTrue(item.language == "uk")
+		Assert.assertTrue(item.attribute == 19)
+		Assert.assertTrue(item.order == -1)
+	}
+
+	@Test(expected = MissingKotlinParameterException::class)
+	fun shouldNotUseNullAsDefault() {
+		val item = createMapper(false).readValue<TestClass>(
 				"""{
 					"sku": "974",
 					"text": "plain",
@@ -44,7 +67,7 @@ class NullToDefault {
 
 	@Test(expected = MissingKotlinParameterException::class)
 	fun errorIfNotDefault() {
-		val item = createMapper().readValue<TestClass>(
+		val item = createMapper(true).readValue<TestClass>(
 				"""{
 						"sku": "974",
 						"text": null,

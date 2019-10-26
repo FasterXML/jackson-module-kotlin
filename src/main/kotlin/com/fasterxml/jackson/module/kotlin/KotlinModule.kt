@@ -27,7 +27,7 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
-class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false, val nullisSameAsDefault: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
     companion object {
         const val serialVersionUID = 1L
     }
@@ -41,12 +41,12 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
 
         // [module-kotlin#225]: keep Kotlin singletons as singletons
         context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         context.addDeserializers(KotlinDeserializers())
