@@ -16,6 +16,8 @@ Project: jackson-module-kotlin
 #225: Don't instantiate new instances of Kotlin singleton objects
  (reported by Dico200@github; fix by Alain L)
 - Make byte code target 1.8 (can't do many things with 1.7 anyway)
+#254: Serializer/Deserializers for Sequences
+ (reported by SprocketNYC@github; fix by Konstantin V)
 
 2.10.0 (26-Sep-2019)
 
