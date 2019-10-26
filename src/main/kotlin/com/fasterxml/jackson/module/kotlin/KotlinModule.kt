@@ -46,10 +46,6 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
         // [module-kotlin#225]: keep Kotlin singletons as singletons
         context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
 
-        fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
-            context.setMixInAnnotations(clazz, mixin)
-        }
-
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
