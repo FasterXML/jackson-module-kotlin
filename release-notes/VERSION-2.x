@@ -21,6 +21,10 @@ Project: jackson-module-kotlin
 #180: Handle nullable method parameters correctly (for creator methods)
  (reported and fixed by Laimiux@github)
 
+Kotlin updated to 1.3.50
+
+------------------------------------------------------------------------
+
 2.10.0 (26-Sep-2019)
 
 #239: Auto-detect sealed classes (similar to `@JsonSubTypes`)
