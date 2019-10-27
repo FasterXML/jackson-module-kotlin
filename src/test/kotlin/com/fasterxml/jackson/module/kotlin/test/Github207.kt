@@ -3,34 +3,33 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
 import org.junit.Test
 
-open class Wrapper(@JsonValue val value: String) {
+class WrappersJavaTest {
+    open class Wrapper(@JsonValue val value: String) {
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
 
-        other as Wrapper
+            other as Wrapper
 
-        if (value != other.value) return false
+            if (value != other.value) return false
 
-        return true
+            return true
+        }
+
+        override fun hashCode(): Int =
+                value.hashCode()
+
+        override fun toString(): String =
+                value
+
     }
 
-    override fun hashCode(): Int =
-            value.hashCode()
-
-    override fun toString(): String =
-            value
-
-}
-
-class ExtendedWrapper(value: String) : Wrapper(value)
-
-// All tests work in 2.9.6, 2.9.7, 2.9.8
-class WrappersJavaTest {
+    class ExtendedWrapper(value: String) : Wrapper(value)
 
     private val objectMapper = ObjectMapper()
 
@@ -40,7 +39,7 @@ class WrappersJavaTest {
         val json = "\"foo\""
 
         // when
-        val deserialized = objectMapper.readValue(json, Wrapper::class.java)
+        val deserialized = objectMapper.readValue<Wrapper>(json)
 
         // then
         Assert.assertEquals(Wrapper("foo"), deserialized)
@@ -64,7 +63,7 @@ class WrappersJavaTest {
         val json = "\"foo\""
 
         // when
-        val deserialized = objectMapper.readValue(json, ExtendedWrapper::class.java)
+        val deserialized = objectMapper.readValue<ExtendedWrapper>(json)
 
         // then
         Assert.assertEquals(ExtendedWrapper("foo"), deserialized)
