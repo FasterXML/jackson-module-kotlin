@@ -17,7 +17,8 @@ class KotlinModule constructor (
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
-    val singletonSupport: SingletonSupport = DISABLED
+    val singletonSupport: SingletonSupport = DISABLED,
+    val strictNullChecks: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -57,7 +58,7 @@ class KotlinModule constructor (
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
         when(singletonSupport) {
             DISABLED -> Unit
