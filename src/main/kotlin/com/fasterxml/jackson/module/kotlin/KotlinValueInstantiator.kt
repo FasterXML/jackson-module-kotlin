@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.TypeVariable
+import java.util.EnumSet
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
@@ -102,7 +103,10 @@ internal class KotlinValueInstantiator(
             }
 
             if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
-                paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                paramVal = when {
+                    jsonProp.type.isTypeOrSubTypeOf(EnumSet::class.java) -> EnumSet.noneOf(EmptyEnum::class.java)
+                    else -> NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                }
             }
 
             val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
@@ -153,6 +157,8 @@ internal class KotlinValueInstantiator(
             else -> false
         }
     }
+
+    private enum class EmptyEnum
 
     private fun SettableBeanProperty.hasInjectableValueId(): Boolean = injectableValueId != null
 }
