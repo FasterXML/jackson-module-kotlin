@@ -7,7 +7,7 @@ import org.junit.Ignore
 import org.junit.Test
 
 
-class Github50 {
+class TestGithub50 {
     data class Name(val firstName: String, val lastName: String)
 
     data class Employee(

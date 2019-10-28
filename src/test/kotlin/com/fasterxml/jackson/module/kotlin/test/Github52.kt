@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 
 
 @Ignore("As expected, need change to annotations targetting to have better default targets for Kotlin")
-class Github52 {
+class TestGithub52 {
     class Test(
         // This gets serialized as "is_lol", as expected. No issues here.
         @JsonProperty("is_lol")

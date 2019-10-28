@@ -37,7 +37,7 @@ private data class TestImage(
         val crops: Map<String, String>? = null
 )
 
-class Github56 {
+class TestGithub56 {
     lateinit var mapper: ObjectMapper
 
     private val gallery = TestGallery(

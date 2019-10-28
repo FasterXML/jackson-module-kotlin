@@ -10,7 +10,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-class GithubDatabind1328 {
+class TestGithubDatabind1328 {
     @Test
     fun testPolymorphicWithEnum() {
         val mapper = jacksonObjectMapper()
