@@ -10,7 +10,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 
-class PropertyRequirednessTests {
+class TestPropertyRequiredness {
 
     private data class TestParamClass(val foo: String = "bar")
 
