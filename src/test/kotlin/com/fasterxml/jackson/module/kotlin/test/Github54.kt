@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Ignore
 import org.junit.Test
 
-class Github54 {
+class TestGithub54 {
     @Ignore("TODO: Fix this, Github #54")
     @Test
     fun testDeserWithIdentityInfo() {

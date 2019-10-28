@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.internal.runners.statements.ExpectException
 
 // @Ignore("not yet implemented, under discussion")
-class NullToDefault {
+class NullToDefaultTest {
 
 	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper().registerModule(KotlinModule(nullisSameAsDefault = allowDefaultingByNull))
 

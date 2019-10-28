@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class Github62 {
+class TestGithub62 {
     @Test
     fun testAnonymousClassSerialization() {
         val externalValue = "ggg"

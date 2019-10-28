@@ -8,7 +8,7 @@ import org.junit.Test
 
 private data class Github57Data(val map: Map<Pair<String, String>, String>)
 
-class Github57 {
+class TestGithub57 {
     @Test
     fun testProblemsWithMaps() {
         val mapper = jacksonObjectMapper().registerModule(KotlinPairKeySerializerModule())

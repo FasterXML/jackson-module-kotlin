@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Ignore
 import org.junit.Test
 
-internal class Github124 {
+internal class TestGithub124 {
     // test for [module-kotlin#124]: broken in 2.9.3, fixed in 2.9.6
     @Test
     fun test() {

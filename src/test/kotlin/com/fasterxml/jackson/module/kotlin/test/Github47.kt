@@ -6,7 +6,7 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class Github47 {
+class TestGithub47 {
 
     class ConfigItem(val configItemId: String)
 
