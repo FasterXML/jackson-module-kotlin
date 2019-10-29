@@ -84,7 +84,8 @@ class TestPropertyRequiredness {
             val f: TestParamClass?,
             val g: TestParamClass = TestParamClass(),
             val h: TestParamClass? = TestParamClass(),
-            @JsonProperty("x", required = true) val x: Int?
+            @JsonProperty("x", required = true) val x: Int?, // TODO: either error in test case with this not being on the property getter, or error in introspection not seeing this on the constructor parameter
+            @get:JsonProperty("z", required = true) val z: Int
     )
 
     @Test fun shouldHandleFalseFailOnNullForPrimitivesForDataClasses() {
@@ -117,6 +118,9 @@ class TestPropertyRequiredness {
 
         "x".isRequiredForDeserializationOf(testClass, mapper)
         "x".isOptionalForSerializationOf(testClass, mapper)
+
+        "z".isRequiredForDeserializationOf(testClass, mapper)
+        "z".isRequiredForSerializationOf(testClass, mapper)
     }
 
     @Test fun shouldHandleTrueFailOnNullForPrimitivesForDataClasses() {
@@ -149,6 +153,9 @@ class TestPropertyRequiredness {
 
         "x".isRequiredForDeserializationOf(testClass, mapper)
         "x".isOptionalForSerializationOf(testClass, mapper)
+
+        "z".isRequiredForDeserializationOf(testClass, mapper)
+        "z".isRequiredForSerializationOf(testClass, mapper)
     }
 
     private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper): Unit {
@@ -182,6 +189,5 @@ class TestPropertyRequiredness {
             mapper.deserializationConfig.introspect(mapper.deserializationConfig.constructType(type))
 
     private fun BeanDescription.isRequired(propertyName: String): Boolean =
-            this.findProperties()
-                    .find { it.name == propertyName }!!.isRequired
+            this.findProperties().find { it.name == propertyName }!!.isRequired
 }
