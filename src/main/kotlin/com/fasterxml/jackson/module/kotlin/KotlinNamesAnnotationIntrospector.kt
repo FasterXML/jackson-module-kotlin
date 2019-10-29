@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.introspect.*
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.companionObject
@@ -16,7 +17,7 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 
-internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache) : NopAnnotationIntrospector() {
+internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
     /*
     override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
         // This should not do introspection here, only for explicit naming by annotations
@@ -91,6 +92,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                                 && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
                                 && areAllParametersValid
                                 && !isSingleStringConstructor
+                                && kClass !in ignoredClassesForImplyingJsonCreator
 
                         implyCreatorAnnotation
                     } else {

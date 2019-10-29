@@ -1,25 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.introspect.Annotated
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember
-import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
-import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
-import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.util.LRUMap
-import java.lang.reflect.Constructor
-import java.lang.reflect.Method
-import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
-import kotlin.reflect.full.*
-import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
-import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
 
 private val metadataFqName = "kotlin.Metadata"
 
@@ -31,6 +13,8 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
     companion object {
         const val serialVersionUID = 1L
     }
+
+    private val ignoredClassesForImplyingJsonCreator = setOf(Regex::class)
 
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
@@ -47,7 +31,7 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
         context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
         context.addDeserializers(KotlinDeserializers())
         context.addSerializers(KotlinSerializers())
