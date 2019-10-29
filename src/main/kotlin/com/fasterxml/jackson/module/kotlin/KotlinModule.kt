@@ -27,7 +27,7 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
-class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false, val nullisSameAsDefault: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false, val nullisSameAsDefault: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
     companion object {
         const val serialVersionUID = 1L
     }
