@@ -61,6 +61,7 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+        addMixIn(Regex::class.java, RegexMixin::class.java)
     }
 }
 
