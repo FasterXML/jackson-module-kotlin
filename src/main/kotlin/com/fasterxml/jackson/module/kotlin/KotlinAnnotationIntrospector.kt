@@ -1,8 +1,10 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
+import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import java.lang.reflect.AccessibleObject
@@ -27,8 +29,8 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
 
-    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? =
-        cache.javaMemberIsRequired(m) {
+    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? {
+        val hasRequired = cache.javaMemberIsRequired(m) {
             try {
                 when {
                     nullToEmptyCollection && m.type.isCollectionLikeType -> false
@@ -45,6 +47,17 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                 null
             }
         }
+        return hasRequired
+    }
+
+    override fun findCreatorAnnotation(config: MapperConfig<*>, a: Annotated): JsonCreator.Mode? {
+
+        // TODO: possible work around for JsonValue class that requires the class constructor to have the JsonCreator(Mode.DELEGATED) set?
+        // since we infer the creator at times for these methods, the wrong mode could be implied.
+
+        // findCreatorBinding used to be a clearer way to set this, but we need to set the mode here to disambugiate the intent of the constructor
+        return super.findCreatorAnnotation(config, a)
+    }
 
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
@@ -87,8 +100,9 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return byAnnotation
     }
 
-    private fun Method.isRequiredByAnnotation(): Boolean? =
-        getAnnotationsByType(JsonProperty::class.java)?.firstOrNull()?.required
+    private fun Method.isRequiredByAnnotation(): Boolean? {
+       return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
+    }
 
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? {
         // This could be a setter or a getter of a class property or

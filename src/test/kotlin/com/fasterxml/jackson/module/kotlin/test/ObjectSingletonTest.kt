@@ -10,7 +10,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
-class ObjectSingletonTest {
+class TestObjectSingleton {
 
     val mapper: ObjectMapper = jacksonObjectMapper()
 
