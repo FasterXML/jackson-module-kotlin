@@ -4,7 +4,7 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
-2.10.1 (not yet released)
+2.10.1 (10-Nov-2019)
 
 #80: Boolean property name starting with 'is' not serialized/deserialized properly
  (fix contributed by Andrey L)
