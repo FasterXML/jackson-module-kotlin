@@ -6,8 +6,6 @@ Project: jackson-module-kotlin
 
 2.11.0 (not yet released)
 
-- Kotling 1.3.41 -> 1.3.50
-
 2.10.1 (not yet released)
 
 #80: Boolean property name starting with 'is' not serialized/deserialized properly
