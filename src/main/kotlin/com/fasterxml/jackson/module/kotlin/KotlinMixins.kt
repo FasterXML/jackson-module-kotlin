@@ -12,7 +12,3 @@ internal abstract class ClosedRangeMixin<T> @JsonCreator constructor(public val 
     @JsonIgnore abstract public fun isEmpty(): Boolean
     @JsonIgnore abstract public fun getStep(): T
 }
-
-internal abstract class RegexMixin @JsonCreator constructor (val pattern: String, val options: Set<RegexOption>) {
-
-}

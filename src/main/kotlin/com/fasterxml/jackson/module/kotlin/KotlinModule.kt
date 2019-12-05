@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import kotlin.reflect.KClass
 
 private val metadataFqName = "kotlin.Metadata"
 
@@ -14,7 +15,7 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
         const val serialVersionUID = 1L
     }
 
-    private val ignoredClassesForImplyingJsonCreator = setOf(Regex::class)
+    private val ignoredClassesForImplyingJsonCreator = emptySet<KClass<*>>()
 
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
@@ -45,7 +46,6 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(Regex::class.java, RegexMixin::class.java)
     }
 }
 
