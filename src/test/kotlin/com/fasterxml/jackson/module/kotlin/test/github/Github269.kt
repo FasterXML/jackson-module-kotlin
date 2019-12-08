@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -15,6 +16,14 @@ class TestGithub269 {
             @JsonSerialize(using = ToStringSerializer::class)
             val myPattern: Regex
     ) {
+        constructor(strPattern: String) : this(Regex(strPattern))
+    }
+
+    data class Zoo(
+            @JsonSerialize(using = ToStringSerializer::class)
+            val myPattern: Regex
+    ) {
+        @JsonCreator
         constructor(strPattern: String) : this(Regex(strPattern))
     }
 
@@ -53,6 +62,17 @@ class TestGithub269 {
         val testObject = Goo(Regex("test_pattern_1"))
         val testJson = mapper.writeValueAsString(testObject)
         val resultObject = mapper.readValue<Goo>(testJson)
+
+        assertEquals(testObject.myPattern.pattern, resultObject.myPattern.pattern)
+    }
+
+    @Test
+    fun testGithub269WithZoo() {
+        val mapper = jacksonObjectMapper()
+
+        val testObject = Zoo(Regex("test_pattern_1"))
+        val testJson = mapper.writeValueAsString(testObject)
+        val resultObject = mapper.readValue<Zoo>(testJson)
 
         assertEquals(testObject.myPattern.pattern, resultObject.myPattern.pattern)
     }
