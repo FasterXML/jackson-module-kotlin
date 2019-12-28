@@ -13,7 +13,8 @@ With this module, single constructor classes can be used automatically, and thos
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* release `2.9.7` (for Jackson `2.9.x`)
+* release `2.10.10` (for Jackson `2.10.x`)
+* release `2.9.10` (for Jackson `2.9.x`)
 * release `2.8.11.1` (for Jackson `2.8.x`) 
 * release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 
@@ -21,7 +22,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.+"
 ```
 
 Maven:
@@ -29,7 +30,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.9.7</version>
+    <version>2.10.10</version>
 </dependency>
 ```
 

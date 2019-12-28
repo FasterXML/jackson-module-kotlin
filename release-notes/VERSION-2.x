@@ -6,8 +6,6 @@ Project: jackson-module-kotlin
 
 2.11.0 (not yet released)
 
-- Kotling 1.3.41 -> 1.3.50
-
 2.10.1 (not yet released)
 
 #80: Boolean property name starting with 'is' not serialized/deserialized properly
@@ -20,6 +18,14 @@ Project: jackson-module-kotlin
 #225: Don't instantiate new instances of Kotlin singleton objects
  (reported by Dico200@github; fix by Alain L)
 - Make byte code target 1.8 (can't do many things with 1.7 anyway)
+#254: Serializer/Deserializers for Sequences
+ (reported by SprocketNYC@github; fix by Konstantin V)
+#180: Handle nullable method parameters correctly (for creator methods)
+ (reported and fixed by Laimiux@github)
+
+Kotlin updated to 1.3.50
+
+------------------------------------------------------------------------
 
 2.10.0 (26-Sep-2019)
 

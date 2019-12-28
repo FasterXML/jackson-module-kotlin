@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class NullToEmptyMapTest {
+class TestNullToEmptyMap {
 
     private data class TestClass(val foo: Map<String, Int>)
 
