@@ -4,6 +4,12 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.10.2 (not yet released)
+
+#270: 2.10.1 seems to output JSON field where name of function matches
+  name of private field
+ (reported by daviddenton@github)
+
 2.10.1 (10-Nov-2019)
 
 #80: Boolean property name starting with 'is' not serialized/deserialized properly
