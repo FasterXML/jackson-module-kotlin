@@ -34,6 +34,9 @@ class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
+        context.addDeserializers(KotlinDeserializers())
+        context.addSerializers(KotlinSerializers())
+
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixIn(clazz, mixin)
         }
