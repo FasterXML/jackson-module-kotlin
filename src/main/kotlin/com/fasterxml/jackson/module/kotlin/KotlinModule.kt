@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import kotlin.reflect.KClass
 
 private val metadataFqName = "kotlin.Metadata"
 
@@ -9,10 +10,12 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
-class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false, val nullisSameAsDefault: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
     companion object {
         const val serialVersionUID = 1L
     }
+
+    private val ignoredClassesForImplyingJsonCreator = emptySet<KClass<*>>()
 
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
@@ -23,17 +26,17 @@ class KotlinModule(val reflectionCacheSize: Int = 512, val nullToEmptyCollection
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
 
         // [module-kotlin#225]: keep Kotlin singletons as singletons
         context.addDeserializerModifier(KotlinBeanDeserializerModifier)
 
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
+
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixIn(clazz, mixin)
         }
-
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         // ranges
         addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)

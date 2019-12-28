@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -12,7 +13,9 @@ import org.junit.internal.runners.statements.ExpectException
 
 class TestNullToDefault {
 
-	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper().registerModule(KotlinModule(nullisSameAsDefault = allowDefaultingByNull))
+	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
+			.addModule(KotlinModule(nullisSameAsDefault = allowDefaultingByNull))
+			.build()
 
 	private data class TestClass(val sku: Int = -1,
 								 val text: String,
