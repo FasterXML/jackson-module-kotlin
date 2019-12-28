@@ -58,7 +58,7 @@ class TestGithub114 {
         val v = Nada.Companion::foo
         assertEquals("OK 42", v.callBy(mapOf()))
         val v2 = FooWithStaticCreator.Companion::createFromJson.javaMethod!!.kotlinFunction!!
-        println(v2.callBy(mapOf(v2.parameters.first() to FooWithStaticCreator, v2.parameters.drop(1).first() to "asdf")))
+//        println(v2.callBy(mapOf(v2.parameters.first() to FooWithStaticCreator, v2.parameters.drop(1).first() to "asdf")))
     }
 
     private class Nada {
@@ -67,6 +67,4 @@ class TestGithub114 {
             fun foo(x: Int = 42) = "OK $x"
         }
     }
-
-
 }
