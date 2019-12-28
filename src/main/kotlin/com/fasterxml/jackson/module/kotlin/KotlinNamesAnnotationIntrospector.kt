@@ -2,7 +2,10 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.PropertyName
+import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
@@ -16,7 +19,6 @@ import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
-
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
     /*
     override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
@@ -29,13 +31,22 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
-        } else if (member is AnnotatedMethod) {
-            // 25-Oct-2019: [module-kotlin#80] Match "isGetter" with field with same name
-            //   since Kotlin generates accessor different from Java
-            if (member.declaringClass.isKotlinClass()) {
-                if (cache.isKotlinGeneratedMethod(member) { it.declaringClass.declaredFields.any { f -> f.name == member.name } }) {
-                    return member.name
-                }
+        }
+        return null
+    }
+
+    // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
+    // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
+    // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
+    //  https://github.com/FasterXML/jackson-databind/issues/2527
+    //  for details)
+    override fun findRenameByField(config: MapperConfig<*>,
+        field: AnnotatedField, implName: PropertyName): PropertyName? {
+        val origSimple = implName.simpleName
+        if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
+            val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
+            if ((mangledName != null) && !mangledName.equals(origSimple)) {
+                return PropertyName.construct(mangledName)
             }
         }
         return null
@@ -47,10 +58,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
         if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 && member.getDeclaringClass().isKotlinClass()) {
+            if (member.getParameterCount() > 0 && member.declaringClass.isKotlinClass()) {
                 return cache.checkConstructorIsCreatorAnnotated(member) {
-                    val kClass = cache.kotlinFromJava(member.getDeclaringClass() as Class<Any>)
-                    val kConstructor = cache.kotlinFromJava(member.getAnnotated() as Constructor<Any>)
+                    val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
+                    val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
 
                     if (kConstructor != null) {
                         val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
@@ -106,7 +117,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
     @Suppress("UNCHECKED_CAST")
     protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.getDeclaringClass().isKotlinClass()) {
+        if (param.declaringClass.isKotlinClass()) {
             val member = param.getOwner().getMember()
             val name = if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
