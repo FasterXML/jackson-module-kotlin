@@ -14,9 +14,11 @@ class TestGithub22 {
         @JsonValue override fun toString() = other
     }
 
+    /*
     data class StringValue2(@get:JsonIgnore val s: String) {
         @JsonValue override fun toString() = s
     }
+    */
 
     @Test fun testJsonValueNoMatchingMemberWithConstructor() {
         val expectedJson = "\"test\""
@@ -30,6 +32,8 @@ class TestGithub22 {
 
     }
 
+    // 28-Dec-2019, tatu: Regression with 3.0, moved to a new separate test class.
+    /*
     @Test fun testJsonValue2DataClassIgnoredMemberInConstructor() {
         val expectedJson = "\"test\""
         val expectedObj = StringValue2("test")
@@ -41,4 +45,5 @@ class TestGithub22 {
         assertEquals(expectedObj, actualObj)
 
     }
+     */
 }
