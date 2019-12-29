@@ -47,14 +47,14 @@ class TestGithub149 {
         val f1 = Foo("f1", listOf(fAtt))
         fAtt.parent = f1
 
-        println(f1)
-        println("=============")
+//        println(f1)
+//        println("=============")
 
         val f1AsJson = mapper.writeValueAsString(f1)
-        println(f1AsJson)
-        println("=============")
+//        println(f1AsJson)
+//        println("=============")
         val mFromJson = mapper.readValue(f1AsJson, Foo::class.java)
-        println(mFromJson)
+//        println(mFromJson)
     }
 
     data class Car(
@@ -81,6 +81,6 @@ class TestGithub149 {
         c.colors.add(color)
         val s = mapper.writeValueAsString(c)
         val value = mapper.readValue(s, Car::class.java)
-        print(value)
+//        print(value)
     }
 }
