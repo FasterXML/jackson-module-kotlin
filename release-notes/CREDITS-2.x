@@ -26,3 +26,13 @@ Konstantin Volivach (kostya05983@github)
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
  (2.10.1)
+
+Patrick Strawderman (kilink@github)
+* Reported #279: 2.10 introduces another binary compatibility issue in `KotlinModule`
+  constructor
+ (2.10.2)
+
+Vladimir Petrakovich (frost13it@github)
+* Contributed fix for #279: 2.10 introduces another binary compatibility issue in
+  `KotlinModule` constructor
+ (2.10.2)

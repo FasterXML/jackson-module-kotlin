@@ -9,6 +9,9 @@ Project: jackson-module-kotlin
 #270: 2.10.1 seems to output JSON field where name of function matches
   name of private field
  (reported by daviddenton@github)
+#279: 2.10 introduces another binary compatibility issue in `KotlinModule`
+  constructor
+ (reported by Patrick S, fix contributed by Vladimir P)
 
 2.10.1 (10-Nov-2019)
 
