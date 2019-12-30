@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test
+package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
@@ -15,7 +15,7 @@ class TestGithub271 {
     fun testAlphabeticFields() {
         val mapper = jacksonObjectMapper()
 
-        val json = mapper.writeValueAsString(Foo("a","c"))
+        val json = mapper.writeValueAsString(Foo("a", "c"))
         assertEquals("""{"a":"a","b":"b","c":"c"}""", json)
     }
 }
