@@ -8,6 +8,8 @@ Project: jackson-module-kotlin
 
 #284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
 
+Kotlin updated to 1.3.61
+
 2.10.2 (05-Jan-2020)
 
 #270: 2.10.1 seems to output JSON field where name of function matches
