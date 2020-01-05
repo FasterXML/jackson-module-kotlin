@@ -4,7 +4,7 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
-2.10.2 (not yet released)
+2.10.2 (05-Jan-2020)
 
 #270: 2.10.1 seems to output JSON field where name of function matches
   name of private field
