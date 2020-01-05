@@ -10,7 +10,20 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
-class KotlinModule @JvmOverloads constructor (val reflectionCacheSize: Int = 512, val nullToEmptyCollection: Boolean = false, val nullToEmptyMap: Boolean = false, val nullisSameAsDefault: Boolean = false) : SimpleModule(PackageVersion.VERSION) {
+class KotlinModule constructor (
+    val reflectionCacheSize: Int = 512,
+    val nullToEmptyCollection: Boolean = false,
+    val nullToEmptyMap: Boolean = false,
+    val nullisSameAsDefault: Boolean = false
+) : SimpleModule(PackageVersion.VERSION) {
+
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    constructor(
+        reflectionCacheSize: Int = 512,
+        nullToEmptyCollection: Boolean = false,
+        nullToEmptyMap: Boolean = false
+    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
+
     companion object {
         const val serialVersionUID = 1L
     }
