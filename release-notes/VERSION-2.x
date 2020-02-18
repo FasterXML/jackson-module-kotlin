@@ -38,8 +38,6 @@ Kotlin updated to 1.3.61
 
 Kotlin updated to 1.3.50
 
-------------------------------------------------------------------------
-
 2.10.0 (26-Sep-2019)
 
 #239: Auto-detect sealed classes (similar to `@JsonSubTypes`)
