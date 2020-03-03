@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.10.3 (03-Mar-2020)
+
+No changes since 2.10.2
+
 2.10.2 (05-Jan-2020)
 
 #270: 2.10.1 seems to output JSON field where name of function matches
