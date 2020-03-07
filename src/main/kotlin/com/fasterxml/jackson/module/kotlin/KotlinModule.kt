@@ -16,7 +16,6 @@ class KotlinModule constructor (
     val nullToEmptyMap: Boolean = false,
     val nullisSameAsDefault: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
-
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int = 512,
@@ -59,6 +58,37 @@ class KotlinModule constructor (
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+    }
+
+    private constructor(builder: Builder) : this(
+        builder.reflectionCacheSize,
+        builder.nullToEmptyCollection,
+        builder.nullToEmptyMap,
+        builder.nullisSameAsDefault
+    )
+
+    class Builder {
+        var reflectionCacheSize: Int = 512
+            private set
+
+        var nullToEmptyCollection: Boolean = false
+            private set
+
+        var nullToEmptyMap: Boolean = false
+            private set
+
+        var nullisSameAsDefault: Boolean = false
+            private set
+
+        fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
+
+        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) = apply { this.nullToEmptyCollection = nullToEmptyCollection }
+
+        fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
+
+        fun nullisSameAsDefault(nullisSameAsDefault: Boolean) = apply { this.nullisSameAsDefault = nullisSameAsDefault }
+
+        fun build() = KotlinModule(this)
     }
 }
 
