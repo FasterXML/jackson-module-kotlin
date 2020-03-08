@@ -14,7 +14,8 @@ class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
-    val nullIsSameAsDefault: Boolean = false
+    val nullIsSameAsDefault: Boolean = false,
+    val enableExperimentalSingletonSupport: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -27,7 +28,8 @@ class KotlinModule constructor (
         builder.reflectionCacheSize,
         builder.nullToEmptyCollection,
         builder.nullToEmptyMap,
-        builder.nullIsSameAsDefault
+        builder.nullIsSameAsDefault,
+        builder.enableExperimentalSingletonSupport
     )
 
     companion object {
@@ -80,13 +82,20 @@ class KotlinModule constructor (
         var nullIsSameAsDefault: Boolean = false
             private set
 
+        var enableExperimentalSingletonSupport = false
+            private set
+
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
 
-        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) = apply { this.nullToEmptyCollection = nullToEmptyCollection }
+        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
+            apply { this.nullToEmptyCollection = nullToEmptyCollection }
 
         fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
 
         fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
+
+        fun enableExperimentalSingletonSupport(enableExperimentalSingletonSupport: Boolean) =
+            apply { this.enableExperimentalSingletonSupport = enableExperimentalSingletonSupport }
 
         fun build() = KotlinModule(this)
     }
