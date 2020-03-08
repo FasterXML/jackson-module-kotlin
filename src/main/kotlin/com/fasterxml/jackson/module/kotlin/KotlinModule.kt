@@ -49,8 +49,10 @@ class KotlinModule constructor (
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
-        // [module-kotlin#225]: keep Kotlin singletons as singletons
-        context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
+        if (enableExperimentalSingletonSupport) {
+            // [jackson-module-kotlin#225]: keep Kotlin singletons as singletons
+            context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
+        }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
