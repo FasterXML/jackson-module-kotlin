@@ -14,7 +14,7 @@ class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
-    val nullisSameAsDefault: Boolean = false
+    val nullIsSameAsDefault: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -22,6 +22,13 @@ class KotlinModule constructor (
         nullToEmptyCollection: Boolean = false,
         nullToEmptyMap: Boolean = false
     ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
+
+    private constructor(builder: Builder) : this(
+        builder.reflectionCacheSize,
+        builder.nullToEmptyCollection,
+        builder.nullToEmptyMap,
+        builder.nullIsSameAsDefault
+    )
 
     companion object {
         const val serialVersionUID = 1L
@@ -38,12 +45,12 @@ class KotlinModule constructor (
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
         // [module-kotlin#225]: keep Kotlin singletons as singletons
         context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
         context.addDeserializers(KotlinDeserializers())
@@ -60,13 +67,6 @@ class KotlinModule constructor (
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
     }
 
-    private constructor(builder: Builder) : this(
-        builder.reflectionCacheSize,
-        builder.nullToEmptyCollection,
-        builder.nullToEmptyMap,
-        builder.nullisSameAsDefault
-    )
-
     class Builder {
         var reflectionCacheSize: Int = 512
             private set
@@ -77,7 +77,7 @@ class KotlinModule constructor (
         var nullToEmptyMap: Boolean = false
             private set
 
-        var nullisSameAsDefault: Boolean = false
+        var nullIsSameAsDefault: Boolean = false
             private set
 
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
@@ -86,7 +86,7 @@ class KotlinModule constructor (
 
         fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
 
-        fun nullisSameAsDefault(nullisSameAsDefault: Boolean) = apply { this.nullisSameAsDefault = nullisSameAsDefault }
+        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
 
         fun build() = KotlinModule(this)
     }
