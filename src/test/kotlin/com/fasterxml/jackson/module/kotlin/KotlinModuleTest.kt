@@ -90,7 +90,7 @@ class KotlinModuleTest {
     @Test
     fun builder_EnableCanonicalSingletonSupport() {
         val module = KotlinModule.Builder().apply {
-            enableExperimentalSingletonSupport(CANONICALIZE)
+            singletonSupport(CANONICALIZE)
         }.build()
 
         assertEquals(512, module.reflectionCacheSize)

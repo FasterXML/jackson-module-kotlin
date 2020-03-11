@@ -31,7 +31,7 @@ class KotlinModule constructor (
         builder.nullToEmptyCollection,
         builder.nullToEmptyMap,
         builder.nullIsSameAsDefault,
-        builder.enableExperimentalSingletonSupport
+        builder.singletonSupport
     )
 
     companion object {
@@ -88,7 +88,7 @@ class KotlinModule constructor (
         var nullIsSameAsDefault: Boolean = false
             private set
 
-        var enableExperimentalSingletonSupport = DISABLED
+        var singletonSupport = DISABLED
             private set
 
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
@@ -100,8 +100,8 @@ class KotlinModule constructor (
 
         fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
 
-        fun enableExperimentalSingletonSupport(enableExperimentalSingletonSupport: SingletonSupport) =
-            apply { this.enableExperimentalSingletonSupport = enableExperimentalSingletonSupport }
+        fun singletonSupport(singletonSupport: SingletonSupport) =
+            apply { this.singletonSupport = singletonSupport }
 
         fun build() = KotlinModule(this)
     }
