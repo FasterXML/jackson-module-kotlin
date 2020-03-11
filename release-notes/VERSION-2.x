@@ -9,7 +9,7 @@ Project: jackson-module-kotlin
 #284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
 - Add Builder for KotlinModule
 #281: Hide singleton deserialization support behind a setting on the module,
-    `enableExperimentalSingletonSupport`
+    `singletonSupport` and enum `SingletonSupport`.  Defaults to pre-2.10 behavior.
 
 Kotlin updated to 1.3.61
 
