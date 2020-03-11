@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import org.junit.Assert.*
 import org.junit.Test
 import kotlin.reflect.full.memberProperties
@@ -20,7 +22,7 @@ class KotlinModuleTest {
         assertEquals(constructorModule.nullToEmptyCollection, builderModule.nullToEmptyCollection)
         assertEquals(constructorModule.nullToEmptyMap, builderModule.nullToEmptyMap)
         assertEquals(constructorModule.nullIsSameAsDefault, builderModule.nullIsSameAsDefault)
-        assertEquals(constructorModule.enableExperimentalSingletonSupport, builderModule.enableExperimentalSingletonSupport)
+        assertEquals(constructorModule.singletonSupport, builderModule.singletonSupport)
     }
 
     @Test
@@ -31,7 +33,7 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertFalse(module.enableExperimentalSingletonSupport)
+        assertEquals(DISABLED, module.singletonSupport)
     }
 
     @Test
@@ -41,14 +43,12 @@ class KotlinModuleTest {
             nullToEmptyCollection(true)
             nullToEmptyMap(true)
             nullIsSameAsDefault(true)
-            enableExperimentalSingletonSupport(true)
         }.build()
 
         assertEquals(123, module.reflectionCacheSize)
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertTrue(module.enableExperimentalSingletonSupport)
     }
 
     @Test
@@ -61,7 +61,6 @@ class KotlinModuleTest {
         assertTrue(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertFalse(module.enableExperimentalSingletonSupport)
     }
 
     @Test
@@ -74,7 +73,6 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertFalse(module.enableExperimentalSingletonSupport)
     }
 
     @Test
@@ -87,19 +85,18 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertFalse(module.enableExperimentalSingletonSupport)
     }
 
     @Test
-    fun builder_EnableExperimentalSingletonSupport() {
+    fun builder_EnableCanonicalSingletonSupport() {
         val module = KotlinModule.Builder().apply {
-            enableExperimentalSingletonSupport(true)
+            enableExperimentalSingletonSupport(CANONICALIZE)
         }.build()
 
         assertEquals(512, module.reflectionCacheSize)
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertTrue(module.enableExperimentalSingletonSupport)
+        assertEquals(CANONICALIZE, module.singletonSupport)
     }
 }

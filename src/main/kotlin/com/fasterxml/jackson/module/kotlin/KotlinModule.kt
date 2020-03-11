@@ -2,6 +2,8 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import kotlin.reflect.KClass
 
 private val metadataFqName = "kotlin.Metadata"
@@ -15,7 +17,7 @@ class KotlinModule constructor (
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
-    val enableExperimentalSingletonSupport: Boolean = false
+    val singletonSupport: SingletonSupport = DISABLED
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -49,9 +51,11 @@ class KotlinModule constructor (
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
-        if (enableExperimentalSingletonSupport) {
-            // [jackson-module-kotlin#225]: keep Kotlin singletons as singletons
-            context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
+        when(singletonSupport) {
+            DISABLED -> Unit
+            CANONICALIZE -> {
+                context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
+            }
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
@@ -84,7 +88,7 @@ class KotlinModule constructor (
         var nullIsSameAsDefault: Boolean = false
             private set
 
-        var enableExperimentalSingletonSupport = false
+        var enableExperimentalSingletonSupport = DISABLED
             private set
 
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
@@ -96,7 +100,7 @@ class KotlinModule constructor (
 
         fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
 
-        fun enableExperimentalSingletonSupport(enableExperimentalSingletonSupport: Boolean) =
+        fun enableExperimentalSingletonSupport(enableExperimentalSingletonSupport: SingletonSupport) =
             apply { this.enableExperimentalSingletonSupport = enableExperimentalSingletonSupport }
 
         fun build() = KotlinModule(this)

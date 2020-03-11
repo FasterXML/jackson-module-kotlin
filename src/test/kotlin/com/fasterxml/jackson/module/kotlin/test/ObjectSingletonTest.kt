@@ -2,6 +2,8 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.SingletonSupport
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -10,7 +12,7 @@ import org.junit.Test
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 class TestObjectSingleton {
     val mapper: ObjectMapper = ObjectMapper()
-        .registerModule(KotlinModule(enableExperimentalSingletonSupport = true))
+        .registerModule(KotlinModule(singletonSupport = CANONICALIZE))
 
     object Singleton {
         var content = 1 // mutable state
