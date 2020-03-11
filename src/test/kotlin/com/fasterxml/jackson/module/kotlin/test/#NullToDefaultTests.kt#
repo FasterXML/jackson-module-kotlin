@@ -9,12 +9,11 @@ import org.junit.Assert
 import org.junit.Test
 
 class TestNullToDefault {
-
-	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
+        private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
 			.addModule(KotlinModule(nullIsSameAsDefault = allowDefaultingByNull))
 			.build()
 
-	private data class TestClass(val sku: Int = -1,
+        private data class TestClass(val sku: Int = -1,
 								 val text: String,
 								 val name: String = "",
 								 val images: String?,

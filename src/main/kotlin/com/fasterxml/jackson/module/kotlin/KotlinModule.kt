@@ -14,15 +14,21 @@ class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
-    val nullisSameAsDefault: Boolean = false
+    val nullIsSameAsDefault: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
-
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int = 512,
         nullToEmptyCollection: Boolean = false,
         nullToEmptyMap: Boolean = false
     ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
+
+    private constructor(builder: Builder) : this(
+        builder.reflectionCacheSize,
+        builder.nullToEmptyCollection,
+        builder.nullToEmptyMap,
+        builder.nullIsSameAsDefault
+    )
 
     companion object {
         const val serialVersionUID = 1L
@@ -39,12 +45,12 @@ class KotlinModule constructor (
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
         // [module-kotlin#225]: keep Kotlin singletons as singletons
         context.addDeserializerModifier(KotlinBeanDeserializerModifier)
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullisSameAsDefault))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
         context.addDeserializers(KotlinDeserializers())
@@ -59,5 +65,29 @@ class KotlinModule constructor (
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+    }
+
+    class Builder {
+        var reflectionCacheSize: Int = 512
+            private set
+
+        var nullToEmptyCollection: Boolean = false
+            private set
+
+        var nullToEmptyMap: Boolean = false
+            private set
+
+        var nullIsSameAsDefault: Boolean = false
+            private set
+
+        fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
+
+        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) = apply { this.nullToEmptyCollection = nullToEmptyCollection }
+
+        fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
+
+        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
+
+        fun build() = KotlinModule(this)
     }
 }

@@ -36,14 +36,13 @@ class ParameterNameTests {
         }
     }
 
-    // 24-Oct-2019, tatu: Note that format of timezone ("+0000" vs "00:00") varies between Jackson 2.x and 3.0
-    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000+00:00"}"""
-    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000+00:00"}"""
+    // 24-Oct-2019, tatu: Note that format of timezone ("+00:00" vs "Z") varies between Jackson 2.x and 3.0
+    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000Z"}"""
+    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z"}"""
 
     private val normalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build()
-
 
     private val pascalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

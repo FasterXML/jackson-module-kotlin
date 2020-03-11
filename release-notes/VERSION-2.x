@@ -7,6 +7,7 @@ Project: jackson-module-kotlin
 2.11.0 (not yet released)
 
 #284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
+- Add Builder for KotlinModule
 
 Kotlin updated to 1.3.61
 
