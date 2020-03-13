@@ -36,3 +36,8 @@ Vladimir Petrakovich (frost13it@github)
 * Contributed fix for #279: 2.10 introduces another binary compatibility issue in
   `KotlinModule` constructor
  (2.10.2)
+
+Drew Stephens (dinomite@github)
+* Contributed fix for #281: KotlinObjectSingletonDeserializer fails to deserialize
+    previously serialized JSON as it doesn't delegate deserializeWithType
+  (2.11.0)
