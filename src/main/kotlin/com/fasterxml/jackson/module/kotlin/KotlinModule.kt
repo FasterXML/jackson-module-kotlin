@@ -2,6 +2,8 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import kotlin.reflect.KClass
 
 private val metadataFqName = "kotlin.Metadata"
@@ -14,7 +16,8 @@ class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
-    val nullIsSameAsDefault: Boolean = false
+    val nullIsSameAsDefault: Boolean = false,
+    val singletonSupport: SingletonSupport = DISABLED
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -27,7 +30,8 @@ class KotlinModule constructor (
         builder.reflectionCacheSize,
         builder.nullToEmptyCollection,
         builder.nullToEmptyMap,
-        builder.nullIsSameAsDefault
+        builder.nullIsSameAsDefault,
+        builder.singletonSupport
     )
 
     companion object {
@@ -47,8 +51,13 @@ class KotlinModule constructor (
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
-        // [module-kotlin#225]: keep Kotlin singletons as singletons
-        context.addDeserializerModifier(KotlinBeanDeserializerModifier)
+        when(singletonSupport) {
+            DISABLED -> Unit
+            CANONICALIZE -> {
+ 	        // [module-kotlin#225]: keep Kotlin singletons as singletons
+                context.addDeserializerModifier(KotlinBeanDeserializerModifier)
+            }
+        }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
@@ -80,13 +89,20 @@ class KotlinModule constructor (
         var nullIsSameAsDefault: Boolean = false
             private set
 
+        var singletonSupport = DISABLED
+            private set
+
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
 
-        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) = apply { this.nullToEmptyCollection = nullToEmptyCollection }
+        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
+            apply { this.nullToEmptyCollection = nullToEmptyCollection }
 
         fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
 
         fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
+
+        fun singletonSupport(singletonSupport: SingletonSupport) =
+            apply { this.singletonSupport = singletonSupport }
 
         fun build() = KotlinModule(this)
     }

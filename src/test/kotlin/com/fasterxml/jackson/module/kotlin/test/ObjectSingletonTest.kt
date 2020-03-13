@@ -1,18 +1,20 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.SingletonSupport
+import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.not
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 class TestObjectSingleton {
-
-    val mapper: ObjectMapper = jacksonObjectMapper()
+    val mapper: ObjectMapper = JsonMapper.builder()
+                .addModule(KotlinModule(singletonSupport = CANONICALIZE))
+                .build()
 
     object Singleton {
         var content = 1 // mutable state
@@ -49,9 +51,8 @@ class TestObjectSingleton {
         val newSingleton = mapper.readValue<Singleton>(js)
         assertThat(newSingleton.content, equalTo(Singleton.content))
 
-        newSingleton.content += 1;
+        newSingleton.content += 1
 
         assertThat(Singleton.content, equalTo(newSingleton.content))
     }
-
 }
