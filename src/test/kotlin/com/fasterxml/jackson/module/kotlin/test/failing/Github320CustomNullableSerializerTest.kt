@@ -15,7 +15,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.math.RoundingMode
 
-class CustomNullableSerializerTest {
+class Github320CustomNullableSerializerTest {
 
     val objectMapper = jacksonMapperBuilder()
             .addModule(SimpleModule()
