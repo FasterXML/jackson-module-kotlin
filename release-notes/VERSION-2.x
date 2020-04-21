@@ -10,6 +10,7 @@ Project: jackson-module-kotlin
 - Add Builder for KotlinModule
 #281: Hide singleton deserialization support behind a setting on the module,
     `singletonSupport` and enum `SingletonSupport`.  Defaults to pre-2.10 behavior.
+#321: Make MissingKotlinParameterException extend MismatchedInputException
 
 Kotlin updated to 1.3.61
 
