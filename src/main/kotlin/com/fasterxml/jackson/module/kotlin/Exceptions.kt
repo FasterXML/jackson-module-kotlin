@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import java.io.Closeable
 import kotlin.reflect.KParameter
 
 /**
@@ -10,5 +11,11 @@ import kotlin.reflect.KParameter
  * parameter was missing or null.
  */
 class MissingKotlinParameterException(val parameter: KParameter,
-                                      val processor: JsonParser? = null,
-                                      val msg: String) : MismatchedInputException(processor, msg)
+                                      processor: JsonParser? = null,
+                                      msg: String) : MismatchedInputException(processor, msg) {
+    constructor(
+            parameter: KParameter,
+            processor: Closeable? = null,
+            msg: String
+    ) : this(parameter, processor as JsonParser, msg)
+}
