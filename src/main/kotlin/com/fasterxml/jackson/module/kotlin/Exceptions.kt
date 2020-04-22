@@ -13,6 +13,7 @@ import kotlin.reflect.KParameter
 class MissingKotlinParameterException(val parameter: KParameter,
                                       processor: JsonParser? = null,
                                       msg: String) : MismatchedInputException(processor, msg) {
+    @Deprecated("Use main constructor", ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"))
     constructor(
             parameter: KParameter,
             processor: Closeable? = null,
