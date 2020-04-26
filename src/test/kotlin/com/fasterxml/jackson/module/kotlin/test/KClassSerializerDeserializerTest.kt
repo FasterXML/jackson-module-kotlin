@@ -24,10 +24,10 @@ class KClassSerializerDeserializerTest {
 
     @Test
     fun `test custom serializer expecting object serialized with rounding serializer applied`() {
-        val jsonString = objectMapper.writeValueAsString(TestDoubleData(nonNullVal = 1.5567, nullVal = 1.5567))
+        val jsonString = objectMapper.writeValueAsString(TestDoubleData(nonNullVal = 1.5567, nullVal = 1.5678))
         val testResult = objectMapper.readValue(jsonString, TestDoubleData::class.java)
         assertThat(testResult.nonNullVal, equalTo(1.56))
-        assertThat(testResult.nullVal, equalTo(1.56))
+        assertThat(testResult.nullVal, equalTo(1.57))
     }
 
     @Test
@@ -35,11 +35,11 @@ class KClassSerializerDeserializerTest {
         val testResult = objectMapper.readValue<TestDoubleData>("""
             {
                 "nonNullVal":1.5567,
-                "nullVal":1.5567
+                "nullVal":1.5678
             }
         """.trimIndent())
         assertThat(testResult.nonNullVal, equalTo(1.56))
-        assertThat(testResult.nullVal, equalTo(1.56))
+        assertThat(testResult.nullVal, equalTo(1.57))
     }
 }
 
