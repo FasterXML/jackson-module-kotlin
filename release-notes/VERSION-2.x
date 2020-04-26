@@ -4,13 +4,17 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
-2.11.0 (not yet released)
+2.11.1 (not yet released)
 
-#284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
-- Add Builder for KotlinModule
+-
+
+2.11.0 (26-Apr-2020)
+
 #281: Hide singleton deserialization support behind a setting on the module,
     `singletonSupport` and enum `SingletonSupport`.  Defaults to pre-2.10 behavior.
+#284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
 #321: Make MissingKotlinParameterException extend MismatchedInputException
+- Add Builder for KotlinModule
 
 Kotlin updated to 1.3.61
 
