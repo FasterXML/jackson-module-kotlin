@@ -3,16 +3,13 @@ package com.fasterxml.jackson.module.kotlin.test
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
-import org.junit.Ignore
 import org.junit.Test
-import org.junit.internal.runners.statements.ExpectException
 
 class TestNullToDefault {
 
-	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper().registerModule(KotlinModule(nullisSameAsDefault = allowDefaultingByNull))
+	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper().registerModule(KotlinModule(nullIsSameAsDefault = allowDefaultingByNull))
 
 	private data class TestClass(val sku: Int = -1,
 								 val text: String,

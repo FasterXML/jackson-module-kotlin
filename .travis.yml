@@ -3,9 +3,10 @@ language: java
 # No more JDK 7 builds
 jdk:
   - openjdk8
+  - openjdk11
 
 # whitelist
 branches:
   only:
     - master
-    - "2.10"
+    - "2.11"

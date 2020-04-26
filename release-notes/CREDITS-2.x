@@ -2,9 +2,15 @@ Here are people who have contributed to development Jackson JSON processor
 Kotlin module, version 2.x
 (version numbers in brackets indicate release in which the problem was fixed)
 
-Jayson Minard, jayson.minard@gmail.com
+Authors:
 
-Tatu Saloranta, tatu.saloranta@iki.fi: co-author (helped setting up module)
+  Jayson Minard/@apatrida, jayson.minard@gmail.com: author
+
+  Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
+
+  Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
+
+Contributors:
 
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
@@ -36,3 +42,11 @@ Vladimir Petrakovich (frost13it@github)
 * Contributed fix for #279: 2.10 introduces another binary compatibility issue in
   `KotlinModule` constructor
  (2.10.2)
+
+Drew Stephens (dinomite@github)
+* Contributed fix for #281: KotlinObjectSingletonDeserializer fails to deserialize
+    previously serialized JSON as it doesn't delegate deserializeWithType
+  (2.11.0)
+
+Mateusz Stefek (MateuszStefek@github)
+* Reported #321: Make MissingKotlinParameterException a descendant of MismatchedInputException
