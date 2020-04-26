@@ -4,6 +4,10 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.12.0 (not yet released)
+
+-
+
 2.11.1 (not yet released)
 
 -
