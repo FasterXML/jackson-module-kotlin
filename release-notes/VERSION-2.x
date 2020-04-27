@@ -4,6 +4,12 @@ Project: jackson-module-kotlin
 === Releases ===
 ------------------------------------------------------------------------
 
+2.12.0 (not yet released)
+
+#322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments that
+    register the serializer/deserializer for both the java type and java class.
+-
+
 2.11.1 (not yet released)
 
 -

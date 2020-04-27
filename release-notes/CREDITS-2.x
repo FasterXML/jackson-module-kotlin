@@ -50,3 +50,7 @@ Drew Stephens (dinomite@github)
 
 Mateusz Stefek (MateuszStefek@github)
 * Reported #321: Make MissingKotlinParameterException a descendant of MismatchedInputException
+
+John Flynn (Neuman968@github)
+* Contributed extension methods for SimpleModule to add serializer and deserializer extension functions for KClass #322
+    (2.12.x)

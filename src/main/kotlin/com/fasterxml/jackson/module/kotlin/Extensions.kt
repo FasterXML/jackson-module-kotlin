@@ -7,10 +7,14 @@ import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonSerializer
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
+import kotlin.reflect.KClass
 
 fun jacksonObjectMapper(): ObjectMapper = ObjectMapper().registerKotlinModule()
 fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
@@ -36,3 +40,13 @@ inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = treeToValue(n
 
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, refFieldName: String) = JsonMappingException.wrapWithPath(this, refFrom, refFieldName)
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, index: Int) = JsonMappingException.wrapWithPath(this, refFrom, index)
+
+inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>) = this.apply {
+    addSerializer(kClass.java, serializer)
+    addSerializer(kClass.javaObjectType, serializer)
+}
+
+inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>) = this.apply {
+    addDeserializer(kClass.java, deserializer)
+    addDeserializer(kClass.javaObjectType, deserializer)
+}
