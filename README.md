@@ -13,16 +13,15 @@ With this module, single constructor classes can be used automatically, and thos
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* release `2.10.2` (for Jackson `2.10.x`)
+* release `2.11.0` (for Jackson `2.10.x`)
+* release `2.10.3` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
-* release `2.8.11.1` (for Jackson `2.8.x`) 
-* release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.+"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.11.+"
 ```
 
 Maven:
@@ -30,7 +29,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.10.2</version>
+    <version>2.11.0</version>
 </dependency>
 ```
 
@@ -109,3 +108,23 @@ These Kotlin classes are supported with the following fields for serialization/d
 * LongRange _(start, end)_
 
 (others are likely to work, but may not be tuned for Jackson)
+
+# Development Team, Maintainers
+
+Following developers have committer access to this project.
+
+* Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
+* Active Maintainers:
+    * Drew Stephens (@dinomite)
+    * Vyacheslav Artemyev (@viartemev)
+* Co-maintainers:
+    * Tatu Saloranta (@cowtowncoder)
+
+You may at-reference them as necessary but please keep in mind that all
+maintenance work is strictly voluntary (no one gets paid to work on this
+or any other Jackson components) so there is no guarantee for timeliness of
+responses.
+
+All Pull Requests should be reviewed by at least one of active maintainers;
+bigger architectural/design questions should be agreed upon by majority of
+active maintainers (at this point meaning both Drew and Vyacheslav :) ).
