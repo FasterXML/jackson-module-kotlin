@@ -109,7 +109,9 @@ These Kotlin classes are supported with the following fields for serialization/d
 
 (others are likely to work, but may not be tuned for Jackson)
 
-# Development Team, Maintainers
+# Development
+
+## Maintainers
 
 Following developers have committer access to this project.
 
@@ -128,3 +130,8 @@ responses.
 All Pull Requests should be reviewed by at least one of active maintainers;
 bigger architectural/design questions should be agreed upon by majority of
 active maintainers (at this point meaning both Drew and Vyacheslav :) ).
+
+## Releases & Branches
+
+This module follows the release schedule of the rest of Jackson—the current version is consistent
+across all Jackson components & modules. See the [jackson-databind README](https://github.com/FasterXML/jackson#actively-developed-versions) for details.
