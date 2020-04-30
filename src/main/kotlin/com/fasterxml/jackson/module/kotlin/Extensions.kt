@@ -3,15 +3,14 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.MappingIterator
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
+import kotlin.reflect.KClass
 
 fun jacksonObjectMapper(): ObjectMapper = JsonMapper.builder().addModule(KotlinModule()).build()
 fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(KotlinModule())
@@ -19,7 +18,7 @@ fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
 //fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
 
-inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
+inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object : TypeReference<T>() {}
 
 inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
@@ -40,3 +39,13 @@ inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = treeToValue(n
 
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, refFieldName: String) = JsonMappingException.wrapWithPath(this, refFrom, refFieldName)
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, index: Int) = JsonMappingException.wrapWithPath(this, refFrom, index)
+
+inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>) = this.apply {
+    addSerializer(kClass.java, serializer)
+    addSerializer(kClass.javaObjectType, serializer)
+}
+
+inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>) = this.apply {
+    addDeserializer(kClass.java, deserializer)
+    addDeserializer(kClass.javaObjectType, deserializer)
+}
