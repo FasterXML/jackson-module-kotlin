@@ -3,7 +3,6 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import kotlin.reflect.KClass
-import kotlin.reflect.full.createInstance
 
 private val metadataFqName = "kotlin.Metadata"
 
@@ -53,9 +52,4 @@ class KotlinModule constructor (
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
     }
-}
-
-
-fun main() {
-    KotlinModule::class.createInstance()
 }
