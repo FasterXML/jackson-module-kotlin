@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
 
 private val metadataFqName = "kotlin.Metadata"
 
@@ -16,7 +17,6 @@ class KotlinModule constructor (
     val nullToEmptyMap: Boolean = false,
     val nullisSameAsDefault: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
-
     companion object {
         const val serialVersionUID = 1L
     }
@@ -56,3 +56,6 @@ class KotlinModule constructor (
 }
 
 
+fun main() {
+    KotlinModule::class.createInstance()
+}
