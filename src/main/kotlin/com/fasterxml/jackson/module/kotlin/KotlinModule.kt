@@ -17,13 +17,6 @@ class KotlinModule constructor (
     val nullisSameAsDefault: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
-    constructor(
-        reflectionCacheSize: Int = 512,
-        nullToEmptyCollection: Boolean = false,
-        nullToEmptyMap: Boolean = false
-    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
-
     companion object {
         const val serialVersionUID = 1L
     }
