@@ -5,6 +5,9 @@ Project: jackson-module-kotlin
 ------------------------------------------------------------------------
 
 2.10.4 (03-May-2020)
+
+#330: Kotlin version from 1.3.61 to 1.3.72
+
 2.10.3 (03-Mar-2020)
 
 No changes since 2.10.2
