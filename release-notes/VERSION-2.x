@@ -12,7 +12,7 @@ Project: jackson-module-kotlin
 
 2.11.1 (not yet released)
 
--
+#330: Kotlin version from 1.3.61 to 1.3.72
 
 2.11.0 (26-Apr-2020)
 
@@ -21,8 +21,11 @@ Project: jackson-module-kotlin
 #284: Use `AnnotationIntrospector.findRenameByField()` to support "is properties"
 #321: Make MissingKotlinParameterException extend MismatchedInputException
 - Add Builder for KotlinModule
+- Kotlin updated to 1.3.61
 
-Kotlin updated to 1.3.61
+2.10.4 (03-May-2020)
+
+#330: Kotlin version from 1.3.61 to 1.3.72
 
 2.10.3 (03-Mar-2020)
 
