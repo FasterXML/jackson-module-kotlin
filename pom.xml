@@ -19,6 +19,17 @@
             <id>jaysonminard</id>
             <name>Jayson Minard</name>
             <email>jayson.minard@gmail.com</email>
+	    <roles>
+	      <role>author</role>
+	    </roles>
+        </developer>
+        <developer>
+            <id>dinomite</id>
+            <name>Drew Stephens</name>
+        </developer>
+        <developer>
+            <id>viartemev</id>
+            <name>Vyacheslav Artemyev</name>
         </developer>
     </developers>
     <url>https://github.com/FasterXML/jackson-module-kotlin</url>
