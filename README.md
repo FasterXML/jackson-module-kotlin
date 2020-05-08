@@ -13,7 +13,7 @@ With this module, single constructor classes can be used automatically, and thos
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* release `2.11.0` (for Jackson `2.10.x`)
+* release `2.11.0` (for Jackson `2.11.x`)
 * release `2.10.3` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
 
