@@ -26,6 +26,14 @@ class KotlinModule constructor (
         nullToEmptyMap: Boolean = false
     ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
 
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    constructor(
+        reflectionCacheSize: Int = 512,
+        nullToEmptyCollection: Boolean = false,
+        nullToEmptyMap: Boolean = false,
+        nullIsSameAsDefault: Boolean = false
+    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault)
+
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
         builder.nullToEmptyCollection,
