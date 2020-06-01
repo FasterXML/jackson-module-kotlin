@@ -163,6 +163,39 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp-maven-plugin</artifactId>
+                <version>0.14.3</version>
+                <configuration>
+                    <oldVersion>
+                        <dependency>
+                            <groupId>com.fasterxml.jackson.module</groupId>
+                            <artifactId>jackson-module-kotlin</artifactId>
+                            <version>2.10.4</version>
+                            <type>jar</type>
+                        </dependency>
+                    </oldVersion>
+                    <newVersion>
+                        <file>
+                            <path>${project.build.directory}/${project.artifactId}-${project.version}.jar</path>
+                        </file>
+                    </newVersion>
+                    <parameter>
+                        <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
+                        <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
+                    </parameter>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>cmp</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
