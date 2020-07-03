@@ -30,7 +30,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     // since 2.4
     override fun findImplicitPropertyName(config: MapperConfig<*>, member: AnnotatedMember): String? {
         if (member is AnnotatedParameter) {
-            return findKotlinParameterName(member)
+            val simpleName = findKotlinParameterName(member)
+            return if (simpleName == null) null else BeanUtil.stdManglePropertyName(simpleName, 0)
         }
         return null
     }

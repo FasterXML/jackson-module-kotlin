@@ -163,6 +163,20 @@ class ParameterNameTests {
 
     // ==================
 
+    private data class NonIdiomaticPascalCasedClass(val Some_Number: Int, val Email_Address: String)
+
+    @Test fun readAfterWriteWithPascalCaseProperties() {
+        val obj = NonIdiomaticPascalCasedClass(6, "nobody@test.com")
+
+        val serialized = normalCasedMapper.writeValueAsString(obj)
+        val deserialized = normalCasedMapper.readValue<NonIdiomaticPascalCasedClass>(serialized)
+
+        assertThat(deserialized, equalTo(obj))
+    }
+
+
+    // ==================
+
     private class StateObjectWithFactory private constructor (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: Date) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
