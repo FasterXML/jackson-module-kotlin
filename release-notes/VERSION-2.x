@@ -8,7 +8,8 @@ Project: jackson-module-kotlin
 
 #322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments that
     register the serializer/deserializer for both the java type and java class.
--
+- Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
+
 
 2.11.1 (25-Jun-2020)
 
