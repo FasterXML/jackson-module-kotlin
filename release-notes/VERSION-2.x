@@ -17,7 +17,11 @@ Project: jackson-module-kotlin
 - Add Builder for KotlinModule
 - Kotlin updated to 1.3.61
 
-2.10.4 (03-May-2020)
+2.10.5 (21-Jul-2020)
+
+No changes since 2.10.4
+
+2.10.4 (04-May-2020)
 
 #330: Kotlin version from 1.3.61 to 1.3.72
 
