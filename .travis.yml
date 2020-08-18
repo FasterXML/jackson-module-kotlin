@@ -9,4 +9,4 @@ jdk:
 branches:
   only:
     - master
-    - "2.11"
+    - "2.12"
