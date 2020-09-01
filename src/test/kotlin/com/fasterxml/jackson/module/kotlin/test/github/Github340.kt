@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class OwnerRequestTest {
     private val jackson = ObjectMapper().registerModule(KotlinModule())
@@ -21,6 +22,7 @@ class OwnerRequestTest {
     fun testDeserHit340() {
         val value: IsField = jackson.readValue(json)
         assertEquals("Got a foo", value.foo)
+        assertTrue(value.isFoo)
     }
 
     @Test

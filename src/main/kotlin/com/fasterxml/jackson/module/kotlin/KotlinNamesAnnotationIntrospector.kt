@@ -40,11 +40,17 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
     //  https://github.com/FasterXML/jackson-databind/issues/2527
     //  for details)
-    override fun findRenameByField(config: MapperConfig<*>,
-        field: AnnotatedField, implName: PropertyName): PropertyName? {
+    override fun findRenameByField(
+            config: MapperConfig<*>,
+            field: AnnotatedField,
+            implName: PropertyName
+    ): PropertyName? {
         val origSimple = implName.simpleName
         if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
             val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
+            if (cache.isKotlinGeneratedMethod(field.member) { it.declaringClass.declaredFields.any { f -> f.name == field.name } }) {
+                return PropertyName.construct(field.name)
+            }
             if ((mangledName != null) && !mangledName.equals(origSimple)) {
                 return PropertyName.construct(mangledName)
             }
