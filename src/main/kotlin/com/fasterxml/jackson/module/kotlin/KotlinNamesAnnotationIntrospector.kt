@@ -19,13 +19,11 @@ import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
-internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    /*
-    override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
-        // This should not do introspection here, only for explicit naming by annotations
-        return null
-    }
-    */
+internal class KotlinNamesAnnotationIntrospector(
+        val module: KotlinModule,
+        val cache: ReflectionCache,
+        private val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>
+) : NopAnnotationIntrospector() {
 
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
@@ -49,7 +47,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
             val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
             if (cache.isKotlinGeneratedMethod(field.member) { it.declaringClass.declaredFields.any { f -> f.name == field.name } }) {
-                return PropertyName.construct(field.name)
+                return PropertyName.construct(origSimple)
             }
             if ((mangledName != null) && !mangledName.equals(origSimple)) {
                 return PropertyName.construct(mangledName)
