@@ -12,6 +12,9 @@ Authors:
 
 Contributors:
 
+Hideaki Tanabe (tanabe@github)
+* Brought README.md into the modern world of Gradle (compile -> implementation)
+
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (2.10.1)

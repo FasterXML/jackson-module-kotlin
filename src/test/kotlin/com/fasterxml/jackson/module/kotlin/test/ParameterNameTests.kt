@@ -3,8 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
@@ -46,7 +45,7 @@ class ParameterNameTests {
 
     private val pascalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .propertyNamingStrategy(PropertyNamingStrategy.UPPER_CAMEL_CASE)
+            .propertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE)
             .build()
 
     // ==================

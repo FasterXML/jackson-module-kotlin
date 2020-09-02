@@ -162,8 +162,8 @@ internal class KotlinInstantiators(
     private val nullToEmptyCollection: Boolean,
     private val nullToEmptyMap: Boolean,
     private val nullIsSameAsDefault: Boolean
-) : ValueInstantiators {
-    override fun findValueInstantiator(
+) : ValueInstantiators.Base() {
+    override fun modifyValueInstantiator(
         deserConfig: DeserializationConfig,
         beanDescriptor: BeanDescription,
         defaultInstantiator: ValueInstantiator

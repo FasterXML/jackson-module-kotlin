@@ -8,9 +8,13 @@ Project: jackson-module-kotlin
 
 #322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments that
     register the serializer/deserializer for both the java type and java class.
--
+- Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
 
-2.11.1 (not yet released)
+2.11.2 (02-Aug-2020)
+
+No changes since 2.11.1
+
+2.11.1 (25-Jun-2020)
 
 #330: Kotlin version from 1.3.61 to 1.3.72
 
@@ -23,7 +27,11 @@ Project: jackson-module-kotlin
 - Add Builder for KotlinModule
 - Kotlin updated to 1.3.61
 
-2.10.4 (03-May-2020)
+2.10.5 (21-Jul-2020)
+
+No changes since 2.10.4
+
+2.10.4 (04-May-2020)
 
 #330: Kotlin version from 1.3.61 to 1.3.72
 
