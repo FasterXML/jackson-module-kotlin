@@ -103,3 +103,20 @@ These Kotlin classes are supported with the following fields for serialization/d
 * LongRange _(start, end)_
 
 (others are likely to work, but may not be tuned for Jackson)
+
+# Configuration
+
+The Kotlin module may be given a few configuration parameters at construction time; see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt) for details on what options are available and what they do.
+
+```kotlin
+val mapper = ObjectMapper().registerModule(KotlinModule(strictNullChecks = true))
+```
+
+If your `ObjectMapper` is constructed in Java, there is a builder method provided for configuring these options:
+
+```java
+KotlinModule kotlinModule = new KotlinModule.Builder()
+        .strictNullChecks(true)
+        .build();
+ObjectMapper objectMapper = new ObjectMapper().registerModule(kotlinModule);
+```

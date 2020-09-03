@@ -12,6 +12,17 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
+/**
+ * @param   reflectionCacheSize     Default: 512.
+ * @param   nullToEmptyCollection   Default: false.
+ * @param   nullToEmptyMap          Default: false.
+ * @param   nullIsSameAsDefault     Default false.
+ * @param   singletonSupport        Default: DISABLED.
+ * @param   strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
+ *                                      the default, collections which are typed to disallow null members
+ *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
+ *                                      protects against this but has significant performance impact.
+ */
 class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
@@ -40,7 +51,8 @@ class KotlinModule constructor (
         builder.nullToEmptyCollection,
         builder.nullToEmptyMap,
         builder.nullIsSameAsDefault,
-        builder.singletonSupport
+        builder.singletonSupport,
+        builder.strictNullChecks
     )
 
     companion object {
@@ -100,6 +112,9 @@ class KotlinModule constructor (
         var singletonSupport = DISABLED
             private set
 
+        var strictNullChecks = false
+            private set
+
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
 
         fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
@@ -111,6 +126,9 @@ class KotlinModule constructor (
 
         fun singletonSupport(singletonSupport: SingletonSupport) =
             apply { this.singletonSupport = singletonSupport }
+
+        fun strictNullChecks(strictNullChecks: Boolean) =
+                apply { this.strictNullChecks = strictNullChecks }
 
         fun build() = KotlinModule(this)
     }
