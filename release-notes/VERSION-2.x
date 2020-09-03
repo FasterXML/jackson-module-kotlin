@@ -1,5 +1,15 @@
 Project: jackson-module-kotlin
 
+Active Maintainers:
+
+* Drew Stephens (@dinomite)
+* Vyacheslav Artemyev (@viartemev)
+
+Co-maintainers:
+
+* Jayson Minard (@apatrida) -- original Module Author, helps from time to time
+* Tatu Saloranta (@cowtowncoder) -- at-large Jackson Author, helps from time to time
+
 ------------------------------------------------------------------------
 === Releases ===
 ------------------------------------------------------------------------
