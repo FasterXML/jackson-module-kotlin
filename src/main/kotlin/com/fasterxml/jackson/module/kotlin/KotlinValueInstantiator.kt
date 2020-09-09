@@ -16,6 +16,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
+import kotlin.reflect.KType
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
@@ -25,7 +26,8 @@ internal class KotlinValueInstantiator(
     private val cache: ReflectionCache,
     private val nullToEmptyCollection: Boolean,
     private val nullToEmptyMap: Boolean,
-    private val nullIsSameAsDefault: Boolean
+    private val nullIsSameAsDefault: Boolean,
+    private val strictNullChecks: Boolean
 ) : StdValueInstantiator(src) {
     @Suppress("UNCHECKED_CAST")
     override fun createFromObjectWith(
@@ -116,6 +118,33 @@ internal class KotlinValueInstantiator(
                 ).wrapWithPath(this.valueClass, jsonProp.name)
             }
 
+            if (strictNullChecks && paramVal != null) {
+                var paramType: String? = null
+                var itemType: KType? = null
+                if (jsonProp.type.isCollectionLikeType && paramDef.type.arguments.getOrNull(0)?.type?.isMarkedNullable == false && (paramVal as Collection<*>).any { it == null }) {
+                    paramType = "collection"
+                    itemType = paramDef.type.arguments[0].type
+                }
+
+                if (jsonProp.type.isMapLikeType && paramDef.type.arguments.getOrNull(1)?.type?.isMarkedNullable == false && (paramVal as Map<*, *>).any { it.value == null }) {
+                    paramType = "map"
+                    itemType = paramDef.type.arguments[1].type
+                }
+
+                if (jsonProp.type.isArrayType && paramDef.type.arguments.getOrNull(0)?.type?.isMarkedNullable == false && (paramVal as Array<*>).any { it == null }) {
+                    paramType = "array"
+                    itemType = paramDef.type.arguments[0].type
+                }
+
+                if (paramType != null && itemType != null) {
+                    throw MissingKotlinParameterException(
+                        parameter = paramDef,
+                        processor = ctxt.parser,
+                        msg = "Instantiation of $itemType $paramType failed for JSON property ${jsonProp.name} due to null value in a $paramType that does not allow null values"
+                    ).wrapWithPath(this.valueClass, jsonProp.name)
+                }
+            }
+
             jsonParamValueList[numCallableParameters] = paramVal
             callableParameters[numCallableParameters] = paramDef
             numCallableParameters++
@@ -161,7 +190,8 @@ internal class KotlinInstantiators(
     private val cache: ReflectionCache,
     private val nullToEmptyCollection: Boolean,
     private val nullToEmptyMap: Boolean,
-    private val nullIsSameAsDefault: Boolean
+    private val nullIsSameAsDefault: Boolean,
+    private val strictNullChecks: Boolean
 ) : ValueInstantiators.Base() {
     override fun modifyValueInstantiator(
         deserConfig: DeserializationConfig,
@@ -170,7 +200,7 @@ internal class KotlinInstantiators(
     ): ValueInstantiator {
         return if (beanDescriptor.beanClass.isKotlinClass()) {
             if (defaultInstantiator is StdValueInstantiator) {
-                KotlinValueInstantiator(defaultInstantiator, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault)
+                KotlinValueInstantiator(defaultInstantiator, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks)
             } else {
                 // TODO: return defaultInstantiator and let default method parameters and nullability go unused?  or die with exception:
                 throw IllegalStateException("KotlinValueInstantiator requires that the default ValueInstantiator is StdValueInstantiator")
