@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -12,7 +12,7 @@ import kotlin.test.assertNull
 
 
 class StrictNullChecksTest {
-    private val mapper = ObjectMapper().registerModule(KotlinModule(strictNullChecks = true))
+    private val mapper = JsonMapper.builder().addModule((KotlinModule(strictNullChecks = true))).build()
 
     /** collection tests */
 
