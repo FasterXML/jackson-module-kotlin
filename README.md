@@ -91,7 +91,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 
 # Caveats
 
-* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation). In these cases, annotate only one method as `JsonCreator`.
+* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation, e.g. `@JvmStatic`).  In these cases, annotate only one method as `JsonCreator`.
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
 * If using proguard:
   * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
@@ -114,7 +114,9 @@ These Kotlin classes are supported with the following fields for serialization/d
 The Kotlin module may be given a few configuration parameters at construction time; see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt) for details on what options are available and what they do.
 
 ```kotlin
-val mapper = ObjectMapper().registerModule(KotlinModule(strictNullChecks = true))
+val mapper = JsonMapper.builder()
+        .addModule(KotlinModule(strictNullChecks = true))
+        .build()
 ```
 
 If your `ObjectMapper` is constructed in Java, there is a builder method provided for configuring these options:
@@ -123,7 +125,9 @@ If your `ObjectMapper` is constructed in Java, there is a builder method provide
 KotlinModule kotlinModule = new KotlinModule.Builder()
         .strictNullChecks(true)
         .build();
-ObjectMapper objectMapper = new ObjectMapper().registerModule(kotlinModule);
+ObjectMapper objectMapper = JsonMapper.builder()
+        .addModule(kotlinModule)
+        .build();
 ```
 
 # Development
