@@ -1,6 +1,10 @@
 version: 2.1
 orbs:
   maven: circleci/maven@1.0.2
+pipeline:
+  project:
+    git_url: https://github.com/FasterXML/jackson-module-kotlin.git
+    type: github
 workflows:
   maven_test:
     jobs:
