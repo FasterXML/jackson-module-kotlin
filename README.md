@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.3.x-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.x-blue.svg)](http://kotlinlang.org) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
 
 # Overview
 
@@ -8,13 +8,11 @@ With this module, single constructor classes can be used automatically, and thos
 
 # Status
 
-[![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
-
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* release `2.11.0` (for Jackson `2.11.x`)
-* release `2.10.3` (for Jackson `2.10.x`)
+* release `2.11.2` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
+* release `2.10.5` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
@@ -70,7 +68,7 @@ myMemberWithType = mapper.readValue(json)
 ```
 
 All inferred types for the extension functions carry in full generic information (reified generics).
-Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
+Therefore, using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
 # Annotations
 
@@ -91,7 +89,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 
 # Caveats
 
-* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation). In these cases, annotate only one method as `JsonCreator`.
+* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation, e.g. `@JvmStatic`).  In these cases, annotate only one method as `JsonCreator`.
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
 * If using proguard:
   * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
@@ -114,7 +112,9 @@ These Kotlin classes are supported with the following fields for serialization/d
 The Kotlin module may be given a few configuration parameters at construction time; see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt) for details on what options are available and what they do.
 
 ```kotlin
-val mapper = ObjectMapper().registerModule(KotlinModule(strictNullChecks = true))
+val mapper = JsonMapper.builder()
+        .addModule(KotlinModule(strictNullChecks = true))
+        .build()
 ```
 
 If your `ObjectMapper` is constructed in Java, there is a builder method provided for configuring these options:
@@ -123,7 +123,9 @@ If your `ObjectMapper` is constructed in Java, there is a builder method provide
 KotlinModule kotlinModule = new KotlinModule.Builder()
         .strictNullChecks(true)
         .build();
-ObjectMapper objectMapper = new ObjectMapper().registerModule(kotlinModule);
+ObjectMapper objectMapper = JsonMapper.builder()
+        .addModule(kotlinModule)
+        .build();
 ```
 
 # Development

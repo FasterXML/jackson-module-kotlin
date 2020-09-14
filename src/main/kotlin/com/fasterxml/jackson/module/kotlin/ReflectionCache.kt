@@ -12,14 +12,14 @@ import kotlin.reflect.jvm.kotlinFunction
 
 internal class ReflectionCache(reflectionCacheSize: Int) {
     sealed class BooleanTriState(val value: Boolean?) {
-        class True(): BooleanTriState(true)
-        class False(): BooleanTriState(false)
-        class Empty(): BooleanTriState(null)
+        class True: BooleanTriState(true)
+        class False: BooleanTriState(false)
+        class Empty: BooleanTriState(null)
 
         companion object {
-            val TRUE = True()
-            val FALSE = False()
-            val EMPTY = Empty()
+            private val TRUE = True()
+            private val FALSE = False()
+            private val EMPTY = Empty()
 
             fun fromBoolean(value: Boolean?): BooleanTriState {
                 return when (value) {

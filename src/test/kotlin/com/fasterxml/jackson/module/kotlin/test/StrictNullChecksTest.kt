@@ -12,7 +12,9 @@ import kotlin.test.assertNull
 
 
 class StrictNullChecksTest {
-    private val mapper = JsonMapper.builder().addModule((KotlinModule(strictNullChecks = true))).build()
+    private val mapper = JsonMapper.builder()
+            .addModule(KotlinModule(strictNullChecks = true))
+            .build()
 
     /** collection tests */
 
