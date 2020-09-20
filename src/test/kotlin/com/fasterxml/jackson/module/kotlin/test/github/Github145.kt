@@ -125,7 +125,6 @@ class TestGithub145 {
         }
     }
     @Test
-    @Ignore
     fun testPersonGood7() {
         val personGood7String = objectMapper.readValue<PersonGood7>(""""TestPreName,TestLastname"""")
         val personGood7Json =
