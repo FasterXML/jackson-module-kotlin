@@ -138,6 +138,11 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <args>
+                                <arg>-Xinline-classes</arg>
+                            </args>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -171,11 +176,11 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
-	    <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
-	    <plugin>
-              <groupId>de.jjohannes</groupId>
-              <artifactId>gradle-module-metadata-maven-plugin</artifactId>
-	    </plugin>
+            <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
+            <plugin>
+                  <groupId>de.jjohannes</groupId>
+                  <artifactId>gradle-module-metadata-maven-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
