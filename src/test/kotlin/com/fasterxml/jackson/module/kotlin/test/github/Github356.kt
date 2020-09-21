@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 
 class TestGithub356 {
     private val mapper = jacksonObjectMapper()
