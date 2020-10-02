@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
+import com.fasterxml.jackson.databind.introspect.AnnotatedField
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -120,10 +125,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     }
 
     @Suppress("UNCHECKED_CAST")
-    protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.declaringClass.isKotlinClass()) {
-            val member = param.getOwner().getMember()
-            val name = if (member is Constructor<*>) {
+    private fun findKotlinParameterName(param: AnnotatedParameter): String? {
+        return if (param.declaringClass.isKotlinClass()) {
+            val member = param.owner.member
+            if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
                 val ctorParmCount = ctor.parameterTypes.size
                 val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
@@ -152,9 +157,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             } else {
                 null
             }
-            return name
+        } else {
+            null
         }
-        return null
     }
-
 }

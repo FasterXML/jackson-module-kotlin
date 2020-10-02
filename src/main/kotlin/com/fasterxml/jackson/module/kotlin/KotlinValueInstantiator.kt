@@ -17,7 +17,9 @@ import java.lang.reflect.Method
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
-import kotlin.reflect.full.*
+import kotlin.reflect.full.extensionReceiverParameter
+import kotlin.reflect.full.instanceParameter
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
@@ -70,7 +72,7 @@ internal class KotlinValueInstantiator(
             } catch (ex: IllegalAccessException) {
                 // fallback for when an odd access exception happens through Kotlin reflection
                 val companionField = possibleCompanion.java.enclosingClass.fields.firstOrNull { it.name == "Companion" }
-                if (companionField == null) throw ex
+                        ?: throw ex
                 val accessible = companionField.isAccessible
                 if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
                     (accessible && ctxt.config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS))
@@ -171,13 +173,8 @@ internal class KotlinValueInstantiator(
 
     }
 
-    override fun createFromObjectWith(ctxt: DeserializationContext, args: Array<out Any>): Any {
-        return super.createFromObjectWith(ctxt, args)
-    }
-
     private fun KParameter.isPrimitive(): Boolean {
-        val javaType = type.javaType
-        return when (javaType) {
+        return when (val javaType = type.javaType) {
             is Class<*> -> javaType.isPrimitive
             else -> false
         }
