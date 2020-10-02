@@ -20,6 +20,7 @@ Co-maintainers:
     register the serializer/deserializer for both the java type and java class.
 - Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
 
+2.11.3 (02-Oct-2020)
 2.11.2 (02-Aug-2020)
 
 No changes since 2.11.1
