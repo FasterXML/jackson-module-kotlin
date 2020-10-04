@@ -11,7 +11,7 @@ With this module, single constructor classes can be used automatically, and thos
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* release `2.11.2` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
+* release `2.11.3` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 * release `2.10.5` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
 
@@ -27,7 +27,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.11.0</version>
+    <version>2.11.3</version>
 </dependency>
 ```
 
@@ -39,6 +39,8 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
 val mapper = ObjectMapper().registerModule(KotlinModule())
+// or with 2.10 and later
+val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 ```
 
 or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
