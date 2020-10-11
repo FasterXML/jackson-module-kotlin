@@ -12,7 +12,19 @@ import java.io.Reader
 import java.net.URL
 import kotlin.reflect.KClass
 
-fun jacksonObjectMapper(): ObjectMapper = JsonMapper.builder().addModule(KotlinModule()).build()
+fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
+    val builder = KotlinModule.Builder()
+    builder.initializer()
+    return builder.build()
+}
+
+fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
+    val builder = JsonMapper.builder()
+    builder.initializer()
+    return builder.build()
+}
+
+fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule()) }
 fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(KotlinModule())
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():

@@ -41,16 +41,17 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 val mapper = ObjectMapper().registerModule(KotlinModule())
 // or with 2.10 and later
 val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
+// or with 2.12 and later
+val mapper = jsonMapper {
+  addModule(kotlinModule())
+}
+
 ```
 
 or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
 
 ```kotlin
 val mapper = jacksonObjectMapper()
-```
-
-```kotlin
-val mapper = ObjectMapper().registerKotlinModule()
 ```
 
 A simple data class example:
@@ -117,6 +118,13 @@ The Kotlin module may be given a few configuration parameters at construction ti
 val mapper = JsonMapper.builder()
         .addModule(KotlinModule(strictNullChecks = true))
         .build()
+
+// Or, from version 2.12
+val mapper = jsonMapper {
+    addModule(kotlinModule {
+        strictNullChecks(true)
+    })
+}
 ```
 
 If your `ObjectMapper` is constructed in Java, there is a builder method provided for configuring these options:
