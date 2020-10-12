@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedField
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
@@ -25,12 +26,24 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    /*
-    override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
-        // This should not do introspection here, only for explicit naming by annotations
+
+    /**
+     * resolve the name of the property, if not given otherwise.
+     */
+    override fun findNameForSerialization(a: Annotated?): PropertyName? {
+        if (a is AnnotatedMethod) {
+            if (a.name.startsWith("get") &&
+                a.name.contains('-') &&
+                a.parameterCount == 0) {
+                return PropertyName(a.name.substringAfter("get").decapitalize().substringBefore('-'))
+            } else if (a.name.startsWith("is") &&
+                a.name.contains('-') &&
+                a.parameterCount == 0) {
+                return PropertyName(a.name.substringAfter("is").decapitalize().substringBefore('-'))
+            }
+        }
         return null
     }
-    */
 
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
