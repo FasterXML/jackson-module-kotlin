@@ -12,6 +12,10 @@ Authors:
 
 Contributors:
 
+Wolfgang Jung (elektro-wolle@github)
+* Fixed inline class serialization
+  (2.12.0)
+
 David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
   (2.12.0)

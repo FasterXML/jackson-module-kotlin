@@ -16,6 +16,7 @@ Co-maintainers:
 
 2.12.0 (not yet released)
 
+#356 Serialization of inline classes under Kotlin 1.4+
 #322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments that
     register the serializer/deserializer for both the java type and java class.
 - Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
