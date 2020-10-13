@@ -4,13 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.Annotated
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedField
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember
-import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
-import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
-import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
+import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -30,16 +24,16 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     /**
      * resolve the name of the property, if not given otherwise.
      */
-    override fun findNameForSerialization(a: Annotated?): PropertyName? {
-        if (a is AnnotatedMethod) {
-            if (a.name.startsWith("get") &&
-                a.name.contains('-') &&
-                a.parameterCount == 0) {
-                return PropertyName(a.name.substringAfter("get").decapitalize().substringBefore('-'))
-            } else if (a.name.startsWith("is") &&
-                a.name.contains('-') &&
-                a.parameterCount == 0) {
-                return PropertyName(a.name.substringAfter("is").decapitalize().substringBefore('-'))
+    override fun findNameForSerialization(annotated: Annotated?): PropertyName? {
+        if (annotated is AnnotatedMethod) {
+            if (annotated.name.startsWith("get") &&
+                annotated.name.contains('-') &&
+                annotated.parameterCount == 0) {
+                return PropertyName(annotated.name.substringAfter("get").decapitalize().substringBefore('-'))
+            } else if (annotated.name.startsWith("is") &&
+                annotated.name.contains('-') &&
+                annotated.parameterCount == 0) {
+                return PropertyName(annotated.name.substringAfter("is").decapitalize().substringBefore('-'))
             }
         }
         return null
