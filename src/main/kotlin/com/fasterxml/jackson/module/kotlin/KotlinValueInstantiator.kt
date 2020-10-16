@@ -109,6 +109,8 @@ internal class KotlinValueInstantiator(
                 paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
             }
 
+            // GitHub 310 https://github.com/FasterXML/jackson-module-kotlin/issues/310
+            // Get this value some other way
             val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
             val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
             if (isMissingAndRequired ||
