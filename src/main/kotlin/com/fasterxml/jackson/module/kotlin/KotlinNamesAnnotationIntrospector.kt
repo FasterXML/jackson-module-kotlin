@@ -20,30 +20,22 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-
-    /**
-     * resolve the name of the property, if not given otherwise.
-     */
-    override fun findNameForSerialization(annotated: Annotated?): PropertyName? {
-        if (annotated is AnnotatedMethod) {
-            if (annotated.name.startsWith("get") &&
-                annotated.name.contains('-') &&
-                annotated.parameterCount == 0) {
-                return PropertyName(annotated.name.substringAfter("get").decapitalize().substringBefore('-'))
-            } else if (annotated.name.startsWith("is") &&
-                annotated.name.contains('-') &&
-                annotated.parameterCount == 0) {
-                return PropertyName(annotated.name.substringAfter("is").decapitalize().substringBefore('-'))
-            }
-        }
-        return null
-    }
-
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
-        if (member is AnnotatedParameter) {
+        if (member is AnnotatedMethod && member.isInlineClass()) {
+            if (member.name.startsWith("get") &&
+                    member.name.contains('-') &&
+                    member.parameterCount == 0) {
+                return member.name.substringAfter("get").decapitalize().substringBefore('-')
+            } else if (member.name.startsWith("is") &&
+                    member.name.contains('-') &&
+                    member.parameterCount == 0) {
+                return member.name.substringAfter("is").decapitalize().substringBefore('-')
+            }
+        } else if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
         }
+
         return null
     }
 
@@ -53,7 +45,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     //  https://github.com/FasterXML/jackson-databind/issues/2527
     //  for details)
     override fun findRenameByField(config: MapperConfig<*>,
-        field: AnnotatedField, implName: PropertyName): PropertyName? {
+                                   field: AnnotatedField,
+                                   implName: PropertyName): PropertyName? {
         val origSimple = implName.simpleName
         if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
             val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
@@ -70,7 +63,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
         if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 && member.declaringClass.isKotlinClass()) {
+            if (member.parameterCount > 0 && member.declaringClass.isKotlinClass()) {
                 return cache.checkConstructorIsCreatorAnnotated(member) {
                     val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
                     val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
@@ -90,7 +83,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                         }
 
                         fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                            return this.filter {  !it.isPossibleSingleString() }
+                            return this.filter { !it.isPossibleSingleString() }
                         }
 
                         val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
@@ -165,3 +158,5 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         }
     }
 }
+
+private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
