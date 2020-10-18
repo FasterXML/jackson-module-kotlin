@@ -13,9 +13,9 @@ import kotlin.reflect.jvm.kotlinFunction
 
 internal class ReflectionCache(reflectionCacheSize: Int) {
     sealed class BooleanTriState(val value: Boolean?) {
-        class True: BooleanTriState(true)
-        class False: BooleanTriState(false)
-        class Empty: BooleanTriState(null)
+        class True : BooleanTriState(true)
+        class False : BooleanTriState(false)
+        class Empty : BooleanTriState(null)
 
         companion object {
             private val TRUE = True()
@@ -40,10 +40,21 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
     private val kotlinGeneratedMethod = LRUMap<AnnotatedMethod, Boolean>(reflectionCacheSize, reflectionCacheSize)
 
 
-    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key) ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
-    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key) ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
-    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key) ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
-    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key) ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
-    fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
-    fun isKotlinGeneratedMethod(key: AnnotatedMethod, calc: (AnnotatedMethod) -> Boolean): Boolean = kotlinGeneratedMethod.get(key) ?: calc(key).let { kotlinGeneratedMethod.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key)
+            ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
+
+    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key)
+            ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
+
+    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key)
+            ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
+
+    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key)
+            ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
+
+    fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
+            ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
+
+    fun isKotlinGeneratedMethod(key: AnnotatedMethod, calc: (AnnotatedMethod) -> Boolean): Boolean = kotlinGeneratedMethod.get(key)
+            ?: calc(key).let { kotlinGeneratedMethod.putIfAbsent(key, it) ?: it }
 }
