@@ -12,9 +12,13 @@ Authors:
 
 Contributors:
 
+Hidde Wieringa (hiddewie@github)
+* Contributed test case for issue 308
+ (2.12.0)
+
 David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
-  (2.12.0)
+ (2.12.0)
 
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
