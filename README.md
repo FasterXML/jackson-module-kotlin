@@ -53,9 +53,9 @@ or with the extension functions imported from `import com.fasterxml.jackson.modu
 val mapper = jacksonObjectMapper()
 ```
 
-```kotlin	
+```kotlin
 val mapper = ObjectMapper().registerKotlinModule()	
-```	
+```
 
 A simple data class example:
 ```kotlin
