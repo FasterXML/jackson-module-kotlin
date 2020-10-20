@@ -156,3 +156,17 @@ active maintainers (at this point meaning both Drew and Vyacheslav :) ).
 
 This module follows the release schedule of the rest of Jackson—the current version is consistent
 across all Jackson components & modules. See the [jackson-databind README](https://github.com/FasterXML/jackson#actively-developed-versions) for details.
+
+## Contributing
+
+We welcome any contributions—reports of issues, ideas for enhancements, and pull requests related to either of those.
+
+See the [main Jackson contribution guidlines](https://github.com/FasterXML/jackson/blob/master/CONTRIBUTING.md) for more details.
+
+### Branches
+
+If you are going to write code, choose the appropriate base branch:
+
+- `2.11` for bugfixes against the current stable version
+- `2.12` for additive functionality & features or minor changes to existing behavior to be included in the next minor version release
+- `master` for significant changes to existing behavior, which will be part of Jackson 3.0
