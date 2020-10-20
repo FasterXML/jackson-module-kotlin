@@ -54,7 +54,7 @@ val mapper = jacksonObjectMapper()
 ```
 
 ```kotlin
-val mapper = ObjectMapper().registerKotlinModule()	
+val mapper = ObjectMapper().registerKotlinModule()
 ```
 
 A simple data class example:
