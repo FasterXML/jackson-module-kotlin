@@ -168,5 +168,5 @@ See the [main Jackson contribution guidlines](https://github.com/FasterXML/jacks
 If you are going to write code, choose the appropriate base branch:
 
 - `2.11` for bugfixes against the current stable version
-- `2.12` for additive functionality & features or minor changes to existing behavior to be included in the next minor version release
+- `2.12` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `master` for significant changes to existing behavior, which will be part of Jackson 3.0
