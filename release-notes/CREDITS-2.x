@@ -14,6 +14,7 @@ Contributors:
 
 Hidde Wieringa (hiddewie@github)
 * Contributed test case for issue 308
+* Contributed Kotlin DSL constructor
  (2.12.0)
 
 David Riggleman (DavidRigglemanININ@github)
