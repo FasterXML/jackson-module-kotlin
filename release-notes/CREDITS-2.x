@@ -9,6 +9,7 @@ Authors:
   Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
 
   Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
+  Vyacheslav Artemyev (@viartemev) co-author (since 2.11)
 
 Contributors:
 
@@ -18,11 +19,11 @@ Hideaki Tanabe (tanabe@github)
 Hidde Wieringa (hiddewie@github)
 * Contributed test case for issue 308
 * Contributed Kotlin DSL constructor
-  (2.12.0)
+ (2.12.0)
 
 David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
-  (2.12.0)
+ (2.12.0)
 
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
