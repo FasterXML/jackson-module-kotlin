@@ -9,8 +9,12 @@ Authors:
   Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
 
   Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
+  Vyacheslav Artemyev (@viartemev) co-author (since 2.11)
 
 Contributors:
+
+Hideaki Tanabe (tanabe@github)
+* Brought README.md into the modern world of Gradle (compile -> implementation)
 
 Hidde Wieringa (hiddewie@github)
 * Contributed test case for issue 308
