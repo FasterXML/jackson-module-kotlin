@@ -15,6 +15,11 @@ Contributors:
 Hideaki Tanabe (tanabe@github)
 * Brought README.md into the modern world of Gradle (compile -> implementation)
 
+Hidde Wieringa (hiddewie@github)
+* Contributed test case for issue 308
+* Contributed Kotlin DSL constructor
+  (2.12.0)
+
 David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
   (2.12.0)

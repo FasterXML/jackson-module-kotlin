@@ -41,6 +41,11 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 val mapper = ObjectMapper().registerModule(KotlinModule())
 // or with 2.10 and later
 val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
+// or with 2.12 and later
+val mapper = jsonMapper {
+  addModule(kotlinModule())
+}
+
 ```
 
 or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
