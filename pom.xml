@@ -175,6 +175,13 @@
                     <optimize>true</optimize>
                 </configuration>
             </plugin>
+
+	    <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
+	    <plugin>
+                <groupId>org.moditect</groupId>
+		<artifactId>moditect-maven-plugin</artifactId>
+	    </plugin>
+
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
             <plugin>
                   <groupId>de.jjohannes</groupId>
