@@ -14,6 +14,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.12.1 (not yet released)
+
+#356 Serialization of inline classes under Kotlin 1.4+
+
 2.12.0 (29-Nov-2020)
 
 #322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments
