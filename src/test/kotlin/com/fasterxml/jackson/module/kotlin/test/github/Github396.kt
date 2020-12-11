@@ -4,8 +4,8 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlFactory
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import org.junit.Test
 import javax.xml.stream.XMLInputFactory
+import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestGithub396 {
