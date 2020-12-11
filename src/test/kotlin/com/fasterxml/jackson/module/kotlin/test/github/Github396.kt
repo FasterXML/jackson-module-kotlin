@@ -8,7 +8,7 @@ import org.junit.Test
 import javax.xml.stream.XMLInputFactory
 import kotlin.test.assertEquals
 
-class Github396 {
+class TestGithub396 {
     /**
      * Succeeds in Jackson 2.11.x, but fails in Jackson 2.12.0
      * See https://github.com/FasterXML/jackson-module-kotlin/issues/396
