@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class Github88 {
+class TestGithub88 {
     class CloneableKotlinObj(val id: String) : Cloneable
 
     @Test
@@ -20,5 +20,4 @@ class Github88 {
 
         assertEquals("{\"id\":\"123\"}", result)
     }
-
 }
