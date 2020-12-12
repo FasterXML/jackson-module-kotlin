@@ -7,11 +7,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class Github91Test {
-
+class TestGithub91 {
     data class DataClass1(val name: String, val content: DataClass2)
 
-    data class DataClass2 @JsonCreator(mode = JsonCreator.Mode.DELEGATING) constructor (@JsonValue val content: String)
+    data class DataClass2 @JsonCreator(mode = JsonCreator.Mode.DELEGATING) constructor(@JsonValue val content: String)
 
     private val jsonData = """
         {
