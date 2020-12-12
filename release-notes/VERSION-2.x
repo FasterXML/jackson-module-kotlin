@@ -21,6 +21,7 @@ Co-maintainers:
 #385: Add Moditect, source module info, to allow Kotlin module usage with Java Module system
 - Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
 
+2.11.4 (12-Dec-2020)
 2.11.3 (02-Oct-2020)
 2.11.2 (02-Aug-2020)
 
