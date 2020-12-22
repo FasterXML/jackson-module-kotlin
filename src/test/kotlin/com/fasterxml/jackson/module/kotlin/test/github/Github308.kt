@@ -10,8 +10,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 
-class Github308 {
-
+class TestGithub308 {
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class TestDto(
             @JsonIgnore
