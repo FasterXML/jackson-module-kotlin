@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule
 import com.fasterxml.jackson.dataformat.xml.XmlFactory
