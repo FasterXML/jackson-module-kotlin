@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.failing
+package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
