@@ -16,11 +16,13 @@ Co-maintainers:
 
 2.12.1 (not yet released)
 
-#356 Serialization of inline classes under Kotlin 1.4+
+#356: Serialization of inline classes under Kotlin 1.4+
+#402: Remove implicitly-included `java.base` dep in `module-info.java`
+ (reported by UkonnRa@github)
 
 2.12.0 (29-Nov-2020)
 
-#322 Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments
+#322: Added extension methods to SimpleModule addSerializer and addDeserializer to support KClass arguments
     that register the serializer/deserializer for both the java type and java class.
 #385: Add Moditect, source module info, to allow Kotlin module usage with Java Module system
 - Add Gradle Module Metadata (https://blog.gradle.org/alignment-with-gradle-module-metadata)
