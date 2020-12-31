@@ -13,8 +13,13 @@ Authors:
 
 Contributors:
 
+Wolfgang Jung (elektro-wolle@github)
+* Fixed inline class serialization
+  (2.12.1)
+
 Hideaki Tanabe (tanabe@github)
 * Brought README.md into the modern world of Gradle (compile -> implementation)
+  (2.12.0)
 
 Hidde Wieringa (hiddewie@github)
 * Contributed test case for issue 308
