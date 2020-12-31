@@ -9,7 +9,7 @@ Module that adds support for serialization/deserialization of [Kotlin](http://ko
 2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
 current Kotlin if you also ensure the `kotlin-reflect` dependency is included with the same version number as stdlib.
 
-* *unreleased* `2.12` branch (for *unreleased* Jackson `2.12`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
+* release `2.12` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
 * release `2.11.2` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 * release `2.10.5` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
@@ -18,7 +18,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.+"
+compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+"
 ```
 
 Maven:
@@ -26,13 +26,14 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.10.10</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
 # Usage
 
-For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
+For any Kotlin class or data class constructor, the JSON property names will be inferred
+from the parameters using Kotlin runtime type information.
 
 To use, just register the Kotlin module with your ObjectMapper instance:
 
@@ -74,11 +75,14 @@ myMemberWithType = mapper.readValue(json)
 ```
 
 All inferred types for the extension functions carry in full generic information (reified generics).
-Therefore, using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
+Therefore, using `readValue()` extension without the `Class` parameter will reify the type and
+automatically create a `TypeReference` for Jackson.
 
 # Annotations
 
-You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call.  An example of these concepts:
+You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.
+Any fields not present in the constructor will be set after the constructor call.
+An example of these concepts:
 
 ```kotlin
    @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -89,7 +93,8 @@ You can intermix non-field values in the constructor and `JsonProperty` annotati
     }
 ```
 
-Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
+Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never null when read,
+while letting it be instantiated after the construction of the class.
 
 # Caveats
 
