@@ -63,7 +63,7 @@ inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, des
 
 inline fun <reified T> T.throwIfNullableTypeIsNull(): T {
     if (null !is T && this == null) {
-        throw NullInputException(msg = "Cannot deserialize null into non-null object of type ${T::class.java.name}")
+        throw NullInputException(msg = "Cannot deserialize null into non-null object of type ${T::class.java.simpleName}")
     }
     return this
 }

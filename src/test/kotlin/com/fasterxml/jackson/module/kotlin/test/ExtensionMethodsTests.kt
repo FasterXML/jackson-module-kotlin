@@ -7,9 +7,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertNull
 import org.junit.Assert.assertThrows
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class TestExtensionMethods {
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
@@ -43,13 +43,13 @@ class TestExtensionMethods {
         assertThat(myList, equalTo(listOf(MyData("value1", 1), MyData("value2", 2))))
     }
 
-    enum class Options { ONE, TWO }
+    enum class Options { ONE }
 
     @Test
     fun testNullEnumThrows() {
-        assertThrows(NullInputException::class.java) {
-            val foo: Options = mapper.readValue("null")
-            assertNull(foo)
+        val nullInputException = assertThrows("foo", NullInputException::class.java) {
+            mapper.readValue<Options>("null")
         }
+        assertEquals("Cannot deserialize null into non-null object of type Options", nullInputException.message)
     }
 }
