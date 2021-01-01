@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+(rafalbednarczuk@github)
+* Prevent null values from being deserialized into non-null types (#373)
+  (2.12.1)
+
 Wolfgang Jung (elektro-wolle@github)
 * Fixed inline class serialization
   (2.12.1)
