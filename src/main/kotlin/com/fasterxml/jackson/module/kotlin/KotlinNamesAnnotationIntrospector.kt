@@ -20,7 +20,6 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    // since 2.4
     override fun findImplicitPropertyName(config: MapperConfig<*>, member: AnnotatedMember): String? {
         if (member is AnnotatedMethod && member.isInlineClass()) {
             if (member.name.startsWith("get") &&
