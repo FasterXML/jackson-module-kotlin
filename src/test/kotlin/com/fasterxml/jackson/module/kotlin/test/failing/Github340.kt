@@ -1,13 +1,12 @@
 package com.fasterxml.jackson.module.kotlin.test.failing
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class OwnerRequestTest {
-    private val jackson = ObjectMapper().registerModule(KotlinModule())
+    private val jackson = jacksonObjectMapper()
 
     val json = """{"foo": "Got a foo"}"""
 
