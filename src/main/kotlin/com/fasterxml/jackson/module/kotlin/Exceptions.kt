@@ -20,3 +20,5 @@ class MissingKotlinParameterException(val parameter: KParameter,
             msg: String
     ) : this(parameter, processor as JsonParser, msg)
 }
+
+class NullInputException(msg: String) : MismatchedInputException(null, msg)
