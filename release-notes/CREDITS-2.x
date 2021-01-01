@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+T. Alexander Popiel (popiel@github)
+* Fixed roundtrip serialization when using PascalCase
+  (2.12.1)
+
 Wolfgang Jung (elektro-wolle@github)
 * Fixed inline class serialization
   (2.12.1)
