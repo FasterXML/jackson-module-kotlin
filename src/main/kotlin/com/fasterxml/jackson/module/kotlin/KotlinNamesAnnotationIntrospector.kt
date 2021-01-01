@@ -20,19 +20,23 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    /*
-    override public fun findNameForDeserialization(annotated: Annotated?): PropertyName? {
-        // This should not do introspection here, only for explicit naming by annotations
-        return null
-    }
-    */
-
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
-        if (member is AnnotatedParameter) {
+        if (member is AnnotatedMethod && member.isInlineClass()) {
+            if (member.name.startsWith("get") &&
+                    member.name.contains('-') &&
+                    member.parameterCount == 0) {
+                return member.name.substringAfter("get").decapitalize().substringBefore('-')
+            } else if (member.name.startsWith("is") &&
+                    member.name.contains('-') &&
+                    member.parameterCount == 0) {
+                return member.name.substringAfter("is").decapitalize().substringBefore('-')
+            }
+        } else if (member is AnnotatedParameter) {
             val simpleName = findKotlinParameterName(member)
             return if (simpleName == null) null else BeanUtil.stdManglePropertyName(simpleName, 0)
         }
+
         return null
     }
 
@@ -42,7 +46,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     //  https://github.com/FasterXML/jackson-databind/issues/2527
     //  for details)
     override fun findRenameByField(config: MapperConfig<*>,
-        field: AnnotatedField, implName: PropertyName): PropertyName? {
+                                   field: AnnotatedField,
+                                   implName: PropertyName): PropertyName? {
         val origSimple = implName.simpleName
         if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
             val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
@@ -59,7 +64,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
         if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
             // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.getParameterCount() > 0 && member.declaringClass.isKotlinClass()) {
+            if (member.parameterCount > 0 && member.declaringClass.isKotlinClass()) {
                 return cache.checkConstructorIsCreatorAnnotated(member) {
                     val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
                     val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
@@ -79,7 +84,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                         }
 
                         fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                            return this.filter {  !it.isPossibleSingleString() }
+                            return this.filter { !it.isPossibleSingleString() }
                         }
 
                         val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
@@ -117,10 +122,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     }
 
     @Suppress("UNCHECKED_CAST")
-    protected fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        if (param.declaringClass.isKotlinClass()) {
-            val member = param.getOwner().getMember()
-            val name = if (member is Constructor<*>) {
+    private fun findKotlinParameterName(param: AnnotatedParameter): String? {
+        return if (param.declaringClass.isKotlinClass()) {
+            val member = param.owner.member
+            if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
                 val ctorParmCount = ctor.parameterTypes.size
                 val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
@@ -149,9 +154,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             } else {
                 null
             }
-            return name
+        } else {
+            null
         }
-        return null
     }
-
 }
+
+private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }

@@ -23,6 +23,7 @@ class KotlinModuleTest {
         assertEquals(constructorModule.nullToEmptyMap, builderModule.nullToEmptyMap)
         assertEquals(constructorModule.nullIsSameAsDefault, builderModule.nullIsSameAsDefault)
         assertEquals(constructorModule.singletonSupport, builderModule.singletonSupport)
+        assertEquals(constructorModule.strictNullChecks, builderModule.strictNullChecks)
     }
 
     @Test
@@ -34,6 +35,7 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
         assertEquals(DISABLED, module.singletonSupport)
+        assertFalse(module.strictNullChecks)
     }
 
     @Test
@@ -43,12 +45,16 @@ class KotlinModuleTest {
             nullToEmptyCollection(true)
             nullToEmptyMap(true)
             nullIsSameAsDefault(true)
+            singletonSupport(CANONICALIZE)
+            strictNullChecks(true)
         }.build()
 
         assertEquals(123, module.reflectionCacheSize)
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
+        assertEquals(CANONICALIZE, module.singletonSupport)
+        assertTrue(module.strictNullChecks)
     }
 
     @Test
@@ -57,10 +63,7 @@ class KotlinModuleTest {
             nullToEmptyCollection(true)
         }.build()
 
-        assertEquals(512, module.reflectionCacheSize)
         assertTrue(module.nullToEmptyCollection)
-        assertFalse(module.nullToEmptyMap)
-        assertFalse(module.nullIsSameAsDefault)
     }
 
     @Test
@@ -69,10 +72,7 @@ class KotlinModuleTest {
             nullToEmptyMap(true)
         }.build()
 
-        assertEquals(512, module.reflectionCacheSize)
-        assertFalse(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
-        assertFalse(module.nullIsSameAsDefault)
     }
 
     @Test
@@ -81,9 +81,6 @@ class KotlinModuleTest {
             nullIsSameAsDefault(true)
         }.build()
 
-        assertEquals(512, module.reflectionCacheSize)
-        assertFalse(module.nullToEmptyCollection)
-        assertFalse(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
     }
 
@@ -93,10 +90,15 @@ class KotlinModuleTest {
             singletonSupport(CANONICALIZE)
         }.build()
 
-        assertEquals(512, module.reflectionCacheSize)
-        assertFalse(module.nullToEmptyCollection)
-        assertFalse(module.nullToEmptyMap)
-        assertFalse(module.nullIsSameAsDefault)
         assertEquals(CANONICALIZE, module.singletonSupport)
+    }
+
+    @Test
+    fun builder_EnableStrictNullChecks() {
+        val module = KotlinModule.Builder().apply {
+            strictNullChecks(true)
+        }.build()
+
+        assertTrue(module.strictNullChecks)
     }
 }

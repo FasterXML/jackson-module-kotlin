@@ -12,12 +12,28 @@ fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
 }
 
+/**
+ * @param   reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
+ * @param   nullToEmptyCollection   Default: false.  Whether to deserialize null values for collection properties as
+ *                                      empty collections.
+ * @param   nullToEmptyMap          Default: false.  Whether to deserialize null values for a map property to an empty
+ *                                      map object.
+ * @param   nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
+ *                                      using the default value provided in Kotlin.
+ * @param   singletonSupport        Default: DISABLED.  Mode for singleton handling.
+ *                                      See {@link com.fasterxml.jackson.module.kotlin.SingletonSupport label}
+ * @param   strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
+ *                                      the default, collections which are typed to disallow null members
+ *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
+ *                                      protects against this but has significant performance impact.
+ */
 class KotlinModule constructor (
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
-    val singletonSupport: SingletonSupport = DISABLED
+    val singletonSupport: SingletonSupport = DISABLED,
+    val strictNullChecks: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -39,7 +55,8 @@ class KotlinModule constructor (
         builder.nullToEmptyCollection,
         builder.nullToEmptyMap,
         builder.nullIsSameAsDefault,
-        builder.singletonSupport
+        builder.singletonSupport,
+        builder.strictNullChecks
     )
 
     companion object {
@@ -57,7 +74,7 @@ class KotlinModule constructor (
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
         when(singletonSupport) {
             DISABLED -> Unit
@@ -99,6 +116,9 @@ class KotlinModule constructor (
         var singletonSupport = DISABLED
             private set
 
+        var strictNullChecks = false
+            private set
+
         fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
 
         fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
@@ -110,6 +130,9 @@ class KotlinModule constructor (
 
         fun singletonSupport(singletonSupport: SingletonSupport) =
             apply { this.singletonSupport = singletonSupport }
+
+        fun strictNullChecks(strictNullChecks: Boolean) =
+                apply { this.strictNullChecks = strictNullChecks }
 
         fun build() = KotlinModule(this)
     }

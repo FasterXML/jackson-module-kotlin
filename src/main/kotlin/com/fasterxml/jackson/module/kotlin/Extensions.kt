@@ -3,21 +3,31 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.MappingIterator
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonSerializer
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
 import kotlin.reflect.KClass
 
-fun jacksonObjectMapper(): ObjectMapper = ObjectMapper().registerKotlinModule()
-fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())
+fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
+    val builder = KotlinModule.Builder()
+    builder.initializer()
+    return builder.build()
+}
+
+fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
+    val builder = JsonMapper.builder()
+    builder.initializer()
+    return builder.build()
+}
+
+fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule()) }
+fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
+
+fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(kotlinModule())
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
 

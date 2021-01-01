@@ -1,26 +1,29 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.3.x-blue.svg)](http://kotlinlang.org) [![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.3.x-blue.svg)](http://kotlinlang.org) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
 
 # Overview
 
-Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org) classes and data classes.  Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.  With this module, single constructor classes can be used automatically, and those with secondary constructors or static factories are also supported.
+Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org)
+classes and data classes.
+Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.
+With this module, single constructor classes can be used automatically,
+and those with secondary constructors or static factories are also supported.
 
 # Status
 
-[![Build Status](https://travis-ci.org/FasterXML/jackson-module-kotlin.svg)](https://travis-ci.org/FasterXML/jackson-module-kotlin)
+2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.
+All should be compatible with current Kotlin if you also ensure the `kotlin-reflect`
+dependency is included with the same version number as stdlib.
 
-2.9.8+ Releases are compiled with Kotlin 1.3.x, other older releases are Kotlin 1.2.x.  All should be compatible with
-current Kotlin if you also ensure the `kotlin-reflect` depedency is included with the same version number as stdlib.
-
-* release `2.10.10` (for Jackson `2.10.x`)
+* release `2.12.0` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
+* release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
+* release `2.10.5` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
-* release `2.8.11.1` (for Jackson `2.8.x`) 
-* release `2.7.9.1` (for Jackson `2.7.x`) lacking in some new features from 2.8 branch
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 Gradle:
 ```
-compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.10.+"
+implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.12.+"
 ```
 
 Maven:
@@ -28,18 +31,26 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.10.10</version>
+    <version>2.12.0</version>
 </dependency>
 ```
 
 # Usage
 
-For any Kotlin class or data class constructor, the JSON property names will be inferred from the parameters using Kotlin runtime type information.
+For any Kotlin class or data class constructor, the JSON property names will be inferred
+from the parameters using Kotlin runtime type information.
 
 To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
 val mapper = ObjectMapper().registerModule(KotlinModule())
+// or with 2.10 and later
+val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
+// or with 2.12 and later
+val mapper = jsonMapper {
+  addModule(kotlinModule())
+}
+
 ```
 
 or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
@@ -69,11 +80,13 @@ myMemberWithType = mapper.readValue(json)
 ```
 
 All inferred types for the extension functions carry in full generic information (reified generics).
-Therefore using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
+Therefore, using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
 # Annotations
 
-You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.  Any fields not present in the constructor will be set after the constructor call.  An example of these concepts:
+You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.
+Any fields not present in the constructor will be set after the constructor call.
+An example of these concepts:
 
 ```kotlin
    @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -84,17 +97,20 @@ You can intermix non-field values in the constructor and `JsonProperty` annotati
     }
 ```
 
-Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never null when read, while letting it be instantiated after the construction of the class.
+Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never `null` when read, while letting it be instantiated after the construction of the class.
 
 # Caveats
 
-* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation).  In these cases, annotate only one method as `JsonCreator`.
+* The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation, e.g. `@JvmStatic`).  In these cases, annotate only one method as `JsonCreator`.
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
-* If using proguard, `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }` 
+* If using proguard:
+    * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
+    * If you're getting `java.lang.ExceptionInInitializerError`, you may also need: `-keep class kotlin.reflect.** { *; }`
  
 # Support for Kotlin Built-in classes
 
-These Kotlin classes are supported with the following fields for serialization/deserialization (and other fields are hidden that are not relevant):
+These Kotlin classes are supported with the following fields for serialization/deserialization
+(and other fields are hidden that are not relevant):
 
 * Pair _(first, second)_
 * Triple _(first, second, third)_
@@ -103,3 +119,68 @@ These Kotlin classes are supported with the following fields for serialization/d
 * LongRange _(start, end)_
 
 (others are likely to work, but may not be tuned for Jackson)
+
+# Configuration
+
+The Kotlin module may be given a few configuration parameters at construction time;
+see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt)
+for details on what options are available and what they do.
+
+```kotlin
+val mapper = JsonMapper.builder()
+        .addModule(KotlinModule(strictNullChecks = true))
+        .build()
+```
+
+If your `ObjectMapper` is constructed in Java, there is a builder method
+provided for configuring these options:
+
+```java
+KotlinModule kotlinModule = new KotlinModule.Builder()
+        .strictNullChecks(true)
+        .build();
+ObjectMapper objectMapper = JsonMapper.builder()
+        .addModule(kotlinModule)
+        .build();
+```
+
+# Development
+
+## Maintainers
+
+Following developers have committer access to this project.
+
+* Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
+* Active Maintainers:
+    * Drew Stephens (@dinomite)
+    * Vyacheslav Artemyev (@viartemev)
+* Co-maintainers:
+    * Tatu Saloranta (@cowtowncoder)
+
+You may at-reference them as necessary but please keep in mind that all
+maintenance work is strictly voluntary (no one gets paid to work on this
+or any other Jackson components) so there is no guarantee for timeliness of
+responses.
+
+All Pull Requests should be reviewed by at least one of active maintainers;
+bigger architectural/design questions should be agreed upon by majority of
+active maintainers (at this point meaning both Drew and Vyacheslav :) ).
+
+## Releases & Branches
+
+This module follows the release schedule of the rest of Jackson—the current version is consistent
+across all Jackson components & modules. See the [jackson-databind README](https://github.com/FasterXML/jackson#actively-developed-versions) for details.
+
+## Contributing
+
+We welcome any contributions—reports of issues, ideas for enhancements, and pull requests related to either of those.
+
+See the [main Jackson contribution guidlines](https://github.com/FasterXML/jackson/blob/master/CONTRIBUTING.md) for more details.
+
+### Branches
+
+If you are going to write code, choose the appropriate base branch:
+
+- `2.12` for bugfixes against the current stable version
+- `2.13` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
+- `master` for significant changes to existing behavior, which will be part of Jackson 3.0
