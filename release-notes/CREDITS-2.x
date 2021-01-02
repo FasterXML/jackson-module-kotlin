@@ -9,12 +9,26 @@ Authors:
   Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
 
   Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
+  Vyacheslav Artemyev (@viartemev) co-author (since 2.11)
 
 Contributors:
 
+Wolfgang Jung (elektro-wolle@github)
+* Fixed inline class serialization
+  (2.12.1)
+
+Hideaki Tanabe (tanabe@github)
+* Brought README.md into the modern world of Gradle (compile -> implementation)
+  (2.12.0)
+
+Hidde Wieringa (hiddewie@github)
+* Contributed test case for issue 308
+* Contributed Kotlin DSL constructor
+ (2.12.0)
+
 David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
-  (2.12.0)
+ (2.12.0)
 
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
