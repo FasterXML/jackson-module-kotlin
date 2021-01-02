@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
@@ -20,7 +21,7 @@ class TestGithub50 {
         try {
             val obj: Employee = jacksonObjectMapper().readValue(json)
             fail("GitHub #50 has been fixed!")
-        } catch (e: AssertionError) {
+        } catch (e: InvalidDefinitionException) {
             // Remove this try/catch and the `fail()` call above when this issue is fixed
         }
     }
