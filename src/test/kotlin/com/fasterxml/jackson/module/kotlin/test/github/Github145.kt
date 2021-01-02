@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Ignore
 import org.junit.Test
 
 class TestGithub145 {
@@ -125,7 +124,6 @@ class TestGithub145 {
         }
     }
     @Test
-    @Ignore("Broke at some point on 2.12 branch (before automated tests were working)")
     fun testPersonGood7() {
         val personGood7String = objectMapper.readValue<PersonGood7>(""""TestPreName,TestLastname"""")
         val personGood7Json =
