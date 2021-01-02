@@ -1,14 +1,15 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import org.junit.Ignore
 import org.junit.Test
+import kotlin.test.fail
 
 class TestGithub138 {
     @JacksonXmlRootElement(localName = "sms")
@@ -23,11 +24,14 @@ class TestGithub138 {
         )
 
     @Test
-    @Ignore("Not sure the cause of this yet...")
     fun testDeserProblem() {
         val xml = """<sms Phone="435242423412" Id="43234324">Lorem ipsum</sms>"""
         val xmlMapper = XmlMapper().registerKotlinModule()
-        val sms = xmlMapper.readValue<Sms>(xml)
-
+        try {
+            val jsms = xmlMapper.readValue<Sms>(xml)
+            fail("GitHub #138 has been fixed!")
+        } catch (e: InvalidDefinitionException) {
+            // Remove this try/catch and the `fail()` call above when this issue is fixed
+        }
     }
 }

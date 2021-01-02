@@ -1,13 +1,14 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
-import com.fasterxml.jackson.module.kotlin.*
-import org.junit.Ignore
+import com.fasterxml.jackson.databind.deser.UnresolvedForwardReference
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
+import kotlin.test.fail
 
 class TestGithub54 {
-    @Ignore("TODO: Fix this, Github #54")
     @Test
     fun testDeserWithIdentityInfo() {
         val mapper = jacksonObjectMapper()
@@ -20,7 +21,13 @@ class TestGithub54 {
         entity1.entity2 = entity2
 
         val json = mapper.writeValueAsString(entity1)
-        mapper.readValue<Entity1>(json)
+        try {
+            mapper.readValue<Entity1>(json)
+            fail("GitHub #54 has been fixed!")
+        } catch (e: UnresolvedForwardReference) {
+            // Remove this try/catch and the `fail()` call above when this issue is fixed
+        }
+
     }
 }
 
