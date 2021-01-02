@@ -43,29 +43,50 @@ from the parameters using Kotlin runtime type information.
 To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
-val mapper = ObjectMapper().registerModule(KotlinModule())
-// or with 2.10 and later
-val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
-// or with 2.12 and later
+// With Jackson 2.12 and later
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+...
+val mapper = jacksonObjectMapper()
+// or
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+...
+val mapper = ObjectMapper().registerKotlinModule()
+// or
+import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
+...
 val mapper = jsonMapper {
   addModule(kotlinModule())
 }
-
 ```
 
-or with the extension functions imported from `import com.fasterxml.jackson.module.kotlin.*`, one of:
+<details>
+  <summary>Jackson versions prior to 2.10–2.11</summary>
 
 ```kotlin
-val mapper = jacksonObjectMapper()
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+...
+val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 ```
+</details>
+
+
+<details>
+  <summary>Jackson versions prior to 2.10</summary>
 
 ```kotlin
-val mapper = ObjectMapper().registerKotlinModule()
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+...
+val mapper = ObjectMapper().registerModule(KotlinModule())
 ```
+</details>
 
 A simple data class example:
 ```kotlin
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 
 data class MyStateObject(val name: String, val age: Int)
 
