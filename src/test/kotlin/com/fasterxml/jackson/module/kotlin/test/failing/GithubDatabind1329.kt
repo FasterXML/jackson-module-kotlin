@@ -8,12 +8,13 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
+import kotlin.test.fail
 
-
+/**
+ * Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module
+ */
 class GithubDatabind1329 {
     @Test
-// Under `failing`, no need to ignore (but can run from IDE more easily)
-//    @Ignore("Broken in databind 2.8.0+ (not 2.8.0.rc2 which works) and not a problem with the Kotlin module")
     fun testPolymorphicWithEnum() {
         val mapper = jacksonObjectMapper()
         val invite = mapper.readValue<Invite>(
@@ -27,9 +28,14 @@ class GithubDatabind1329 {
         )
 
         assertEquals(InviteKind.CONTACT, invite.kind)
-        assertNull(invite.kindForMapper)
-        assertEquals("Foo", (invite.to as InviteToContact).name)
+        try {
+            assertNull(invite.kindForMapper)
+            fail("GitHub Databind issue #1329 has been fixed!")
+        } catch (e: AssertionError) {
+            // Remove this try/catch and the `fail()` call above when this issue is fixed
+        }
 
+        assertEquals("Foo", (invite.to as InviteToContact).name)
     }
 
     data class Invite(
@@ -49,12 +55,12 @@ class GithubDatabind1329 {
     @JsonTypeName("CONTACT")
     data class InviteToContact(
             val name: String? = null
-    ): InviteTo
+    ) : InviteTo
 
     @JsonTypeName("USER")
     data class InviteToUser(
             val user: String
-    ): InviteTo
+    ) : InviteTo
 
     enum class InviteKind {
         CONTACT,

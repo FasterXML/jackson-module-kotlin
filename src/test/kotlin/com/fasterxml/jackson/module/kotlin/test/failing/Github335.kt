@@ -9,6 +9,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertNull
+import kotlin.test.fail
 
 class Github335Test {
     val mapper = jacksonObjectMapper()
@@ -29,7 +30,12 @@ class Github335Test {
         val json = mapper.writeValueAsString(oldEntity)
         val newEntity = mapper.readValue<MyEntity>(json)
 
-        // Returns false: "null" String instead of null
-        assertNull(newEntity.type)
+        try {
+            // Returns false: "null" String instead of null
+            assertNull(newEntity.type)
+            fail("GitHub #335 has been fixed!")
+        } catch (e: AssertionError) {
+            // Remove this try/catch and the `fail()` call above when this issue is fixed
+        }
     }
 }
