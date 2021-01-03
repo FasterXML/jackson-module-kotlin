@@ -6,9 +6,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 
 class TestGithub153 {
     @JacksonXmlRootElement(localName = "MyPojo")
@@ -55,7 +55,7 @@ class TestGithub153 {
     @Test
     // Conflict between the annotations that is not current resolvable.
     fun test_data_class() {
-        try {
+        expectFailure(InvalidDefinitionException::class, "Problem with conflicting annotations related to #153 has been fixed!") {
             // I create a pojo from the xml using the data classes
             val pojoFromXml = mapper.readValue(xml, MyDataPojo::class.java)
 
@@ -64,9 +64,6 @@ class TestGithub153 {
 
             // I compare the original xml with the xml generated from the pojo
             assertEquals(xml, xmlFromPojo)
-            fail("Problem with conflicting annotations related to #153 has been fixed!")
-        } catch (e: InvalidDefinitionException) {
-            // Remove this try/catch and the `fail()` call above when this issue is fixed
         }
     }
 }

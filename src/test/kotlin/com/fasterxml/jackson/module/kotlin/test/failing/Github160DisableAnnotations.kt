@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
-import kotlin.test.fail
 
 class TestGithub160 {
     data class DataClass(val blah: String)
@@ -13,11 +13,8 @@ class TestGithub160 {
     @Test
     fun dataClass() {
         val mapper = jacksonObjectMapper().configure(MapperFeature.USE_ANNOTATIONS, false)
-        try {
+        expectFailure(MismatchedInputException::class, "GitHub #160 has been fixed!") {
             mapper.readValue<DataClass>("""{"blah":"blah"}""")
-            fail("GitHub #160 has been fixed!")
-        } catch (e: MismatchedInputException) {
-            // Remove this try/catch and the `fail()` call above when this issue is fixed
         }
     }
 }

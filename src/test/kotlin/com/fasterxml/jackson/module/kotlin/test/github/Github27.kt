@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -46,14 +47,12 @@ class TestGithub27 {
     fun testListOfInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithListOfInt>(json)
-        try {
+        expectFailure(NullPointerException::class, "Problem with nullable generics related to #27 has been fixed!") {
             assertTrue(stateObj.samples.none {
                 @Suppress("SENSELESS_COMPARISON")
                 (it == null)
             })
-            fail("Problem with nullable generics related to #27 has been fixed!")
-        } catch (e: NullPointerException) {
-            // Remove this try/catch and the `fail()` call above when this issue is fixed
+            fail()
         }
     }
 

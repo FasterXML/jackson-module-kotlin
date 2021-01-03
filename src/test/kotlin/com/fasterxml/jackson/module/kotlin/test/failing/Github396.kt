@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test.failing
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
@@ -17,13 +18,10 @@ class TestGithub396 {
         val mapper = XmlMapper().registerKotlinModule()
 
         val xml = "<product><stuff></stuff></product>"
-        try {
+        expectFailure(MismatchedInputException::class, "GitHub #396 has been fixed!") {
             val product: Product = mapper.readValue(xml, Product::class.java)
 
             assertEquals(Product(null), product)
-            fail("GitHub #396 has been fixed!")
-        } catch (e: MismatchedInputException) {
-            // Remove this try/catch and the `fail()` call above when this issue is fixed
         }
     }
 

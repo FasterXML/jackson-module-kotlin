@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import com.fasterxml.jackson.databind.deser.UnresolvedForwardReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.fail
 
@@ -21,11 +22,8 @@ class TestGithub54 {
         entity1.entity2 = entity2
 
         val json = mapper.writeValueAsString(entity1)
-        try {
+        expectFailure(UnresolvedForwardReference::class, "GitHub #54 has been fixed!") {
             mapper.readValue<Entity1>(json)
-            fail("GitHub #54 has been fixed!")
-        } catch (e: UnresolvedForwardReference) {
-            // Remove this try/catch and the `fail()` call above when this issue is fixed
         }
 
     }
