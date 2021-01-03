@@ -31,7 +31,7 @@ class Github335Test {
         val newEntity = mapper.readValue<MyEntity>(json)
 
         try {
-            // Returns false: "null" String instead of null
+            // newEntity.type is hte string "null" instead of the null value
             assertNull(newEntity.type)
             fail("GitHub #335 has been fixed!")
         } catch (e: AssertionError) {
