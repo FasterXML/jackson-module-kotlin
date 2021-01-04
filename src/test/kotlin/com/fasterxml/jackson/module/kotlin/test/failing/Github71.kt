@@ -15,7 +15,7 @@ class TestGithub71 {
     fun testInternalPropertySerliazation() {
         val json = jacksonObjectMapper().writeValueAsString(Identifiable())
 
-        expectFailure(AssertionError::class, "GitHub #71 has been fixed!") {
+        expectFailure<AssertionError>("GitHub #71 has been fixed!") {
             assertEquals("{\"identity\":null}", json) // fails: {"identity$jackson_module_kotlin":null}
             val newInstance = jacksonObjectMapper().readValue<Identifiable>(json)
             assertEquals(Identifiable(), newInstance)

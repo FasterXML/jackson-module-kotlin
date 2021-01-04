@@ -19,7 +19,7 @@ See the below examples:
 ```kotlin
 @Test
 fun failingTest() {
-    expectFailure(MismatchedInputException::class, "The call that fails with MismatchedInputException has been fixed!") {
+    expectFailure<MismatchedInputException>("The call that fails with MismatchedInputException has been fixed!") {
         mapper.callThatFailsWithMismatchedInputException()
     }
 }
@@ -32,7 +32,7 @@ fun serializeAndDeserializeTypeable() {
     val json = mapper.writeValueAsString(oldEntity)
     val newEntity = mapper.readValue<MyEntity>(json)
 
-    expectFailure(AssertionError::class, "GitHub #335 has been fixed!") {
+    expectFailure<AssertionError>("GitHub #335 has been fixed!") {
         // newEntity.type is hte string "null" instead of the null value
         assertNull(newEntity.type)
     }

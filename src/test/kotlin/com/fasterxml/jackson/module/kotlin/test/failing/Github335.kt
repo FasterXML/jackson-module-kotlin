@@ -30,7 +30,7 @@ class Github335Test {
         val json = mapper.writeValueAsString(oldEntity)
         val newEntity = mapper.readValue<MyEntity>(json)
 
-        expectFailure(AssertionError::class, "GitHub #335 has been fixed!") {
+        expectFailure<AssertionError>("GitHub #335 has been fixed!") {
             // newEntity.type is the string "null" instead of the null value
             assertNull(newEntity.type)
         }

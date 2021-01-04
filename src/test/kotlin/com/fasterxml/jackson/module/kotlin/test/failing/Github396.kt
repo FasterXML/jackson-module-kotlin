@@ -6,7 +6,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.fail
 
 class TestGithub396 {
     /**
@@ -18,7 +17,7 @@ class TestGithub396 {
         val mapper = XmlMapper().registerKotlinModule()
 
         val xml = "<product><stuff></stuff></product>"
-        expectFailure(MismatchedInputException::class, "GitHub #396 has been fixed!") {
+        expectFailure<MismatchedInputException>("GitHub #396 has been fixed!") {
             val product: Product = mapper.readValue(xml, Product::class.java)
 
             assertEquals(Product(null), product)

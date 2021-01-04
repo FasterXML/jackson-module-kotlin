@@ -55,7 +55,7 @@ class TestGithub153 {
     @Test
     // Conflict between the annotations that is not current resolvable.
     fun test_data_class() {
-        expectFailure(InvalidDefinitionException::class, "Problem with conflicting annotations related to #153 has been fixed!") {
+        expectFailure<InvalidDefinitionException>("Problem with conflicting annotations related to #153 has been fixed!") {
             // I create a pojo from the xml using the data classes
             val pojoFromXml = mapper.readValue(xml, MyDataPojo::class.java)
 

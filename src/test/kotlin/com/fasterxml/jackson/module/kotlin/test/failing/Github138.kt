@@ -26,7 +26,7 @@ class TestGithub138 {
     fun testDeserProblem() {
         val xml = """<sms Phone="435242423412" Id="43234324">Lorem ipsum</sms>"""
         val xmlMapper = XmlMapper().registerKotlinModule()
-        expectFailure(InvalidDefinitionException::class, "GitHub #138 has been fixed!") {
+        expectFailure<InvalidDefinitionException>("GitHub #138 has been fixed!") {
             val jsms = xmlMapper.readValue<Sms>(xml)
         }
     }

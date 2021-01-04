@@ -13,7 +13,7 @@ class TestGithub160 {
     @Test
     fun dataClass() {
         val mapper = jacksonObjectMapper().configure(MapperFeature.USE_ANNOTATIONS, false)
-        expectFailure(MismatchedInputException::class, "GitHub #160 has been fixed!") {
+        expectFailure<MismatchedInputException>("GitHub #160 has been fixed!") {
             mapper.readValue<DataClass>("""{"blah":"blah"}""")
         }
     }

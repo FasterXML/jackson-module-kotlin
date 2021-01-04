@@ -21,7 +21,7 @@ class OwnerRequestTest {
 
     @Test
     fun testDeserHit340() {
-        expectFailure(UnrecognizedPropertyException::class, "GitHub #340 has been fixed!") {
+        expectFailure<UnrecognizedPropertyException>("GitHub #340 has been fixed!") {
             val value: IsField = jackson.readValue(json)
             assertEquals("Got a foo", value.foo)
         }

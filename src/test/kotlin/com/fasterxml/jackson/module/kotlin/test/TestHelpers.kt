@@ -1,6 +1,5 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import kotlin.reflect.KClass
 import kotlin.test.fail
 
 /**
@@ -13,18 +12,18 @@ import kotlin.test.fail
  * should make it clear what has happened (i.e. that some previously broken functionality
  * has been fixed).
  *
- * @param throwableType The expected throwable
+ * @param T             The expected throwable
  * @param fixMessage    The message to print when the block succeeds
  * @param block         The block to execute
  */
-fun <T : Throwable> expectFailure(
-        throwableType: KClass<T>,
+inline fun <reified T : Throwable> expectFailure(
         fixMessage: String,
         block: () -> Unit
 ) {
     try {
         block()
     } catch (e: Throwable) {
+        val throwableType = T::class
         if (throwableType.isInstance(e)) {
             // Expected exception, do nothing
         } else {

@@ -17,7 +17,7 @@ class TestGithub271 {
         val mapper = jacksonObjectMapper()
 
         val json = mapper.writeValueAsString(Foo("a", "c"))
-        expectFailure(AssertionError::class, "GitHub #271 has been fixed!") {
+        expectFailure<AssertionError>("GitHub #271 has been fixed!") {
             assertEquals("""{"a":"a","b":"b","c":"c"}""", json)
         }
     }

@@ -47,7 +47,7 @@ class TestGithub27 {
     fun testListOfInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithListOfInt>(json)
-        expectFailure(NullPointerException::class, "Problem with nullable generics related to #27 has been fixed!") {
+        expectFailure<NullPointerException>("Problem with nullable generics related to #27 has been fixed!") {
             assertTrue(stateObj.samples.none {
                 @Suppress("SENSELESS_COMPARISON")
                 (it == null)

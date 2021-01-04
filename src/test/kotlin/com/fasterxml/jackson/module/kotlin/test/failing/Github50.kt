@@ -18,7 +18,7 @@ class TestGithub50 {
     @Test
     fun testGithub50UnwrappedError() {
         val json = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
-        expectFailure(InvalidDefinitionException::class, "GitHub #50 has been fixed!") {
+        expectFailure<InvalidDefinitionException>("GitHub #50 has been fixed!") {
             val obj: Employee = jacksonObjectMapper().readValue(json)
         }
     }

@@ -28,7 +28,7 @@ class GithubDatabind1329 {
         )
 
         assertEquals(InviteKind.CONTACT, invite.kind)
-        expectFailure(AssertionError::class, "GitHub Databind issue #1329 has been fixed!") {
+        expectFailure<AssertionError>("GitHub Databind issue #1329 has been fixed!") {
             assertNull(invite.kindForMapper)
         }
 

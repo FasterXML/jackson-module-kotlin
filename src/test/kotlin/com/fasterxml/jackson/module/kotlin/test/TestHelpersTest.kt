@@ -7,7 +7,7 @@ import kotlin.test.assertEquals
 class TestHelpersTest {
     @Test
     fun expectFailure_ExpectedExceptionThrown() {
-        expectFailure(AssertionError::class, "This will not be printed") {
+        expectFailure<AssertionError>("This will not be printed") {
             throw AssertionError("This is expected")
         }
     }
@@ -15,7 +15,7 @@ class TestHelpersTest {
     @Test
     fun expectFailure_AnotherExceptionThrown() {
         val throwable = assertThrows(AssertionError::class.java) {
-            expectFailure(AssertionError::class, "This will not be printed") {
+            expectFailure<AssertionError>("This will not be printed") {
                 throw Exception("This is not expected")
             }
         }
@@ -27,7 +27,7 @@ class TestHelpersTest {
     fun expectFailure_NoExceptionThrown() {
         val fixMessage = "Test will fail with this message"
         val throwable = assertThrows(AssertionError::class.java) {
-            expectFailure(AssertionError::class, fixMessage) {
+            expectFailure<AssertionError>(fixMessage) {
                 // Do nothing
             }
         }
