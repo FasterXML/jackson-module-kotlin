@@ -205,3 +205,14 @@ If you are going to write code, choose the appropriate base branch:
 - `2.12` for bugfixes against the current stable version
 - `2.13` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `master` for significant changes to existing behavior, which will be part of Jackson 3.0
+
+### Failing tests
+
+There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
+package but a few as part of other test suites.  Instead of ignoring these tests (with JUnit's `@Ignore` annotation)
+or excluding them from being run as part of automated testing, the tests are written to demonstrate the failure
+(either making a call that throws an exception or with an assertion that fails) but not fail the build, except if the
+underlying issue is fixed.  This allows us to know when the tested functionality has been incidentally fixed by
+unrelated code changes.
+
+See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.

@@ -1,7 +1,9 @@
-package com.fasterxml.jackson.module.kotlin.test.failing
+package com.fasterxml.jackson.module.kotlin.test.github.failing
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -17,9 +19,11 @@ class TestGithub396 {
                 .build()
 
         val xml = "<product><stuff></stuff></product>"
-        val product: Product = mapper.readValue(xml, Product::class.java)
+        expectFailure<MismatchedInputException>("GitHub #396 has been fixed!") {
+            val product: Product = mapper.readValue(xml, Product::class.java)
 
-        assertEquals(Product(null), product)
+            assertEquals(Product(null), product)
+        }
     }
 
     private data class Stuff(val str: String?)

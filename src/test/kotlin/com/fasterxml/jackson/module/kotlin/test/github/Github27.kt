@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 class TestGithub27 {
     val mapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
@@ -40,14 +41,18 @@ class TestGithub27 {
 
     private data class ClassWithListOfInt(val samples: List<Int>)
 
-    @Ignore("Would be hard to look into generics of every possible type of collection or generic object to check nullability of each item, maybe only possible for simple known collections")
-    @Test fun testListOfInt() {
+    @Test
+    // Would be hard to look into generics of every possible type of collection or generic object to check nullability of each item, maybe only possible for simple known collections
+    fun testListOfInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithListOfInt>(json)
-        assertTrue(stateObj.samples.none {
-            @Suppress("SENSELESS_COMPARISON")
-            (it == null)
-        })
+        expectFailure<NullPointerException>("Problem with nullable generics related to #27 has been fixed!") {
+            assertTrue(stateObj.samples.none {
+                @Suppress("SENSELESS_COMPARISON")
+                (it == null)
+            })
+            fail()
+        }
     }
 
     // work around to above

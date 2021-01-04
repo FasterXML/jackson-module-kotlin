@@ -1,11 +1,11 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Ignore
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
-
 
 class TestGithub50 {
     data class Name(val firstName: String, val lastName: String)
@@ -15,11 +15,11 @@ class TestGithub50 {
             val position: String
     )
 
-
     @Test
-    @Ignore("""Fails with: Cannot define Creator property "name" as `@JsonUnwrapped`""")
     fun testGithub50UnwrappedError() {
-        val JSON = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
-        val obj: Employee = jacksonObjectMapper().readValue(JSON)
+        val json = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
+        expectFailure<InvalidDefinitionException>("GitHub #50 has been fixed!") {
+            val obj: Employee = jacksonObjectMapper().readValue(json)
+        }
     }
 }
