@@ -215,4 +215,4 @@ or excluding them from being run as part of automated testing, the tests are wri
 underlying issue is fixed.  This allows us to know when the tested functionality has been incidentally fixed by
 unrelated code changes.
 
-See the [failing tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/failing/README.md) for more information.
+See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.
