@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.assertNull
 
@@ -29,7 +30,9 @@ class Github335Test {
         val json = mapper.writeValueAsString(oldEntity)
         val newEntity = mapper.readValue<MyEntity>(json)
 
-        // Returns false: "null" String instead of null
-        assertNull(newEntity.type)
+        expectFailure<AssertionError>("GitHub #335 has been fixed!") {
+            // newEntity.type is the string "null" instead of the null value
+            assertNull(newEntity.type)
+        }
     }
 }

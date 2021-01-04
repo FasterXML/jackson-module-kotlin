@@ -1,8 +1,10 @@
 package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -19,8 +21,10 @@ class OwnerRequestTest {
 
     @Test
     fun testDeserHit340() {
-        val value: IsField = jackson.readValue(json)
-        assertEquals("Got a foo", value.foo)
+        expectFailure<UnrecognizedPropertyException>("GitHub #340 has been fixed!") {
+            val value: IsField = jackson.readValue(json)
+            assertEquals("Got a foo", value.foo)
+        }
     }
 
     @Test

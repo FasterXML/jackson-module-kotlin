@@ -1,33 +1,33 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.failing
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlText
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import org.junit.Ignore
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 
 class TestGithub138 {
     @JacksonXmlRootElement(localName = "sms")
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class Sms(
-        @JacksonXmlProperty(localName = "Phone", isAttribute = true)
-        val phone: String?,
+            @JacksonXmlProperty(localName = "Phone", isAttribute = true)
+            val phone: String?,
 
-        @JacksonXmlText
-        val text: String? = ""
-
-        )
+            @JacksonXmlText
+            val text: String? = ""
+    )
 
     @Test
-    @Ignore("Not sure the cause of this yet...")
     fun testDeserProblem() {
         val xml = """<sms Phone="435242423412" Id="43234324">Lorem ipsum</sms>"""
         val xmlMapper = XmlMapper().registerKotlinModule()
-        val sms = xmlMapper.readValue<Sms>(xml)
-
+        expectFailure<InvalidDefinitionException>("GitHub #138 has been fixed!") {
+            val jsms = xmlMapper.readValue<Sms>(xml)
+        }
     }
 }
