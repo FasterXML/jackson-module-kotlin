@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.failing
+package com.fasterxml.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo

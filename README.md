@@ -208,7 +208,7 @@ If you are going to write code, choose the appropriate base branch:
 
 ### Failing tests
 
-There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/failing)
+There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
 package but a few as part of other test suites.  Instead of ignoring these tests (with JUnit's `@Ignore` annotation)
 or excluding them from being run as part of automated testing, the tests are written to demonstrate the failure
 (either making a call that throws an exception or with an assertion that fails) but not fail the build, except if the
