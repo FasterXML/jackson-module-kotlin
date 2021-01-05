@@ -3,8 +3,8 @@ package com.fasterxml.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import junit.framework.Assert.assertEquals
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class TestGithub120 {
     data class Foo @JsonCreator(mode = JsonCreator.Mode.DELEGATING) constructor (

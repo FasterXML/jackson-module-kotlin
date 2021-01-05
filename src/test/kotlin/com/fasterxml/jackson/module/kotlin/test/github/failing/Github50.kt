@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class TestGithub50 {
     data class Name(val firstName: String, val lastName: String)
@@ -20,6 +21,8 @@ class TestGithub50 {
         val json = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
         expectFailure<InvalidDefinitionException>("GitHub #50 has been fixed!") {
             val obj: Employee = jacksonObjectMapper().readValue(json)
+            assertEquals(Name("John", "Smith"), obj.name)
+            assertEquals("Manager", obj.position)
         }
     }
 }

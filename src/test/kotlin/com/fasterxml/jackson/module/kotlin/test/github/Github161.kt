@@ -17,7 +17,7 @@ class TestGithub161 {
         val json = """{"foo":17}"""
         val objectMapper = jacksonObjectMapper().configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
         try {
-            val foo = objectMapper.readValue(json, Foo::class.java)
+            objectMapper.readValue(json, Foo::class.java)
             fail("Expected an error on the missing primitive value")
         } catch (ex: MismatchedInputException) {
             // success

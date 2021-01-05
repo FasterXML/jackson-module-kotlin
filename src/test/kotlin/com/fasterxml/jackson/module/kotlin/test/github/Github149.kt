@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 
+@Suppress("UNUSED_VARIABLE")
 class TestGithub149 {
 
     class Foo(val name: String, attributes: List<FooAtt>) {

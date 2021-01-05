@@ -27,7 +27,7 @@ class TestGithub138 {
         val xml = """<sms Phone="435242423412" Id="43234324">Lorem ipsum</sms>"""
         val xmlMapper = XmlMapper().registerKotlinModule()
         expectFailure<InvalidDefinitionException>("GitHub #138 has been fixed!") {
-            val jsms = xmlMapper.readValue<Sms>(xml)
+            xmlMapper.readValue<Sms>(xml)
         }
     }
 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 
+@Suppress("UNUSED_VARIABLE")
 class TestGithub145 {
     private val objectMapper = jacksonObjectMapper()
 
