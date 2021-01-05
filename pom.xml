@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <!-- This module was also published with a richer model, Gradle metadata,  -->
-  <!-- which should be used instead. Do not delete the following line which  -->
-  <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
-  <!-- that they should prefer consuming it instead. -->
-  <!-- do_not_remove: published-with-gradle-metadata -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- This module was also published with a richer model, Gradle metadata,  -->
+    <!-- which should be used instead. Do not delete the following line which  -->
+    <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
+    <!-- that they should prefer consuming it instead. -->
+    <!-- do_not_remove: published-with-gradle-metadata -->
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.fasterxml.jackson</groupId>
@@ -24,9 +25,9 @@
             <id>jaysonminard</id>
             <name>Jayson Minard</name>
             <email>jayson.minard@gmail.com</email>
-	    <roles>
-	      <role>author</role>
-	    </roles>
+            <roles>
+                <role>author</role>
+            </roles>
         </developer>
         <developer>
             <id>dinomite</id>
@@ -146,9 +147,9 @@
                 </executions>
             </plugin>
             <plugin>
-	      <groupId>org.apache.maven.plugins</groupId>
-	      <artifactId>maven-surefire-plugin</artifactId>
-	    </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
             <plugin>
                 <!-- Inherited from oss-base. Generate PackageVersion.java.-->
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
@@ -167,20 +168,19 @@
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
-                    <optimize>true</optimize>
                 </configuration>
             </plugin>
 
-	    <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
-	    <plugin>
+            <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
+            <plugin>
                 <groupId>org.moditect</groupId>
-		<artifactId>moditect-maven-plugin</artifactId>
-	    </plugin>
+                <artifactId>moditect-maven-plugin</artifactId>
+            </plugin>
 
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
             <plugin>
-                  <groupId>de.jjohannes</groupId>
-                  <artifactId>gradle-module-metadata-maven-plugin</artifactId>
+                <groupId>de.jjohannes</groupId>
+                <artifactId>gradle-module-metadata-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -189,8 +189,12 @@
         <repository>
             <id>snapshots-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
-            <snapshots><enabled>true</enabled></snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 </project>
