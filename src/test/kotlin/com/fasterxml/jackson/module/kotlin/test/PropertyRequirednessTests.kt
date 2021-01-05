@@ -14,6 +14,7 @@ class TestPropertyRequiredness {
 
     private data class TestParamClass(val foo: String = "bar")
 
+    @Suppress("UNUSED_PARAMETER")
     private class TestClass {
         fun setA(value: Int): Unit {}
         fun setB(value: Int = 5): Unit {}

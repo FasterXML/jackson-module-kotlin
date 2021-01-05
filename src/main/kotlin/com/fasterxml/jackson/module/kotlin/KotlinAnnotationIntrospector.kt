@@ -140,6 +140,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                 it.getter.javaMethod == this.member
             }
 
+    @Suppress("UNCHECKED_CAST")
     private fun AnnotatedMethod.getCorrespondingSetter(): KMutableProperty1.Setter<out Any, Any?>? {
         val mutableProperty = member.declaringClass.kotlin.declaredMemberProperties.find {
             when (it) {

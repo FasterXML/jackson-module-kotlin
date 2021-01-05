@@ -18,7 +18,7 @@ class TestGithub161 {
         val objectMapper = jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
                 .build()
         try {
-            val foo = objectMapper.readValue(json, Foo::class.java)
+            objectMapper.readValue(json, Foo::class.java)
             fail("Expected an error on the missing primitive value")
         } catch (ex: MismatchedInputException) {
             // success
