@@ -14,7 +14,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.12.1 (not yet released)
+2.12.1 (08-Jan-2021)
 
 #402: Remove implicitly-included `java.base` dep in `module-info.java`
  (reported by UkonnRa@github)
