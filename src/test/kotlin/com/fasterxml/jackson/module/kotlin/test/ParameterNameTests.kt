@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.isKotlinClass
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -157,6 +159,20 @@ class TestJacksonWithKotlin {
 
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)
         assertThat(test1out, equalTo(pascalCasedJson))
+    }
+
+
+    // ==================
+
+    private data class NonIdiomaticPascalCasedClass(val Some_Number: Int, val Email_Address: String)
+
+    @Test fun readAfterWriteWithPascalCaseProperties() {
+        val obj = NonIdiomaticPascalCasedClass(6, "nobody@test.com")
+
+        val serialized = normalCasedMapper.writeValueAsString(obj)
+        val deserialized = normalCasedMapper.readValue<NonIdiomaticPascalCasedClass>(serialized)
+
+        assertThat(deserialized, equalTo(obj))
     }
 
 
