@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.DatabindException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -120,7 +120,7 @@ private fun location(line: Int, column: Int) = object : CustomTypeSafeMatcher<Mi
     }
 }
 
-private fun JsonMappingException.getHumanReadablePath(): String {
+private fun DatabindException.getHumanReadablePath(): String {
     val builder = StringBuilder()
     this.path.forEachIndexed { i, reference ->
         if (reference.index >= 0) {

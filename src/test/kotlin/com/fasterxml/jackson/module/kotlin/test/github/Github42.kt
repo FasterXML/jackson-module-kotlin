@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.DatabindException
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Rule
@@ -32,7 +32,7 @@ class TestGithub42_FailOnNullForPrimitives {
     }
 
     @Test fun `Exception thrown if required primitive parameter not in json when FAIL_ON_NULL_FOR_PRIMITIVES is true`() {
-        thrown.expect(JsonMappingException::class.java)
+        thrown.expect(DatabindException::class.java)
 
         mapper.readValue<OptionalIntRequiredBoolean>("""
         {"optInt": 2}
