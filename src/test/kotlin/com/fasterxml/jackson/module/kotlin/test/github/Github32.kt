@@ -127,7 +127,7 @@ private fun DatabindException.getHumanReadablePath(): String {
             builder.append("[${reference.index}]")
         } else {
             if (i > 0) builder.append(".")
-            builder.append("${reference.fieldName}")
+            builder.append("${reference.propertyName}")
         }
     }
     return builder.toString()

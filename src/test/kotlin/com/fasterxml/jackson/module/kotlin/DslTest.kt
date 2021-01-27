@@ -59,7 +59,7 @@ class DslTest {
     fun creatJsonMappereWithBuilderOptions() {
         val mapper = jsonMapper {
             enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
-            disable(JsonWriteFeature.QUOTE_FIELD_NAMES)
+            disable(JsonWriteFeature.QUOTE_PROPERTY_NAMES)
             configure(JsonReadFeature.ALLOW_SINGLE_QUOTES, true)
 
             addModule(kotlinModule {
@@ -69,7 +69,7 @@ class DslTest {
 
         assertNotNull(mapper)
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_JAVA_COMMENTS))
-        assertFalse(mapper.isEnabled(JsonWriteFeature.QUOTE_FIELD_NAMES))
+        assertFalse(mapper.isEnabled(JsonWriteFeature.QUOTE_PROPERTY_NAMES))
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_SINGLE_QUOTES))
         assertTrue(mapper.registeredModules.any { it.moduleName == "jackson-module-kotlin" })
     }
