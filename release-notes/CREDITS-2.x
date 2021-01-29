@@ -13,9 +13,22 @@ Authors:
 
 Contributors:
 
+Elisha Peterson (triathematician@github)
+* Reported #409: `module-info.java` missing "exports"
+  (2.12.2)
+
 Wolfgang Jung (elektro-wolle@github)
 * Fixed inline class serialization
   (2.12.1)
+
+John Flynn (Neuman968@github)
+* Contributed extension methods for SimpleModule to add serializer and deserializer
+  extension functions for KClass #322
+  (2.12.0)
+
+Mateusz Stefek (MateuszStefek@github)
+* Reported #321: Make MissingKotlinParameterException a descendant of MismatchedInputException
+  (2.12.0)
 
 Hideaki Tanabe (tanabe@github)
 * Brought README.md into the modern world of Gradle (compile -> implementation)
@@ -65,10 +78,3 @@ Drew Stephens (dinomite@github)
 * Contributed fix for #281: KotlinObjectSingletonDeserializer fails to deserialize
     previously serialized JSON as it doesn't delegate deserializeWithType
   (2.11.0)
-
-Mateusz Stefek (MateuszStefek@github)
-* Reported #321: Make MissingKotlinParameterException a descendant of MismatchedInputException
-
-John Flynn (Neuman968@github)
-* Contributed extension methods for SimpleModule to add serializer and deserializer extension functions for KClass #322
-    (2.12.x)
