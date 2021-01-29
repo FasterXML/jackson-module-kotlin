@@ -14,6 +14,11 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.12.2 (not yet released)
+
+#409: `module-info.java` missing "exports"
+ (reported by Elisha P)
+
 2.12.1 (08-Jan-2021)
 
 #402: Remove implicitly-included `java.base` dep in `module-info.java`
