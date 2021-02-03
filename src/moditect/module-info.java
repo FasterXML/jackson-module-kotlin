@@ -2,6 +2,8 @@
 //   https://github.com/FasterXML/jackson-module-kotlin/issues/385
 module com.fasterxml.jackson.kotlin {
     requires java.desktop;
+
+    requires kotlin.reflect;
     requires kotlin.stdlib;
 
     requires com.fasterxml.jackson.annotation;
