@@ -11,6 +11,6 @@ module com.fasterxml.jackson.kotlin {
 
     exports com.fasterxml.jackson.module.kotlin;
 
-    provides com.fasterxml.jackson.databind.Module with
+    provides com.fasterxml.jackson.databind.JacksonModule with
         com.fasterxml.jackson.module.kotlin.KotlinModule;
 }

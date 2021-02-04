@@ -3,7 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.Module
+import com.fasterxml.jackson.databind.JacksonModule
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
@@ -20,7 +20,7 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.*
 
 
-internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
+internal class KotlinAnnotationIntrospector(private val context: JacksonModule.SetupContext,
                                             private val cache: ReflectionCache,
                                             private val nullToEmptyCollection: Boolean,
                                             private val nullToEmptyMap: Boolean,
