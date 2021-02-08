@@ -3,9 +3,9 @@ package com.fasterxml.jackson.module.kotlin.test
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.ValueDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.addDeserializer
 import com.fasterxml.jackson.module.kotlin.addSerializer
@@ -58,7 +58,7 @@ class RoundingSerializer : JsonSerializer<Double>() {
     }
 }
 
-class RoundingDeserializer : JsonDeserializer<Double>() {
+class RoundingDeserializer : ValueDeserializer<Double>() {
     override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): Double? {
         return BigDecimal(p?.valueAsString)
                 .setScale(2, RoundingMode.HALF_UP)

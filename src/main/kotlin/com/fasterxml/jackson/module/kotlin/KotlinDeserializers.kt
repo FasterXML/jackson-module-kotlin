@@ -37,7 +37,7 @@ object RegexDeserializer: StdDeserializer<Regex>(Regex::class.java) {
 }
 
 internal class KotlinDeserializers: Deserializers.Base() {
-    override fun findBeanDeserializer(type: JavaType, config: DeserializationConfig?, beanDesc: BeanDescription?): JsonDeserializer<*>? {
+    override fun findBeanDeserializer(type: JavaType, config: DeserializationConfig?, beanDesc: BeanDescription?): ValueDeserializer<*>? {
         return if (type.isInterface && type.rawClass == Sequence::class.java) {
             SequenceDeserializer
         } else if (type.rawClass == Regex::class.java) {

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonSerializer
+import com.fasterxml.jackson.databind.ValueDeserializer
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.io.File
 import java.io.InputStream
@@ -59,7 +59,7 @@ inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, seria
     addSerializer(kClass.javaObjectType, serializer)
 }
 
-inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>) = this.apply {
+inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: ValueDeserializer<T>) = this.apply {
     addDeserializer(kClass.java, deserializer)
     addDeserializer(kClass.javaObjectType, deserializer)
 }
