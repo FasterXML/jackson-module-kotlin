@@ -3,10 +3,10 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
+import com.fasterxml.jackson.databind.deser.ValueDeserializerModifier
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
-object KotlinBeanDeserializerModifier : BeanDeserializerModifier() {
+object KotlinValueDeserializerModifier : ValueDeserializerModifier() {
     override fun modifyDeserializer(
             config: DeserializationConfig,
             beanDesc: BeanDescription,

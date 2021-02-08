@@ -80,7 +80,7 @@ class KotlinModule constructor (
             DISABLED -> Unit
             CANONICALIZE -> {
  	        // [module-kotlin#225]: keep Kotlin singletons as singletons
-                context.addDeserializerModifier(KotlinBeanDeserializerModifier)
+                context.addDeserializerModifier(KotlinValueDeserializerModifier)
             }
         }
 
