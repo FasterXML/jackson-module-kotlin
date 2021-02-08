@@ -17,7 +17,7 @@ internal class KotlinSerializers : Serializers.Base() {
     override fun findSerializer(config: SerializationConfig,
                                 type: JavaType,
                                 beanDesc: BeanDescription?,
-                                formatOverrides: JsonFormat.Value?): JsonSerializer<*>? {
+                                formatOverrides: JsonFormat.Value?): ValueSerializer<*>? {
         return if (Sequence::class.java.isAssignableFrom(type.rawClass)) {
             SequenceSerializer
         } else {

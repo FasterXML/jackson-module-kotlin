@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.ValueDeserializer
+import com.fasterxml.jackson.databind.ValueSerializer
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.io.File
 import java.io.InputStream
@@ -54,7 +54,7 @@ inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = treeToValue(n
 internal fun DatabindException.wrapWithPath(refFrom: Any?, refFieldName: String) = DatabindException.wrapWithPath(this, refFrom, refFieldName)
 internal fun DatabindException.wrapWithPath(refFrom: Any?, index: Int) = DatabindException.wrapWithPath(this, refFrom, index)
 
-inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>) = this.apply {
+inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: ValueSerializer<T>) = this.apply {
     addSerializer(kClass.java, serializer)
     addSerializer(kClass.javaObjectType, serializer)
 }
