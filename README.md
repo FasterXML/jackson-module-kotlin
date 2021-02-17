@@ -149,13 +149,13 @@ A `com.fasterxml.jackson.annotation.@JsonTypeInfo` annotation at the base-class 
 ```kotlin
   @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
   sealed class SuperClass{
-      class A:SuperClass()
-      class B:SuperClass()
+      class A: SuperClass()
+      class B: SuperClass()
   }
 
 ...
 val mapper = jacksonObjectMapper()
-val root:SuperClass = mapper.readValue(json)
+val root: SuperClass = mapper.readValue(json)
 when(root){
     is A -> "It's A"
     is B -> "It's B"
