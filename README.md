@@ -141,6 +141,28 @@ These Kotlin classes are supported with the following fields for serialization/d
 
 (others are likely to work, but may not be tuned for Jackson)
 
+# Sealed classes without @JsonSubTypes
+Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
+at compile-time to Kotlin. This makes `com.fasterxml.jackson.annotation.JsonSubTypes` redundant.
+A `com.fasterxml.jackson.annotation.@JsonTypeInfo` annotation at the base-class is still necessary. 
+
+```kotlin
+  @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+  sealed class SuperClass{
+      class A: SuperClass()
+      class B: SuperClass()
+  }
+
+...
+val mapper = jacksonObjectMapper()
+val root: SuperClass = mapper.readValue(json)
+when(root){
+    is A -> "It's A"
+    is B -> "It's B"
+}
+```
+
+
 # Configuration
 
 The Kotlin module may be given a few configuration parameters at construction time;
