@@ -14,6 +14,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.13.0 (not yet released)
+
+No changes since 2.12
+
 2.12.2 (not yet released)
 
 #409: `module-info.java` missing "exports"
