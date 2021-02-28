@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github.failing
+package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type
@@ -7,9 +7,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.As
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
-import kotlin.test.assertNull
+import kotlin.test.assertEquals
 
 class Github335Test {
     val mapper = jacksonObjectMapper()
@@ -18,10 +17,10 @@ class Github335Test {
     data class UniquePayload(val data: String) : Payload
 
     data class MyEntity(
-            val type: String?,
-            @JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "type")
-            @JsonSubTypes(Type(value = UniquePayload::class, name = "UniquePayload"))
-            val payload: Payload?
+        val type: String?,
+        @JsonTypeInfo(use = Id.NAME, include = As.EXTERNAL_PROPERTY, property = "type")
+        @JsonSubTypes(Type(value = UniquePayload::class, name = "UniquePayload"))
+        val payload: Payload?
     )
 
     @Test
@@ -30,9 +29,6 @@ class Github335Test {
         val json = mapper.writeValueAsString(oldEntity)
         val newEntity = mapper.readValue<MyEntity>(json)
 
-        expectFailure<AssertionError>("GitHub #335 has been fixed!") {
-            // newEntity.type is the string "null" instead of the null value
-            assertNull(newEntity.type)
-        }
+        assertEquals(oldEntity, newEntity)
     }
 }
