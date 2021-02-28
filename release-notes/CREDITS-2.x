@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+Eric Fenderbosch (efenderbosch@github)
+* Fixed #182: Serialize unsigned numbers
+  (2.12.2)
+
 Elisha Peterson (triathematician@github)
 * Reported #409: `module-info.java` missing "exports"
   (2.12.2)

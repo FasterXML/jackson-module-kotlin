@@ -22,6 +22,9 @@ No changes since 2.12
 
 #409: `module-info.java` missing "exports"
  (reported by Elisha P)
+#182: Nullable unsigned numbers do not serialize correctly
+ (reported by bholzman@github)
+ (fix contributed by Eric F)
 
 2.12.1 (08-Jan-2021)
 

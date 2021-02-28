@@ -34,8 +34,8 @@ fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object : TypeReference<T>() {}
 
-inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
-inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValue(p: JsonParser): T = readValue(p, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValues(p: JsonParser): MappingIterator<T> = readValues(p, jacksonTypeRef<T>())
 
 inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>())
@@ -47,8 +47,7 @@ inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src
 inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T? = treeToValue(n, T::class.java)
 inline fun <reified T> ObjectMapper.convertValue(from: Any): T = convertValue(from, jacksonTypeRef<T>())
 
-inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
-inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> = readValues(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectReader.readValuesTyped(p: JsonParser): Iterator<T> = readValues(p, jacksonTypeRef<T>())
 inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = treeToValue(n, T::class.java)
 
 internal fun DatabindException.wrapWithPath(refFrom: Any?, refFieldName: String) = DatabindException.wrapWithPath(this, refFrom, refFieldName)
