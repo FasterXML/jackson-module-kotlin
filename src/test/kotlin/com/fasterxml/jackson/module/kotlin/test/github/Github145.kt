@@ -17,19 +17,29 @@ class TestGithub145 {
             @JsonProperty("preName") val preName: String,
             @JsonProperty("lastName") val lastName: String
         ) {
-            constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
+            constructor(preNameAndLastName: String) : this(
+                preNameAndLastName.substringBefore(","),
+                preNameAndLastName.substringAfter(",")
+            )
         }
 
         val objectMapper = ObjectMapper()
-        val personA = objectMapper.readValue("""{"preName":"TestPreName","lastName":"TestLastname"}""", Person1::class.java)
+        val personA =
+            objectMapper.readValue("""{"preName":"TestPreName","lastName":"TestLastname"}""", Person1::class.java)
         val personB = objectMapper.readValue(""""TestPreName,TestLastname"""", Person1::class.java)
     }
 
     @Test
     fun testPersonGood2() {
-        class PersonGood1(@JsonProperty("preName") val preName:String, @JsonProperty("lastName") val lastName:String)
-        {
-            @JsonCreator constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
+        class PersonGood1(
+            @JsonProperty("preName") val preName: String,
+            @JsonProperty("lastName") val lastName: String
+        ) {
+            @JsonCreator
+            constructor(preNameAndLastName: String) : this(
+                preNameAndLastName.substringBefore(","),
+                preNameAndLastName.substringAfter(",")
+            )
         }
 
         val personGood1String = objectMapper.readValue<PersonGood1>(""""TestPreName,TestLastname"""")
@@ -39,9 +49,12 @@ class TestGithub145 {
 
     @Test
     fun testPersonGood3() {
-        class PersonGood2(val preName:String, val lastName:String)
-        {
-            @JsonCreator constructor(preNameAndLastName:String): this(preNameAndLastName.substringBefore(","),preNameAndLastName.substringAfter(","))
+        class PersonGood2(val preName: String, val lastName: String) {
+            @JsonCreator
+            constructor(preNameAndLastName: String) : this(
+                preNameAndLastName.substringBefore(","),
+                preNameAndLastName.substringAfter(",")
+            )
         }
 
         val personGood2String = objectMapper.readValue<PersonGood2>(""""TestPreName,TestLastname"""")
@@ -52,8 +65,8 @@ class TestGithub145 {
     @Test
     fun testPersonGood4() {
         class PersonGood4(preNameAndLastName: String) {
-            val preName:String
-            val lastName:String
+            val preName: String
+            val lastName: String
 
             init {
                 this.preName = preNameAndLastName.substringBefore(",")
@@ -102,6 +115,7 @@ class TestGithub145 {
             }
         }
     }
+
     @Test
     fun testPersonGood6() {
         val personGood6String = objectMapper.readValue<PersonGood6>(""""TestPreName,TestLastname"""")
@@ -124,6 +138,7 @@ class TestGithub145 {
             }
         }
     }
+
     @Test
     fun testPersonGood7() {
         val personGood7String = objectMapper.readValue<PersonGood7>(""""TestPreName,TestLastname"""")
