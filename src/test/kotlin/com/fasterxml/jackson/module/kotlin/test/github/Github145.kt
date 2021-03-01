@@ -30,8 +30,8 @@ class TestGithub145 {
     }
 
     @Test
-    fun testPersonGood2() {
-        class PersonGood1(
+    fun testPerson2() {
+        class Person2(
             @JsonProperty("preName") val preName: String,
             @JsonProperty("lastName") val lastName: String
         ) {
@@ -42,14 +42,13 @@ class TestGithub145 {
             )
         }
 
-        val personGood1String = objectMapper.readValue<PersonGood1>(""""TestPreName,TestLastname"""")
-        val personGood1Json =
-            objectMapper.readValue<PersonGood1>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+        val person1String = objectMapper.readValue<Person2>(""""TestPreName,TestLastname"""")
+        val person1Json = objectMapper.readValue<Person2>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 
     @Test
-    fun testPersonGood3() {
-        class PersonGood2(val preName: String, val lastName: String) {
+    fun testPerson3() {
+        class Person3(val preName: String, val lastName: String) {
             @JsonCreator
             constructor(preNameAndLastName: String) : this(
                 preNameAndLastName.substringBefore(","),
@@ -57,14 +56,13 @@ class TestGithub145 {
             )
         }
 
-        val personGood2String = objectMapper.readValue<PersonGood2>(""""TestPreName,TestLastname"""")
-        val personGood2Json =
-            objectMapper.readValue<PersonGood2>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+        val person2String = objectMapper.readValue<Person3>(""""TestPreName,TestLastname"""")
+        val person2Json = objectMapper.readValue<Person3>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 
     @Test
-    fun testPersonGood4() {
-        class PersonGood4(preNameAndLastName: String) {
+    fun testPerson4() {
+        class Person4(preNameAndLastName: String) {
             val preName: String
             val lastName: String
 
@@ -74,13 +72,13 @@ class TestGithub145 {
             }
         }
 
-        val personGood4String = objectMapper.readValue<PersonGood4>(""""TestPreName,TestLastname"""")
+        val person4String = objectMapper.readValue<Person4>(""""TestPreName,TestLastname"""")
         // person4 does not have parameter bound constructor, only string
     }
 
     @Test
-    fun testPersonGood5() {
-        class PersonGood5 @JsonCreator constructor(
+    fun testPerson5() {
+        class Person5 @JsonCreator constructor(
             @JsonProperty("preName") val preName: String,
             @JsonProperty("lastName") val lastName: String
         ) {
@@ -89,13 +87,12 @@ class TestGithub145 {
                     this(preNameAndLastName.substringBefore(","), preNameAndLastName.substringAfter(","))
         }
 
-        val personGood5String = objectMapper.readValue<PersonGood5>(""""TestPreName,TestLastname"""")
-        val personGood5Json =
-            objectMapper.readValue<PersonGood5>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+        val person5String = objectMapper.readValue<Person5>(""""TestPreName,TestLastname"""")
+        val person5Json = objectMapper.readValue<Person5>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 
     // Cannot have companion object in class declared within function
-    class PersonGood6 private constructor(val preName: String, val lastName: String) {
+    class Person6 private constructor(val preName: String, val lastName: String) {
         private constructor(preNameAndLastName: String) : this(
             preNameAndLastName.substringBefore(","),
             preNameAndLastName.substringAfter(",")
@@ -104,27 +101,26 @@ class TestGithub145 {
         companion object {
             @JsonCreator
             @JvmStatic
-            fun createFromJson(preNameAndLastName: String): PersonGood6 {
-                return PersonGood6(preNameAndLastName)
+            fun createFromJson(preNameAndLastName: String): Person6 {
+                return Person6(preNameAndLastName)
             }
 
             @JsonCreator
             @JvmStatic
-            fun createFromData(preName: String, lastName: String): PersonGood6 {
-                return PersonGood6(preName, lastName)
+            fun createFromData(preName: String, lastName: String): Person6 {
+                return Person6(preName, lastName)
             }
         }
     }
 
     @Test
-    fun testPersonGood6() {
-        val personGood6String = objectMapper.readValue<PersonGood6>(""""TestPreName,TestLastname"""")
-        val personGood6Json =
-            objectMapper.readValue<PersonGood6>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+    fun testPerson6() {
+        val person6String = objectMapper.readValue<Person6>(""""TestPreName,TestLastname"""")
+        val person6Json = objectMapper.readValue<Person6>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 
     // Cannot have companion object in class declared within function
-    class PersonGood7 constructor(val preName: String, val lastName: String) {
+    class Person7 constructor(val preName: String, val lastName: String) {
         private constructor(preNameAndLastName: String) : this(
             preNameAndLastName.substringBefore(","),
             preNameAndLastName.substringAfter(",")
@@ -133,16 +129,15 @@ class TestGithub145 {
         companion object {
             @JsonCreator
             @JvmStatic
-            fun createFromJson(preNameAndLastName: String): PersonGood7 {
-                return PersonGood7(preNameAndLastName)
+            fun createFromJson(preNameAndLastName: String): Person7 {
+                return Person7(preNameAndLastName)
             }
         }
     }
 
     @Test
-    fun testPersonGood7() {
-        val personGood7String = objectMapper.readValue<PersonGood7>(""""TestPreName,TestLastname"""")
-        val personGood7Json =
-            objectMapper.readValue<PersonGood7>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
+    fun testPerson7() {
+        val person7String = objectMapper.readValue<Person7>(""""TestPreName,TestLastname"""")
+        val person7Json = objectMapper.readValue<Person7>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 }
