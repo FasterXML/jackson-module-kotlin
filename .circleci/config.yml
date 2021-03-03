@@ -1,7 +1,21 @@
 version: 2.1
 orbs:
   maven: circleci/maven@1.0.2
+  codecov: codecov/codecov@1.0.2
 workflows:
   maven_test:
     jobs:
       - maven/test
+      - store_artifacts:
+          path: target
+      - codecov/upload:
+          file: { { coverage_report_filepath } }
+
+#    - run: mvn integration-test cobertura:cobertura
+#
+#    - store_test_results:
+#        path: target/surfire-reports
+#
+#    - run:
+#        name: Send to CodeCov
+#        command: bash <(curl -s https://codecov.io/bash)enter code here
