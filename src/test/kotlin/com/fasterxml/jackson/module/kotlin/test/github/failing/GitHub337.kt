@@ -8,6 +8,9 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
+/**
+ * Fields named "is…" are only serialized if they are Boolean
+ */
 class TestGitHub337 {
     private val mapper = jacksonObjectMapper()
             .setSerializationInclusion(JsonInclude.Include.ALWAYS)
