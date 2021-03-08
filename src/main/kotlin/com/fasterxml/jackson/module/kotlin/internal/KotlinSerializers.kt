@@ -1,6 +1,6 @@
 @file:Suppress("EXPERIMENTAL_API_USAGE")
 
-package com.fasterxml.jackson.module.kotlin
+package com.fasterxml.jackson.module.kotlin.internal
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.*

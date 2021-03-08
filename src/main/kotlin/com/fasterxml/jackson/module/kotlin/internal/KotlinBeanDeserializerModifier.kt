@@ -1,9 +1,10 @@
-package com.fasterxml.jackson.module.kotlin
+package com.fasterxml.jackson.module.kotlin.internal
 
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
+import com.fasterxml.jackson.module.kotlin.isKotlinClass
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 object KotlinBeanDeserializerModifier : BeanDeserializerModifier() {

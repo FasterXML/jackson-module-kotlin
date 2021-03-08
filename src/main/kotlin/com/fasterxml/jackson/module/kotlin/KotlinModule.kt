@@ -4,6 +4,13 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
+import com.fasterxml.jackson.module.kotlin.internal.KotlinAnnotationIntrospector
+import com.fasterxml.jackson.module.kotlin.internal.KotlinBeanDeserializerModifier
+import com.fasterxml.jackson.module.kotlin.internal.KotlinDeserializers
+import com.fasterxml.jackson.module.kotlin.internal.KotlinInstantiators
+import com.fasterxml.jackson.module.kotlin.internal.KotlinNamesAnnotationIntrospector
+import com.fasterxml.jackson.module.kotlin.internal.KotlinSerializers
+import com.fasterxml.jackson.module.kotlin.internal.ReflectionCache
 import kotlin.reflect.KClass
 
 private val metadataFqName = "kotlin.Metadata"
