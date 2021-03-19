@@ -19,13 +19,31 @@ class TestGithub194 {
         assertEquals(id.toString(), value.idString)
         assertEquals("Foo", value.name)
     }
-}
 
-@JsonIdentityInfo(
-        property = "id",
-        scope = WithIdentity::class,
-        generator = ObjectIdGenerators.PropertyGenerator::class
-)
-class WithIdentity(val id: UUID = UUID.randomUUID(),
-                   val idString: String = id.toString(),
-                   val name: String)
+    @JsonIdentityInfo(
+            property = "id",
+            scope = WithIdentity::class,
+            generator = ObjectIdGenerators.PropertyGenerator::class
+    )
+    class WithIdentity(val id: UUID,
+                       val idString: String = id.toString(),
+                       val name: String)
+
+    @Test
+    fun testIdentityInfo_WithDefaultId() {
+        val mapper = jacksonObjectMapper()
+        val value = mapper.readValue(json, WithIdentityAndDefaultId::class.java)
+        assertEquals(id, value.id)
+        assertEquals(id.toString(), value.idString)
+        assertEquals("Foo", value.name)
+    }
+
+    @JsonIdentityInfo(
+            property = "id",
+            scope = WithIdentityAndDefaultId::class,
+            generator = ObjectIdGenerators.PropertyGenerator::class
+    )
+    class WithIdentityAndDefaultId(val id: UUID,
+                                   val idString: String = id.toString(),
+                                   val name: String)
+}
