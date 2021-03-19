@@ -13,6 +13,14 @@ Authors:
 
 Contributors:
 
+Christopher Mason (masoncj@github)
+* #194: Contributed test case for @JsonIdentityInfo usage
+  (2.12.NEXT)
+
+Martin Häusler (MartinHaeusler@github)
+* Reported #194: @JsonIdentityInfo bug
+  (2.12.NEXT)
+
 Eric Fenderbosch (efenderbosch@github)
 * Fixed #182: Serialize unsigned numbers
   (2.12.2)
