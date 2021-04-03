@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+ming0804@github
+* Reported #431: Custom serializers for generic values don't work
+  (2.12.NEXT)
+
 Christopher Mason (masoncj@github)
 * #194: Contributed test case for @JsonIdentityInfo usage
   (2.12.NEXT)
