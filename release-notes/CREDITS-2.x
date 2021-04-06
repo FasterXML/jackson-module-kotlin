@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+Jocelyn N'TAKPÉ (jntakpe@github)
+* #211: Contributed test case for @JsonMerge
+  (2.12.NEXT)
+
 Christopher Mason (masoncj@github)
 * #194: Contributed test case for @JsonIdentityInfo usage
   (2.12.NEXT)
