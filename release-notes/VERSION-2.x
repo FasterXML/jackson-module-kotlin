@@ -18,6 +18,10 @@ Co-maintainers:
 
 No changes since 2.12
 
+2.12.3 (12-Apr-2021)
+
+No changes since 2.12.2
+
 2.12.2 (03-Mar-2021)
 
 #409: `module-info.java` missing "exports"
