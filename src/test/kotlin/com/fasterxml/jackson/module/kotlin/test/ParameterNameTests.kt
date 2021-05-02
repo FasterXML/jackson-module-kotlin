@@ -197,6 +197,23 @@ class TestJacksonWithKotlin {
         }
     }
 
+    private class StateObjectWithFactoryOnNamedCompanion private constructor (override val name: String, override val age: Int, override val primaryAddress: String, override val wrongName: Boolean, override val createdDt: Date) : TestFields {
+        var factoryUsed: Boolean = false
+        companion object Named {
+            @JvmStatic @JsonCreator fun create(@JsonProperty("name") nameThing: String, @JsonProperty("age") age: Int, @JsonProperty("primaryAddress") primaryAddress: String, @JsonProperty("renamed") wrongName: Boolean, @JsonProperty("createdDt") createdDt: Date): StateObjectWithFactoryOnNamedCompanion {
+                val obj = StateObjectWithFactoryOnNamedCompanion(nameThing, age, primaryAddress, wrongName, createdDt)
+                obj.factoryUsed = true
+                return obj
+            }
+        }
+    }
+
+    @Test fun findingFactoryMethod3() {
+        val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryOnNamedCompanion::class.java)
+        stateObj.validate()
+        assertThat(stateObj.factoryUsed, equalTo(true))
+    }
+
     // GH #14 failing due to this enum type
     data class Gh14FailureWithEnum(var something: String = "hi", var someEnum: LaunchType = LaunchType.ACTIVITY)
 
