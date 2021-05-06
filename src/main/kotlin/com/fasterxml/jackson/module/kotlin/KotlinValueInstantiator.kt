@@ -71,7 +71,7 @@ internal class KotlinValueInstantiator(
                 possibleCompanion.objectInstance
             } catch (ex: IllegalAccessException) {
                 // fallback for when an odd access exception happens through Kotlin reflection
-                val companionField = possibleCompanion.java.enclosingClass.fields.firstOrNull { it.name == "Companion" }
+                val companionField = possibleCompanion.java.enclosingClass.fields.firstOrNull { it.type.kotlin.isCompanion }
                         ?: throw ex
                 val accessible = companionField.isAccessible
                 if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
