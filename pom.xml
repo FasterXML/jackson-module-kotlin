@@ -128,12 +128,6 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
-                        <configuration>
-                            <sourceDirs>
-                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                                <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                            </sourceDirs>
-                        </configuration>
                     </execution>
 
                     <execution>
@@ -172,6 +166,10 @@
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
+                    <includes>
+                        <include>${project.basedir}/src/main/kotlin</include>
+                        <include>${project.basedir}/src/main/java</include>
+                    </includes>
                 </configuration>
             </plugin>
 
