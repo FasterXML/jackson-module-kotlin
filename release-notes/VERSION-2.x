@@ -16,7 +16,8 @@ Co-maintainers:
 
 2.13.0 (not yet released)
 
-No changes since 2.12
+#438: Fixed mapping failure when `private` `companion object` is named
+ (reported, fix contributed by k163377@github)
 
 2.12.3 (12-Apr-2021)
 
