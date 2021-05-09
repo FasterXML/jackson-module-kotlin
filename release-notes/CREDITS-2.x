@@ -95,6 +95,6 @@ Drew Stephens (dinomite@github)
     previously serialized JSON as it doesn't delegate deserializeWithType
   (2.11.0)
 
-Kiyori Miyata aka "wrongwrong" (k163377@github)
+Kiori Miyata aka "wrongwrong" (k163377@github)
 * Contributed #438: Fixed mapping failure when `private` `companion object` is named
  (2.13.0)
