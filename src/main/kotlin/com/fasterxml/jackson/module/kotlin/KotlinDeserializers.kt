@@ -5,7 +5,11 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.JsonToken.VALUE_NUMBER_INT
 import com.fasterxml.jackson.core.exc.InputCoercionException
-import com.fasterxml.jackson.databind.*
+import com.fasterxml.jackson.databind.BeanDescription
+import com.fasterxml.jackson.databind.DeserializationConfig
+import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JavaType
+import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.Deserializers
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 
@@ -79,7 +83,6 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
-@ExperimentalUnsignedTypes
 internal class KotlinDeserializers : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,

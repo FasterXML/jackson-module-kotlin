@@ -3,7 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test.github.failing
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -12,17 +12,18 @@ import kotlin.test.assertEquals
  * Fields named "is…" are only serialized if they are Boolean
  */
 class TestGitHub337 {
-    private val mapper = jacksonObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.ALWAYS)
-            .configure(SORT_PROPERTIES_ALPHABETICALLY, true)
+    private val mapper = jacksonMapperBuilder()
+        .configure(SORT_PROPERTIES_ALPHABETICALLY, true)
+        .build()
+        .setSerializationInclusion(JsonInclude.Include.ALWAYS)
     private val writer = mapper.writerWithDefaultPrettyPrinter()
 
     @Test
     @Ignore
     fun test_ClassWithIsFields() {
         data class ClassWithIsFields(
-                val isBooleanField: Boolean,
-                val isIntField: Int
+            val isBooleanField: Boolean,
+            val isIntField: Int
         )
 
         val problematic = ClassWithIsFields(true, 9)
@@ -38,8 +39,8 @@ class TestGitHub337 {
     @Ignore
     fun test_AnnotatedClassWithIsFields() {
         data class ClassWithIsFields(
-                @JsonProperty("isBooleanField") val isBooleanField: Boolean,
-                @JsonProperty("isIntField") val isIntField: Int
+            @JsonProperty("isBooleanField") val isBooleanField: Boolean,
+            @JsonProperty("isIntField") val isIntField: Int
         )
 
         val problematic = ClassWithIsFields(true, 9)
@@ -54,8 +55,8 @@ class TestGitHub337 {
     @Test
     fun test_AnnotatedGetClassWithIsFields() {
         data class ClassWithIsFields(
-                @JsonProperty("isBooleanField") val isBooleanField: Boolean,
-                @get:JsonProperty("isIntField") val isIntField: Int
+            @JsonProperty("isBooleanField") val isBooleanField: Boolean,
+            @get:JsonProperty("isIntField") val isIntField: Int
         )
 
         val problematic = ClassWithIsFields(true, 9)
