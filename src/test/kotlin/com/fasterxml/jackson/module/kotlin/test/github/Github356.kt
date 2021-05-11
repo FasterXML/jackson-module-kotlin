@@ -34,7 +34,7 @@ class TestGithub356 {
     }
 }
 
-@Suppress("EXPERIMENTAL_FEATURE_WARNING") // Experimental enabled in test-compile
+// Deprecated usage kept at 1.5.0 upgrade; delete in the future
 inline class InlineClass(val value: String)
 
 @JsonDeserialize(builder = ClassWithInlineMember.JacksonBuilder::class)
