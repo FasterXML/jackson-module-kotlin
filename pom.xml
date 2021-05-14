@@ -203,6 +203,21 @@
                     <parameter>
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
+                        <excludes>
+                            <!--
+                                TODO Remove after release of 2.13 and update the oldVersion above. These were made
+                                `internal`, breaking backwards compat (in a way we're ok with), but we don't want
+                                to lose japicmp's enforcement until the new version is released.
+                            -->
+                            <exclude>com.fasterxml.jackson.module.kotlin.UByteDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UByteSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UIntDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UIntSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ULongDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ULongSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UShortDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UShortSerializer</exclude>
+                        </excludes>
                     </parameter>
                 </configuration>
                 <executions>
