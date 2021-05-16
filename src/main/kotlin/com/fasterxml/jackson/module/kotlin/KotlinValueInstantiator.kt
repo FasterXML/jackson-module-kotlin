@@ -32,8 +32,92 @@ internal class KotlinValueInstantiator(
     private val strictNullChecks: Boolean,
     private val experimentalDeserializationBackend: Boolean
 ) : StdValueInstantiator(src) {
+    private fun experimentalCreateFromObjectWith(
+        ctxt: DeserializationContext,
+        props: Array<out SettableBeanProperty>,
+        buffer: PropertyValueBuffer
+    ): Any? {
+        val instantiator: Instantiator<*> = cache.instantiatorFromJava(_withArgsCreator)
+            ?: return super.createFromObjectWith(ctxt, props, buffer) // we cannot reflect this method so do the default Java-ish behavior
+
+        val bucket = instantiator.generateBucket()
+
+        instantiator.valueParameters.forEachIndexed { idx, paramDef ->
+            val jsonProp = props[idx]
+            val isMissing = !buffer.hasParameter(jsonProp)
+
+            if (isMissing && paramDef.isOptional) {
+                return@forEachIndexed
+            }
+
+            var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
+                val tempParamVal = buffer.getParameter(jsonProp)
+                if (nullIsSameAsDefault && tempParamVal == null && paramDef.isOptional) {
+                    return@forEachIndexed
+                }
+                tempParamVal
+            } else {
+                // trying to get suitable "missing" value provided by deserializer
+                jsonProp.valueDeserializer?.getNullValue(ctxt)
+            }
+
+            if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
+                paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+            }
+
+            val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
+            val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
+            if (isMissingAndRequired ||
+                (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable)) {
+                throw MissingKotlinParameterException(
+                    parameter = paramDef,
+                    processor = ctxt.parser,
+                    msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
+                ).wrapWithPath(this.valueClass, jsonProp.name)
+            }
+
+            if (strictNullChecks && paramVal != null) {
+                var paramType: String? = null
+                var itemType: KType? = null
+                if (jsonProp.type.isCollectionLikeType && paramDef.type.arguments.getOrNull(0)?.type?.isMarkedNullable == false && (paramVal as Collection<*>).any { it == null }) {
+                    paramType = "collection"
+                    itemType = paramDef.type.arguments[0].type
+                }
+
+                if (jsonProp.type.isMapLikeType && paramDef.type.arguments.getOrNull(1)?.type?.isMarkedNullable == false && (paramVal as Map<*, *>).any { it.value == null }) {
+                    paramType = "map"
+                    itemType = paramDef.type.arguments[1].type
+                }
+
+                if (jsonProp.type.isArrayType && paramDef.type.arguments.getOrNull(0)?.type?.isMarkedNullable == false && (paramVal as Array<*>).any { it == null }) {
+                    paramType = "array"
+                    itemType = paramDef.type.arguments[0].type
+                }
+
+                if (paramType != null && itemType != null) {
+                    throw MissingKotlinParameterException(
+                        parameter = paramDef,
+                        processor = ctxt.parser,
+                        msg = "Instantiation of $itemType $paramType failed for JSON property ${jsonProp.name} due to null value in a $paramType that does not allow null values"
+                    ).wrapWithPath(this.valueClass, jsonProp.name)
+                }
+            }
+
+            bucket[idx] = paramVal
+        }
+
+        // TODO: Is it necessary to call them differently? Direct execution will perform better.
+        return if (bucket.isFullInitialized() && !instantiator.hasInstanceParameter) {
+            // we didn't do anything special with default parameters, do a normal call
+            super.createFromObjectWith(ctxt, bucket.values)
+        } else {
+            instantiator.checkAccessibility(ctxt)
+            instantiator.callBy(bucket)
+        }
+    }
+
     @Suppress("UNCHECKED_CAST")
-    override fun createFromObjectWith(
+    private fun conventionalCreateFromObjectWith(
         ctxt: DeserializationContext,
         props: Array<out SettableBeanProperty>,
         buffer: PropertyValueBuffer
@@ -172,6 +256,16 @@ internal class KotlinValueInstantiator(
             callable.callBy(callableParametersByName)
         }
 
+    }
+
+    override fun createFromObjectWith(
+        ctxt: DeserializationContext,
+        props: Array<out SettableBeanProperty>,
+        buffer: PropertyValueBuffer
+    ): Any? = if (experimentalDeserializationBackend) {
+        experimentalCreateFromObjectWith(ctxt, props, buffer)
+    } else {
+        conventionalCreateFromObjectWith(ctxt, props, buffer)
     }
 
     private fun KParameter.isPrimitive(): Boolean {
