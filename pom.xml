@@ -92,6 +92,11 @@
             <version>${version.kotlin}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>kotlinx-metadata-jvm</artifactId>
+            <version>0.3.0</version>
+        </dependency>
 
         <!-- only for testing... -->
         <dependency>
