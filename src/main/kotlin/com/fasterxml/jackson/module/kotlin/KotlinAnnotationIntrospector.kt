@@ -62,16 +62,14 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.
      */
     override fun findSubtypes(cfg : MapperConfig<*>, a: Annotated): MutableList<NamedType>? {
-        val rawType = a.rawType
-        if (rawType.isKotlinClass()) {
-            val kClass = rawType.kotlin
-            if (kClass.isSealed) {
-                return kClass.sealedSubclasses
+        return a.rawType
+            .takeIf { it.isKotlinClass() }
+            ?.let { rawType ->
+                rawType.kotlin.sealedSubclasses
                     .map { NamedType(it.java) }
                     .toMutableList()
+                    .ifEmpty { null }
             }
-        }
-        return null
     }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
