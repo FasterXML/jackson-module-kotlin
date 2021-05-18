@@ -159,25 +159,25 @@ class TestPropertyRequiredness {
         "z".isRequiredForSerializationOf(testClass, mapper)
     }
 
-    private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper): Unit {
+    private fun String.isRequiredForSerializationOf(type: Class<*>, mapper: ObjectMapper) {
         assertTrue("Property $this should be required for serialization!"){
             introspectSerialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isRequiredForDeserializationOf(type: Class<*>, mapper: ObjectMapper): Unit {
+    private fun String.isRequiredForDeserializationOf(type: Class<*>, mapper: ObjectMapper) {
         assertTrue("Property $this should be required for deserialization!"){
             introspectDeserialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isOptionalForSerializationOf(type: Class<*>, mapper: ObjectMapper): Unit {
+    private fun String.isOptionalForSerializationOf(type: Class<*>, mapper: ObjectMapper) {
         assertFalse("Property $this should be optional for serialization!"){
             introspectSerialization(type, mapper).isRequired(this)
         }
     }
 
-    private fun String.isOptionalForDeserializationOf(type: Class<*>, mapper: ObjectMapper): Unit {
+    private fun String.isOptionalForDeserializationOf(type: Class<*>, mapper: ObjectMapper) {
         assertFalse("Property $this should be optional for deserialization of ${type.simpleName}!"){
             introspectDeserialization(type, mapper).isRequired(this)
         }
