@@ -96,26 +96,19 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
-    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? {
-        // This could be a setter or a getter of a class property or
-        // a setter-like/getter-like method.
-        this.getFromCorrespondingAccessor()?.let { return it }
-
-        // Is the member method a regular method of the data class or
-        val method = this.member.kotlinFunction
-        if (method != null) {
+    // This could be a setter or a getter of a class property or
+    // a setter-like/getter-like method.
+    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getFromCorrespondingAccessor()
+        ?: this.member.kotlinFunction?.let { method -> // Is the member method a regular method of the data class or
             val byAnnotation = method.javaMethod?.isRequiredByAnnotation()
-            if (method.isGetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
-            }
-
-            if (method.isSetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
+            when {
+                method.isGetterLike() ->
+                    requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
+                method.isSetterLike() ->
+                    requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
+                else -> null
             }
         }
-
-        return null
-    }
 
     private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
     private fun KFunction<*>.isSetterLike(): Boolean =
