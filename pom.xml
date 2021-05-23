@@ -205,9 +205,13 @@
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
                             <!--
-                                TODO Remove after release of 2.13 and update the oldVersion above. These were made
-                                `internal`, breaking backwards compat (in a way we're ok with), but we don't want
-                                to lose japicmp's enforcement until the new version is released.
+                                TODO Remove after release of 2.13 and update the oldVersion above.
+
+                                Kotlin's method suffix generation changed in 1.4.30
+                                (https://github.com/Kotlin/KEEP/commit/e7984ffd83a1166c7f81a11d1a95b35cae929a2a#diff-012da204af6117588e5a1d3a41491bb7fe4e6c5620111c3c2d4a680c7a1057b1R653)
+                                which changes the presented API produced by these objects. While they aren't
+                                internal and should not be…they're fairly esoteric so we're ok with that breakage
+                                across a major version.
                             -->
                             <exclude>com.fasterxml.jackson.module.kotlin.UByteDeserializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.UByteSerializer</exclude>
