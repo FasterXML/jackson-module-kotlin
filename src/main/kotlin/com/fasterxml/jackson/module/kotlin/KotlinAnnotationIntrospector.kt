@@ -110,10 +110,6 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
         }
 
-    private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
-    private fun KFunction<*>.isSetterLike(): Boolean =
-            parameters.size == 2 && returnType == Unit::class.createType()
-
     private fun AnnotatedMethod.getFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty1 ->
             kProperty1.javaGetter
@@ -132,6 +128,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         }
         return null
     }
+
+    private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
+    private fun KFunction<*>.isSetterLike(): Boolean =
+        parameters.size == 2 && returnType == Unit::class.createType()
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
