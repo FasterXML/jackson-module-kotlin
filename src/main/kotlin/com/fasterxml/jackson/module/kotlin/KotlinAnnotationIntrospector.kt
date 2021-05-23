@@ -99,7 +99,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     // This could be a setter or a getter of a class property or
     // a setter-like/getter-like method.
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
-        ?: this.member.kotlinFunction?.getRequiredMarkerFromAccessorLikeMethod()
+        ?: this.member.getRequiredMarkerFromAccessorLikeMethod()
 
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty1 ->
@@ -121,11 +121,11 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     // Is the member method a regular method of the data class or
-    private fun KFunction<*>.getRequiredMarkerFromAccessorLikeMethod(): Boolean? {
-        val byAnnotation = this.javaMethod?.isRequiredByAnnotation()
+    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = this.kotlinFunction?.let { method ->
+        val byAnnotation = this.isRequiredByAnnotation()
         return when {
-            this.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, this.returnType.isRequired())
-            this.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, this.isMethodParameterRequired(0))
+            method.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
+            method.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
             else -> null
         }
     }
