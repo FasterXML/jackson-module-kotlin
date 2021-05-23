@@ -98,7 +98,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     // This could be a setter or a getter of a class property or
     // a setter-like/getter-like method.
-    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getFromCorrespondingAccessor()
+    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
         ?: this.member.kotlinFunction?.let { method -> // Is the member method a regular method of the data class or
             val byAnnotation = method.javaMethod?.isRequiredByAnnotation()
             when {
@@ -110,7 +110,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             }
         }
 
-    private fun AnnotatedMethod.getFromCorrespondingAccessor(): Boolean? {
+    private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty1 ->
             kProperty1.javaGetter
                 ?.takeIf { it == this.member }
