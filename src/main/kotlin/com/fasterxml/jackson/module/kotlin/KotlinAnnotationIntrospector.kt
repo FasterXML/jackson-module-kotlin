@@ -131,8 +131,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
-    private fun KFunction<*>.isSetterLike(): Boolean =
-        parameters.size == 2 && returnType == Unit::class.createType()
+    private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
@@ -170,4 +169,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     private fun KType.isRequired(): Boolean = !isMarkedNullable
 
+    companion object {
+        val UNIT_TYPE: KType = Unit::class.createType()
+    }
 }
