@@ -18,37 +18,41 @@ import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
+import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
     // since 2.4
-    override fun findImplicitPropertyName(member: AnnotatedMember): String? {
-        if (member is AnnotatedMethod && member.isInlineClass()) {
-            if (member.name.startsWith("get") &&
-                    member.name.contains('-') &&
-                    member.parameterCount == 0) {
-                return member.name.substringAfter("get")
-                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
-                    .substringBefore('-')
-            } else if (member.name.startsWith("is") &&
-                    member.name.contains('-') &&
-                    member.parameterCount == 0) {
-                return member.name.substringAfter("is")
-                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
-                    .substringBefore('-')
-            }
-        } else if (member is AnnotatedParameter) {
-            return findKotlinParameterName(member)
-        }
-
-        return null
+    override fun findImplicitPropertyName(member: AnnotatedMember): String? = when (member) {
+        is AnnotatedMethod -> findImplicitPropertyNameFromKotlinPropertyIfNeeded(member)
+        is AnnotatedParameter -> findKotlinParameterName(member)
+        else -> null
     }
+
+    // Since getter for value class (inline class) will be compiled into a different name such as "getFoo-${random}",
+    // use the property name in Kotlin in such a case.
+    private fun findImplicitPropertyNameFromKotlinPropertyIfNeeded(member: AnnotatedMethod): String? = member
+        .takeIf {
+            it.parameterCount == 0 &&
+                    it.name.run { contains("-") && (startsWith("get") || startsWith("is")) }
+        }?.let { _ ->
+            val propertyNameFromGetter = member.name.let {
+                when {
+                    it.startsWith("get") -> it.substringAfter("get")
+                    it.startsWith("is") -> it.substringAfter("is")
+                    else -> throw IllegalStateException("Should not get here.")
+                }
+            }.replaceFirstChar { it.lowercase(Locale.getDefault()) }
+
+            member.declaringClass.kotlin.declaredMemberProperties.find { kProperty1 ->
+                kProperty1.javaGetter
+                    ?.let { it == member.member && kProperty1.name != propertyNameFromGetter }
+                    ?: false
+            }?.name
+        }
 
     // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
     // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
@@ -169,5 +173,3 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         }
     }
 }
-
-private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
