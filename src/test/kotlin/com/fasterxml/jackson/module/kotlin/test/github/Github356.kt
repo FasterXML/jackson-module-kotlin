@@ -22,6 +22,30 @@ class TestGithub356 {
     }
 
     @Test
+    fun deserializeKebabInlineMember() {
+        val original = ClassWithKebabInlineMember(ValueClass("bar"))
+        assertEquals(original, mapper.readValue(mapper.writeValueAsString(original)))
+    }
+
+    @Test
+    fun serializeKebabInlineClass() {
+        val original = ClassWithKebabInlineMember(ValueClass("bar"))
+        assertEquals("""{"value-class-property":"bar"}""", mapper.writeValueAsString(original))
+    }
+
+    @Test
+    fun deserializeNamedInlineClass() {
+        val original = ClassWithNamedInlineMember(ValueClass("bar"))
+        assertEquals(original, mapper.readValue(mapper.writeValueAsString(original)))
+    }
+
+    @Test
+    fun serializeNamedInlineClass() {
+        val original = ClassWithNamedInlineMember(ValueClass("bar"))
+        assertEquals("""{"value-":"bar"}""", mapper.writeValueAsString(original))
+    }
+
+    @Test
     fun deserializeValueClass() {
         val original = ClassWithValueMember(ValueClass("bar"))
         assertEquals(original, mapper.readValue(mapper.writeValueAsString(original)))
@@ -52,5 +76,19 @@ value class ValueClass(val value: String)
 data class ClassWithValueMember(val valueClassProperty: ValueClass) {
     data class JacksonBuilder constructor(val valueClassProperty: String) {
         fun build() = ClassWithValueMember(ValueClass(valueClassProperty))
+    }
+}
+
+@JsonDeserialize(builder = ClassWithKebabInlineMember.JacksonBuilder::class)
+data class ClassWithKebabInlineMember(val `value-class-property`: ValueClass) {
+    data class JacksonBuilder constructor(val `value-class-property`: String) {
+        fun build() = ClassWithKebabInlineMember(ValueClass(`value-class-property`))
+    }
+}
+
+@JsonDeserialize(builder = ClassWithNamedInlineMember.JacksonBuilder::class)
+data class ClassWithNamedInlineMember(@get:JvmName("getValue-") val `value-`: ValueClass) {
+    data class JacksonBuilder constructor(val `value-`: String) {
+        fun build() = ClassWithNamedInlineMember(ValueClass(`value-`))
     }
 }
