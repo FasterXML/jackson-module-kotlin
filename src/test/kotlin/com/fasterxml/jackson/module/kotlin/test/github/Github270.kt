@@ -6,7 +6,7 @@ import kotlin.test.assertEquals
 
 class TestGithub270 {
     data class Wrapper(private val field: String) {
-        val upper = field.toUpperCase()
+        val upper = field.uppercase()
         fun field() = field
         fun stillAField() = field
     }
