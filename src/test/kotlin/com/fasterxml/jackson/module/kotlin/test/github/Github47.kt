@@ -1,7 +1,8 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -13,7 +14,7 @@ class TestGithub47 {
     fun testCaseInsensitivePropertyNames() {
         val mapper = jacksonMapperBuilder()
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
-                .build()
+            .build()
 
         val jsonWithMismtachedPropertyName = """
                     {
@@ -21,7 +22,7 @@ class TestGithub47 {
                     }
                    """
 
-        val item: ConfigItem = mapper.readValue<ConfigItem>(jsonWithMismtachedPropertyName)
+        val item: ConfigItem = mapper.readValue(jsonWithMismtachedPropertyName)
         assertEquals("test", item.configItemId)
     }
 }

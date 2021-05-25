@@ -14,7 +14,9 @@ class TestGithub160 {
     @Test
     @Ignore("No longer sensical in 3.0; throws IllegalStateException in KotlinModule")
     fun dataClass() {
-        val mapper = jacksonMapperBuilder().disable(MapperFeature.USE_ANNOTATIONS).build()
+        val mapper = jacksonMapperBuilder()
+            .configure(MapperFeature.USE_ANNOTATIONS, false)
+            .build()
         expectFailure<MismatchedInputException>("GitHub #160 has been fixed!") {
             mapper.readValue<DataClass>("""{"blah":"blah"}""")
         }

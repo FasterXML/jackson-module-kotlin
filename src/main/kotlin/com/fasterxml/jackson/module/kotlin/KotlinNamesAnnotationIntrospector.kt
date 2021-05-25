@@ -4,10 +4,17 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
+import com.fasterxml.jackson.databind.introspect.AnnotatedField
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
+import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -25,11 +32,15 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             if (member.name.startsWith("get") &&
                     member.name.contains('-') &&
                     member.parameterCount == 0) {
-                return member.name.substringAfter("get").decapitalize().substringBefore('-')
+                return member.name.substringAfter("get")
+                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
+                    .substringBefore('-')
             } else if (member.name.startsWith("is") &&
                     member.name.contains('-') &&
                     member.parameterCount == 0) {
-                return member.name.substringAfter("is").decapitalize().substringBefore('-')
+                return member.name.substringAfter("is")
+                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
+                    .substringBefore('-')
             }
         } else if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)

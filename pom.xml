@@ -53,7 +53,7 @@
         <javac.src.version>1.8</javac.src.version>
         <javac.target.version>1.8</javac.target.version>
 
-        <version.kotlin>1.4.21</version.kotlin>
+        <version.kotlin>1.5.10</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
@@ -199,6 +199,25 @@
                     <parameter>
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
+                        <excludes>
+                            <!--
+                                TODO Remove after release of 2.13 and update the oldVersion above.
+
+                                Kotlin's method suffix generation changed in 1.4.30
+                                (https://github.com/Kotlin/KEEP/commit/e7984ffd83a1166c7f81a11d1a95b35cae929a2a#diff-012da204af6117588e5a1d3a41491bb7fe4e6c5620111c3c2d4a680c7a1057b1R653)
+                                which changes the presented API produced by these objects. While they aren't
+                                internal and should not be…they're fairly esoteric so we're ok with that breakage
+                                across a major version.
+                            -->
+                            <exclude>com.fasterxml.jackson.module.kotlin.UByteDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UByteSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UIntDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UIntSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ULongDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ULongSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UShortDeserializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.UShortSerializer</exclude>
+                        </excludes>
                     </parameter>
                 </configuration>
                 <executions>
