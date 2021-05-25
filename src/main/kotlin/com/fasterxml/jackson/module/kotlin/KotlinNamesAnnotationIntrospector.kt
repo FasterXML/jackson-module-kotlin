@@ -4,7 +4,13 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
+import com.fasterxml.jackson.databind.introspect.AnnotatedField
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
@@ -31,6 +37,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                     member.name.contains('-') &&
                     member.parameterCount == 0) {
                 return member.name.substringAfter("is").decapitalize().substringBefore('-')
+            }
+        } else if (member is AnnotatedMethod && member.declaringClass.isKotlinClass()) {
+            if (cache.isKotlinGeneratedMethod(member) { it.declaringClass.declaredFields.any { f -> f.name == member.name } }) {
+                return member.name
             }
         } else if (member is AnnotatedParameter) {
             return findKotlinParameterName(member)
