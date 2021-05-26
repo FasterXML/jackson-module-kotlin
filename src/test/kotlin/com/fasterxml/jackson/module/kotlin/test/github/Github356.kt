@@ -11,26 +11,34 @@ class TestGithub356 {
 
     @Test
     fun deserializeInlineClass() {
-        val original = ClassWithInlineMember(InlineClass("bar"))
-        assertEquals(original, mapper.readValue(mapper.writeValueAsString(original)))
+        assertEquals(
+            ClassWithInlineMember(InlineClass("bar")),
+            mapper.readValue("""{"inlineClassProperty":"bar"}""")
+        )
     }
 
     @Test
     fun serializeInlineClass() {
-        val original = ClassWithInlineMember(InlineClass("bar"))
-        assertEquals("""{"inlineClassProperty":"bar"}""", mapper.writeValueAsString(original))
+        assertEquals(
+            """{"inlineClassProperty":"bar"}""",
+            mapper.writeValueAsString(ClassWithInlineMember(InlineClass("bar")))
+        )
     }
 
     @Test
     fun deserializeValueClass() {
-        val original = ClassWithValueMember(ValueClass("bar"))
-        assertEquals(original, mapper.readValue(mapper.writeValueAsString(original)))
+        assertEquals(
+            ClassWithValueMember(ValueClass("bar")),
+            mapper.readValue("""{"valueClassProperty":"bar"}""")
+        )
     }
 
     @Test
     fun serializeValueClass() {
-        val original = ClassWithValueMember(ValueClass("bar"))
-        assertEquals("""{"valueClassProperty":"bar"}""", mapper.writeValueAsString(original))
+        assertEquals(
+            """{"valueClassProperty":"bar"}""",
+            mapper.writeValueAsString(ClassWithValueMember(ValueClass("bar")))
+        )
     }
 }
 
