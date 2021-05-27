@@ -32,13 +32,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         else -> null
     }
 
-    // Since getter for value class (inline class) will be compiled into a different name such as "getFoo-${random}",
-    // use the property name in Kotlin in such a case.
+    // Use Kotlin property names as needed.
     private fun findImplicitPropertyNameFromKotlinPropertyIfNeeded(member: AnnotatedMethod): String? = member
-        .takeIf {
-            it.parameterCount == 0 &&
-                    it.name.run { contains("-") && (startsWith("get") || startsWith("is")) }
-        }?.let { _ ->
+        .takeIf { it.parameterCount == 0 && looksLikeKotlinGeneratedMethod(it.name) }
+        ?.let { _ ->
             val propertyNameFromGetter = member.name.let {
                 when {
                     it.startsWith("get") -> it.substringAfter("get")
@@ -53,6 +50,10 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                     ?: false
             }?.name
         }
+
+    // Since getter for value class (inline class) will be compiled into a different name such as "getFoo-${random}".
+    private fun looksLikeKotlinGeneratedMethod(methodName: String) =
+        methodName.run { contains("-") && (startsWith("get") || startsWith("is")) }
 
     // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
     // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
