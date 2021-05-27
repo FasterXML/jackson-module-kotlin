@@ -36,17 +36,15 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     private fun findImplicitPropertyNameFromKotlinPropertyIfNeeded(member: AnnotatedMethod): String? = member
         .takeIf { it.parameterCount == 0 && looksLikeKotlinGeneratedMethod(it.name) }
         ?.let { _ ->
-            val propertyNameFromGetter = member.name.let {
-                when {
-                    it.startsWith("get") -> it.substringAfter("get")
-                    it.startsWith("is") -> it.substringAfter("is")
-                    else -> throw IllegalStateException("Should not get here.")
-                }
+            val propertyNameFromGetter = when  {
+                member.name.startsWith("get") -> member.name.substringAfter("get")
+                member.name.startsWith("is") -> member.name.substringAfter("is")
+                else -> throw IllegalStateException("Should not get here.")
             }.replaceFirstChar { it.lowercase(Locale.getDefault()) }
 
-            member.declaringClass.kotlin.declaredMemberProperties.find { kProperty1 ->
-                kProperty1.javaGetter
-                    ?.let { it == member.member && kProperty1.name != propertyNameFromGetter }
+            member.declaringClass.kotlin.declaredMemberProperties.find { kProperty ->
+                kProperty.javaGetter
+                    ?.let { it == member.member && kProperty.name != propertyNameFromGetter }
                     ?: false
             }?.name
         }
