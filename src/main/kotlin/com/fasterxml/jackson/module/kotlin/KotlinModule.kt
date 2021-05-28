@@ -140,8 +140,8 @@ class KotlinModule private constructor(
             bitSet.andNot(feature.bitSet)
         }
 
-        fun set(feature: KotlinFeature, state: Boolean) = when {
-            state -> enable(feature)
+        fun set(feature: KotlinFeature, enabled: Boolean) = when {
+            enabled -> enable(feature)
             else -> disable(feature)
         }
 
