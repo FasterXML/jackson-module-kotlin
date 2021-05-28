@@ -34,8 +34,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
     // Use Kotlin property names as needed.
     private fun findImplicitPropertyNameFromKotlinPropertyIfNeeded(member: AnnotatedMethod): String? = member
-        .takeIf { it.parameterCount == 0 && looksLikeKotlinGeneratedMethod(it.name) }
-        ?.let { _ ->
+        .takeIf {
+            it.parameterCount == 0 && looksLikeKotlinGeneratedMethod(it.name) && !it.hasAnnotation(JvmName::class.java)
+        }?.let { _ ->
             val propertyNameFromGetter = when  {
                 member.name.startsWith("get") -> member.name.substringAfter("get")
                 member.name.startsWith("is") -> member.name.substringAfter("is")
