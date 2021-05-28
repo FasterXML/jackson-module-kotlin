@@ -37,17 +37,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         .takeIf {
             it.parameterCount == 0 && looksLikeKotlinGeneratedMethod(it.name) && !it.hasAnnotation(JvmName::class.java)
         }?.let { _ ->
-            val propertyNameFromGetter = when  {
-                member.name.startsWith("get") -> member.name.substringAfter("get")
-                member.name.startsWith("is") -> member.name.substringAfter("is")
-                else -> throw IllegalStateException("Should not get here.")
-            }.replaceFirstChar { it.lowercase(Locale.getDefault()) }
-
-            member.declaringClass.kotlin.declaredMemberProperties.find { kProperty ->
-                kProperty.javaGetter
-                    ?.let { it == member.member && kProperty.name != propertyNameFromGetter }
-                    ?: false
-            }?.name
+            member.declaringClass.kotlin.declaredMemberProperties
+                .find { kProperty -> kProperty.javaGetter == member.member }
+                ?.name
         }
 
     // Since getter for value class (inline class) will be compiled into a different name such as "getFoo-${random}".
