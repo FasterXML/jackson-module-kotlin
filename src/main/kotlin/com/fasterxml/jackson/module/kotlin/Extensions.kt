@@ -15,6 +15,7 @@ import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
+import java.util.*
 import kotlin.reflect.KClass
 
 fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
@@ -64,4 +65,18 @@ inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, seria
 inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>) = this.apply {
     addDeserializer(kClass.java, deserializer)
     addDeserializer(kClass.javaObjectType, deserializer)
+}
+
+fun Int.toBitSet(): BitSet {
+    var i = this
+    var index = 0
+    val bits = BitSet(32)
+    while (i != 0) {
+        if (i % 2 != 0) {
+            bits.set(index)
+        }
+        ++index
+        i = i shr 1
+    }
+    return bits
 }

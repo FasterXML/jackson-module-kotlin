@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -48,7 +48,7 @@ class TestGithub239 {
     ]"""
 
     val mapper = ObjectMapper()
-            .registerModule(KotlinModule())
+        .registerModule(kotlinModule {})
 
     @Test
     fun test_implicit_subclasses() {
@@ -71,5 +71,4 @@ class TestGithub239 {
         assertEquals(Github239EitherCustomized.B("1234"), array[1])
 
     }
-
 }

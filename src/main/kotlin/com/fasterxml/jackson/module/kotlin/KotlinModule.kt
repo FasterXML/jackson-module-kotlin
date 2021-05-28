@@ -2,11 +2,16 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
+import java.util.*
 import kotlin.reflect.KClass
 
-private val metadataFqName = "kotlin.Metadata"
+private const val metadataFqName = "kotlin.Metadata"
 
 fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
@@ -27,36 +32,51 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
  */
-class KotlinModule constructor (
-    val reflectionCacheSize: Int = 512,
-    val nullToEmptyCollection: Boolean = false,
-    val nullToEmptyMap: Boolean = false,
-    val nullIsSameAsDefault: Boolean = false,
-    val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false
+class KotlinModule private constructor(
+    val reflectionCacheSize: Int,
+    val nullToEmptyCollection: Boolean,
+    val nullToEmptyMap: Boolean,
+    val nullIsSameAsDefault: Boolean,
+    val singletonSupport: SingletonSupport,
+    val strictNullChecks: Boolean
 ) : SimpleModule(PackageVersion.VERSION) {
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder")
     constructor(
-        reflectionCacheSize: Int = 512,
-        nullToEmptyCollection: Boolean = false,
-        nullToEmptyMap: Boolean = false
-    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
+        reflectionCacheSize: Int,
+        nullToEmptyCollection: Boolean,
+        nullToEmptyMap: Boolean
+    ) : this(
+        Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .set(NullToEmptyCollection, nullToEmptyCollection)
+            .set(NullToEmptyMap, nullToEmptyMap)
+            .disable(NullIsSameAsDefault)
+    )
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder")
     constructor(
-        reflectionCacheSize: Int = 512,
-        nullToEmptyCollection: Boolean = false,
-        nullToEmptyMap: Boolean = false,
-        nullIsSameAsDefault: Boolean = false
-    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault)
+        reflectionCacheSize: Int,
+        nullToEmptyCollection: Boolean,
+        nullToEmptyMap: Boolean,
+        nullIsSameAsDefault: Boolean
+    ) : this(
+        Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .set(NullToEmptyCollection, nullToEmptyCollection)
+            .set(NullToEmptyMap, nullToEmptyMap)
+            .set(NullIsSameAsDefault, nullIsSameAsDefault)
+    )
 
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
-        builder.nullToEmptyCollection,
-        builder.nullToEmptyMap,
-        builder.nullIsSameAsDefault,
-        builder.singletonSupport,
-        builder.strictNullChecks
+        builder.isEnabled(NullToEmptyCollection),
+        builder.isEnabled(NullToEmptyMap),
+        builder.isEnabled(NullIsSameAsDefault),
+        when {
+            builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
+            else -> DISABLED
+        },
+        builder.isEnabled(StrictNullChecks)
     )
 
     companion object {
@@ -76,7 +96,7 @@ class KotlinModule constructor (
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        when(singletonSupport) {
+        when (singletonSupport) {
             DISABLED -> Unit
             CANONICALIZE -> {
                 context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
@@ -104,38 +124,29 @@ class KotlinModule constructor (
         var reflectionCacheSize: Int = 512
             private set
 
-        var nullToEmptyCollection: Boolean = false
-            private set
+        private val bitSet: BitSet = 0.toBitSet().apply {
+            KotlinFeature.values().filter { it.enabledByDefault() }.forEach { or(it.bitSet) }
+        }
 
-        var nullToEmptyMap: Boolean = false
-            private set
+        fun withReflectionCacheSize(reflectionCacheSize: Int) = apply {
+            this.reflectionCacheSize = reflectionCacheSize
+        }
 
-        var nullIsSameAsDefault: Boolean = false
-            private set
+        fun enable(feature: KotlinFeature) = apply {
+            bitSet.or(feature.bitSet)
+        }
 
-        var singletonSupport = DISABLED
-            private set
+        fun disable(feature: KotlinFeature) = apply {
+            bitSet.andNot(feature.bitSet)
+        }
 
-        var strictNullChecks = false
-            private set
+        fun set(feature: KotlinFeature, state: Boolean) = when {
+            state -> enable(feature)
+            else -> disable(feature)
+        }
 
-        fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
-
-        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
-            apply { this.nullToEmptyCollection = nullToEmptyCollection }
-
-        fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
-
-        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
-
-        fun singletonSupport(singletonSupport: SingletonSupport) =
-            apply { this.singletonSupport = singletonSupport }
-
-        fun strictNullChecks(strictNullChecks: Boolean) =
-                apply { this.strictNullChecks = strictNullChecks }
+        fun isEnabled(feature: KotlinFeature): Boolean = bitSet.intersects(feature.bitSet)
 
         fun build() = KotlinModule(this)
     }
 }
-
-
