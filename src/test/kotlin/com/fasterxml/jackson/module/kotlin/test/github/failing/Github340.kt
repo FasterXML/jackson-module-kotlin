@@ -9,7 +9,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 class OwnerRequestTest {
-    private val jackson = ObjectMapper().registerModule(kotlinModule { })
+    private val jackson = ObjectMapper().registerModule(kotlinModule())
 
     val json = """{"foo": "Got a foo"}"""
 

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import com.fasterxml.jackson.module.kotlin.test.github.TestGithub153.MyPojo
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -38,7 +39,7 @@ class TestGithub153 {
     val xml = """<MyPojo><elements><element value="e1"/></elements></MyPojo>"""
 
     val mapper = XmlMapper()
-        .registerModule(kotlinModule { })
+        .registerModule(kotlinModule())
 
     @Test
     fun test_class() {

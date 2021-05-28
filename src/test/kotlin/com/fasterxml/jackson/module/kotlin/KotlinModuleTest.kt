@@ -18,7 +18,6 @@ class KotlinModuleTest {
      */
     @Test
     fun builderDefaultsMatchFeatures() {
-        @Suppress("DEPRECATION")
         val module = KotlinModule.Builder().build()
 
         assertEquals(module.reflectionCacheSize, 512)

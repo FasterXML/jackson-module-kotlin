@@ -48,7 +48,7 @@ class TestGithub239 {
     ]"""
 
     val mapper = ObjectMapper()
-        .registerModule(kotlinModule {})
+        .registerModule(kotlinModule())
 
     @Test
     fun test_implicit_subclasses() {
