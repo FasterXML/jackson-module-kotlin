@@ -63,14 +63,12 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.
      */
-    override fun findSubtypes(a: Annotated): MutableList<NamedType>? = a.rawType
-        .takeIf { it.isKotlinClass() }
-        ?.let { rawType ->
-            rawType.kotlin.sealedSubclasses
-                .map { NamedType(it.java) }
-                .toMutableList()
-                .ifEmpty { null }
-        }
+    override fun findSubtypes(a: Annotated): MutableList<NamedType>? = a.toKmClassOrNull()?.let { kmClass ->
+        kmClass.sealedSubclasses
+            .map { NamedType(it.toJavaClass()) }
+            .toMutableList()
+            .ifEmpty { null }
+    }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val byAnnotation = (member as Field).isRequiredByAnnotation()
