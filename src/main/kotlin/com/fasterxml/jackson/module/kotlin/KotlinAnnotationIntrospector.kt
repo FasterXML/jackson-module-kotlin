@@ -102,19 +102,19 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         ?: this.member.getRequiredMarkerFromAccessorLikeMethod()
 
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
-        member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty1 ->
-            kProperty1.javaGetter
+        member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty ->
+            kProperty.javaGetter
                 ?.takeIf { it == this.member }
                 ?.let {
                     val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty1.returnType.isRequired())
+                    return requiredAnnotationOrNullability(byAnnotation, kProperty.returnType.isRequired())
                 }
 
-            (kProperty1 as? KMutableProperty1)?.javaSetter
+            (kProperty as? KMutableProperty1)?.javaSetter
                 ?.takeIf { it == this.member }
                 ?.let {
                     val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty1.setter.isMethodParameterRequired(0))
+                    return requiredAnnotationOrNullability(byAnnotation, kProperty.setter.isMethodParameterRequired(0))
                 }
         }
         return null
