@@ -13,6 +13,7 @@ import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
@@ -96,6 +97,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
+    // Since Kotlin's property has the same Type for each field, getter, and setter,
+    // nullability can be determined from the returnType of KProperty.
+    private fun KProperty1<*, *>.isRequiredByNullability() = returnType.isRequired()
+
     // This could be a setter or a getter of a class property or
     // a setter-like/getter-like method.
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
@@ -103,19 +108,11 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty ->
-            kProperty.javaGetter
-                ?.takeIf { it == this.member }
-                ?.let {
-                    val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty.returnType.isRequired())
-                }
-
-            (kProperty as? KMutableProperty1)?.javaSetter
-                ?.takeIf { it == this.member }
-                ?.let {
-                    val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty.setter.isMethodParameterRequired(0))
-                }
+            if (kProperty.javaGetter == this.member || (kProperty as? KMutableProperty1)?.javaSetter == this.member) {
+                val byAnnotation = this.member.isRequiredByAnnotation()
+                val byNullability = kProperty.isRequiredByNullability()
+                return requiredAnnotationOrNullability(byAnnotation, byNullability)
+            }
         }
         return null
     }
