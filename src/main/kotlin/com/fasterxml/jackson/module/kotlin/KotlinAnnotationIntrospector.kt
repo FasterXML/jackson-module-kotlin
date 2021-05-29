@@ -7,15 +7,17 @@ import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
+import kotlinx.metadata.Flag
+import kotlinx.metadata.KmProperty
+import kotlinx.metadata.jvm.getterSignature
+import kotlinx.metadata.jvm.setterSignature
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
-import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.*
 
 
@@ -94,27 +96,28 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
+    // Since Kotlin's property has the same Type for each field, getter, and setter,
+    // nullability can be determined from the returnType of KmProperty.
+    private fun KmProperty.isRequiredByNullability(): Boolean = !Flag.Type.IS_NULLABLE(returnType.flags)
+
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
         ?: this.member.getRequiredMarkerFromAccessorLikeMethod()
 
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
-        member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty1 ->
-            kProperty1.javaGetter
-                ?.takeIf { it == this.member }
-                ?.let {
-                    val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty1.returnType.isRequired())
+        member.declaringClass.toKmClassOrNull()?.let { kmClass ->
+            kmClass.properties.forEach { kmProperty ->
+                if (member.isAccessorOf(kmProperty)) {
+                    val byAnnotation = this.member.isRequiredByAnnotation()
+                    val byNullability = kmProperty.isRequiredByNullability()
+                    return requiredAnnotationOrNullability(byAnnotation, byNullability)
                 }
-
-            (kProperty1 as? KMutableProperty1)?.javaSetter
-                ?.takeIf { it == this.member }
-                ?.let {
-                    val byAnnotation = it.isRequiredByAnnotation()
-                    return requiredAnnotationOrNullability(byAnnotation, kProperty1.setter.isMethodParameterRequired(0))
-                }
+            }
         }
         return null
     }
+
+    private fun Method.isAccessorOf(kmProperty: KmProperty): Boolean =
+        kmProperty.getterSignature?.name == name || kmProperty.setterSignature?.name == name
 
     // Is the member method a regular method of the data class or
     private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = this.kotlinFunction?.let { method ->
