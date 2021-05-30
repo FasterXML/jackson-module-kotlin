@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import kotlinx.metadata.*
+import kotlinx.metadata.jvm.fieldSignature
 import kotlinx.metadata.jvm.getterSignature
 import kotlinx.metadata.jvm.setterSignature
 import kotlinx.metadata.jvm.signature
@@ -16,8 +17,8 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
-import kotlin.reflect.KType
-import kotlin.reflect.jvm.*
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.kotlinFunction
 
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
@@ -71,8 +72,11 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
-        val byAnnotation = (member as Field).isRequiredByAnnotation()
-        val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
+        val field = member as Field
+        val byAnnotation = field.isRequiredByAnnotation()
+        val byNullability = field.declaringClass.toKmClassOrNull()?.let { kmClass ->
+            kmClass.properties.find { field.name == it.fieldSignature?.name }?.returnType?.isRequired()
+        }
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
@@ -182,8 +186,6 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return !paramType.isMarkedNullable && !param.isOptional &&
                 !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
-
-    private fun KType.isRequired(): Boolean = !isMarkedNullable
 
     companion object {
         val UNIT_CLASSIFIER: KmClassifier = KmClassifier.Class("kotlin/Unit")
