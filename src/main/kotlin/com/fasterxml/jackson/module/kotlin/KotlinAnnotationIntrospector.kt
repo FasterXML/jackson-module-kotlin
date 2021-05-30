@@ -16,10 +16,6 @@ import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import kotlin.reflect.KFunction
-import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
-
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
                                             private val cache: ReflectionCache,
@@ -146,44 +142,28 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         valueParameters.size == 1 && returnType.classifier == UNIT_CLASSIFIER
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
-        val member = this.member
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
 
+        val member = this.member
+        val kmClass = member.declaringClass.toKmClassOrNull()!!
+
         val byNullability = when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
+            is Constructor<*> -> kmClass.getKmConstructor(member).valueParameters to member.parameterTypes
+            is Method         -> kmClass.getKmFunction(member)?.let { it.valueParameters to member.parameterTypes }
             else              -> null
+        }?.let {
+            isMethodParameterRequired(it.first[index], it.second[index])
         }
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
 
-    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index)
-    }
-
-    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index+1)
-    }
     private fun isMethodParameterRequired(param: KmValueParameter, type: Class<*>): Boolean {
         val isRequired = Flag.Type.IS_NULLABLE(param.type!!.flags)
         val isOptional = Flag.ValueParameter.DECLARES_DEFAULT_VALUE(param.flags)
         val isPrimitive = type.isPrimitive
 
         return !isRequired && !isOptional &&
-                !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
-    }
-
-    private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
-        val param = parameters[index]
-        val paramType = param.type
-        val javaType = paramType.javaType
-        val isPrimitive = when (javaType) {
-            is Class<*> -> javaType.isPrimitive
-            else -> false
-        }
-
-        return !paramType.isMarkedNullable && !param.isOptional &&
                 !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
 
