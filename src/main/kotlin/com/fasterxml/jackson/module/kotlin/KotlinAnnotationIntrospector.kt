@@ -98,6 +98,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     // Since Kotlin's property has the same Type for each field, getter, and setter,
     // nullability can be determined from the returnType of KmProperty.
     private fun KmProperty.isRequiredByNullability(): Boolean = !Flag.Type.IS_NULLABLE(returnType.flags)
+    private fun KmType.isRequired() = !Flag.Type.IS_NULLABLE(flags)
 
     private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
         ?: this.member.getRequiredMarkerFromAccessorLikeMethod()
@@ -125,7 +126,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
             kmClass.functions.forEach { kmFunction ->
                 if (kmFunction.signature?.name == name) {
                     val byNullability = when {
-                        kmFunction.isGetterLike() -> !Flag.Type.IS_NULLABLE(kmFunction.returnType.flags)
+                        kmFunction.isGetterLike() -> kmFunction.returnType.isRequired()
                         kmFunction.isSetterLike() -> isMethodParameterRequired(kmFunction.valueParameters[0], this.parameterTypes[0])
                         else -> return@let null
                     }
