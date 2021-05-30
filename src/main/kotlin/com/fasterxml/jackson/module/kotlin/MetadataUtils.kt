@@ -21,6 +21,7 @@ internal fun Metadata.toKmClassOrNull(): KmClass? =
 internal fun Class<*>.toKmClassOrNull(): KmClass? = this.getAnnotation(Metadata::class.java)?.toKmClassOrNull()
 internal fun Annotated.toKmClassOrNull(): KmClass? = this.getAnnotation(Metadata::class.java)?.toKmClassOrNull()
 
+// It may fail when executed for types like `kotlin.Int`.
 internal fun ClassName.toJavaClass(): Class<*> {
     return Class.forName(replace(".", "$").replace("/", "."))
 }
