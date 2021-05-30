@@ -7,17 +7,16 @@ import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
-import kotlinx.metadata.Flag
-import kotlinx.metadata.KmProperty
+import kotlinx.metadata.*
 import kotlinx.metadata.jvm.getterSignature
 import kotlinx.metadata.jvm.setterSignature
+import kotlinx.metadata.jvm.signature
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
 import kotlin.reflect.KType
-import kotlin.reflect.full.createType
 import kotlin.reflect.jvm.*
 
 
@@ -120,17 +119,26 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         kmProperty.getterSignature?.name == name || kmProperty.setterSignature?.name == name
 
     // Is the member method a regular method of the data class or
-    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = this.kotlinFunction?.let { method ->
-        val byAnnotation = this.isRequiredByAnnotation()
-        return when {
-            method.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
-            method.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
-            else -> null
+    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? =
+        this.declaringClass.toKmClassOrNull()?.let { kmClass ->
+            val byAnnotation = this.isRequiredByAnnotation()
+            kmClass.functions.forEach { kmFunction ->
+                if (kmFunction.signature?.name == name) {
+                    val byNullability = when {
+                        kmFunction.isGetterLike() -> !Flag.Type.IS_NULLABLE(kmFunction.returnType.flags)
+                        kmFunction.isSetterLike() -> isMethodParameterRequired(kmFunction.valueParameters[0], this.parameterTypes[0])
+                        else -> return@let null
+                    }
+                    return@let requiredAnnotationOrNullability(byAnnotation, byNullability)
+                }
+            }
+            null
         }
-    }
 
-    private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
-    private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
+    private fun KmFunction.isGetterLike(): Boolean = valueParameters.size == 0
+    // As an edge case, there is a pattern where the return type is Unit?, but it is not considered.
+    private fun KmFunction.isSetterLike(): Boolean =
+        valueParameters.size == 1 && returnType.classifier == UNIT_CLASSIFIER
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
@@ -152,6 +160,14 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
         return isParameterRequired(index+1)
     }
+    private fun isMethodParameterRequired(param: KmValueParameter, type: Class<*>): Boolean {
+        val isRequired = Flag.Type.IS_NULLABLE(param.type!!.flags)
+        val isOptional = Flag.ValueParameter.DECLARES_DEFAULT_VALUE(param.flags)
+        val isPrimitive = type.isPrimitive
+
+        return !isRequired && !isOptional &&
+                !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
+    }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
         val param = parameters[index]
@@ -169,6 +185,6 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun KType.isRequired(): Boolean = !isMarkedNullable
 
     companion object {
-        val UNIT_TYPE: KType = Unit::class.createType()
+        val UNIT_CLASSIFIER: KmClassifier = KmClassifier.Class("kotlin/Unit")
     }
 }
