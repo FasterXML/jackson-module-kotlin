@@ -21,11 +21,11 @@ class KotlinModuleTest {
         val module = KotlinModule.Builder().build()
 
         assertEquals(module.reflectionCacheSize, 512)
-        assertEquals(module.nullToEmptyCollection, NullToEmptyCollection.enabledByDefault())
-        assertEquals(module.nullToEmptyMap, NullToEmptyMap.enabledByDefault())
-        assertEquals(module.nullIsSameAsDefault, NullIsSameAsDefault.enabledByDefault())
-        assertEquals(module.singletonSupport == CANONICALIZE, SingletonSupport.enabledByDefault())
-        assertEquals(module.strictNullChecks, StrictNullChecks.enabledByDefault())
+        assertEquals(module.nullToEmptyCollection, NullToEmptyCollection.enabledByDefault)
+        assertEquals(module.nullToEmptyMap, NullToEmptyMap.enabledByDefault)
+        assertEquals(module.nullIsSameAsDefault, NullIsSameAsDefault.enabledByDefault)
+        assertEquals(module.singletonSupport == CANONICALIZE, SingletonSupport.enabledByDefault)
+        assertEquals(module.strictNullChecks, StrictNullChecks.enabledByDefault)
     }
 
     @Test

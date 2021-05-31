@@ -11,7 +11,7 @@ import org.junit.Test
 class TestNullToDefault {
 
 	private fun createMapper(allowDefaultingByNull: Boolean) = ObjectMapper()
-		.registerModule(kotlinModule { set(NullIsSameAsDefault, allowDefaultingByNull) })
+		.registerModule(kotlinModule { configure(NullIsSameAsDefault, allowDefaultingByNull) })
 
 	private data class TestClass(val sku: Int = -1,
 								 val text: String,

@@ -1,19 +1,15 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.core.util.JacksonFeature
 import java.util.*
+import kotlin.math.pow
 
-enum class KotlinFeature(private val enabledByDefault: Boolean, private val mask: Int) : JacksonFeature {
+enum class KotlinFeature(val enabledByDefault: Boolean) {
 
-    NullToEmptyCollection(enabledByDefault = false, mask = 1),
-    NullToEmptyMap(enabledByDefault = false, mask = 2),
-    NullIsSameAsDefault(enabledByDefault = false, mask = 4),
-    SingletonSupport(enabledByDefault = false, mask = 8),
-    StrictNullChecks(enabledByDefault = false, mask = 16);
+    NullToEmptyCollection(enabledByDefault = false),
+    NullToEmptyMap(enabledByDefault = false),
+    NullIsSameAsDefault(enabledByDefault = false),
+    SingletonSupport(enabledByDefault = false),
+    StrictNullChecks(enabledByDefault = false);
 
-    val bitSet: BitSet = mask.toBitSet()
-
-    override fun enabledByDefault() = enabledByDefault
-    override fun getMask() = mask
-    override fun enabledIn(flags: Int) = bitSet.intersects(flags.toBitSet())
+    val bitSet: BitSet = 2.0.pow(ordinal).toInt().toBitSet()
 }

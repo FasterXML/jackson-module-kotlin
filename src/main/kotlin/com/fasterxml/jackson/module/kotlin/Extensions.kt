@@ -67,7 +67,7 @@ inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, des
     addDeserializer(kClass.javaObjectType, deserializer)
 }
 
-fun Int.toBitSet(): BitSet {
+internal fun Int.toBitSet(): BitSet {
     var i = this
     var index = 0
     val bits = BitSet(32)
