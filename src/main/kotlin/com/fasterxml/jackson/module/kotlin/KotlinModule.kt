@@ -173,7 +173,6 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
             message = "Deprecated, use isEnabled(NullToEmptyMap) instead.",
             replaceWith = ReplaceWith("isEnabled(NullToEmptyMap)")
         )
-
         fun getNullToEmptyMap() = isEnabled(NullToEmptyMap)
 
         @Deprecated(
