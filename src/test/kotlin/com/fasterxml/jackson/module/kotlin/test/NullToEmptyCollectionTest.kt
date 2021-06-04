@@ -1,18 +1,19 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TestNullToEmptyCollection{
+class TestNullToEmptyCollection {
 
     private data class TestClass(val foo: List<Int>)
 
     @Test
     fun nonNullCaseStillWorks() {
         val mapper = createMapper()
-        assertEquals(listOf(1,2), mapper.readValue("""{"foo": [1,2]}""", TestClass::class.java).foo)
+        assertEquals(listOf(1, 2), mapper.readValue("""{"foo": [1,2]}""", TestClass::class.java).foo)
     }
 
     @Test
@@ -24,6 +25,6 @@ class TestNullToEmptyCollection{
     }
 
     private fun createMapper(): ObjectMapper {
-        return ObjectMapper().registerModule(KotlinModule(nullToEmptyCollection = true))
+        return ObjectMapper().registerModule(kotlinModule { enable(NullToEmptyCollection) })
     }
 }
