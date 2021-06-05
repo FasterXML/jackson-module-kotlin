@@ -1,8 +1,9 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -10,10 +11,9 @@ import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertNull
 
-
 class StrictNullChecksTest {
     private val mapper = JsonMapper.builder()
-            .addModule(KotlinModule(strictNullChecks = true))
+            .addModule(kotlinModule { enable(StrictNullChecks) })
             .build()
 
     /** collection tests */

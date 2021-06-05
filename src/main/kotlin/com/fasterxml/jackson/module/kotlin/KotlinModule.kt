@@ -2,11 +2,16 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
+import java.util.BitSet
 import kotlin.reflect.KClass
 
-private val metadataFqName = "kotlin.Metadata"
+private const val metadataFqName = "kotlin.Metadata"
 
 fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
@@ -27,7 +32,7 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
  */
-class KotlinModule constructor (
+class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder") constructor(
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
@@ -37,26 +42,42 @@ class KotlinModule constructor (
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
-        reflectionCacheSize: Int = 512,
-        nullToEmptyCollection: Boolean = false,
-        nullToEmptyMap: Boolean = false
-    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, false)
+        reflectionCacheSize: Int,
+        nullToEmptyCollection: Boolean,
+        nullToEmptyMap: Boolean
+    ) : this(
+        Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .configure(NullToEmptyCollection, nullToEmptyCollection)
+            .configure(NullToEmptyMap, nullToEmptyMap)
+            .disable(NullIsSameAsDefault)
+    )
 
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
-        reflectionCacheSize: Int = 512,
-        nullToEmptyCollection: Boolean = false,
-        nullToEmptyMap: Boolean = false,
-        nullIsSameAsDefault: Boolean = false
-    ) : this(reflectionCacheSize, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault)
+        reflectionCacheSize: Int,
+        nullToEmptyCollection: Boolean,
+        nullToEmptyMap: Boolean,
+        nullIsSameAsDefault: Boolean
+    ) : this(
+        Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .configure(NullToEmptyCollection, nullToEmptyCollection)
+            .configure(NullToEmptyMap, nullToEmptyMap)
+            .configure(NullIsSameAsDefault, nullIsSameAsDefault)
+    )
 
+    @Suppress("DEPRECATION")
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
-        builder.nullToEmptyCollection,
-        builder.nullToEmptyMap,
-        builder.nullIsSameAsDefault,
-        builder.singletonSupport,
-        builder.strictNullChecks
+        builder.isEnabled(NullToEmptyCollection),
+        builder.isEnabled(NullToEmptyMap),
+        builder.isEnabled(NullIsSameAsDefault),
+        when {
+            builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
+            else -> DISABLED
+        },
+        builder.isEnabled(StrictNullChecks)
     )
 
     companion object {
@@ -76,7 +97,7 @@ class KotlinModule constructor (
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        when(singletonSupport) {
+        when (singletonSupport) {
             DISABLED -> Unit
             CANONICALIZE -> {
  	        // [module-kotlin#225]: keep Kotlin singletons as singletons
@@ -105,35 +126,103 @@ class KotlinModule constructor (
         var reflectionCacheSize: Int = 512
             private set
 
-        var nullToEmptyCollection: Boolean = false
-            private set
+        private val bitSet: BitSet = 0.toBitSet().apply {
+            KotlinFeature.values().filter { it.enabledByDefault }.forEach { or(it.bitSet) }
+        }
 
-        var nullToEmptyMap: Boolean = false
-            private set
+        fun withReflectionCacheSize(reflectionCacheSize: Int) = apply {
+            this.reflectionCacheSize = reflectionCacheSize
+        }
 
-        var nullIsSameAsDefault: Boolean = false
-            private set
+        fun enable(feature: KotlinFeature) = apply {
+            bitSet.or(feature.bitSet)
+        }
 
-        var singletonSupport = DISABLED
-            private set
+        fun disable(feature: KotlinFeature) = apply {
+            bitSet.andNot(feature.bitSet)
+        }
 
-        var strictNullChecks = false
-            private set
+        fun configure(feature: KotlinFeature, enabled: Boolean) = when {
+            enabled -> enable(feature)
+            else -> disable(feature)
+        }
 
-        fun reflectionCacheSize(reflectionCacheSize: Int) = apply { this.reflectionCacheSize = reflectionCacheSize }
+        fun isEnabled(feature: KotlinFeature): Boolean = bitSet.intersects(feature.bitSet)
 
+        @Deprecated(
+            message = "Deprecated, use withReflectionCacheSize(reflectionCacheSize) instead.",
+            replaceWith = ReplaceWith("isEnabled(reflectionCacheSize)")
+        )
+        fun reflectionCacheSize(reflectionCacheSize: Int) = apply {
+            this.reflectionCacheSize = reflectionCacheSize
+        }
+
+        @Deprecated(
+            message = "Deprecated, use isEnabled(NullToEmptyCollection) instead.",
+            replaceWith = ReplaceWith("isEnabled(NullToEmptyCollection)")
+        )
+        fun getNullToEmptyCollection() = isEnabled(NullToEmptyCollection)
+
+        @Deprecated(
+            message = "Deprecated, use configure(NullToEmptyCollection, enabled) instead.",
+            replaceWith = ReplaceWith("configure(NullToEmptyCollection, enabled)")
+        )
         fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
-            apply { this.nullToEmptyCollection = nullToEmptyCollection }
+            configure(NullToEmptyCollection, nullToEmptyCollection)
 
-        fun nullToEmptyMap(nullToEmptyMap: Boolean) = apply { this.nullToEmptyMap = nullToEmptyMap }
+        @Deprecated(
+            message = "Deprecated, use isEnabled(NullToEmptyMap) instead.",
+            replaceWith = ReplaceWith("isEnabled(NullToEmptyMap)")
+        )
+        fun getNullToEmptyMap() = isEnabled(NullToEmptyMap)
 
-        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = apply { this.nullIsSameAsDefault = nullIsSameAsDefault }
+        @Deprecated(
+            message = "Deprecated, use configure(NullToEmptyMap, enabled) instead.",
+            replaceWith = ReplaceWith("configure(NullToEmptyMap, enabled)")
+        )
+        fun nullToEmptyMap(nullToEmptyMap: Boolean) = configure(NullToEmptyMap, nullToEmptyMap)
 
-        fun singletonSupport(singletonSupport: SingletonSupport) =
-            apply { this.singletonSupport = singletonSupport }
+        @Deprecated(
+            message = "Deprecated, use isEnabled(NullIsSameAsDefault) instead.",
+            replaceWith = ReplaceWith("isEnabled(NullIsSameAsDefault)")
+        )
+        fun getNullIsSameAsDefault() = isEnabled(NullIsSameAsDefault)
 
-        fun strictNullChecks(strictNullChecks: Boolean) =
-                apply { this.strictNullChecks = strictNullChecks }
+        @Deprecated(
+            message = "Deprecated, use configure(NullIsSameAsDefault, enabled) instead.",
+            replaceWith = ReplaceWith("configure(NullIsSameAsDefault, enabled)")
+        )
+        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = configure(NullIsSameAsDefault, nullIsSameAsDefault)
+
+        @Deprecated(
+            message = "Deprecated, use isEnabled(SingletonSupport) instead.",
+            replaceWith = ReplaceWith("isEnabled(SingletonSupport)")
+        )
+        fun getSingletonSupport() = when {
+            isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
+            else -> DISABLED
+        }
+
+        @Deprecated(
+            message = "Deprecated, use configure(SingletonSupport, enabled) instead.",
+            replaceWith = ReplaceWith("configure(SingletonSupport, enabled)")
+        )
+        fun singletonSupport(singletonSupport: SingletonSupport) = when (singletonSupport) {
+            CANONICALIZE -> enable(KotlinFeature.SingletonSupport)
+            else -> disable(KotlinFeature.SingletonSupport)
+        }
+
+        @Deprecated(
+            message = "Deprecated, use isEnabled(StrictNullChecks) instead.",
+            replaceWith = ReplaceWith("isEnabled(StrictNullChecks)")
+        )
+        fun getStrictNullChecks() = isEnabled(StrictNullChecks)
+
+        @Deprecated(
+            message = "Deprecated, use configure(StrictNullChecks, enabled) instead.",
+            replaceWith = ReplaceWith("configure(StrictNullChecks, enabled)")
+        )
+        fun strictNullChecks(strictNullChecks: Boolean) = configure(StrictNullChecks, strictNullChecks)
 
         fun build() = KotlinModule(this)
     }

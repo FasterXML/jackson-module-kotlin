@@ -1,18 +1,17 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
 import org.junit.Test
 
 class TestNullToDefault {
-
 	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
-			.addModule(KotlinModule(nullIsSameAsDefault = allowDefaultingByNull))
-			.build()
+		.addModule(kotlinModule { configure(NullIsSameAsDefault, allowDefaultingByNull) })
+		.build()
 
 	private data class TestClass(val sku: Int = -1,
 								 val text: String,

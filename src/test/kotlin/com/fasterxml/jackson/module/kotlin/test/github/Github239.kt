@@ -3,10 +3,8 @@ package com.fasterxml.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonTypeName
-
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -26,8 +24,8 @@ class TestGithub239 {
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
     @JsonSubTypes(
-            JsonSubTypes.Type(Github239EitherCustomized.A::class, name = "a"),
-            JsonSubTypes.Type(Github239EitherCustomized.B::class, name = "b")
+        JsonSubTypes.Type(Github239EitherCustomized.A::class, name = "a"),
+        JsonSubTypes.Type(Github239EitherCustomized.B::class, name = "b")
     )
     sealed class Github239EitherCustomized {
 
@@ -71,5 +69,4 @@ class TestGithub239 {
         assertEquals(Github239EitherCustomized.B("1234"), array[1])
 
     }
-
 }

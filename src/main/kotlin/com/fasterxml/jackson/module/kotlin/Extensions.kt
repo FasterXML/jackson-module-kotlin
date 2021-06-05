@@ -3,15 +3,19 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.*
-import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.DatabindException
+import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.databind.ValueDeserializer
 import com.fasterxml.jackson.databind.ValueSerializer
 import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.databind.module.SimpleModule
 import java.io.File
 import java.io.InputStream
 import java.io.Reader
 import java.net.URL
+import java.util.BitSet
 import kotlin.reflect.KClass
 
 fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
@@ -61,4 +65,18 @@ inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, seria
 inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: ValueDeserializer<T>) = this.apply {
     addDeserializer(kClass.java, deserializer)
     addDeserializer(kClass.javaObjectType, deserializer)
+}
+
+internal fun Int.toBitSet(): BitSet {
+    var i = this
+    var index = 0
+    val bits = BitSet(32)
+    while (i != 0) {
+        if (i % 2 != 0) {
+            bits.set(index)
+        }
+        ++index
+        i = i shr 1
+    }
+    return bits
 }
