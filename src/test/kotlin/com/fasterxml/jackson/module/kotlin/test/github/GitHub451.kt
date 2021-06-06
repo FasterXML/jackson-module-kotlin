@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -19,6 +20,7 @@ class GitHub451 {
     val mapper = jacksonObjectMapper()
 
     @Test
+    @Ignore
     fun serializeTest() {
         val expected = """{"foo-bar":"a","baz-qux":"b","quux-corge":"a","grault-graply":"b"}"""
 
