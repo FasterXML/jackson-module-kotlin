@@ -31,6 +31,9 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      the default, collections which are typed to disallow null members
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
+ * @param   experimentalDeserializationBackend
+ *                                  Default: false.  Whether to enable experimental deserialization backend.  Enabling
+ *                                      it significantly improve performance in certain use cases.
  */
 class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder") constructor(
     val reflectionCacheSize: Int = 512,
@@ -38,7 +41,8 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false
+    val strictNullChecks: Boolean = false,
+    val experimentalDeserializationBackend: Boolean = false
 ) : SimpleModule(PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -77,7 +81,8 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
             builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
             else -> DISABLED
         },
-        builder.isEnabled(StrictNullChecks)
+        builder.isEnabled(StrictNullChecks),
+        builder.isEnabled(KotlinFeature.ExperimentalDeserializationBackend)
     )
 
     companion object {
@@ -95,7 +100,14 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
+        context.addValueInstantiators(KotlinInstantiators(
+            cache,
+            nullToEmptyCollection,
+            nullToEmptyMap,
+            nullIsSameAsDefault,
+            strictNullChecks,
+            experimentalDeserializationBackend
+        ))
 
         when (singletonSupport) {
             DISABLED -> Unit

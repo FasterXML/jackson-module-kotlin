@@ -8,7 +8,8 @@ enum class KotlinFeature(val enabledByDefault: Boolean) {
     NullToEmptyMap(enabledByDefault = false),
     NullIsSameAsDefault(enabledByDefault = false),
     SingletonSupport(enabledByDefault = false),
-    StrictNullChecks(enabledByDefault = false);
+    StrictNullChecks(enabledByDefault = false),
+    ExperimentalDeserializationBackend(enabledByDefault = false);
 
     internal val bitSet: BitSet = 2.0.pow(ordinal).toInt().toBitSet()
 }
