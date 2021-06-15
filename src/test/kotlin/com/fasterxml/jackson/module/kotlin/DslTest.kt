@@ -55,13 +55,13 @@ class DslTest {
     }
 
     @Test
-    fun creatJsonMapperWithEmptyInitializer() {
+    fun createJsonMapperWithEmptyInitializer() {
         val mapper = jsonMapper {}
         assertNotNull(mapper)
     }
 
     @Test
-    fun creatJsonMapperWithBuilderOptions() {
+    fun createJsonMapperWithBuilderOptions() {
         val mapper = jsonMapper {
             enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
             disable(JsonWriteFeature.QUOTE_FIELD_NAMES)
