@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.ExperimentalDeserializationBackend
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import org.junit.Assert.*
@@ -26,6 +27,7 @@ class KotlinModuleTest {
         assertEquals(module.nullIsSameAsDefault, NullIsSameAsDefault.enabledByDefault)
         assertEquals(module.singletonSupport == CANONICALIZE, SingletonSupport.enabledByDefault)
         assertEquals(module.strictNullChecks, StrictNullChecks.enabledByDefault)
+        assertEquals(module.experimentalDeserializationBackend, ExperimentalDeserializationBackend.enabledByDefault)
     }
 
     @Test
@@ -38,6 +40,7 @@ class KotlinModuleTest {
         assertFalse(module.nullIsSameAsDefault)
         assertEquals(DISABLED, module.singletonSupport)
         assertFalse(module.strictNullChecks)
+        assertFalse(module.experimentalDeserializationBackend)
     }
 
     @Test
@@ -49,6 +52,7 @@ class KotlinModuleTest {
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
             enable(StrictNullChecks)
+            enable(ExperimentalDeserializationBackend)
         }.build()
 
         assertEquals(123, module.reflectionCacheSize)
@@ -57,6 +61,7 @@ class KotlinModuleTest {
         assertTrue(module.nullIsSameAsDefault)
         assertEquals(CANONICALIZE, module.singletonSupport)
         assertTrue(module.strictNullChecks)
+        assertTrue(module.experimentalDeserializationBackend)
     }
 
     @Test
