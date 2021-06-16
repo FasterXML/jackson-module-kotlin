@@ -76,6 +76,6 @@ class DslTest {
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_JAVA_COMMENTS))
         assertFalse(mapper.isEnabled(JsonWriteFeature.QUOTE_PROPERTY_NAMES))
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_SINGLE_QUOTES))
-        assertTrue(mapper.registeredModules.any { it.moduleName == "jackson-module-kotlin" })
+        assertTrue(mapper.registeredModules.any { it.moduleName == "com.fasterxml.jackson.module.kotlin.KotlinModule" })
     }
 }
