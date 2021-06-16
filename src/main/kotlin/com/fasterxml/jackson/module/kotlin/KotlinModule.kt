@@ -39,7 +39,7 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false
-) : SimpleModule(PackageVersion.VERSION) {
+) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int,
