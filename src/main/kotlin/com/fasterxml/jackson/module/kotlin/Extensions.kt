@@ -80,3 +80,9 @@ internal fun Int.toBitSet(): BitSet {
     }
     return bits
 }
+
+// In the future, value class without JvmInline will be available, and unbox may not be able to handle it.
+// https://github.com/FasterXML/jackson-module-kotlin/issues/464
+// The JvmInline annotation can be given to Java class,
+// so the isKotlinClass decision is necessary (the order is preferable in terms of possible frequency).
+internal fun Class<*>.isUnboxableValueClass() = annotations.any { it is JvmInline } && this.isKotlinClass()

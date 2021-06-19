@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.ser.Serializers
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer.isUnboxableValueClass
 import java.math.BigInteger
 
 object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
@@ -52,12 +51,6 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
 
         provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
     }
-
-    // In the future, value class without JvmInline will be available, and unbox may not be able to handle it.
-    // https://github.com/FasterXML/jackson-module-kotlin/issues/464
-    // The JvmInline annotation can be given to Java class,
-    // so the isKotlinClass decision is necessary (the order is preferable in terms of possible frequency).
-    fun Class<*>.isUnboxableValueClass() = annotations.any { it is JvmInline } && this.isKotlinClass()
 }
 
 @Suppress("EXPERIMENTAL_API_USAGE")
