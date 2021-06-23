@@ -221,6 +221,11 @@
                             <exclude>com.fasterxml.jackson.module.kotlin.ULongSerializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.UShortDeserializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.UShortSerializer</exclude>
+                            <!--
+                                #451 private top-level function removed which caused this class to disappear,
+                                though to no effect.
+                            -->
+                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospectorKt</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
