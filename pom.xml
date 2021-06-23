@@ -204,8 +204,9 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
+                            <!-- TODO Delaying update of oldVersion so we can keep track of what has changed -->
                             <!--
-                                TODO Remove after release of 2.13 and update the oldVersion above.
+                                TODO Remove after release of 2.13 and update the oldVersion above to 2.13.
 
                                 Kotlin's method suffix generation changed in 1.4.30
                                 (https://github.com/Kotlin/KEEP/commit/e7984ffd83a1166c7f81a11d1a95b35cae929a2a#diff-012da204af6117588e5a1d3a41491bb7fe4e6c5620111c3c2d4a680c7a1057b1R653)
@@ -221,6 +222,10 @@
                             <exclude>com.fasterxml.jackson.module.kotlin.ULongSerializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.UShortDeserializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.UShortSerializer</exclude>
+                            <!--
+                                TODO Remove after release of 2.13 and update the oldVersion above to 2.13.
+                            -->
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
