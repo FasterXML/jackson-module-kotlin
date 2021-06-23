@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import org.junit.ComparisonFailure
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -70,7 +72,6 @@ class Github464 {
             )
         }
 
-        @Ignore
         @Test
         fun test() {
             val zeroValue = ValueClass(0)
@@ -88,7 +89,8 @@ class Github464 {
                 waldo = mapOf(WrapperClass(zeroValue) to WrapperClass(zeroValue), WrapperClass(oneValue) to null)
             )
 
-            assertEquals("""
+            expectFailure<ComparisonFailure>("GitHub #469 has been fixed!") {
+                assertEquals("""
                 {
                   "foo" : 0,
                   "bar" : null,
@@ -111,8 +113,9 @@ class Github464 {
                   }
                 }
             """.trimIndent(),
-                writer.writeValueAsString(target)
-            )
+                    writer.writeValueAsString(target)
+                )
+            }
         }
     }
 
