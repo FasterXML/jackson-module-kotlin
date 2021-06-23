@@ -13,6 +13,18 @@ Authors:
 
 Contributors:
 
+wrongwrong (k163377@github)
+* #468: Improved support for value classes
+  (2.13)
+
+wrongwrong (k163377@github)
+* #460: Test for GitHub #451 (`-` in property name handling)
+  (2.13)
+
+wrongwrong (k163377@github)
+* #447: Fix edge case when dealing with sealed classes
+  (2.13)
+
 Jocelyn N'TAKPÉ (jntakpe@github)
 * #211: Contributed test case for @JsonMerge
   (2.12.NEXT)
