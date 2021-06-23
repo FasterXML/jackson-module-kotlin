@@ -15,6 +15,8 @@ import kotlin.test.assertEquals
 
 class Github464 {
     class UnboxTest {
+        val writer = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+
         @JvmInline
         value class ValueClass(val value: Int)
         data class WrapperClass(val inlineField: ValueClass)
@@ -49,23 +51,22 @@ class Github464 {
                 waldo = emptyMap()
             )
 
-            val om = jacksonObjectMapper()
             assertEquals("""
                 {
-                    "foo": 0,
-                    "bar": null,
-                    "baz": 0,
-                    "qux": [0, null],
-                    "quux": [0, null],
-                    "corge": {
-                        "inlineField": 0
-                    },
-                    "grault": null,
-                    "garply": {},
-                    "waldo": {}
+                  "foo" : 0,
+                  "bar" : null,
+                  "baz" : 0,
+                  "qux" : [ 0, null ],
+                  "quux" : [ 0, null ],
+                  "corge" : {
+                    "inlineField" : 0
+                  },
+                  "grault" : null,
+                  "garply" : { },
+                  "waldo" : { }
                 }
-            """.replace("\\s".toRegex(), ""),
-                om.writeValueAsString(target)
+            """.trimIndent(),
+                writer.writeValueAsString(target)
             )
         }
 
@@ -87,31 +88,30 @@ class Github464 {
                 waldo = mapOf(WrapperClass(zeroValue) to WrapperClass(zeroValue), WrapperClass(oneValue) to null)
             )
 
-            val om = jacksonObjectMapper()
             assertEquals("""
                 {
-                    "foo": 0,
-                    "bar": null,
-                    "baz": 0,
-                    "qux": [0, null],
-                    "quux": [0, null],
-                    "corge": {
-                        "inlineField": 0
+                  "foo" : 0,
+                  "bar" : null,
+                  "baz" : 0,
+                  "qux" : [ 0, null ],
+                  "quux" : [ 0, null ],
+                  "corge" : {
+                    "inlineField" : 0
+                  },
+                  "grault" : null,
+                  "garply" : {
+                    "0" : 0,
+                    "1" : null
+                  },
+                  "waldo" : {
+                    "{inlineField=0}" : {
+                      "inlineField" : 0
                     },
-                    "grault": null,
-                    "garply": {
-                        "0": 0,
-                        "1": null
-                    },
-                    "waldo": {
-                        "{inlineField=0}": {
-                            "inlineField": 0
-                        },
-                        "{inlineField=1}": null
-                    }
+                    "{inlineField=1}" : null
+                  }
                 }
-            """.replace("\\s".toRegex(), ""),
-                om.writeValueAsString(target)
+            """.trimIndent(),
+                writer.writeValueAsString(target)
             )
         }
     }
