@@ -21,6 +21,10 @@ wrongwrong (k163377@github)
 * #460: Test for GitHub #451 (`-` in property name handling)
   (2.13)
 
+wrongwrong (k163377@github)
+* #447: Fix edge case when dealing with sealed classes
+  (2.13)
+
 Christopher Mason (masoncj@github)
 * #194: Contributed test case for @JsonIdentityInfo usage
   (2.12.NEXT)
