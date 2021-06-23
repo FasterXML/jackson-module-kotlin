@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -17,7 +18,7 @@ import kotlin.test.assertEquals
 
 class Github464 {
     class UnboxTest {
-        val writer = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+        private val writer: ObjectWriter = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
 
         @JvmInline
         value class ValueClass(val value: Int)
