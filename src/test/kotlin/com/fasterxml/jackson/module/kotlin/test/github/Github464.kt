@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializerProvider
@@ -10,18 +11,25 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
-import org.junit.ComparisonFailure
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class Github464 {
     class UnboxTest {
-        private val writer: ObjectWriter = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+        object NullValueClassKeySerializer : StdSerializer<ValueClass>(ValueClass::class.java) {
+            override fun serialize(value: ValueClass?, gen: JsonGenerator, provider: SerializerProvider) {
+                gen.writeFieldName("null-key")
+            }
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        private val writer: ObjectWriter = jacksonObjectMapper()
+            .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>) }
+            .writerWithDefaultPrettyPrinter()
 
         @JvmInline
-        value class ValueClass(val value: Int)
+        value class ValueClass(val value: Int?)
         data class WrapperClass(val inlineField: ValueClass)
 
         class Poko(
@@ -33,50 +41,14 @@ class Github464 {
             val quux: Array<ValueClass?>,
             val corge: WrapperClass,
             val grault: WrapperClass?,
-            val garply: Map<ValueClass, ValueClass?>,
-            val waldo: Map<WrapperClass, WrapperClass?>
+            val garply: Map<ValueClass, ValueClass?>
         )
-
-        // TODO: Remove this function after applying unbox to key of Map and cancel Ignore of test.
-        @Test
-        fun tempTest() {
-            val zeroValue = ValueClass(0)
-
-            val target = Poko(
-                foo = zeroValue,
-                bar = null,
-                baz = zeroValue,
-                qux = listOf(zeroValue, null),
-                quux = arrayOf(zeroValue, null),
-                corge = WrapperClass(zeroValue),
-                grault = null,
-                garply = emptyMap(),
-                waldo = emptyMap()
-            )
-
-            assertEquals("""
-                {
-                  "foo" : 0,
-                  "bar" : null,
-                  "baz" : 0,
-                  "qux" : [ 0, null ],
-                  "quux" : [ 0, null ],
-                  "corge" : {
-                    "inlineField" : 0
-                  },
-                  "grault" : null,
-                  "garply" : { },
-                  "waldo" : { }
-                }
-            """.trimIndent(),
-                writer.writeValueAsString(target)
-            )
-        }
 
         @Test
         fun test() {
             val zeroValue = ValueClass(0)
             val oneValue = ValueClass(1)
+            val nullValue = ValueClass(null)
 
             val target = Poko(
                 foo = zeroValue,
@@ -86,37 +58,30 @@ class Github464 {
                 quux = arrayOf(zeroValue, null),
                 corge = WrapperClass(zeroValue),
                 grault = null,
-                garply = mapOf(zeroValue to zeroValue, oneValue to null),
-                waldo = mapOf(WrapperClass(zeroValue) to WrapperClass(zeroValue), WrapperClass(oneValue) to null)
+                garply = mapOf(zeroValue to zeroValue, oneValue to null, nullValue to nullValue)
             )
 
-            expectFailure<ComparisonFailure>("GitHub #469 has been fixed!") {
-                assertEquals("""
-                {
-                  "foo" : 0,
-                  "bar" : null,
-                  "baz" : 0,
-                  "qux" : [ 0, null ],
-                  "quux" : [ 0, null ],
-                  "corge" : {
-                    "inlineField" : 0
-                  },
-                  "grault" : null,
-                  "garply" : {
-                    "0" : 0,
-                    "1" : null
-                  },
-                  "waldo" : {
-                    "{inlineField=0}" : {
-                      "inlineField" : 0
-                    },
-                    "{inlineField=1}" : null
-                  }
-                }
-            """.trimIndent(),
-                    writer.writeValueAsString(target)
-                )
-            }
+            assertEquals(
+                """
+                    {
+                      "foo" : 0,
+                      "bar" : null,
+                      "baz" : 0,
+                      "qux" : [ 0, null ],
+                      "quux" : [ 0, null ],
+                      "corge" : {
+                        "inlineField" : 0
+                      },
+                      "grault" : null,
+                      "garply" : {
+                        "0" : 0,
+                        "1" : null,
+                        "null-key" : null
+                      }
+                    }
+                """.trimIndent(),
+                writer.writeValueAsString(target)
+            )
         }
     }
 
@@ -129,15 +94,22 @@ class Github464 {
                 gen.writeString(value.value.toString())
             }
         }
+        object KeySerializer : StdSerializer<ValueBySerializer>(ValueBySerializer::class.java) {
+            override fun serialize(value: ValueBySerializer, gen: JsonGenerator, provider: SerializerProvider) {
+                gen.writeFieldName(value.value.toString())
+            }
+        }
 
-        private val target = listOf(ValueBySerializer(1))
+        private val target = mapOf(ValueBySerializer(1) to ValueBySerializer(2))
+        private val sm = SimpleModule()
+            .addSerializer(Serializer)
+            .addKeySerializer(ValueBySerializer::class.java, KeySerializer)
 
         @Test
         fun simpleTest() {
-            val sm = SimpleModule().addSerializer(Serializer)
             val om: ObjectMapper = jacksonMapperBuilder().addModule(sm).build()
 
-            assertEquals("""["1"]""", om.writeValueAsString(target))
+            assertEquals("""{"1":"2"}""", om.writeValueAsString(target))
         }
 
         // Currently, there is a situation where the serialization results are different depending on the registration order of the modules.
@@ -146,13 +118,12 @@ class Github464 {
         @Ignore
         @Test
         fun priorityTest() {
-            val sm = SimpleModule().addSerializer(Serializer)
             val km = KotlinModule.Builder().build()
             val om1: ObjectMapper = JsonMapper.builder().addModules(km, sm).build()
             val om2: ObjectMapper = JsonMapper.builder().addModules(sm, km).build()
 
-            // om1(collect) -> """["1"]"""
-            // om2(broken)  -> """[1]"""
+            // om1(collect) -> """{"1":"2"}"""
+            // om2(broken)  -> """{"1":2}"""
             assertEquals(om1.writeValueAsString(target), om2.writeValueAsString(target))
         }
     }
