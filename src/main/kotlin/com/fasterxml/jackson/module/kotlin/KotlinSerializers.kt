@@ -45,7 +45,7 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
         val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
         if (unboxed == null) {
-            gen.writeNull()
+            provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
             return
         }
 

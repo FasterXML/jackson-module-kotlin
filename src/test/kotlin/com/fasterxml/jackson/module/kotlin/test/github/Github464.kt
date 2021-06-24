@@ -23,11 +23,6 @@ class Github464 {
             }
         }
 
-        @Suppress("UNCHECKED_CAST")
-        private val writer: ObjectWriter = jacksonObjectMapper()
-            .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>) }
-            .writerWithDefaultPrettyPrinter()
-
         @JvmInline
         value class ValueClass(val value: Int?)
         data class WrapperClass(val inlineField: ValueClass)
@@ -44,22 +39,27 @@ class Github464 {
             val garply: Map<ValueClass, ValueClass?>
         )
 
+        private val zeroValue = ValueClass(0)
+        private val oneValue = ValueClass(1)
+        private val nullValue = ValueClass(null)
+
+        private val target = Poko(
+            foo = zeroValue,
+            bar = null,
+            baz = zeroValue,
+            qux = listOf(zeroValue, null),
+            quux = arrayOf(zeroValue, null),
+            corge = WrapperClass(zeroValue),
+            grault = null,
+            garply = mapOf(zeroValue to zeroValue, oneValue to null, nullValue to nullValue)
+        )
+
         @Test
         fun test() {
-            val zeroValue = ValueClass(0)
-            val oneValue = ValueClass(1)
-            val nullValue = ValueClass(null)
-
-            val target = Poko(
-                foo = zeroValue,
-                bar = null,
-                baz = zeroValue,
-                qux = listOf(zeroValue, null),
-                quux = arrayOf(zeroValue, null),
-                corge = WrapperClass(zeroValue),
-                grault = null,
-                garply = mapOf(zeroValue to zeroValue, oneValue to null, nullValue to nullValue)
-            )
+            @Suppress("UNCHECKED_CAST")
+            val writer: ObjectWriter = jacksonObjectMapper()
+                .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>) }
+                .writerWithDefaultPrettyPrinter()
 
             assertEquals(
                 """
@@ -77,6 +77,44 @@ class Github464 {
                         "0" : 0,
                         "1" : null,
                         "null-key" : null
+                      }
+                    }
+                """.trimIndent(),
+                writer.writeValueAsString(target)
+            )
+        }
+
+        object NullValueSerializer : StdSerializer<Any>(Any::class.java) {
+            override fun serialize(value: Any?, gen: JsonGenerator, provider: SerializerProvider) {
+                gen.writeString("null-value")
+            }
+        }
+
+        @Test
+        fun nullValueSerializerTest() {
+            @Suppress("UNCHECKED_CAST")
+            val writer = jacksonObjectMapper()
+                .apply {
+                    serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>)
+                    serializerProvider.setNullValueSerializer(NullValueSerializer)
+                }.writerWithDefaultPrettyPrinter()
+
+            assertEquals(
+                """
+                    {
+                      "foo" : 0,
+                      "bar" : "null-value",
+                      "baz" : 0,
+                      "qux" : [ 0, "null-value" ],
+                      "quux" : [ 0, "null-value" ],
+                      "corge" : {
+                        "inlineField" : 0
+                      },
+                      "grault" : "null-value",
+                      "garply" : {
+                        "0" : 0,
+                        "1" : "null-value",
+                        "null-key" : "null-value"
                       }
                     }
                 """.trimIndent(),
