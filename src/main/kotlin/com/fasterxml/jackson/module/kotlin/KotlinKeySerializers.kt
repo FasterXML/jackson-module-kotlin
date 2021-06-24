@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.ser.Serializers
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.fasterxml.jackson.databind.type.TypeFactory
 
 internal object ValueClassUnboxKeySerializer : StdSerializer<Any>(Any::class.java) {
     override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
@@ -21,7 +20,7 @@ internal object ValueClassUnboxKeySerializer : StdSerializer<Any>(Any::class.jav
     }
 }
 
-class KotlinKeySerializers : Serializers.Base() {
+internal class KotlinKeySerializers : Serializers.Base() {
     override fun findSerializer(
         config: SerializationConfig,
         type: JavaType,
