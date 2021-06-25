@@ -12,8 +12,14 @@ import java.math.BigInteger
 
 object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
     override fun serialize(value: Sequence<*>, gen: JsonGenerator, provider: SerializerProvider) {
-        val materializedList = value.toList()
-        provider.writeValue(gen, materializedList)
+        provider.findTypedValueSerializer(
+            Iterable::class.java,
+            true
+        ).serialize(
+            value.asIterable(),
+            gen,
+            provider
+        )
     }
 }
 
