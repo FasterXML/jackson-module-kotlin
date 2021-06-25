@@ -114,7 +114,6 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
@@ -167,6 +166,10 @@
                 <configuration>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
+                    <includes>
+                        <include>${project.basedir}/src/main/kotlin</include>
+                        <include>${project.basedir}/src/main/java</include>
+                    </includes>
                 </configuration>
             </plugin>
 

@@ -162,13 +162,18 @@ internal class KotlinValueInstantiator(
             ) {
                 callable.isAccessible = true
             }
-            val callableParametersByName = linkedMapOf<KParameter, Any?>()
-            callableParameters.mapIndexed { idx, paramDef ->
-                if (paramDef != null) {
-                    callableParametersByName[paramDef] = jsonParamValueList[idx]
+            ArgumentBucket(callable.parameters).apply {
+                callableParameters.forEachIndexed { idx, paramDef ->
+                    if (paramDef != null) {
+                        this[paramDef] = jsonParamValueList[idx]
+                    }
                 }
+            }.let {
+                if (it.isFullInitialized())
+                    SpreadWrapper.call(callable, it.valueArray)
+                else
+                    callable.callBy(it)
             }
-            callable.callBy(callableParametersByName)
         }
 
     }
