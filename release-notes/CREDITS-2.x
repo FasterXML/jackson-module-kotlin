@@ -25,6 +25,10 @@ wrongwrong (k163377@github)
 * #447: Fix edge case when dealing with sealed classes
   (2.13)
 
+wrongwrong (k163377@github)
+* Contributed #438: Fixed mapping failure when `private` `companion object` is named
+  (2.13)
+
 Jocelyn N'TAKPÉ (jntakpe@github)
 * #211: Contributed test case for @JsonMerge
   (2.12.NEXT)
@@ -71,6 +75,21 @@ David Riggleman (DavidRigglemanININ@github)
 * Wrote strict null checking for collection values
  (2.12.0)
 
+Drew Stephens (dinomite@github)
+* Contributed fix for #281: KotlinObjectSingletonDeserializer fails to deserialize
+  previously serialized JSON as it doesn't delegate deserializeWithType
+ (2.11.0)
+
+Patrick Strawderman (kilink@github)
+* Reported #279: 2.10 introduces another binary compatibility issue in `KotlinModule`
+  constructor
+ (2.10.2)
+
+Vladimir Petrakovich (frost13it@github)
+* Contributed fix for #279: 2.10 introduces another binary compatibility issue in
+  `KotlinModule` constructor
+ (2.10.2)
+
 Stéphane B (StephaneBg@github)
 * Submitted fix for #176: Version 2.9.7 breaks compatibility with Android minSdk < 24
  (2.10.1)
@@ -91,22 +110,3 @@ Konstantin Volivach (kostya05983@github)
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
  (2.10.1)
-
-Patrick Strawderman (kilink@github)
-* Reported #279: 2.10 introduces another binary compatibility issue in `KotlinModule`
-  constructor
- (2.10.2)
-
-Vladimir Petrakovich (frost13it@github)
-* Contributed fix for #279: 2.10 introduces another binary compatibility issue in
-  `KotlinModule` constructor
- (2.10.2)
-
-Drew Stephens (dinomite@github)
-* Contributed fix for #281: KotlinObjectSingletonDeserializer fails to deserialize
-    previously serialized JSON as it doesn't delegate deserializeWithType
-  (2.11.0)
-
-Kiori Miyata aka "wrongwrong" (k163377@github)
-* Contributed #438: Fixed mapping failure when `private` `companion object` is named
- (2.13.0)
