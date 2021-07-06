@@ -13,6 +13,9 @@ Authors:
 
 Contributors:
 
+Marshall Pierce (marshallpierce@github)
+* #474: Reported disrespect for @JsonProperty on parent class
+
 Christopher Mason (masoncj@github)
 * #194: Contributed test case for @JsonIdentityInfo usage
   (2.12.NEXT)
