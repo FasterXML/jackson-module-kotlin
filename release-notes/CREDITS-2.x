@@ -31,6 +31,9 @@ wrongwrong (k163377@github)
 
 Jocelyn N'TAKPÉ (jntakpe@github)
 * #211: Contributed test case for @JsonMerge
+
+Marshall Pierce (marshallpierce@github)
+* #474: Reported disrespect for @JsonProperty on parent class
   (2.12.NEXT)
 
 Christopher Mason (masoncj@github)
