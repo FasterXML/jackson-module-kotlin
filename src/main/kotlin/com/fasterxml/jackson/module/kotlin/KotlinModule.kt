@@ -32,7 +32,21 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
  */
-class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder") constructor(
+class KotlinModule @Deprecated(
+    level = DeprecationLevel.WARNING,
+    message = "Use KotlinModule.Builder instead of named constructor parameters.",
+    replaceWith = ReplaceWith(
+        """KotlinModule.Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)
+            .configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)
+            .configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)
+            .configure(KotlinFeature.SingletonSupport, singletonSupport)
+            .configure(KotlinFeature.StrictNullChecks, strictNullChecks)
+            .build()""",
+        "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+    )
+) constructor(
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
