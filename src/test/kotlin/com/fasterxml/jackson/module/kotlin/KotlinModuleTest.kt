@@ -7,10 +7,10 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
 
 class KotlinModuleTest {
     /**
@@ -21,11 +21,11 @@ class KotlinModuleTest {
         val module = KotlinModule.Builder().build()
 
         assertEquals(module.reflectionCacheSize, 512)
-        assertEquals(module.nullToEmptyCollection, NullToEmptyCollection.enabledByDefault)
-        assertEquals(module.nullToEmptyMap, NullToEmptyMap.enabledByDefault)
-        assertEquals(module.nullIsSameAsDefault, NullIsSameAsDefault.enabledByDefault)
-        assertEquals(module.singletonSupport == CANONICALIZE, SingletonSupport.enabledByDefault)
-        assertEquals(module.strictNullChecks, StrictNullChecks.enabledByDefault)
+        assertFalse(module.nullToEmptyCollection)
+        assertFalse(module.nullToEmptyMap)
+        assertFalse(module.nullIsSameAsDefault)
+        assertEquals(module.singletonSupport, DISABLED)
+        assertFalse(module.strictNullChecks)
     }
 
     @Test
