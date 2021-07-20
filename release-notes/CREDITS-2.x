@@ -13,6 +13,9 @@ Authors:
 
 Contributors:
 
+Róbert Papp (TWiStErRob@github)
+* #477: KotlinFeature documentation & deprecation replacements
+
 wrongwrong (k163377@github)
 * #468: Improved support for value classes
   (2.13)
