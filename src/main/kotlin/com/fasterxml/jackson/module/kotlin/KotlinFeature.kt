@@ -6,7 +6,7 @@ import kotlin.math.pow
 /**
  * @see KotlinModule.Builder
  */
-enum class KotlinFeature(val enabledByDefault: Boolean) {
+enum class KotlinFeature(private val enabledByDefault: Boolean) {
     /**
      * This feature represents whether to deserialize `null` values for collection properties as empty collections.
      */
@@ -45,4 +45,11 @@ enum class KotlinFeature(val enabledByDefault: Boolean) {
     StrictNullChecks(enabledByDefault = false);
 
     internal val bitSet: BitSet = 2.0.pow(ordinal).toInt().toBitSet()
+
+    companion object {
+        internal val defaults
+            get() = 0.toBitSet().apply {
+                values().filter { it.enabledByDefault }.forEach { or(it.bitSet) }
+            }
+    }
 }

@@ -140,9 +140,7 @@ class KotlinModule @Deprecated(
         var reflectionCacheSize: Int = 512
             private set
 
-        private val bitSet: BitSet = 0.toBitSet().apply {
-            KotlinFeature.values().filter { it.enabledByDefault }.forEach { or(it.bitSet) }
-        }
+        private val bitSet: BitSet = KotlinFeature.defaults
 
         fun withReflectionCacheSize(reflectionCacheSize: Int): Builder = apply {
             this.reflectionCacheSize = reflectionCacheSize
