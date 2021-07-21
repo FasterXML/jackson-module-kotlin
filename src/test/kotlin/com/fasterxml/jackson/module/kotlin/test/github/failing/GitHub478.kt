@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test.github.failing
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 class GitHub478Test {
     val mapper = jsonMapper {
         addModule(kotlinModule())
-        serializationInclusion(NON_DEFAULT)
+        changeDefaultPropertyInclusion { it.withValueInclusion(JsonInclude.Include.NON_DEFAULT) }
     }
 
     data class Data(val flag: Boolean = true)
