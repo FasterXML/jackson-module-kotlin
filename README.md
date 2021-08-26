@@ -100,6 +100,30 @@ myMemberWithType = mapper.readValue(json)
 All inferred types for the extension functions carry in full generic information (reified generics).
 Therefore, using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
+Also, there are some convenient operator overloading extension functions for JsonNode inheritors.
+```kotlin
+import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import com.fasterxml.jackson.module.kotlin.*
+
+// ...
+val objectNode: ObjectNode = JsonNodeFactory.instance.objectNode()
+objectNode.put("foo1", "bar").put("foo2", "baz").put("foo3", "bax")
+objectNode -= "foo1"
+objectNode -= listOf("foo2")
+println(objectNode.toString()) // {"foo3":"bax"}
+
+// ...
+val arrayNode: ArrayNode = JsonNodeFactory.instance.arrayNode()
+arrayNode += "foo"
+arrayNode += true
+arrayNode += 1
+arrayNode += 1.0
+arrayNode += "bar".toByteArray()
+println(arrayNode.toString()) // ["foo",true,1,1.0,"YmFy"]
+```
+
 # Annotations
 
 You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.
