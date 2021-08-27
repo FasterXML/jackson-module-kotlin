@@ -19,6 +19,7 @@ Co-maintainers:
 #438: Fixed mapping failure when `private` `companion object` is named
  (reported, fix contributed by k163377@github)
 
+2.12.5 (27-Aug-2021)
 2.12.4 (06-Jul-2021)
 2.12.3 (12-Apr-2021)
 
