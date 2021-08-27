@@ -124,6 +124,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 * If using proguard:
     * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
     * If you're getting `java.lang.ExceptionInInitializerError`, you may also need: `-keep class kotlin.reflect.** { *; }`
+    * If you're still running into problems, you might also need to add a proguard keep rule for the specific classes you want to (de-)serialize. For example, if all your models are inside the package `com.example.models`, you could add the rule `-keep class com.example.models.** { *; }`
  
 # Support for Kotlin Built-in classes
 
