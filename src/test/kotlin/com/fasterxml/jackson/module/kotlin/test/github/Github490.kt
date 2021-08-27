@@ -12,7 +12,9 @@ class Github490 {
     @Test
     fun testKotlinDeserialization() {
         val mapper = jacksonObjectMapper()
-        val value: DataClassWithAllNullableParams = mapper.readValue("{}")
+        val value: DataClassWithAllNullableParams = mapper.readValue("{" +
+                "\"jsonNodeValueWithNullAsDefaultProvidedNull\":null, " +
+                "\"jsonNodeValueProvidedNull\":null}")
         assertThat(
             "Nullable missing Int value should be deserialized as null",
             value.intValue,
@@ -28,7 +30,29 @@ class Github490 {
             value.jsonNodeValue,
             CoreMatchers.nullValue()
         )
+        assertThat(
+            "Nullable missing JsonNode value should be deserialized as null and not as NullNode",
+            value.jsonNodeValueProvidedNull,
+            CoreMatchers.nullValue()
+        )
+        assertThat(
+            "Nullable by default missing JsonNode value should be deserialized as null and not as NullNode",
+            value.jsonNodeValueWithNullAsDefault,
+            CoreMatchers.nullValue()
+        )
+        assertThat(
+            "Nullable by default JsonNode with provided null value in payload should be deserialized as null and not as NullNode",
+            value.jsonNodeValueWithNullAsDefaultProvidedNull,
+            CoreMatchers.nullValue()
+        )
     }
 }
 
-data class DataClassWithAllNullableParams(val intValue: Int?, val stringValue: String?, val jsonNodeValue: JsonNode?)
+data class DataClassWithAllNullableParams(
+    val intValue: Int?,
+    val stringValue: String?,
+    val jsonNodeValue: JsonNode?,
+    val jsonNodeValueProvidedNull: JsonNode?,
+    val jsonNodeValueWithNullAsDefault: JsonNode? = null,
+    val jsonNodeValueWithNullAsDefaultProvidedNull: JsonNode? = null
+)
