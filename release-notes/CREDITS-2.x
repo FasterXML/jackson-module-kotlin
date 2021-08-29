@@ -13,6 +13,9 @@ Authors:
 
 Contributors:
 
+Max Wiechmann (MaxMello@github)
+* #494: ProGuard ProTips in the README
+
 Róbert Papp (TWiStErRob@github)
 * #477: KotlinFeature documentation & deprecation replacements
 
