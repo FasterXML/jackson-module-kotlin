@@ -13,6 +13,9 @@ Authors:
 
 Contributors:
 
+Mikhael Sokolov (sokomishalov@github)
+* #489: JsonNode, ArrayNode and ObjectNode extension functions
+
 Max Wiechmann (MaxMello@github)
 * #494: ProGuard ProTips in the README
 
