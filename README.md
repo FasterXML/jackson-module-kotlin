@@ -121,7 +121,7 @@ arrayNode += true
 arrayNode += 1
 arrayNode += 1.0
 arrayNode += "bar".toByteArray()
-println(arrayNode.toString()) // ["foo",true,1,1.0,"YmFy"]
+println(arrayNode.toString()) // ["foo",true,1,1.0,"bar"]
 ```
 
 # Annotations
