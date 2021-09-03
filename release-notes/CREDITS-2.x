@@ -119,3 +119,6 @@ Konstantin Volivach (kostya05983@github)
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
  (2.10.1)
+
+Fedor Bobin (Fuud@github)
+* Contributed fix for #496 and #45: treeToValue extension function should not have type erasure
