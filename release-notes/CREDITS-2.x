@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+Fedor Bobin (Fuud@github)
+* #496, #45: Fix treeToValue extension function should not have type erasure
+  (2.13)
+
 Mikhael Sokolov (sokomishalov@github)
 * #489: JsonNode, ArrayNode and ObjectNode extension functions
 
@@ -119,6 +123,3 @@ Konstantin Volivach (kostya05983@github)
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
  (2.10.1)
-
-Fedor Bobin (Fuud@github)
-* Contributed fix for #496 and #45: treeToValue extension function should not have type erasure
