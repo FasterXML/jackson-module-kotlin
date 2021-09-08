@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.NullNode
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers
@@ -45,9 +46,9 @@ class TestGithub490 {
     @Test
     fun testKotlinDeserialization_jsonNodeValueProvidedNull() {
         assertThat(
-            "Nullable JsonNode value provided as null should be deserialized as null and not as NullNode",
+            "Nullable JsonNode value provided as null should be deserialized as NullNode",
             value.jsonNodeValueProvidedNull,
-            CoreMatchers.nullValue()
+            CoreMatchers.equalTo(NullNode.instance)
         )
     }
 
@@ -63,9 +64,9 @@ class TestGithub490 {
     @Test
     fun testKotlinDeserialization_jsonNodeValueWithNullAsDefaultProvidedNull() {
         assertThat(
-            "Nullable by default JsonNode with provided null value in payload should be deserialized as null and not as NullNode",
+            "Nullable by default JsonNode with provided null value in payload should be deserialized as NullNode",
             value.jsonNodeValueWithNullAsDefaultProvidedNull,
-            CoreMatchers.nullValue()
+            CoreMatchers.equalTo(NullNode.instance)
         )
     }
 }
