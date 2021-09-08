@@ -13,6 +13,16 @@ Authors:
 
 Contributors:
 
+Fedor Bobin (Fuud@github)
+* #496, #45: Fix treeToValue extension function should not have type erasure
+  (2.13)
+
+Mikhael Sokolov (sokomishalov@github)
+* #489: JsonNode, ArrayNode and ObjectNode extension functions
+
+Max Wiechmann (MaxMello@github)
+* #494: ProGuard ProTips in the README
+
 Róbert Papp (TWiStErRob@github)
 * #477: KotlinFeature documentation & deprecation replacements
 
