@@ -56,9 +56,9 @@ inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src
 inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.convertValue(from: Any): T = convertValue(from, jacksonTypeRef<T>())
 
-inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectReader.readValueTyped(p: JsonParser): T = forType(jacksonTypeRef<T>()).readValue(p)
 inline fun <reified T> ObjectReader.readValuesTyped(p: JsonParser): Iterator<T> = readValues(p, jacksonTypeRef<T>())
-inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
+inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(n))
 
 operator fun ArrayNode.plus(element: Boolean) = Unit.apply { add(element) }
 operator fun ArrayNode.plus(element: Short) = Unit.apply { add(element) }
