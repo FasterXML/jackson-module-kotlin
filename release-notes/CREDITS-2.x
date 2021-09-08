@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+Fedor Bobin (Fuud@github)
+* #496, #45: Fix treeToValue extension function should not have type erasure
+  (2.13)
+
 Mikhael Sokolov (sokomishalov@github)
 * #489: JsonNode, ArrayNode and ObjectNode extension functions
 

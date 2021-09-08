@@ -61,4 +61,19 @@ class TestExtensionMethods {
         (4 downTo 0).forEach { arrayNode -= it }
         assertThat(arrayNode.size(), `is`(0))
     }
+
+    @Test fun noTypeErasure(){
+        data class Person(val name: String)
+        val source = """[ { "name" : "Neo" } ]"""
+        val tree = mapper.readTree(source)
+
+        val readValueResult: List<Person> = mapper.readValue(source)
+        assertThat(readValueResult, `is`(listOf(Person("Neo"))))
+
+        val treeToValueResult: List<Person> = mapper.treeToValue(tree)
+        assertThat(treeToValueResult, `is`(listOf(Person("Neo"))))
+
+        val convertValueResult: List<Person> = mapper.convertValue(tree)
+        assertThat(convertValueResult, `is`(listOf(Person("Neo"))))
+    }
 }
