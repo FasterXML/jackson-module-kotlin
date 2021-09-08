@@ -226,6 +226,7 @@
                                 TODO Remove after release of 2.13 and update the oldVersion above to 2.13.
                             -->
                             <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt$treeToValue</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
