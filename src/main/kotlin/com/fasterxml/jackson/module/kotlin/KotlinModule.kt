@@ -123,6 +123,7 @@ class KotlinModule @Deprecated(
 
         context.addDeserializers(KotlinDeserializers())
         context.addSerializers(KotlinSerializers())
+        context.addKeySerializers(KotlinKeySerializers())
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixInAnnotations(clazz, mixin)
