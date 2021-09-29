@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](http://kotlinlang.org) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](http://kotlinlang.org) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg)](https://github.com/FasterXML/jackson-module-kotlin/actions) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
 
 # Overview
 
@@ -10,8 +10,8 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.13.0` (for Jackson `2.13.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.13)
-* release `2.12.3` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
+* release `2.13.0` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?branch=2.13)
+* release `2.12.3` (for Jackson `2.12.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.12)](https://github.com/FasterXML/jackson-module-kotlin/actions?branch=2.12)
 * release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 * release `2.10.5` (for Jackson `2.10.x`)
 * release `2.9.10` (for Jackson `2.9.x`)
