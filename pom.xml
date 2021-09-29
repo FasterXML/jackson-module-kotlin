@@ -227,6 +227,8 @@
                             -->
                             <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt$treeToValue</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinKeySerializers</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxKeySerializer</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
