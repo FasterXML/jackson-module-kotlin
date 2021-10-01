@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.ser.Serializers
@@ -24,8 +25,9 @@ internal class KotlinKeySerializers : Serializers.Base() {
     override fun findSerializer(
         config: SerializationConfig,
         type: JavaType,
-        beanDesc: BeanDescription
-    ): JsonSerializer<*>? = when {
+        beanDesc: BeanDescription,
+	formatOverrides: JsonFormat.Value
+    ): ValueSerializer<*>? = when {
         type.rawClass.isUnboxableValueClass() -> ValueClassUnboxKeySerializer
         else -> null
     }

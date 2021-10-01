@@ -1,10 +1,10 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.ValueSerializer
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
@@ -19,7 +19,7 @@ class Github464 {
     class UnboxTest {
         object NullValueClassKeySerializer : StdSerializer<ValueClass>(ValueClass::class.java) {
             override fun serialize(value: ValueClass?, gen: JsonGenerator, provider: SerializerProvider) {
-                gen.writeFieldName("null-key")
+                gen.writeName("null-key")
             }
         }
 
@@ -58,7 +58,7 @@ class Github464 {
         fun test() {
             @Suppress("UNCHECKED_CAST")
             val writer: ObjectWriter = jacksonObjectMapper()
-                .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>) }
+                .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as ValueSerializer<Any?>) }
                 .writerWithDefaultPrettyPrinter()
 
             assertEquals(
@@ -95,7 +95,7 @@ class Github464 {
             @Suppress("UNCHECKED_CAST")
             val writer = jacksonObjectMapper()
                 .apply {
-                    serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as JsonSerializer<Any?>)
+                    serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as ValueSerializer<Any?>)
                     serializerProvider.setNullValueSerializer(NullValueSerializer)
                 }.writerWithDefaultPrettyPrinter()
 
@@ -134,7 +134,7 @@ class Github464 {
         }
         object KeySerializer : StdSerializer<ValueBySerializer>(ValueBySerializer::class.java) {
             override fun serialize(value: ValueBySerializer, gen: JsonGenerator, provider: SerializerProvider) {
-                gen.writeFieldName(value.value.toString())
+                gen.writeName(value.value.toString())
             }
         }
 
