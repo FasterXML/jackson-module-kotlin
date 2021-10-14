@@ -2,7 +2,9 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
 import com.fasterxml.jackson.module.kotlin.*
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -32,5 +34,46 @@ class TestExtensionMethods {
         val jsonStr = """[{"a": "value1", "b": 1}, {"a": "value2", "b": 2}]"""
         val myList: List<MyData> = mapper.readValue(jsonStr)
         assertThat(myList, equalTo(listOf(MyData("value1", 1), MyData("value2", 2))))
+    }
+
+    @Test fun testOperatorFunExtensions() {
+        val factory = JsonNodeFactory.instance
+
+        val objectNode = factory.objectNode()
+        objectNode.put("foo1", "bar")
+        objectNode.put("foo2", "baz")
+        objectNode.put("foo3", "bah")
+        objectNode -= "foo1"
+        objectNode -= listOf("foo2")
+
+        assertThat("foo1" !in objectNode, `is`(true))
+        assertThat("foo3" in objectNode, `is`(true))
+
+        val arrayNode = factory.arrayNode()
+        arrayNode += "foo"
+        arrayNode += true
+        arrayNode += 1
+        arrayNode += 1.0
+        arrayNode += "bar".toByteArray()
+
+        assertThat(arrayNode.size(), `is`(5))
+
+        (4 downTo 0).forEach { arrayNode -= it }
+        assertThat(arrayNode.size(), `is`(0))
+    }
+
+    @Test fun noTypeErasure(){
+        data class Person(val name: String)
+        val source = """[ { "name" : "Neo" } ]"""
+        val tree = mapper.readTree(source)
+
+        val readValueResult: List<Person> = mapper.readValue(source)
+        assertThat(readValueResult, `is`(listOf(Person("Neo"))))
+
+        val treeToValueResult: List<Person> = mapper.treeToValue(tree)
+        assertThat(treeToValueResult, `is`(listOf(Person("Neo"))))
+
+        val convertValueResult: List<Person> = mapper.convertValue(tree)
+        assertThat(convertValueResult, `is`(listOf(Person("Neo"))))
     }
 }

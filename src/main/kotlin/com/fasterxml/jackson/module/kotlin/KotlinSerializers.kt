@@ -40,6 +40,19 @@ object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
     }
 }
 
+object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
+    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+        val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
+
+        if (unboxed == null) {
+            provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
+            return
+        }
+
+        provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+    }
+}
+
 @Suppress("EXPERIMENTAL_API_USAGE")
 internal class KotlinSerializers : Serializers.Base() {
     override fun findSerializer(
@@ -52,6 +65,8 @@ internal class KotlinSerializers : Serializers.Base() {
         UShort::class.java.isAssignableFrom(type.rawClass) -> UShortSerializer
         UInt::class.java.isAssignableFrom(type.rawClass) -> UIntSerializer
         ULong::class.java.isAssignableFrom(type.rawClass) -> ULongSerializer
+        // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
+        type.rawClass.isUnboxableValueClass() -> ValueClassUnboxSerializer
         else -> null
     }
 }

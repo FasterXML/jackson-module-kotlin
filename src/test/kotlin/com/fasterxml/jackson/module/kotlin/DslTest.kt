@@ -3,7 +3,6 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.json.JsonReadFeature
 import com.fasterxml.jackson.core.json.JsonWriteFeature
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.*
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import org.junit.Assert.assertNotNull
 import org.junit.Test
@@ -54,13 +53,13 @@ class DslTest {
     }
 
     @Test
-    fun creatJsonMapperWithEmptyInitializer() {
+    fun createJsonMapperWithEmptyInitializer() {
         val mapper = jsonMapper {}
         assertNotNull(mapper)
     }
 
     @Test
-    fun creatJsonMapperWithBuilderOptions() {
+    fun createJsonMapperWithBuilderOptions() {
         val mapper = jsonMapper {
             enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
             disable(JsonWriteFeature.QUOTE_FIELD_NAMES)

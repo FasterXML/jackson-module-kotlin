@@ -1,8 +1,8 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package com.fasterxml.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Ignore
+import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import org.junit.ComparisonFailure
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -20,12 +20,13 @@ class GitHub451 {
     val mapper = jacksonObjectMapper()
 
     @Test
-    @Ignore
     fun serializeTest() {
         val expected = """{"foo-bar":"a","baz-qux":"b","quux-corge":"a","grault-graply":"b"}"""
 
         val src = Target("a", "b")
         val json = mapper.writeValueAsString(src)
-        assertEquals(expected, json)
+        expectFailure<ComparisonFailure>("GitHub #451 has been fixed!") {
+            assertEquals(expected, json)
+        }
     }
 }

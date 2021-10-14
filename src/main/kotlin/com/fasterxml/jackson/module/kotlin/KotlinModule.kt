@@ -2,10 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.*
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
@@ -35,7 +32,21 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                  Default: false.  Whether to enable experimental deserialization backend.  Enabling
  *                                      it significantly improve performance in certain use cases.
  */
-class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use KotlinModule.Builder") constructor(
+class KotlinModule @Deprecated(
+    level = DeprecationLevel.WARNING,
+    message = "Use KotlinModule.Builder instead of named constructor parameters.",
+    replaceWith = ReplaceWith(
+        """KotlinModule.Builder()
+            .withReflectionCacheSize(reflectionCacheSize)
+            .configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)
+            .configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)
+            .configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)
+            .configure(KotlinFeature.SingletonSupport, singletonSupport)
+            .configure(KotlinFeature.StrictNullChecks, strictNullChecks)
+            .build()""",
+        "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+    )
+) constructor(
     val reflectionCacheSize: Int = 512,
     val nullToEmptyCollection: Boolean = false,
     val nullToEmptyMap: Boolean = false,
@@ -43,7 +54,7 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false,
     val experimentalDeserializationBackend: Boolean = false
-) : SimpleModule(PackageVersion.VERSION) {
+) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int,
@@ -121,6 +132,7 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
 
         context.addDeserializers(KotlinDeserializers())
         context.addSerializers(KotlinSerializers())
+        context.addKeySerializers(KotlinKeySerializers())
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixInAnnotations(clazz, mixin)
@@ -137,104 +149,143 @@ class KotlinModule @Deprecated(level = DeprecationLevel.WARNING, message = "Use 
         var reflectionCacheSize: Int = 512
             private set
 
-        private val bitSet: BitSet = 0.toBitSet().apply {
-            KotlinFeature.values().filter { it.enabledByDefault }.forEach { or(it.bitSet) }
-        }
+        private val bitSet: BitSet = KotlinFeature.defaults
 
-        fun withReflectionCacheSize(reflectionCacheSize: Int) = apply {
+        fun withReflectionCacheSize(reflectionCacheSize: Int): Builder = apply {
             this.reflectionCacheSize = reflectionCacheSize
         }
 
-        fun enable(feature: KotlinFeature) = apply {
+        fun enable(feature: KotlinFeature): Builder = apply {
             bitSet.or(feature.bitSet)
         }
 
-        fun disable(feature: KotlinFeature) = apply {
+        fun disable(feature: KotlinFeature): Builder = apply {
             bitSet.andNot(feature.bitSet)
         }
 
-        fun configure(feature: KotlinFeature, enabled: Boolean) = when {
-            enabled -> enable(feature)
-            else -> disable(feature)
-        }
+        fun configure(feature: KotlinFeature, enabled: Boolean): Builder =
+            when {
+                enabled -> enable(feature)
+                else -> disable(feature)
+            }
 
-        fun isEnabled(feature: KotlinFeature): Boolean = bitSet.intersects(feature.bitSet)
+        fun isEnabled(feature: KotlinFeature): Boolean =
+            bitSet.intersects(feature.bitSet)
 
         @Deprecated(
             message = "Deprecated, use withReflectionCacheSize(reflectionCacheSize) instead.",
-            replaceWith = ReplaceWith("isEnabled(reflectionCacheSize)")
+            replaceWith = ReplaceWith("withReflectionCacheSize(reflectionCacheSize)")
         )
-        fun reflectionCacheSize(reflectionCacheSize: Int) = apply {
-            this.reflectionCacheSize = reflectionCacheSize
-        }
+        fun reflectionCacheSize(reflectionCacheSize: Int): Builder =
+            withReflectionCacheSize(reflectionCacheSize)
 
         @Deprecated(
             message = "Deprecated, use isEnabled(NullToEmptyCollection) instead.",
-            replaceWith = ReplaceWith("isEnabled(NullToEmptyCollection)")
+            replaceWith = ReplaceWith(
+                "isEnabled(KotlinFeature.NullToEmptyCollection)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun getNullToEmptyCollection() = isEnabled(NullToEmptyCollection)
+        fun getNullToEmptyCollection(): Boolean =
+            isEnabled(NullToEmptyCollection)
 
         @Deprecated(
             message = "Deprecated, use configure(NullToEmptyCollection, enabled) instead.",
-            replaceWith = ReplaceWith("configure(NullToEmptyCollection, enabled)")
+            replaceWith = ReplaceWith(
+                "configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun nullToEmptyCollection(nullToEmptyCollection: Boolean) =
+        fun nullToEmptyCollection(nullToEmptyCollection: Boolean): Builder =
             configure(NullToEmptyCollection, nullToEmptyCollection)
 
         @Deprecated(
             message = "Deprecated, use isEnabled(NullToEmptyMap) instead.",
-            replaceWith = ReplaceWith("isEnabled(NullToEmptyMap)")
+            replaceWith = ReplaceWith(
+                "isEnabled(KotlinFeature.NullToEmptyMap)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun getNullToEmptyMap() = isEnabled(NullToEmptyMap)
+        fun getNullToEmptyMap(): Boolean =
+            isEnabled(NullToEmptyMap)
 
         @Deprecated(
             message = "Deprecated, use configure(NullToEmptyMap, enabled) instead.",
-            replaceWith = ReplaceWith("configure(NullToEmptyMap, enabled)")
+            replaceWith = ReplaceWith(
+                "configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun nullToEmptyMap(nullToEmptyMap: Boolean) = configure(NullToEmptyMap, nullToEmptyMap)
+        fun nullToEmptyMap(nullToEmptyMap: Boolean): Builder =
+            configure(NullToEmptyMap, nullToEmptyMap)
 
         @Deprecated(
             message = "Deprecated, use isEnabled(NullIsSameAsDefault) instead.",
-            replaceWith = ReplaceWith("isEnabled(NullIsSameAsDefault)")
+            replaceWith = ReplaceWith(
+                "isEnabled(KotlinFeature.NullIsSameAsDefault)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun getNullIsSameAsDefault() = isEnabled(NullIsSameAsDefault)
+        fun getNullIsSameAsDefault(): Boolean =
+            isEnabled(NullIsSameAsDefault)
 
         @Deprecated(
             message = "Deprecated, use configure(NullIsSameAsDefault, enabled) instead.",
-            replaceWith = ReplaceWith("configure(NullIsSameAsDefault, enabled)")
+            replaceWith = ReplaceWith(
+                "configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean) = configure(NullIsSameAsDefault, nullIsSameAsDefault)
+        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean): Builder =
+            configure(NullIsSameAsDefault, nullIsSameAsDefault)
 
         @Deprecated(
             message = "Deprecated, use isEnabled(SingletonSupport) instead.",
-            replaceWith = ReplaceWith("isEnabled(SingletonSupport)")
+            replaceWith = ReplaceWith(
+                "isEnabled(KotlinFeature.SingletonSupport)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun getSingletonSupport() = when {
-            isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
-            else -> DISABLED
-        }
+        fun getSingletonSupport(): SingletonSupport =
+            when {
+                isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
+                else -> DISABLED
+            }
 
         @Deprecated(
             message = "Deprecated, use configure(SingletonSupport, enabled) instead.",
-            replaceWith = ReplaceWith("configure(SingletonSupport, enabled)")
+            replaceWith = ReplaceWith(
+                "configure(KotlinFeature.SingletonSupport, singletonSupport)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun singletonSupport(singletonSupport: SingletonSupport) = when (singletonSupport) {
-            CANONICALIZE -> enable(KotlinFeature.SingletonSupport)
-            else -> disable(KotlinFeature.SingletonSupport)
-        }
+        fun singletonSupport(singletonSupport: SingletonSupport): Builder =
+            when (singletonSupport) {
+                CANONICALIZE -> enable(KotlinFeature.SingletonSupport)
+                else -> disable(KotlinFeature.SingletonSupport)
+            }
 
         @Deprecated(
             message = "Deprecated, use isEnabled(StrictNullChecks) instead.",
-            replaceWith = ReplaceWith("isEnabled(StrictNullChecks)")
+            replaceWith = ReplaceWith(
+                "isEnabled(KotlinFeature.StrictNullChecks)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun getStrictNullChecks() = isEnabled(StrictNullChecks)
+        fun getStrictNullChecks(): Boolean =
+            isEnabled(StrictNullChecks)
 
         @Deprecated(
             message = "Deprecated, use configure(StrictNullChecks, enabled) instead.",
-            replaceWith = ReplaceWith("configure(StrictNullChecks, enabled)")
+            replaceWith = ReplaceWith(
+                "configure(KotlinFeature.StrictNullChecks, strictNullChecks)",
+                "com.fasterxml.jackson.module.kotlin.KotlinFeature"
+            )
         )
-        fun strictNullChecks(strictNullChecks: Boolean) = configure(StrictNullChecks, strictNullChecks)
+        fun strictNullChecks(strictNullChecks: Boolean): Builder =
+            configure(StrictNullChecks, strictNullChecks)
 
-        fun build() = KotlinModule(this)
+        fun build(): KotlinModule =
+            KotlinModule(this)
     }
 }
