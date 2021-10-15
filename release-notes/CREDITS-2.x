@@ -13,6 +13,10 @@ Authors:
 
 Contributors:
 
+Dmitri Domanine (novtor@github)
+* Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
+  (2.13.NEXT)
+
 Fedor Bobin (Fuud@github)
 * #496, #45: Fix treeToValue extension function should not have type erasure
   (2.13)
@@ -44,6 +48,7 @@ wrongwrong (k163377@github)
 
 Jocelyn N'TAKPÉ (jntakpe@github)
 * #211: Contributed test case for @JsonMerge
+  (2.13)
 
 Marshall Pierce (marshallpierce@github)
 * #474: Reported disrespect for @JsonProperty on parent class

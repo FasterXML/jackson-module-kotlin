@@ -20,7 +20,7 @@ import java.io.Reader
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
-import java.util.BitSet
+import java.util.*
 import kotlin.reflect.KClass
 
 fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
