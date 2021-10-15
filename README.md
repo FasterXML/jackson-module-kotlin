@@ -1,4 +1,4 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](http://kotlinlang.org) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](http://kotlinlang.org) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
 
 # Overview
 
@@ -10,7 +10,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.13.0` (for Jackson `2.13.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.13)
+* release `2.13.0` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.13)
 * release `2.12.3` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
 * release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 * release `2.10.5` (for Jackson `2.10.x`)
@@ -100,6 +100,30 @@ myMemberWithType = mapper.readValue(json)
 All inferred types for the extension functions carry in full generic information (reified generics).
 Therefore, using `readValue()` extension without the `Class` parameter will reify the type and automatically create a `TypeReference` for Jackson.
 
+Also, there are some convenient operator overloading extension functions for JsonNode inheritors.
+```kotlin
+import com.fasterxml.jackson.databind.node.ArrayNode
+import com.fasterxml.jackson.databind.node.ObjectNode
+import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import com.fasterxml.jackson.module.kotlin.*
+
+// ...
+val objectNode: ObjectNode = JsonNodeFactory.instance.objectNode()
+objectNode.put("foo1", "bar").put("foo2", "baz").put("foo3", "bax")
+objectNode -= "foo1"
+objectNode -= listOf("foo2")
+println(objectNode.toString()) // {"foo3":"bax"}
+
+// ...
+val arrayNode: ArrayNode = JsonNodeFactory.instance.arrayNode()
+arrayNode += "foo"
+arrayNode += true
+arrayNode += 1
+arrayNode += 1.0
+arrayNode += "bar".toByteArray()
+println(arrayNode.toString()) // ["foo",true,1,1.0,"YmFy"]
+```
+
 # Annotations
 
 You can intermix non-field values in the constructor and `JsonProperty` annotation in the constructor.
@@ -124,6 +148,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 * If using proguard:
     * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
     * If you're getting `java.lang.ExceptionInInitializerError`, you may also need: `-keep class kotlin.reflect.** { *; }`
+    * If you're still running into problems, you might also need to add a proguard keep rule for the specific classes you want to (de-)serialize. For example, if all your models are inside the package `com.example.models`, you could add the rule `-keep class com.example.models.** { *; }`
  
 # Support for Kotlin Built-in classes
 

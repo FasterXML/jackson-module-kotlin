@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
-import java.util.BitSet
+import java.util.*
 import kotlin.reflect.KClass
 
 private const val metadataFqName = "kotlin.Metadata"
@@ -123,6 +123,7 @@ class KotlinModule @Deprecated(
 
         context.addDeserializers(KotlinDeserializers())
         context.addSerializers(KotlinSerializers())
+        context.addKeySerializers(KotlinKeySerializers())
 
         fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
             context.setMixInAnnotations(clazz, mixin)
