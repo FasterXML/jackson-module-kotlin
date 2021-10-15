@@ -7,7 +7,7 @@ import java.lang.reflect.Constructor
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 
-// This class does not support inner constructor.
+// This class does not support constructors for non-static inner classes.
 internal class ConstructorInstantiator<T>(
     kConstructor: KFunction<T>, private val constructor: Constructor<T>
 ) : Instantiator<T> {
