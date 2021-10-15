@@ -42,6 +42,10 @@ wrongwrong (k163377@github)
 * Contributed #438: Fixed mapping failure when `private` `companion object` is named
   (2.13)
 
+Dmitri Domanine (novtor@github)
+* Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
+  (2.13)
+
 Marshall Pierce (marshallpierce@github)
 * #474: Reported disrespect for @JsonProperty on parent class
   (2.12.NEXT)

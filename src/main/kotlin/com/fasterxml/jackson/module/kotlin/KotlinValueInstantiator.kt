@@ -101,8 +101,13 @@ internal class KotlinValueInstantiator(
                 }
                 tempParamVal
             } else {
-                // trying to get suitable "missing" value provided by deserializer
-                jsonProp.valueDeserializer?.getNullValue(ctxt)
+                if(paramDef.type.isMarkedNullable) {
+                    // do not try to create any object if it is nullable and the value is missing
+                    null
+                } else {
+                    // to get suitable "missing" value provided by deserializer
+                    jsonProp.valueDeserializer?.getAbsentValue(ctxt)
+                }
             }
 
             if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
