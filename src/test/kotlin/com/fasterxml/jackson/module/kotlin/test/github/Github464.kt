@@ -23,21 +23,35 @@ class Github464 {
             }
         }
 
+        interface IValue
         @JvmInline
-        value class ValueClass(val value: Int?)
+        value class ValueClass(val value: Int?) : IValue
         data class WrapperClass(val inlineField: ValueClass)
+
+        abstract class AbstractGetter<T> {
+            abstract val qux: T
+
+            fun <T> getPlugh() = qux
+        }
+        interface IGetter<T> {
+            val quux: T
+
+            fun <T> getXyzzy() = quux
+        }
+
 
         class Poko(
             val foo: ValueClass,
             val bar: ValueClass?,
-            @JvmField
-            val baz: ValueClass,
-            val qux: Collection<ValueClass?>,
-            val quux: Array<ValueClass?>,
-            val corge: WrapperClass,
-            val grault: WrapperClass?,
-            val garply: Map<ValueClass, ValueClass?>
-        )
+            val baz: IValue,
+            override val qux: ValueClass,
+            override val quux: ValueClass,
+            val corge: Collection<ValueClass?>,
+            val grault: Array<ValueClass?>,
+            val garply: WrapperClass,
+            val waldo: WrapperClass?,
+            val fred: Map<ValueClass, ValueClass?>
+        ) : AbstractGetter<ValueClass>(), IGetter<ValueClass>
 
         private val zeroValue = ValueClass(0)
         private val oneValue = ValueClass(1)
@@ -47,11 +61,13 @@ class Github464 {
             foo = zeroValue,
             bar = null,
             baz = zeroValue,
-            qux = listOf(zeroValue, null),
-            quux = arrayOf(zeroValue, null),
-            corge = WrapperClass(zeroValue),
-            grault = null,
-            garply = mapOf(zeroValue to zeroValue, oneValue to null, nullValue to nullValue)
+            qux = zeroValue,
+            quux = zeroValue,
+            corge = listOf(zeroValue, null),
+            grault = arrayOf(zeroValue, null),
+            garply = WrapperClass(zeroValue),
+            waldo = null,
+            fred = mapOf(zeroValue to zeroValue, oneValue to null, nullValue to nullValue)
         )
 
         @Test
@@ -67,17 +83,21 @@ class Github464 {
                       "foo" : 0,
                       "bar" : null,
                       "baz" : 0,
-                      "qux" : [ 0, null ],
-                      "quux" : [ 0, null ],
-                      "corge" : {
+                      "qux" : 0,
+                      "quux" : 0,
+                      "corge" : [ 0, null ],
+                      "grault" : [ 0, null ],
+                      "garply" : {
                         "inlineField" : 0
                       },
-                      "grault" : null,
-                      "garply" : {
+                      "waldo" : null,
+                      "fred" : {
                         "0" : 0,
                         "1" : null,
                         "null-key" : null
-                      }
+                      },
+                      "xyzzy" : 0,
+                      "plugh" : 0
                     }
                 """.trimIndent(),
                 writer.writeValueAsString(target)
@@ -105,17 +125,21 @@ class Github464 {
                       "foo" : 0,
                       "bar" : "null-value",
                       "baz" : 0,
-                      "qux" : [ 0, "null-value" ],
-                      "quux" : [ 0, "null-value" ],
-                      "corge" : {
+                      "qux" : 0,
+                      "quux" : 0,
+                      "corge" : [ 0, "null-value" ],
+                      "grault" : [ 0, "null-value" ],
+                      "garply" : {
                         "inlineField" : 0
                       },
-                      "grault" : "null-value",
-                      "garply" : {
+                      "waldo" : "null-value",
+                      "fred" : {
                         "0" : 0,
                         "1" : "null-value",
                         "null-key" : "null-value"
-                      }
+                      },
+                      "xyzzy" : 0,
+                      "plugh" : 0
                     }
                 """.trimIndent(),
                 writer.writeValueAsString(target)
