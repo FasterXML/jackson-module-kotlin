@@ -4,13 +4,11 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.ValueSerializer
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -56,9 +54,12 @@ class Github464 {
 
         @Test
         fun test() {
-            @Suppress("UNCHECKED_CAST")
-            val writer: ObjectWriter = jacksonObjectMapper()
-                .apply { serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as ValueSerializer<Any?>) }
+            val writer: ObjectWriter = jacksonMapperBuilder()
+                .addModule(
+                    SimpleModule()
+                        .setDefaultNullKeySerializer(NullValueClassKeySerializer)
+                )
+                .build()
                 .writerWithDefaultPrettyPrinter()
 
             assertEquals(
@@ -92,12 +93,14 @@ class Github464 {
 
         @Test
         fun nullValueSerializerTest() {
-            @Suppress("UNCHECKED_CAST")
-            val writer = jacksonObjectMapper()
-                .apply {
-                    serializerProvider.setNullKeySerializer(NullValueClassKeySerializer as ValueSerializer<Any?>)
-                    serializerProvider.setNullValueSerializer(NullValueSerializer)
-                }.writerWithDefaultPrettyPrinter()
+            val writer = jacksonMapperBuilder()
+                .addModule(
+                    SimpleModule()
+                        .setDefaultNullKeySerializer(NullValueClassKeySerializer)
+                        .setDefaultNullValueSerializer(NullValueSerializer)
+                )
+                .build()
+                .writerWithDefaultPrettyPrinter()
 
             assertEquals(
                 """
@@ -132,6 +135,7 @@ class Github464 {
                 gen.writeString(value.value.toString())
             }
         }
+
         object KeySerializer : StdSerializer<ValueBySerializer>(ValueBySerializer::class.java) {
             override fun serialize(value: ValueBySerializer, gen: JsonGenerator, provider: SerializerProvider) {
                 gen.writeName(value.value.toString())
