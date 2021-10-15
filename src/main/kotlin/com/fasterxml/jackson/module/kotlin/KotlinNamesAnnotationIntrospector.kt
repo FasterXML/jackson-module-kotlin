@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
@@ -27,26 +27,16 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    override fun findImplicitPropertyName(config: MapperConfig<*>, member: AnnotatedMember): String? {
-        if (member is AnnotatedMethod && member.isInlineClass()) {
-            if (member.name.startsWith("get") &&
-                    member.name.contains('-') &&
-                    member.parameterCount == 0) {
-                return member.name.substringAfter("get")
-                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
-                    .substringBefore('-')
-            } else if (member.name.startsWith("is") &&
-                    member.name.contains('-') &&
-                    member.parameterCount == 0) {
-                return member.name.substringAfter("is")
-                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
-                    .substringBefore('-')
-            }
-        } else if (member is AnnotatedParameter) {
-            return findKotlinParameterName(member)
-        }
-
-        return null
+    override fun findImplicitPropertyName(config: MapperConfig<*>?, member: AnnotatedMember?): String? = when (member) {
+        is AnnotatedMethod -> if (member.name.contains('-') && member.parameterCount == 0) {
+            when {
+                member.name.startsWith("get") -> member.name.substringAfter("get")
+                member.name.startsWith("is") -> member.name.substringAfter("is")
+                else -> null
+            }?.replaceFirstChar { it.lowercase(Locale.getDefault()) }?.substringBefore('-')
+        } else null
+        is AnnotatedParameter -> findKotlinParameterName(member)
+        else -> null
     }
 
     // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
@@ -171,5 +161,3 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         }
     }
 }
-
-private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
