@@ -13,18 +13,29 @@ Authors:
 
 Contributors:
 
+wrongwrong (k163377@github)
+* #456: Refactor KNAI.findImplicitPropertyName()
+  (2.13.NEXT)
+
+Dmitri Domanine (novtor@github)
+* Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
+  (2.13.NEXT)
+
 Fedor Bobin (Fuud@github)
 * #496, #45: Fix treeToValue extension function should not have type erasure
   (2.13)
 
 Mikhael Sokolov (sokomishalov@github)
 * #489: JsonNode, ArrayNode and ObjectNode extension functions
+  (2.13)
 
 Max Wiechmann (MaxMello@github)
 * #494: ProGuard ProTips in the README
+  (2.13)
 
 Róbert Papp (TWiStErRob@github)
 * #477: KotlinFeature documentation & deprecation replacements
+  (2.13)
 
 wrongwrong (k163377@github)
 * #468: Improved support for value classes
@@ -42,21 +53,17 @@ wrongwrong (k163377@github)
 * Contributed #438: Fixed mapping failure when `private` `companion object` is named
   (2.13)
 
-Dmitri Domanine (novtor@github)
-* Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
-  (2.13)
-
 Marshall Pierce (marshallpierce@github)
 * #474: Reported disrespect for @JsonProperty on parent class
-  (2.12.NEXT)
+  (2.12.5)
 
 Christopher Mason (masoncj@github)
 * #194: Contributed test case for @JsonIdentityInfo usage
-  (2.12.NEXT)
+  (2.12.5)
 
 Martin Häusler (MartinHaeusler@github)
 * Reported #194: @JsonIdentityInfo bug
-  (2.12.NEXT)
+  (2.12.5)
 
 Eric Fenderbosch (efenderbosch@github)
 * Fixed #182: Serialize unsigned numbers
