@@ -15,6 +15,7 @@ Contributors:
 
 wrongwrong (k163377@github)
 * #456: Refactor KNAI.findImplicitPropertyName()
+* #449: Refactor AnnotatedMethod.hasRequiredMarker()
   (2.13.NEXT)
 
 Dmitri Domanine (novtor@github)

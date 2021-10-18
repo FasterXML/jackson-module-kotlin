@@ -97,57 +97,38 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
-    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? {
-        // This could be a setter or a getter of a class property or
-        // a setter-like/getter-like method.
-        val paramGetter = this.getCorrespondingGetter()
-        if (paramGetter != null) {
-            val byAnnotation = paramGetter.javaGetter?.isRequiredByAnnotation()
-            return requiredAnnotationOrNullability(byAnnotation, paramGetter.returnType.isRequired())
-        }
+    // Since Kotlin's property has the same Type for each field, getter, and setter,
+    // nullability can be determined from the returnType of KProperty.
+    private fun KProperty1<*, *>.isRequiredByNullability() = returnType.isRequired()
 
-        val paramSetter = this.getCorrespondingSetter()
-        if (paramSetter != null) {
-            val byAnnotation = paramSetter.javaMethod?.isRequiredByAnnotation()
-            return requiredAnnotationOrNullability(byAnnotation, paramSetter.isMethodParameterRequired(0))
-        }
+    // This could be a setter or a getter of a class property or
+    // a setter-like/getter-like method.
+    private fun AnnotatedMethod.hasRequiredMarker(): Boolean? = this.getRequiredMarkerFromCorrespondingAccessor()
+        ?: this.member.getRequiredMarkerFromAccessorLikeMethod()
 
-        // Is the member method a regular method of the data class or
-        val method = this.member.kotlinFunction
-        if (method != null) {
-            val byAnnotation = method.javaMethod?.isRequiredByAnnotation()
-            if (method.isGetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
-            }
-
-            if (method.isSetterLike()) {
-                return requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
+    private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
+        member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty ->
+            if (kProperty.javaGetter == this.member || (kProperty as? KMutableProperty1)?.javaSetter == this.member) {
+                val byAnnotation = this.member.isRequiredByAnnotation()
+                val byNullability = kProperty.isRequiredByNullability()
+                return requiredAnnotationOrNullability(byAnnotation, byNullability)
             }
         }
-
         return null
     }
 
-    private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
-    private fun KFunction<*>.isSetterLike(): Boolean =
-            parameters.size == 2 && returnType == Unit::class.createType()
-
-
-    private fun AnnotatedMethod.getCorrespondingGetter(): KProperty1<out Any, Any?>? =
-            member.declaringClass.kotlin.declaredMemberProperties.find {
-                it.getter.javaMethod == this.member
-            }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun AnnotatedMethod.getCorrespondingSetter(): KMutableProperty1.Setter<out Any, Any?>? {
-        val mutableProperty = member.declaringClass.kotlin.declaredMemberProperties.find {
-            when (it) {
-                is KMutableProperty1 -> it.javaSetter == this.member
-                else                 -> false
-            }
+    // Is the member method a regular method of the data class or
+    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = this.kotlinFunction?.let { method ->
+        val byAnnotation = this.isRequiredByAnnotation()
+        return when {
+            method.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
+            method.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
+            else -> null
         }
-        return (mutableProperty as? KMutableProperty1<out Any, Any?>)?.setter
     }
+
+    private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
+    private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
         val member = this.member
@@ -185,4 +166,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
 
     private fun KType.isRequired(): Boolean = !isMarkedNullable
 
+    companion object {
+        val UNIT_TYPE: KType = Unit::class.createType()
+    }
 }
