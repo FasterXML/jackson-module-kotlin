@@ -28,16 +28,18 @@ import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
     // since 2.4
-    override fun findImplicitPropertyName(member: AnnotatedMember): String? = when (member) {
-        is AnnotatedMethod -> if (member.name.contains('-') && member.parameterCount == 0) {
-            when {
-                member.name.startsWith("get") -> member.name.substringAfter("get")
-                member.name.startsWith("is") -> member.name.substringAfter("is")
-                else -> null
-            }?.replaceFirstChar { it.lowercase(Locale.getDefault()) }?.substringBefore('-')
-        } else null
-        is AnnotatedParameter -> findKotlinParameterName(member)
-        else -> null
+    override fun findImplicitPropertyName(member: AnnotatedMember): String? {
+        return when (member) {
+            is AnnotatedMethod -> if (member.name.contains('-') && member.parameterCount == 0) {
+                when {
+                    member.name.startsWith("get") -> member.name.substringAfter("get")
+                    member.name.startsWith("is") -> member.name.substringAfter("is")
+                    else -> null
+                }?.replaceFirstChar { it.lowercase(Locale.getDefault()) }?.substringBefore('-')
+            } else null
+            is AnnotatedParameter -> findKotlinParameterName(member)
+            else -> null
+        }
     }
 
     // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
