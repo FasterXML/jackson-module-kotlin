@@ -1,9 +1,10 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.annotation.JsonValue
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.test.SealedClassTest.SuperClass.B
 import org.junit.Test
@@ -27,6 +28,21 @@ class SealedClassTest {
         assertTrue { result is B }
     }
 
+    @Test
+    fun sealedClassWithoutSubTypesList() {
+        val result = mapper.readValue(
+            """[$jsonB, $jsonB]""",
+            object : TypeReference<List<SuperClass>>() {}
+        )
+        assertEquals(2, result.size)
+    }
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+    sealed class SuperClass {
+        class A : SuperClass()
+        class B : SuperClass()
+    }
+
     /**
      * Tests that we can use JsonTypeInfo.Id.DEDUCTION to deduct sealed types without the need for explicit fields.
      */
@@ -36,24 +52,27 @@ class SealedClassTest {
         val single = mapper.readValue(serializedSingle, SealedRequest::class.java)
         assertTrue(single is SealedRequest.SingleRequest)
         assertEquals("single", single.request)
-
-        val serializedBatch = """[{"request":"first"},{"request":"second"}]"""
-        val batch = mapper.readValue(serializedBatch, SealedRequest::class.java)
-        assertTrue(batch is SealedRequest.BatchRequest)
-        assertEquals(2, batch.requests.size)
-        assertEquals("first", batch.requests[0].request)
-        assertEquals("second", batch.requests[1].request)
     }
 
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-    sealed class SuperClass {
-        class A : SuperClass()
-        class B : SuperClass()
+    /**
+     * Attempting to deserialize a collection by deduction
+     */
+    @Test
+    fun sealedClassWithoutTypeDiscriminatorList() {
+        val serializedBatch = """[{"request":"first"},{"request":"second"}]"""
+        expectFailure<MismatchedInputException>("Deserializing a list using deduction is fixed!") {
+            val batch = mapper.readValue(serializedBatch, SealedRequest::class.java)
+            assertTrue(batch is SealedRequest.BatchRequest)
+            assertEquals(2, batch.requests.size)
+            assertEquals("first", batch.requests[0].request)
+            assertEquals("second", batch.requests[1].request)
+        }
     }
 
     @JsonTypeInfo(use = JsonTypeInfo.Id.DEDUCTION)
     sealed class SealedRequest {
         data class SingleRequest(val request: String) : SealedRequest()
-        data class BatchRequest @JsonCreator constructor(@get:JsonValue val requests: List<SingleRequest>): SealedRequest()
+        data class BatchRequest @JsonCreator constructor(@get:JsonValue val requests: List<SingleRequest>) :
+            SealedRequest()
     }
 }
