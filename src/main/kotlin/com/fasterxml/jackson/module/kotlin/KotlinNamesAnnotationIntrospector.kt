@@ -161,3 +161,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         }
     }
 }
+
+@Deprecated(
+    "To be removed in 2.14",
+    ReplaceWith("with(receiver) { declaringClass.declaredMethods.any { it.name.contains('-') } }")
+)
+private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
