@@ -151,5 +151,6 @@ private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boo
 private fun Collection<KFunction<*>>.filterOutSingleStringCallables(propertyNames: Set<String>): Collection<KFunction<*>> =
     this.filter { !it.isPossibleSingleString(propertyNames) }
 
-private fun KClass<*>.isPrimaryConstructor(kConstructor: KFunction<*>) = this.primaryConstructor == kConstructor ||
-        (this.primaryConstructor == null && this.constructors.size == 1)
+private fun KClass<*>.isPrimaryConstructor(kConstructor: KFunction<*>) = this.primaryConstructor.let {
+    it == kConstructor || (it == null && this.constructors.size == 1)
+}
