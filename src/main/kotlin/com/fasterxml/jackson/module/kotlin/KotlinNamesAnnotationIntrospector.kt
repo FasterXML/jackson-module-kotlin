@@ -18,10 +18,7 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
@@ -65,7 +62,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
             parameters[0].name !in propertyNames &&
             parameters[0].type.javaType == String::class.java &&
-            parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java }
+            !parameters[0].hasAnnotation<JsonProperty>()
 
     @Suppress("UNCHECKED_CAST")
     override fun hasCreatorAnnotation(member: Annotated): Boolean {
