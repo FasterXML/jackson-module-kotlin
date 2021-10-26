@@ -70,16 +70,12 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                     val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
-                    fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                        return this.filter { !it.isPossibleSingleString(propertyNames) }
-                    }
-
-                    val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
+                    val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables(propertyNames)
                             .any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                             }
 
                     val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
-                            ?.filterOutSingleStringCallables()?.any {
+                            ?.filterOutSingleStringCallables(propertyNames)?.any {
                                 it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
                                         it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
                             } ?: false
@@ -90,7 +86,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                     val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
 
-                    val isSingleStringConstructor = kConstructor.isPossibleSingleString()
+                    val isSingleStringConstructor = kConstructor.isPossibleSingleString(propertyNames)
 
                     val implyCreatorAnnotation = isPrimaryConstructor
                             && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
@@ -159,3 +155,6 @@ private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boo
         parameters[0].name !in propertyNames &&
         parameters[0].type.javaType == String::class.java &&
         !parameters[0].hasAnnotation<JsonProperty>()
+
+private fun Collection<KFunction<*>>.filterOutSingleStringCallables(propertyNames: Set<String>): Collection<KFunction<*>> =
+    this.filter { !it.isPossibleSingleString(propertyNames) }
