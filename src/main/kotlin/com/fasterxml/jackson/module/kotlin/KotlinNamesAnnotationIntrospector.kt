@@ -63,8 +63,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             .apply { if (this in ignoredClassesForImplyingJsonCreator) return false }
         val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return false
 
-        val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
-                (kClass.primaryConstructor == null && kClass.constructors.size == 1)
+        val isPrimaryConstructor = kClass.isPrimaryConstructor(kConstructor)
 
         val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
@@ -153,3 +152,6 @@ private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boo
 
 private fun Collection<KFunction<*>>.filterOutSingleStringCallables(propertyNames: Set<String>): Collection<KFunction<*>> =
     this.filter { !it.isPossibleSingleString(propertyNames) }
+
+private fun KClass<*>.isPrimaryConstructor(kConstructor: KFunction<*>) = this.primaryConstructor == kConstructor ||
+        (this.primaryConstructor == null && this.constructors.size == 1)
