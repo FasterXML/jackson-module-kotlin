@@ -66,8 +66,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     override fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
-        if (member is AnnotatedConstructor && member.isKotlinConstructorWithParameters()) {
-            return cache.checkConstructorIsCreatorAnnotated(member) {
+        return if (member is AnnotatedConstructor && member.isKotlinConstructorWithParameters()) {
+            cache.checkConstructorIsCreatorAnnotated(member) {
                 val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
                 val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
 
@@ -118,8 +118,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                     false
                 }
             }
-        }
-        return false
+        } else false
     }
 
     @Suppress("UNCHECKED_CAST")
