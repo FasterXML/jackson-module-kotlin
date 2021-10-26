@@ -83,7 +83,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
             // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
 
-            val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
+            val areAllParametersValid = kConstructor.parameters.all { it.name != null }
 
             val isSingleStringConstructor = kConstructor.isPossibleSingleString(propertyNames)
 
