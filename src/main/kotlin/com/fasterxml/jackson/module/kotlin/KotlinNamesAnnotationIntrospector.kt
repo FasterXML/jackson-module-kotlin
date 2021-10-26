@@ -87,13 +87,11 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                     val isSingleStringConstructor = kConstructor.isPossibleSingleString(propertyNames)
 
-                    val implyCreatorAnnotation = isPrimaryConstructor
+                    isPrimaryConstructor
                             && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
                             && areAllParametersValid
                             && !isSingleStringConstructor
                             && kClass !in ignoredClassesForImplyingJsonCreator
-
-                    implyCreatorAnnotation
                 } else {
                     false
                 }
