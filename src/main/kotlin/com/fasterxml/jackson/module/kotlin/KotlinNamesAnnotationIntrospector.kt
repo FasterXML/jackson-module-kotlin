@@ -62,6 +62,11 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     private fun AnnotatedConstructor.isKotlinConstructorWithParameters(): Boolean =
         parameterCount > 0 && declaringClass.isKotlinClass() && !declaringClass.isEnum
 
+    private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
+            parameters[0].name !in propertyNames &&
+            parameters[0].type.javaType == String::class.java &&
+            parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java }
+
     @Suppress("UNCHECKED_CAST")
     override fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
@@ -77,16 +82,8 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                     val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
-                    fun KFunction<*>.isPossibleSingleString(): Boolean {
-                        val result = parameters.size == 1 &&
-                                parameters[0].name !in propertyNames &&
-                                parameters[0].type.javaType == String::class.java &&
-                                parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java }
-                        return result
-                    }
-
                     fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                        return this.filter { !it.isPossibleSingleString() }
+                        return this.filter { !it.isPossibleSingleString(propertyNames) }
                     }
 
                     val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
