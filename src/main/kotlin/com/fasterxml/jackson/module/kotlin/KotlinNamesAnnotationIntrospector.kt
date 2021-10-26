@@ -70,15 +70,14 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
                     val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
-                    val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables(propertyNames)
-                            .any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                            }
+                    val anyConstructorHasJsonCreator = kClass.constructors
+                        .filterOutSingleStringCallables(propertyNames)
+                        .any { it.hasAnnotation<JsonCreator>() }
 
                     val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
-                            ?.filterOutSingleStringCallables(propertyNames)?.any {
-                                it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
-                                        it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                            } ?: false
+                        ?.filterOutSingleStringCallables(propertyNames)
+                        ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
+                        ?: false
 
                     // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
                     // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
