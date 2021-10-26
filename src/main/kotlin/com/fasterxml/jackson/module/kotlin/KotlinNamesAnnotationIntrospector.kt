@@ -61,38 +61,34 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
 
         val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
             .apply { if (this in ignoredClassesForImplyingJsonCreator) return false }
-        val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
+        val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return false
 
-        return if (kConstructor != null) {
-            val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
-                    (kClass.primaryConstructor == null && kClass.constructors.size == 1)
+        val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
+                (kClass.primaryConstructor == null && kClass.constructors.size == 1)
 
-            val propertyNames = kClass.memberProperties.map { it.name }.toSet()
+        val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
-            val anyConstructorHasJsonCreator = kClass.constructors
-                .filterOutSingleStringCallables(propertyNames)
-                .any { it.hasAnnotation<JsonCreator>() }
+        val anyConstructorHasJsonCreator = kClass.constructors
+            .filterOutSingleStringCallables(propertyNames)
+            .any { it.hasAnnotation<JsonCreator>() }
 
-            val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
-                ?.filterOutSingleStringCallables(propertyNames)
-                ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
-                ?: false
+        val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
+            ?.filterOutSingleStringCallables(propertyNames)
+            ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
+            ?: false
 
-            // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
-            // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
-            // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
+        // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
+        // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
+        // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
 
-            val areAllParametersValid = kConstructor.parameters.all { it.name != null }
+        val areAllParametersValid = kConstructor.parameters.all { it.name != null }
 
-            val isSingleStringConstructor = kConstructor.isPossibleSingleString(propertyNames)
+        val isSingleStringConstructor = kConstructor.isPossibleSingleString(propertyNames)
 
-            isPrimaryConstructor
-                    && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
-                    && areAllParametersValid
-                    && !isSingleStringConstructor
-        } else {
-            false
-        }
+        return isPrimaryConstructor
+                && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
+                && areAllParametersValid
+                && !isSingleStringConstructor
     }
 
     override fun hasCreatorAnnotation(member: Annotated): Boolean =
