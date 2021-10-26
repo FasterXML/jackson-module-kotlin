@@ -55,15 +55,6 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         return null
     }
 
-    // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-    private fun AnnotatedConstructor.isKotlinConstructorWithParameters(): Boolean =
-        parameterCount > 0 && declaringClass.isKotlinClass() && !declaringClass.isEnum
-
-    private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
-            parameters[0].name !in propertyNames &&
-            parameters[0].type.javaType == String::class.java &&
-            !parameters[0].hasAnnotation<JsonProperty>()
-
     @Suppress("UNCHECKED_CAST")
     override fun hasCreatorAnnotation(member: Annotated): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
@@ -159,3 +150,12 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     ReplaceWith("with(receiver) { declaringClass.declaredMethods.any { it.name.contains('-') } }")
 )
 private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
+
+// if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
+private fun AnnotatedConstructor.isKotlinConstructorWithParameters(): Boolean =
+    parameterCount > 0 && declaringClass.isKotlinClass() && !declaringClass.isEnum
+
+private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
+        parameters[0].name !in propertyNames &&
+        parameters[0].type.javaType == String::class.java &&
+        !parameters[0].hasAnnotation<JsonProperty>()
