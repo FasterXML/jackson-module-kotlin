@@ -27,8 +27,7 @@ internal class KotlinValueInstantiator(
         props: Array<out SettableBeanProperty>,
         buffer: PropertyValueBuffer
     ): Any? {
-        // TODO: cache ValueCreator
-        val valueCreator: ValueCreator<*> = ValueCreator.of(_withArgsCreator, cache)
+        val valueCreator: ValueCreator<*> = cache.valueCreatorFromJava(_withArgsCreator)
             ?: return super.createFromObjectWith(ctxt, props, buffer)
 
         val propCount: Int
