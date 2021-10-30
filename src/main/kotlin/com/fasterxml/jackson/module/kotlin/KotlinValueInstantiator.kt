@@ -124,6 +124,8 @@ internal class KotlinValueInstantiator(
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParamValueList)
         } else {
+            valueCreator.checkAccessibility(ctxt)
+
             val callableParametersByName = linkedMapOf<KParameter, Any?>()
             callableParameters.mapIndexed { idx, paramDef ->
                 if (paramDef != null) {
