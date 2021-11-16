@@ -13,6 +13,9 @@ Authors:
 
 Contributors:
 
+Stefan Schmid (schmist@github)
+* #519: Contributed test for #518 (null should deserialize to _the_ Unit instance)
+
 wrongwrong (k163377@github)
 * #456: Refactor KNAI.findImplicitPropertyName()
 * #449: Refactor AnnotatedMethod.hasRequiredMarker()
