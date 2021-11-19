@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.core.json.JsonReadFeature
 import com.fasterxml.jackson.core.json.JsonWriteFeature
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.ExperimentalDeserializationBackend
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
@@ -37,6 +38,7 @@ class DslTest {
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
             enable(StrictNullChecks)
+            enable(ExperimentalDeserializationBackend)
         }
 
         assertNotNull(module)
@@ -46,6 +48,7 @@ class DslTest {
         assertTrue(module.nullIsSameAsDefault)
         assertEquals(module.singletonSupport, CANONICALIZE)
         assertTrue(module.strictNullChecks)
+        assertTrue(module.experimentalDeserializationBackend)
     }
 
     @Test

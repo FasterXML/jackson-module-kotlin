@@ -2,10 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.*
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
@@ -31,6 +28,9 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      the default, collections which are typed to disallow null members
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
+ * @param   experimentalDeserializationBackend
+ *                                  Default: false.  Whether to enable experimental deserialization backend.  Enabling
+ *                                      it significantly improve performance in certain use cases.
  */
 class KotlinModule @Deprecated(
     level = DeprecationLevel.WARNING,
@@ -52,7 +52,8 @@ class KotlinModule @Deprecated(
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false
+    val strictNullChecks: Boolean = false,
+    val experimentalDeserializationBackend: Boolean = false
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
@@ -91,7 +92,8 @@ class KotlinModule @Deprecated(
             builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
             else -> DISABLED
         },
-        builder.isEnabled(StrictNullChecks)
+        builder.isEnabled(StrictNullChecks),
+        builder.isEnabled(KotlinFeature.ExperimentalDeserializationBackend)
     )
 
     companion object {
@@ -109,7 +111,14 @@ class KotlinModule @Deprecated(
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
+        context.addValueInstantiators(KotlinInstantiators(
+            cache,
+            nullToEmptyCollection,
+            nullToEmptyMap,
+            nullIsSameAsDefault,
+            strictNullChecks,
+            experimentalDeserializationBackend
+        ))
 
         when (singletonSupport) {
             DISABLED -> Unit

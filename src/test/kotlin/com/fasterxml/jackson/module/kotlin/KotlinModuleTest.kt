@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.ExperimentalDeserializationBackend
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
@@ -21,11 +22,12 @@ class KotlinModuleTest {
         val module = KotlinModule.Builder().build()
 
         assertEquals(module.reflectionCacheSize, 512)
-        assertFalse(module.nullToEmptyCollection)
-        assertFalse(module.nullToEmptyMap)
-        assertFalse(module.nullIsSameAsDefault)
-        assertEquals(module.singletonSupport, DISABLED)
-        assertFalse(module.strictNullChecks)
+        assertEquals(module.nullToEmptyCollection, NullToEmptyCollection.enabledByDefault)
+        assertEquals(module.nullToEmptyMap, NullToEmptyMap.enabledByDefault)
+        assertEquals(module.nullIsSameAsDefault, NullIsSameAsDefault.enabledByDefault)
+        assertEquals(module.singletonSupport == CANONICALIZE, SingletonSupport.enabledByDefault)
+        assertEquals(module.strictNullChecks, StrictNullChecks.enabledByDefault)
+        assertEquals(module.experimentalDeserializationBackend, ExperimentalDeserializationBackend.enabledByDefault)
     }
 
     @Test
@@ -38,6 +40,7 @@ class KotlinModuleTest {
         assertFalse(module.nullIsSameAsDefault)
         assertEquals(DISABLED, module.singletonSupport)
         assertFalse(module.strictNullChecks)
+        assertFalse(module.experimentalDeserializationBackend)
     }
 
     @Test
@@ -49,6 +52,7 @@ class KotlinModuleTest {
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
             enable(StrictNullChecks)
+            enable(ExperimentalDeserializationBackend)
         }.build()
 
         assertEquals(123, module.reflectionCacheSize)
@@ -57,6 +61,7 @@ class KotlinModuleTest {
         assertTrue(module.nullIsSameAsDefault)
         assertEquals(CANONICALIZE, module.singletonSupport)
         assertTrue(module.strictNullChecks)
+        assertTrue(module.experimentalDeserializationBackend)
     }
 
     @Test

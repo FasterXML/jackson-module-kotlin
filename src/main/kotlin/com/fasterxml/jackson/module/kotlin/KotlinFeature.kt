@@ -1,12 +1,12 @@
 package com.fasterxml.jackson.module.kotlin
 
-import java.util.BitSet
+import java.util.*
 import kotlin.math.pow
 
 /**
  * @see KotlinModule.Builder
  */
-enum class KotlinFeature(private val enabledByDefault: Boolean) {
+enum class KotlinFeature(internal val enabledByDefault: Boolean) {
     /**
      * This feature represents whether to deserialize `null` values for collection properties as empty collections.
      */
@@ -42,7 +42,9 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      * may contain null values after deserialization.
      * Enabling it protects against this but has significant performance impact.
      */
-    StrictNullChecks(enabledByDefault = false);
+    StrictNullChecks(enabledByDefault = false),
+
+    ExperimentalDeserializationBackend(enabledByDefault = false);
 
     internal val bitSet: BitSet = 2.0.pow(ordinal).toInt().toBitSet()
 
