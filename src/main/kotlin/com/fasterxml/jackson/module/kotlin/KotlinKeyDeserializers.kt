@@ -3,13 +3,13 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.core.JsonToken
 import com.fasterxml.jackson.core.exc.InputCoercionException
 import com.fasterxml.jackson.databind.*
-import com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer
-import com.fasterxml.jackson.databind.deser.std.StdKeyDeserializers
+import com.fasterxml.jackson.databind.deser.jdk.JDKKeyDeserializer
+import com.fasterxml.jackson.databind.deser.jdk.JDKKeyDeserializers
 
-// The reason why key is treated as nullable is to match the tentative behavior of StdKeyDeserializer.
-// If StdKeyDeserializer is modified, need to modify this too.
+// The reason why key is treated as nullable is to match the tentative behavior of JDKKeyDeserializer.
+// If JDKKeyDeserializer is modified, need to modify this too.
 
-internal object UByteKeyDeserializer : StdKeyDeserializer(TYPE_SHORT, UByte::class.java) {
+internal object UByteKeyDeserializer : JDKKeyDeserializer(TYPE_SHORT, UByte::class.java) {
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UByte? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Short).asUByte() ?: throw InputCoercionException(
@@ -21,7 +21,7 @@ internal object UByteKeyDeserializer : StdKeyDeserializer(TYPE_SHORT, UByte::cla
         }
 }
 
-internal object UShortKeyDeserializer : StdKeyDeserializer(TYPE_INT, UShort::class.java) {
+internal object UShortKeyDeserializer : JDKKeyDeserializer(TYPE_INT, UShort::class.java) {
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UShort? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Int).asUShort() ?: throw InputCoercionException(
@@ -33,7 +33,7 @@ internal object UShortKeyDeserializer : StdKeyDeserializer(TYPE_INT, UShort::cla
         }
 }
 
-internal object UIntKeyDeserializer : StdKeyDeserializer(TYPE_LONG, UInt::class.java) {
+internal object UIntKeyDeserializer : JDKKeyDeserializer(TYPE_LONG, UInt::class.java) {
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UInt? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Long).asUInt() ?: throw InputCoercionException(
@@ -46,7 +46,7 @@ internal object UIntKeyDeserializer : StdKeyDeserializer(TYPE_LONG, UInt::class.
 }
 
 // kind parameter is dummy.
-internal object ULongKeyDeserializer : StdKeyDeserializer(TYPE_LONG, ULong::class.java) {
+internal object ULongKeyDeserializer : JDKKeyDeserializer(TYPE_LONG, ULong::class.java) {
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): ULong? = key?.let {
         it.toBigInteger().asULong() ?: throw InputCoercionException(
             null,
@@ -57,7 +57,7 @@ internal object ULongKeyDeserializer : StdKeyDeserializer(TYPE_LONG, ULong::clas
     }
 }
 
-internal object KotlinKeyDeserializers : StdKeyDeserializers() {
+internal object KotlinKeyDeserializers : JDKKeyDeserializers() {
     override fun findKeyDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
