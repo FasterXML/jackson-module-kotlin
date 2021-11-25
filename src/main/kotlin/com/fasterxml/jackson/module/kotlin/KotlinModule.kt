@@ -123,6 +123,7 @@ class KotlinModule @Deprecated(
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
         context.addDeserializers(KotlinDeserializers())
+        context.addKeyDeserializers(KotlinKeyDeserializers)
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 

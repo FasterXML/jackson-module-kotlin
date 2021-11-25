@@ -1,5 +1,3 @@
-@file:Suppress("EXPERIMENTAL_API_USAGE")
-
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonFormat
@@ -58,7 +56,6 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
     }
 }
 
-@Suppress("EXPERIMENTAL_API_USAGE")
 internal class KotlinSerializers : Serializers.Base() {
     override fun findSerializer(
         config: SerializationConfig?,
