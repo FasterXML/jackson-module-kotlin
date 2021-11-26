@@ -1,12 +1,12 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.Assert.*
 import org.junit.Test
 
 class KotlinInstantiatorsTest {
     private val mapper = jacksonObjectMapper()
+    private val deserConfig = mapper.deserializationConfig
 
     private val kotlinInstantiators = KotlinInstantiators(
         ReflectionCache(10),
@@ -16,19 +16,13 @@ class KotlinInstantiatorsTest {
         strictNullChecks = false
     )
 
-    private class DefaultClass
-
-    private val deserConfig = mapper.deserializationConfig
-    private val defaultInstantiator = object : StdValueInstantiator(
-        deserConfig,
-        mapper.constructType(DefaultClass::class.java)
-    ) {}
-
     @Test
     fun `Provides default instantiator for Java class`() {
+        val javaType = mapper.constructType(String::class.java)
+        val defaultInstantiator = StdValueInstantiator(deserConfig, javaType)
         val instantiator = kotlinInstantiators.findValueInstantiator(
             deserConfig,
-            deserConfig.introspect(mapper.constructType(String::class.java)),
+            deserConfig.introspect(javaType),
             defaultInstantiator
         )
 
@@ -39,13 +33,33 @@ class KotlinInstantiatorsTest {
     fun `Provides KotlinValueInstantiator for Kotlin class`() {
         class TestClass
 
+        val javaType = mapper.constructType(TestClass::class.java)
         val instantiator = kotlinInstantiators.findValueInstantiator(
             deserConfig,
-            deserConfig.introspect(mapper.constructType(TestClass::class.java)),
-            defaultInstantiator
+            deserConfig.introspect(javaType),
+            StdValueInstantiator(deserConfig, javaType)
         )
 
         assertTrue(instantiator is StdValueInstantiator)
         assertTrue(instantiator::class == KotlinValueInstantiator::class)
+    }
+
+    @Test
+    fun `Throws for Kotlin class when default instantiator isn't StdValueInstantiator`() {
+        class TestClass
+        class DefaultClass
+
+        val subClassInstantiator = object : StdValueInstantiator(
+            deserConfig,
+            mapper.constructType(DefaultClass::class.java)
+        ) {}
+
+        assertThrows(IllegalStateException::class.java) {
+            kotlinInstantiators.findValueInstantiator(
+                deserConfig,
+                deserConfig.introspect(mapper.constructType(TestClass::class.java)),
+                subClassInstantiator
+            )
+        }
     }
 }
