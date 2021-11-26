@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class KotlinInstantiatorsTest {
@@ -18,7 +19,6 @@ class KotlinInstantiatorsTest {
     private class DefaultClass
 
     private val deserConfig = mapper.deserializationConfig
-    private val beanDescription = deserConfig.introspect(mapper.constructType(String::class.java))
     private val defaultInstantiator = object : StdValueInstantiator(
         deserConfig,
         mapper.constructType(DefaultClass::class.java)
@@ -28,10 +28,24 @@ class KotlinInstantiatorsTest {
     fun `Provides default instantiator for Java class`() {
         val instantiator = kotlinInstantiators.findValueInstantiator(
             deserConfig,
-            beanDescription,
+            deserConfig.introspect(mapper.constructType(String::class.java)),
             defaultInstantiator
         )
 
         assertEquals(defaultInstantiator, instantiator)
+    }
+
+    @Test
+    fun `Provides KotlinValueInstantiator for Kotlin class`() {
+        class TestClass
+
+        val instantiator = kotlinInstantiators.findValueInstantiator(
+            deserConfig,
+            deserConfig.introspect(mapper.constructType(TestClass::class.java)),
+            defaultInstantiator
+        )
+
+        assertTrue(instantiator is StdValueInstantiator)
+        assertTrue(instantiator::class == KotlinValueInstantiator::class)
     }
 }
