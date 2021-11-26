@@ -1,12 +1,14 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class KotlinInstantiatorsTest {
     private val mapper = jacksonObjectMapper()
-    private val deserConfig = mapper.deserializationConfig
+    private val deserConfig = mapper.deserializationConfig()
 
     private val kotlinInstantiators = KotlinInstantiators(
         ReflectionCache(10),
@@ -20,9 +22,9 @@ class KotlinInstantiatorsTest {
     fun `Provides default instantiator for Java class`() {
         val javaType = mapper.constructType(String::class.java)
         val defaultInstantiator = StdValueInstantiator(deserConfig, javaType)
-        val instantiator = kotlinInstantiators.findValueInstantiator(
+        val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.introspect(javaType),
+            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType),
             defaultInstantiator
         )
 
@@ -34,9 +36,9 @@ class KotlinInstantiatorsTest {
         class TestClass
 
         val javaType = mapper.constructType(TestClass::class.java)
-        val instantiator = kotlinInstantiators.findValueInstantiator(
+        val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.introspect(javaType),
+            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType),
             StdValueInstantiator(deserConfig, javaType)
         )
 
@@ -55,9 +57,10 @@ class KotlinInstantiatorsTest {
         ) {}
 
         assertThrows(IllegalStateException::class.java) {
-            kotlinInstantiators.findValueInstantiator(
+            kotlinInstantiators.modifyValueInstantiator(
                 deserConfig,
-                deserConfig.introspect(mapper.constructType(TestClass::class.java)),
+                deserConfig.classIntrospectorInstance()
+                    .introspectForDeserialization(mapper.constructType(TestClass::class.java)),
                 subClassInstantiator
             )
         }
