@@ -21,6 +21,7 @@ Stefan Schmid (schmist@github)
 wrongwrong (k163377@github)
 * #456: Refactor KNAI.findImplicitPropertyName()
 * #449: Refactor AnnotatedMethod.hasRequiredMarker()
+* #521: Fixed lookup of instantiators
 
 Dmitri Domanine (novtor@github)
 * Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
