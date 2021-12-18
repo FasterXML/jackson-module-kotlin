@@ -94,6 +94,9 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         else -> null
     }
 
+    // Perform proper serialization even if the value wrapped by the value class is null.
+    override fun findNullSerializer(am: Annotated) = findSerializer(am)
+
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.

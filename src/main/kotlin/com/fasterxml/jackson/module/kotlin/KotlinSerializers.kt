@@ -82,7 +82,7 @@ internal class ValueClassBoxSerializer(
 ) : StdSerializer<Any>(outerClazz.java) {
     private val boxMethod = _handledType.getMethod("box-impl", innerClazz)
 
-    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: Any?, gen: JsonGenerator, provider: SerializerProvider) {
         // Values retrieved from getter are considered validated and constructor-impl is not executed.
         val boxed = boxMethod.invoke(null, value)
 
