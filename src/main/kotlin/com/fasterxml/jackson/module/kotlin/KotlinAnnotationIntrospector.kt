@@ -11,12 +11,14 @@ import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.*
 
 
@@ -57,6 +59,39 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
         // findCreatorBinding used to be a clearer way to set this, but we need to set the mode here to disambugiate the intent of the constructor
         return super.findCreatorAnnotation(config, a)
+    }
+
+    // Find a serializer to handle the case where the getter returns an unboxed value from the value class.
+    override fun findSerializer(am: Annotated): ValueClassBoxSerializer? = when (am) {
+        is AnnotatedMethod -> {
+            val getter = am.member.apply {
+                // If the return value of the getter is a value class,
+                // it will be serialized properly without doing anything.
+                if (this.returnType.isUnboxableValueClass()) return null
+            }
+
+            val kotlinProperty = getter
+                .declaringClass
+                .kotlin
+                .let {
+                    // KotlinReflectionInternalError is raised in GitHub167 test,
+                    // but it looks like an edge case, so it is ignored.
+                    try {
+                        it.memberProperties
+                    } catch (e: Error) {
+                        null
+                    }
+                }?.find { it.javaGetter == getter }
+
+            (kotlinProperty?.returnType?.classifier as? KClass<*>)
+                ?.takeIf { it.isValue }
+                ?.let { outerClazz ->
+                    @Suppress("UNCHECKED_CAST")
+                    ValueClassBoxSerializer(outerClazz as KClass<Any>, getter.returnType)
+                }
+        }
+        // Ignore the case of AnnotatedField, because JvmField cannot be set in the field of value class.
+        else -> null
     }
 
     /**
