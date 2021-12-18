@@ -2,17 +2,20 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 // Most of the current behavior has been tested on GitHub464, so only serializer-related behavior is tested here.
 class GitHub524 {
     @JvmInline
     value class HasSerializer(val value: Int?)
-    object Serializer : StdSerializer<HasSerializer>(HasSerializer::class.java) {
+    class Serializer : StdSerializer<HasSerializer>(HasSerializer::class.java) {
         override fun serialize(value: HasSerializer, gen: JsonGenerator, provider: SerializerProvider) {
             gen.writeString(value.toString())
         }
@@ -35,7 +38,7 @@ class GitHub524 {
     @Test
     fun test() {
         val sm = SimpleModule()
-            .addSerializer(Serializer)
+            .addSerializer(Serializer())
         val writer = jacksonMapperBuilder().addModule(sm).build().writerWithDefaultPrettyPrinter()
 
         // 18446744073709551615 is ULong.MAX_VALUE.
@@ -50,6 +53,23 @@ class GitHub524 {
                 }
             """.trimIndent(),
             writer.writeValueAsString(Poko())
+        )
+    }
+
+    class SerializeByAnnotation(@get:JsonSerialize(using = Serializer::class) val foo: HasSerializer = HasSerializer(1))
+
+    @Test
+    fun failing() {
+        val writer = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+
+        // JsonSerialize is not working now.
+        assertNotEquals(
+            """
+                {
+                  "foo" : "HasSerializer(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(SerializeByAnnotation())
         )
     }
 }
