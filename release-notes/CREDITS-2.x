@@ -4,7 +4,7 @@ Kotlin module, version 2.x
 
 Authors:
 
-  Jayson Minard/@apatrida, jayson.minard@gmail.com: author
+  Jayson Minard/@apatrida, jayson.minard@gmail.com: original author
 
   Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
 
@@ -14,6 +14,8 @@ Authors:
 Contributors:
 
 # 2.13.NEXT
+
+# 2.13.1
 
 Stefan Schmid (schmist@github)
 * #519: Contributed test for #518 (null should deserialize to _the_ Unit instance)

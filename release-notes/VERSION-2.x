@@ -20,12 +20,27 @@ No changes since 2.13
 
 2.13.1 (19-Dec-2021)
 
-No documented changes since 2.13.0
+* #456: Refactor KNAI.findImplicitPropertyName()
+ (contributed by wrongwrong)
+* #449: Refactor AnnotatedMethod.hasRequiredMarker()
+ (contributed by wrongwrong)
+* #521: Fixed lookup of instantiators
+ (contributed by wrongwrong)
+
+Dmitri Domanine (novtor@github)
+* Contributed fix for #490: Missing value of type JsonNode? is deserialized as NullNode instead of null
 
 2.13.0 (30-Sep-2021)
 
 #438: Fixed mapping failure when `private` `companion object` is named
  (reported, fix contributed by k163377@github)
+#447: Fix edge case when dealing with sealed classes
+#468: Improved support for value classes
+#477: Improved documentation for KotlinFeature
+#489: Extension functions for JsonNode, ArrayNode and ObjectNode
+#490: Fix deserialization of missing value (was `NullNode`, now literal `null`)
+#494: Improved documentation for ProGuard users
+#496: Fix type erasure in treeToValue() extension function
 
 2.12.6 (15-Dec-2021)
 2.12.5 (27-Aug-2021)
