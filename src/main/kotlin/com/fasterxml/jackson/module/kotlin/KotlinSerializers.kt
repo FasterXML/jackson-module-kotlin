@@ -77,15 +77,15 @@ internal class KotlinSerializers : Serializers.Base() {
 // The getter generated for the value class is special,
 // so this class will not work properly when added to the Serializers
 // (it is configured from KotlinAnnotationIntrospector.findSerializer).
-internal class ValueClassBoxSerializer(
-    outerClazz: KClass<Any>, innerClazz: Class<*>
-) : StdSerializer<Any>(outerClazz.java) {
-    private val boxMethod = _handledType.getMethod("box-impl", innerClazz)
+internal class ValueClassBoxSerializer<T : Any>(
+    private val outerClazz: Class<out Any>, innerClazz: Class<T>
+) : StdSerializer<T>(innerClazz) {
+    private val boxMethod = outerClazz.getMethod("box-impl", innerClazz)
 
-    override fun serialize(value: Any?, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: T?, gen: JsonGenerator, provider: SerializerProvider) {
         // Values retrieved from getter are considered validated and constructor-impl is not executed.
         val boxed = boxMethod.invoke(null, value)
 
-        provider.findValueSerializer(_handledType).serialize(boxed, gen, provider)
+        provider.findValueSerializer(outerClazz).serialize(boxed, gen, provider)
     }
 }
