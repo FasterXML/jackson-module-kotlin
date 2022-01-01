@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.ser.Serializers
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.math.BigInteger
+import kotlin.reflect.KClass
 
 object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
     override fun serialize(value: Sequence<*>, gen: JsonGenerator, provider: SerializerProvider) {
@@ -69,5 +70,22 @@ internal class KotlinSerializers : Serializers.Base() {
         // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
         type.rawClass.isUnboxableValueClass() -> ValueClassUnboxSerializer
         else -> null
+    }
+}
+
+// This serializer is used to properly serialize the value class.
+// The getter generated for the value class is special,
+// so this class will not work properly when added to the Serializers
+// (it is configured from KotlinAnnotationIntrospector.findSerializer).
+internal class ValueClassBoxSerializer<T : Any>(
+    private val outerClazz: Class<out Any>, innerClazz: Class<T>
+) : StdSerializer<T>(innerClazz) {
+    private val boxMethod = outerClazz.getMethod("box-impl", innerClazz)
+
+    override fun serialize(value: T?, gen: JsonGenerator, provider: SerializerProvider) {
+        // Values retrieved from getter are considered validated and constructor-impl is not executed.
+        val boxed = boxMethod.invoke(null, value)
+
+        provider.findValueSerializer(outerClazz).serialize(boxed, gen, provider)
     }
 }
