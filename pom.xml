@@ -204,6 +204,10 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
+                            <!--
+                                TODO Remove after release of 2.14 and update the oldVersion above to 2.14.
+                            -->
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
