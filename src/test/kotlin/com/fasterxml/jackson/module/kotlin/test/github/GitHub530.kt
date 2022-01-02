@@ -64,7 +64,7 @@ class GitHub530 {
                   "corge1" : "Corge(value=10)",
                   "corge2" : "Corge(value=11)",
                   "grault1" : "Grault(value=12)",
-                  "grault2" : "Grault(value=13)",
+                  "grault2" : "Grault(value=13)"
                 }
             """.trimIndent(),
             writer.writeValueAsString(
