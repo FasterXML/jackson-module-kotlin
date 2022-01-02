@@ -49,16 +49,43 @@ object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
 private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods
     .find { method -> Modifier.isStatic(method.modifiers) && method.annotations.any { it is JsonValue } }
 
-object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
-    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
-        val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
+internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer<T>(t) {
+    object Unbox : ValueClassSerializer<Any>(Any::class.java) {
+        override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+            val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
-        if (unboxed == null) {
-            provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
-            return
+            if (unboxed == null) {
+                provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
+                return
+            }
+
+            provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
         }
+    }
 
-        provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+    class StaticJsonValue<T : Any>(
+        t: Class<T>, private val staticJsonValueGetter: Method
+    ) : ValueClassSerializer<T>(t) {
+        private val unboxMethod: Method = t.getMethod("unbox-impl")
+
+        override fun serialize(value: T, gen: JsonGenerator, provider: SerializerProvider) {
+            val unboxed = unboxMethod.invoke(value)
+            // As shown in the processing of the factory function, jsonValueGetter is always a static method.
+            val jsonValue: Any? = staticJsonValueGetter.invoke(null, unboxed)
+            jsonValue
+                ?.let { provider.findValueSerializer(it::class.java).serialize(it, gen, provider) }
+                ?: provider.findNullValueSerializer(null).serialize(null, gen, provider)
+        }
+    }
+
+    companion object {
+        // `t` must be UnboxableValueClass.
+        // If create a function with a JsonValue in the value class,
+        // it will be compiled as a static method (= cannot be processed properly by Jackson),
+        // so use a ValueClassSerializer.StaticJsonValue to handle this.
+        fun from(t: Class<*>): ValueClassSerializer<*> = t.getStaticJsonValueGetter()
+            ?.let { StaticJsonValue(t, it) }
+            ?: Unbox
     }
 }
 
@@ -74,7 +101,7 @@ internal class KotlinSerializers : Serializers.Base() {
         UInt::class.java.isAssignableFrom(type.rawClass) -> UIntSerializer
         ULong::class.java.isAssignableFrom(type.rawClass) -> ULongSerializer
         // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
-        type.rawClass.isUnboxableValueClass() -> ValueClassUnboxSerializer
+        type.rawClass.isUnboxableValueClass() -> ValueClassSerializer.from(type.rawClass)
         else -> null
     }
 }
