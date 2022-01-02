@@ -66,7 +66,6 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
             javaConstructorToValueCreator.get(constructor)
                 ?: kotlinFromJava(constructor)?.let {
                     val value = ConstructorValueCreator(it)
-
                     javaConstructorToValueCreator.putIfAbsent(constructor, value) ?: value
                 }
         }
