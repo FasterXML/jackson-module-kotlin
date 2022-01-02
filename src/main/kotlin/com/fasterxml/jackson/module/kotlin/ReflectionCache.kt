@@ -76,7 +76,6 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
             javaMethodToValueCreator.get(method)
                 ?: kotlinFromJava(method)?.let {
                     val value = MethodValueCreator.of(it)
-
                     javaMethodToValueCreator.putIfAbsent(method, value) ?: value
                 }
         }
