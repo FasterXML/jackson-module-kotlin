@@ -94,15 +94,19 @@ internal class KotlinSerializers : Serializers.Base() {
         config: SerializationConfig?,
         type: JavaType,
         beanDesc: BeanDescription?
-    ): JsonSerializer<*>? = when {
-        Sequence::class.java.isAssignableFrom(type.rawClass) -> SequenceSerializer
-        UByte::class.java.isAssignableFrom(type.rawClass) -> UByteSerializer
-        UShort::class.java.isAssignableFrom(type.rawClass) -> UShortSerializer
-        UInt::class.java.isAssignableFrom(type.rawClass) -> UIntSerializer
-        ULong::class.java.isAssignableFrom(type.rawClass) -> ULongSerializer
-        // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
-        type.rawClass.isUnboxableValueClass() -> ValueClassSerializer.from(type.rawClass)
-        else -> null
+    ): JsonSerializer<*>? {
+        val rawClass = type.rawClass
+
+        return when {
+            Sequence::class.java.isAssignableFrom(rawClass) -> SequenceSerializer
+            UByte::class.java.isAssignableFrom(rawClass) -> UByteSerializer
+            UShort::class.java.isAssignableFrom(rawClass) -> UShortSerializer
+            UInt::class.java.isAssignableFrom(rawClass) -> UIntSerializer
+            ULong::class.java.isAssignableFrom(rawClass) -> ULongSerializer
+            // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
+            rawClass.isUnboxableValueClass() -> ValueClassSerializer.from(rawClass)
+            else -> null
+        }
     }
 }
 
