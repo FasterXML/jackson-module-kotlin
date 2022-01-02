@@ -5,7 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.JacksonModule
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedField
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
@@ -19,7 +24,11 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.*
+import kotlin.reflect.jvm.javaGetter
+import kotlin.reflect.jvm.javaSetter
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.kotlinFunction
+import kotlin.reflect.jvm.kotlinProperty
 
 
 internal class KotlinAnnotationIntrospector(private val context: JacksonModule.SetupContext,
@@ -60,7 +69,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     }
 
     // Find a serializer to handle the case where the getter returns an unboxed value from the value class.
-    override fun findSerializer(am: Annotated): ValueClassBoxSerializer<*>? = when (am) {
+    override fun findSerializer(config: MapperConfig<*>?, am: Annotated): ValueClassBoxSerializer<*>? = when (am) {
         is AnnotatedMethod -> {
             val getter = am.member.apply {
                 // If the return value of the getter is a value class,
@@ -94,7 +103,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     }
 
     // Perform proper serialization even if the value wrapped by the value class is null.
-    override fun findNullSerializer(am: Annotated) = findSerializer(am)
+    override fun findNullSerializer(config: MapperConfig<*>?, am: Annotated) = findSerializer(config, am)
 
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
