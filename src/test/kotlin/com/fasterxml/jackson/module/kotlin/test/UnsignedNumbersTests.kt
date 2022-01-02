@@ -1,5 +1,3 @@
-@file:Suppress("EXPERIMENTAL_API_USAGE", "EXPERIMENTAL_UNSIGNED_LITERALS")
-
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.core.exc.InputCoercionException

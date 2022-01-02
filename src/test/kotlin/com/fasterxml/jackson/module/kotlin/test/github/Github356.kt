@@ -52,7 +52,6 @@ data class ClassWithInlineMember(val inlineClassProperty: InlineClass) {
     }
 }
 
-@Suppress("EXPERIMENTAL_FEATURE_WARNING") // Enabled in test-compile
 @JvmInline
 value class ValueClass(val value: String)
 
