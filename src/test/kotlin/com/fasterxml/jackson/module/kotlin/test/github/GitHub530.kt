@@ -45,7 +45,7 @@ class GitHub530 {
     )
 
     @Test
-    fun test() {
+    fun inProperty() {
         val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
 
         assertEquals(
@@ -78,6 +78,26 @@ class GitHub530 {
                     Grault(12), Grault(13)
                 )
             )
+        )
+    }
+
+    @Test
+    fun inCollection() {
+        val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
+
+        assertEquals(
+            "[ 0, 1, \"Baz(value=2)\", \"Qux(value=3)\", \"Quux(value=4)\" ]",
+            writer.writeValueAsString(listOf(Foo(0), Bar(1), Baz(2), Qux(3), Quux(4)))
+        )
+    }
+
+    @Test
+    fun inArray() {
+        val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
+
+        assertEquals(
+            "[ 0, 1, \"Baz(value=2)\", \"Qux(value=3)\", \"Quux(value=4)\" ]",
+            writer.writeValueAsString(arrayOf(Foo(0), Bar(1), Baz(2), Qux(3), Quux(4)))
         )
     }
 }
