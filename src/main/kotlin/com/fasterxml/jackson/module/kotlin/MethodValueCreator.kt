@@ -34,7 +34,7 @@ internal class MethodValueCreator<T> private constructor(
                 instance to initialCallableAccessible
             } catch (ex: IllegalAccessException) {
                 // fallback for when an odd access exception happens through Kotlin reflection
-                possibleCompanion.java.enclosingClass.fields
+                possibleCompanion.java.enclosingClass.declaredFields
                     .firstOrNull { it.type.kotlin.isCompanion }
                     ?.let {
                         it.isAccessible = true
