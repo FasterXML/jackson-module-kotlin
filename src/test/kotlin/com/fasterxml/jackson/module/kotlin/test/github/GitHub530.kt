@@ -2,80 +2,199 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import org.junit.Test
 import kotlin.test.assertEquals
+import org.junit.Test
 
 class GitHub530 {
     // At the moment, the output is the same with or without `JsonValue`,
     // but this pattern is included in the test case in case the option to default to a serialization method that
     // does not `unbox` is introduced in the future.
-    @JvmInline value class Foo(@get:JsonValue val value: Int)
-    @JvmInline value class Bar(@JvmField @field:JsonValue val value: Int)
+    @JvmInline
+    value class ValueParamGetterAnnotated(@get:JsonValue val value: Int)
 
-    @JvmInline value class Baz(val value: Int) {
-        @get:JsonValue val jsonValue: String get() = this.toString()
-    }
-    @JvmInline value class Qux(val value: Int) {
-        @JsonValue fun getJsonValue(): String = this.toString()
-    }
+    @JvmInline
+    value class ValueParamFieldAnnotated(@JvmField @field:JsonValue val value: Int)
 
-    interface JsonValueGetter { @get:JsonValue val jsonValue: String get() = this.toString() }
-    @JvmInline value class Quux(val value: Int): JsonValueGetter
-    @JvmInline value class Corge(val value: Int): JsonValueGetter
-
-    @JvmInline value class Grault(val value: Int) {
-        @get:JsonValue val jsonValue: String get() = this.toString()
+    @JvmInline
+    value class PropertyWithOverriddenGetter(val value: Int) {
+        @get:JsonValue
+        val jsonValue: String
+            get() = this.toString()
     }
 
-    data class Data<T : Any>(
-        val foo1: Foo,
-        val foo2: Foo?,
-        val bar1: Bar,
-        val bar2: Bar?,
-        val baz1: Baz,
-        val baz2: Baz?,
-        val qux1: Qux,
-        val qux2: Qux?,
-        val quux1: Quux,
-        val quux2: Quux?,
-        val corge1: JsonValueGetter,
-        val corge2: JsonValueGetter?,
-        val grault1: T,
-        val grault2: T?
-    )
+    @JvmInline
+    value class DirectlyOverriddenGetter(val value: Int) {
+        @JsonValue
+        fun getJsonValue(): String = this.toString()
+    }
+
+    interface JsonValueGetter {
+        @get:JsonValue
+        val jsonValue: String
+            get() = this.toString()
+    }
+
+    @JvmInline
+    value class JsonValueGetterImplementation(val value: Int) : JsonValueGetter
+
+    private val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
 
     @Test
-    fun inProperty() {
-        val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
+    fun valueParamGetterAnnotated() {
+        data class Data(
+            val nonNull: ValueParamGetterAnnotated,
+            val nullable: ValueParamGetterAnnotated?
+        )
 
         assertEquals(
             """
                 {
-                  "foo1" : 0,
-                  "foo2" : 1,
-                  "bar1" : 2,
-                  "bar2" : 3,
-                  "baz1" : "Baz(value=4)",
-                  "baz2" : "Baz(value=5)",
-                  "qux1" : "Qux(value=6)",
-                  "qux2" : "Qux(value=7)",
-                  "quux1" : "Quux(value=8)",
-                  "quux2" : "Quux(value=9)",
-                  "corge1" : "Corge(value=10)",
-                  "corge2" : "Corge(value=11)",
-                  "grault1" : "Grault(value=12)",
-                  "grault2" : "Grault(value=13)"
+                  "nonNull" : 0,
+                  "nullable" : 1
                 }
             """.trimIndent(),
             writer.writeValueAsString(
                 Data(
-                    Foo(0), Foo(1),
-                    Bar(2), Bar(3),
-                    Baz(4), Baz(5),
-                    Qux(6), Qux(7),
-                    Quux(8), Quux(9),
-                    Corge(10), Corge(11),
-                    Grault(12), Grault(13)
+                    ValueParamGetterAnnotated(0),
+                    ValueParamGetterAnnotated(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun valueParamFieldAnnoated() {
+        data class Data(
+            val nonNull: ValueParamFieldAnnotated,
+            val nullable: ValueParamFieldAnnotated?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : 0,
+                  "nullable" : 1
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    ValueParamFieldAnnotated(0),
+                    ValueParamFieldAnnotated(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun propertyWithOverriddenGetter() {
+        data class Data(
+            val nonNull: PropertyWithOverriddenGetter,
+            val nullable: PropertyWithOverriddenGetter?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : "PropertyWithOverriddenGetter(value=0)",
+                  "nullable" : "PropertyWithOverriddenGetter(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    PropertyWithOverriddenGetter(0),
+                    PropertyWithOverriddenGetter(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun directlyOverriddenGetter() {
+        data class Data(
+            val nonNull: DirectlyOverriddenGetter,
+            val nullable: DirectlyOverriddenGetter?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : "DirectlyOverriddenGetter(value=0)",
+                  "nullable" : "DirectlyOverriddenGetter(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    DirectlyOverriddenGetter(0),
+                    DirectlyOverriddenGetter(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun propertyWithOverriddenGetterAsParameterizedType() {
+        data class Data<T : Any>(
+            val nonNull: T,
+            val nullable: T?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : "PropertyWithOverriddenGetter(value=0)",
+                  "nullable" : "PropertyWithOverriddenGetter(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    PropertyWithOverriddenGetter(0),
+                    PropertyWithOverriddenGetter(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun jsonValueGetterImplementationAsConcreteType() {
+        data class Data(
+            val nonNull: JsonValueGetterImplementation,
+            val nullable: JsonValueGetterImplementation?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : "JsonValueGetterImplementation(value=0)",
+                  "nullable" : "JsonValueGetterImplementation(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    JsonValueGetterImplementation(0),
+                    JsonValueGetterImplementation(1)
+                )
+            )
+        )
+    }
+
+    @Test
+    fun jsonValueGetterImplementationAsGenericType() {
+        data class Data(
+            val nonNull: JsonValueGetter,
+            val nullable: JsonValueGetter?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : "JsonValueGetterImplementation(value=0)",
+                  "nullable" : "JsonValueGetterImplementation(value=1)"
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    JsonValueGetterImplementation(0),
+                    JsonValueGetterImplementation(1)
                 )
             )
         )
@@ -83,21 +202,33 @@ class GitHub530 {
 
     @Test
     fun inCollection() {
-        val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
-
         assertEquals(
-            "[ 0, 1, \"Baz(value=2)\", \"Qux(value=3)\", \"Quux(value=4)\" ]",
-            writer.writeValueAsString(listOf(Foo(0), Bar(1), Baz(2), Qux(3), Quux(4)))
+            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\" ]",
+            writer.writeValueAsString(
+                listOf(
+                    ValueParamGetterAnnotated(0),
+                    ValueParamFieldAnnotated(1),
+                    PropertyWithOverriddenGetter(2),
+                    DirectlyOverriddenGetter(3),
+                    JsonValueGetterImplementation(4)
+                )
+            )
         )
     }
 
     @Test
     fun inArray() {
-        val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
-
         assertEquals(
-            "[ 0, 1, \"Baz(value=2)\", \"Qux(value=3)\", \"Quux(value=4)\" ]",
-            writer.writeValueAsString(arrayOf(Foo(0), Bar(1), Baz(2), Qux(3), Quux(4)))
+            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\" ]",
+            writer.writeValueAsString(
+                arrayOf(
+                    ValueParamGetterAnnotated(0),
+                    ValueParamFieldAnnotated(1),
+                    PropertyWithOverriddenGetter(2),
+                    DirectlyOverriddenGetter(3),
+                    JsonValueGetterImplementation(4)
+                )
+            )
         )
     }
 }
