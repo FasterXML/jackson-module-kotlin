@@ -41,46 +41,6 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
     }
 }
 
-object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
-        p.shortValue.asUByte() ?: throw InputCoercionException(
-            p,
-            "Numeric value (${p.text}) out of range of UByte (0 - ${UByte.MAX_VALUE}).",
-            VALUE_NUMBER_INT,
-            UByte::class.java
-        )
-}
-
-object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
-        p.intValue.asUShort() ?: throw InputCoercionException(
-            p,
-            "Numeric value (${p.text}) out of range of UShort (0 - ${UShort.MAX_VALUE}).",
-            VALUE_NUMBER_INT,
-            UShort::class.java
-        )
-}
-
-object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
-        p.longValue.asUInt() ?: throw InputCoercionException(
-            p,
-            "Numeric value (${p.text}) out of range of UInt (0 - ${UInt.MAX_VALUE}).",
-            VALUE_NUMBER_INT,
-            UInt::class.java
-        )
-}
-
-object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
-        p.bigIntegerValue.asULong() ?: throw InputCoercionException(
-            p,
-            "Numeric value (${p.text}) out of range of ULong (0 - ${ULong.MAX_VALUE}).",
-            VALUE_NUMBER_INT,
-            ULong::class.java
-        )
-}
-
 internal class KotlinDeserializers : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,
@@ -90,10 +50,6 @@ internal class KotlinDeserializers : Deserializers.Base() {
         return when {
             type.isInterface && type.rawClass == Sequence::class.java -> SequenceDeserializer
             type.rawClass == Regex::class.java -> RegexDeserializer
-            type.rawClass == UByte::class.java -> UByteDeserializer
-            type.rawClass == UShort::class.java -> UShortDeserializer
-            type.rawClass == UInt::class.java -> UIntDeserializer
-            type.rawClass == ULong::class.java -> ULongDeserializer
             else -> null
         }
     }

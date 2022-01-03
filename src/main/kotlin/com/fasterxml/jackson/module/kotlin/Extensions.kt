@@ -40,7 +40,7 @@ fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(
 
 fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(kotlinModule())
 
-inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
+inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object : TypeReference<T>() {}
 
 inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
@@ -121,8 +121,20 @@ internal fun Int.toBitSet(): BitSet {
     return bits
 }
 
+private val jvmInlineClass by lazy {
+    try {
+        Class.forName("kotlin.jvm.JvmInline")
+    } catch (e: ClassNotFoundException) {
+        null
+    }
+}
+
 // In the future, value classes without @JvmInline will be available, and unboxing may not be able to handle it.
 // https://github.com/FasterXML/jackson-module-kotlin/issues/464
 // The JvmInline annotation can be added to Java classes,
 // so the isKotlinClass decision is necessary (the order is preferable in terms of possible frequency).
-internal fun Class<*>.isUnboxableValueClass() = annotations.any { it is JvmInline } && this.isKotlinClass()
+internal fun Class<*>.isUnboxableValueClass() = if (jvmInlineClass != null) {
+    annotations.any { jvmInlineClass!!.isInstance(it) } && this.isKotlinClass()
+} else {
+    false
+}

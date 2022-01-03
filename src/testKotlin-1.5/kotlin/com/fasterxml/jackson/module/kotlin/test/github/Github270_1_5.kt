@@ -4,10 +4,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TestGithub270 {
+@Suppress("ClassName")
+class TestGithub270_1_5 {
     data class Wrapper(private val field: String) {
-        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
-        val upper = (field as java.lang.String).toUpperCase()
+        val upper = field.uppercase()
         fun field() = field
         fun stillAField() = field
     }

@@ -1,4 +1,5 @@
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
@@ -25,13 +26,31 @@ sourceSets {
         java.srcDirs(generatedSources)
     }
 }
-kotlin {
-    sourceSets {
-        main {
-            kotlin.srcDir(file("src/kotlin-1.5/kotlin"))
+
+val compatibilityTestEnabled =
+    providers
+        .gradleProperty("compatibilityTest")
+        .forUseAtConfigurationTime() // TODO: Remove `forUseAtConfigurationTime` when updating to Gradle 3.4
+        .map { it != "false" }
+        .getOrElse(false)
+
+if (compatibilityTestEnabled) {
+    tasks.withType<KotlinCompile>() {
+        kotlinOptions {
+            apiVersion = "1.3"
+            languageVersion = "1.3"
+            jvmTarget = "1.8"
         }
-        test {
-            kotlin.srcDir(file("src/testKotlin-1.5/kotlin"))
+    }
+} else {
+    kotlin {
+        sourceSets {
+            main {
+                kotlin.srcDir(file("src/kotlin-1.5/kotlin"))
+            }
+            test {
+                kotlin.srcDir(file("src/testKotlin-1.5/kotlin"))
+            }
         }
     }
 }

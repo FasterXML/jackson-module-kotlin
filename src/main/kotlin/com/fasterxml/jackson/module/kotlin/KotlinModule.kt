@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
 import kotlin.reflect.KClass
+import kotlin.reflect.full.functions
 
 private const val metadataFqName = "kotlin.Metadata"
 
@@ -122,7 +123,6 @@ class KotlinModule @Deprecated(
         context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
 
         context.addDeserializers(KotlinDeserializers())
-        context.addKeyDeserializers(KotlinKeyDeserializers)
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 
@@ -135,6 +135,26 @@ class KotlinModule @Deprecated(
         addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
         addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+
+        addComponentsForKotlin_1_5(context)
+    }
+
+    @Suppress("FunctionName")
+    private fun addComponentsForKotlin_1_5(context: SetupContext) {
+        if (KotlinVersion.CURRENT.isAtLeast(1, 5)) {
+            try {
+                val kClass =
+                    Class.forName("com.fasterxml.jackson.module.kotlin.KotlinModuleVersionAdapter")
+                        .kotlin
+                val instance =
+                    kClass
+                        .let { it.objectInstance ?: it.java.getDeclaredConstructor().newInstance() }
+                val method = kClass.functions.single { it.name == "configureModuleSetupContext" }
+                method.call(instance, context)
+            } catch (e: ClassNotFoundException) {
+                // ignore
+            }
+        }
     }
 
     class Builder {

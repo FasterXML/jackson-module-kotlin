@@ -35,10 +35,22 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                 member.name.startsWith("get") -> member.name.substringAfter("get")
                 member.name.startsWith("is") -> member.name.substringAfter("is")
                 else -> null
-            }?.replaceFirstChar { it.lowercase(Locale.getDefault()) }?.substringBefore('-')
+            }?.replaceFirstChar {
+                // Explicitly call toLowerCase on Java string for backwards compatibility with Kotlin 1.3
+                @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
+                (it.toString() as java.lang.String).toLowerCase(Locale.getDefault())
+            }?.substringBefore('-')
         } else null
         is AnnotatedParameter -> findKotlinParameterName(member)
         else -> null
+    }
+
+    /**
+     * Kotlin version of this method was added in Kotlin 1.5.
+     * Coppied here for backwards compatibility reasons.
+     */
+    private inline fun String.replaceFirstChar(transform: (Char) -> CharSequence): String {
+        return if (isNotEmpty()) transform(this[0]).toString() + substring(1) else this
     }
 
     // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
@@ -83,9 +95,9 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
                     .any { it.hasAnnotation<JsonCreator>() }
 
                 val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
-                    ?.filterOutSingleStringCallables(propertyNames)
-                    ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
-                    ?: false
+                            ?.filterOutSingleStringCallables(propertyNames)
+                            ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
+                            ?: false
 
                 !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
             }
@@ -105,9 +117,13 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
             if (member is Constructor<*>) {
                 val ctor = (member as Constructor<Any>)
                 val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
-                catch (ex: KotlinReflectionInternalError) { 0 }
-                catch (ex: UnsupportedOperationException) { 0 }
+                val ktorParmCount = try {
+                    ctor.kotlinFunction?.parameters?.size ?: 0
+                } catch (ex: KotlinReflectionInternalError) {
+                    0
+                } catch (ex: UnsupportedOperationException) {
+                    0
+                }
                 if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
                     ctor.kotlinFunction?.parameters?.get(param.index)?.name
                 } else {
