@@ -129,6 +129,12 @@
                         <goals>
                             <goal>compile</goal>
                         </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/kotlin-1.5/kotlin</sourceDir>
+                            </sourceDirs>
+                        </configuration>
                     </execution>
 
                     <execution>
@@ -141,6 +147,10 @@
                             <args>
                                 <arg>-Xinline-classes</arg>
                             </args>
+                            <sourceDirs>
+                                <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
+                                <sourceDir>${project.basedir}/src/testKotlin-1.5/kotlin</sourceDir>
+                            </sourceDirs>
                         </configuration>
                     </execution>
                 </executions>

@@ -22,5 +22,10 @@ target
 *.iws
 /target
 /.gradle/
-/gradle/
 /out/
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
