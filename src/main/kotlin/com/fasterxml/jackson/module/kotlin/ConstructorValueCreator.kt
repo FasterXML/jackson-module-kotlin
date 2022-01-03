@@ -7,6 +7,6 @@ internal class ConstructorValueCreator<T>(override val callable: KFunction<T>) :
     override val accessible: Boolean = callable.isAccessible
 
     init {
-        callable.isAccessible = true
+        if (!accessible) callable.isAccessible = true
     }
 }
