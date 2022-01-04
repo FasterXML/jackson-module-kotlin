@@ -23,6 +23,7 @@ internal class MethodValueCreator<T> private constructor(
             // abort, we have some unknown case here
             if (!possibleCompanion.isCompanion) return null
 
+            // To prevent the call from failing, save the initial value and then rewrite the flag.
             val initialCallableAccessible = callable.isAccessible
             if (!initialCallableAccessible) callable.isAccessible = true
 
