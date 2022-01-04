@@ -13,7 +13,6 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.fasterxml.jackson.module.kotlin.KotlinSerializers.ValueClassBoxSerializer
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -97,7 +96,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
                 ?.let { outerClazz ->
                     val innerClazz = getter.returnType
 
-                    KotlinSerializers.ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
+                    ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
                         ?: @Suppress("UNCHECKED_CAST") ValueClassBoxSerializer(outerClazz, innerClazz)
                 }
         }
