@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.jsontype.NamedType
+import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.fasterxml.jackson.module.kotlin.KotlinSerializers.ValueClassBoxSerializer
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -29,7 +31,6 @@ import kotlin.reflect.jvm.javaSetter
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
-
 
 internal class KotlinAnnotationIntrospector(private val context: JacksonModule.SetupContext,
                                             private val cache: ReflectionCache,
@@ -69,7 +70,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     }
 
     // Find a serializer to handle the case where the getter returns an unboxed value from the value class.
-    override fun findSerializer(config: MapperConfig<*>?, am: Annotated): ValueClassBoxSerializer<*>? = when (am) {
+    override fun findSerializer(config: MapperConfig<*>?, am: Annotated): StdSerializer<*>? = when (am) {
         is AnnotatedMethod -> {
             val getter = am.member.apply {
                 // If the return value of the getter is a value class,
@@ -94,8 +95,10 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
                 ?.takeIf { it.isValue }
                 ?.java
                 ?.let { outerClazz ->
-                    @Suppress("UNCHECKED_CAST")
-                    ValueClassBoxSerializer(outerClazz, getter.returnType)
+                    val innerClazz = getter.returnType
+
+                    KotlinSerializers.ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
+                        ?: @Suppress("UNCHECKED_CAST") ValueClassBoxSerializer(outerClazz, innerClazz)
                 }
         }
         // Ignore the case of AnnotatedField, because JvmField cannot be set in the field of value class.

@@ -53,7 +53,7 @@
         <javac.src.version>1.8</javac.src.version>
         <javac.target.version>1.8</javac.target.version>
 
-        <version.kotlin>1.6.0</version.kotlin>
+        <version.kotlin>1.6.10</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
@@ -204,6 +204,13 @@
                                 TODO Remove after release of 2.14 and update the oldVersion above to 2.14.
                             -->
                             <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$StaticJsonValue</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$Unbox</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer.serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)</exclude>
+                            <exclude>com.fasterxml.jackson.databind.jsonschema.SchemaAware[com.fasterxml.jackson.databind.jsonschema.SchemaAware]</exclude>
+                            <exclude>com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable[com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable]:INTERFACE_REMOVED, java.io.Serializable[java.io.Serializable]</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
                         </excludes>
                     </parameter>
                 </configuration>

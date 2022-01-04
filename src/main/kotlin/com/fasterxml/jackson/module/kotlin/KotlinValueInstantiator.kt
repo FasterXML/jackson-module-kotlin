@@ -3,24 +3,15 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
 import com.fasterxml.jackson.databind.deser.bean.PropertyValueBuffer
 import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
-import java.lang.reflect.Constructor
-import java.lang.reflect.Method
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
-import kotlin.reflect.full.extensionReceiverParameter
-import kotlin.reflect.full.instanceParameter
-import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaType
 
 internal class KotlinValueInstantiator(
@@ -31,62 +22,34 @@ internal class KotlinValueInstantiator(
     private val nullIsSameAsDefault: Boolean,
     private val strictNullChecks: Boolean
 ) : StdValueInstantiator(src) {
-    @Suppress("UNCHECKED_CAST")
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
         props: Array<out SettableBeanProperty>,
         buffer: PropertyValueBuffer
     ): Any? {
-        val callable = when (_withArgsCreator) {
-            is AnnotatedConstructor -> cache.kotlinFromJava(_withArgsCreator.annotated as Constructor<Any>)
-            is AnnotatedMethod -> cache.kotlinFromJava(_withArgsCreator.annotated as Method)
-            else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
-        } ?: return super.createFromObjectWith(
-            ctxt,
-            props,
-            buffer
-        ) // we cannot reflect this method so do the default Java-ish behavior
+        val valueCreator: ValueCreator<*> = cache.valueCreatorFromJava(_withArgsCreator)
+            ?: return super.createFromObjectWith(ctxt, props, buffer)
 
-        if (callable.extensionReceiverParameter != null) {
-            // we shouldn't have an instance or receiver parameter and if we do, just go with default Java-ish behavior
-            return super.createFromObjectWith(ctxt, props, buffer)
+        val propCount: Int
+        var numCallableParameters: Int
+        val callableParameters: Array<KParameter?>
+        val jsonParamValueList: Array<Any?>
+
+        if (valueCreator is MethodValueCreator) {
+            propCount = props.size + 1
+            numCallableParameters = 1
+            callableParameters = arrayOfNulls<KParameter>(propCount)
+                .apply { this[0] = valueCreator.instanceParameter }
+            jsonParamValueList = arrayOfNulls<Any>(propCount)
+                .apply { this[0] = valueCreator.companionObjectInstance }
+        } else {
+            propCount = props.size
+            numCallableParameters = 0
+            callableParameters = arrayOfNulls(propCount)
+            jsonParamValueList = arrayOfNulls(propCount)
         }
 
-        val propCount = props.size + if (callable.instanceParameter != null) 1 else 0
-
-        var numCallableParameters = 0
-        val callableParameters = arrayOfNulls<KParameter>(propCount)
-        val jsonParamValueList = arrayOfNulls<Any>(propCount)
-
-        if (callable.instanceParameter != null) {
-            val possibleCompanion = callable.instanceParameter!!.type.erasedType().kotlin
-
-            if (!possibleCompanion.isCompanion) {
-                // abort, we have some unknown case here
-                return super.createFromObjectWith(ctxt, props, buffer)
-            }
-
-            // TODO: cache this lookup since the exception throwing/catching can be expensive
-            jsonParamValueList[numCallableParameters] = try {
-                possibleCompanion.objectInstance
-            } catch (ex: IllegalAccessException) {
-                // fallback for when an odd access exception happens through Kotlin reflection
-                val companionField = possibleCompanion.java.enclosingClass.fields.firstOrNull { it.type.kotlin.isCompanion }
-                        ?: throw ex
-                val accessible = companionField.isAccessible
-                if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
-                    (accessible && ctxt.config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS))
-                ) {
-                    companionField.isAccessible = true
-                }
-                companionField.get(null) ?: throw ex
-            }
-
-            callableParameters[numCallableParameters] = callable.instanceParameter
-            numCallableParameters++
-        }
-
-        callable.valueParameters.forEachIndexed { idx, paramDef ->
+        valueCreator.valueParameters.forEachIndexed { idx, paramDef ->
             val jsonProp = props[idx]
             val isMissing = !buffer.hasParameter(jsonProp)
 
@@ -157,23 +120,19 @@ internal class KotlinValueInstantiator(
             numCallableParameters++
         }
 
-        return if (numCallableParameters == jsonParamValueList.size && callable.instanceParameter == null) {
+        return if (numCallableParameters == jsonParamValueList.size && valueCreator is ConstructorValueCreator) {
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParamValueList)
         } else {
-            val accessible = callable.isAccessible
-            if ((!accessible && ctxt.config.isEnabled(MapperFeature.CAN_OVERRIDE_ACCESS_MODIFIERS)) ||
-                (accessible && ctxt.config.isEnabled(MapperFeature.OVERRIDE_PUBLIC_ACCESS_MODIFIERS))
-            ) {
-                callable.isAccessible = true
-            }
+            valueCreator.checkAccessibility(ctxt)
+
             val callableParametersByName = linkedMapOf<KParameter, Any?>()
             callableParameters.mapIndexed { idx, paramDef ->
                 if (paramDef != null) {
                     callableParametersByName[paramDef] = jsonParamValueList[idx]
                 }
             }
-            callable.callBy(callableParametersByName)
+            valueCreator.callBy(callableParametersByName)
         }
 
     }
