@@ -5,7 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.cfg.MapperConfig
-import com.fasterxml.jackson.databind.introspect.*
+import com.fasterxml.jackson.databind.introspect.Annotated
+import com.fasterxml.jackson.databind.introspect.AnnotatedField
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember
+import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
+import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import java.lang.reflect.AccessibleObject
@@ -20,14 +25,27 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.jvm.*
+import kotlin.reflect.jvm.javaGetter
+import kotlin.reflect.jvm.javaSetter
+import kotlin.reflect.jvm.javaType
+import kotlin.reflect.jvm.kotlinFunction
+import kotlin.reflect.jvm.kotlinProperty
 
 
-internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
-                                            private val cache: ReflectionCache,
-                                            private val nullToEmptyCollection: Boolean,
-                                            private val nullToEmptyMap: Boolean,
-                                            private val nullIsSameAsDefault: Boolean) : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(
+    private val context: Module.SetupContext,
+    private val cache: ReflectionCache,
+    private val nullToEmptyCollection: Boolean,
+    private val nullToEmptyMap: Boolean,
+    private val nullIsSameAsDefault: Boolean
+) : NopAnnotationIntrospector() {
+
+    /**
+     * Call [KClass.isValue] via reflection for Kotlin 1.3 support.
+     */
+    private val isValueKClassReflectionMethod by lazy {
+        KClass::class.members.firstOrNull { it.name == "isValue" }
+    }
 
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
@@ -79,13 +97,16 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                     // but it looks like an edge case, so it is ignored.
                     try {
                         it.memberProperties
+                    } catch(e: UnsupportedOperationException) {
+                        // Thrown by older versions of Kotlin (eg. 1.3)
+                        null
                     } catch (e: Error) {
                         null
                     }
                 }?.find { it.javaGetter == getter }
 
             (kotlinProperty?.returnType?.classifier as? KClass<*>)
-                ?.takeIf { it.isValue }
+                ?.takeIf { isValueKClassReflectionMethod?.call(it) as Boolean? ?: false }
                 ?.java
                 ?.let { outerClazz ->
                     val innerClazz = getter.returnType
@@ -116,7 +137,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val byAnnotation = (member as Field).isRequiredByAnnotation()
-        val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
+        val byNullability = (member as Field).kotlinProperty?.returnType?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
@@ -136,7 +157,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun Method.isRequiredByAnnotation(): Boolean? {
-       return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
+        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
     // Since Kotlin's property has the same Type for each field, getter, and setter,
@@ -178,8 +199,8 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
         val byNullability = when (member) {
             is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
-            else              -> null
+            is Method -> member.kotlinFunction?.isMethodParameterRequired(index)
+            else -> null
         }
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
@@ -190,7 +211,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index+1)
+        return isParameterRequired(index + 1)
     }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
@@ -203,7 +224,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         }
 
         return !paramType.isMarkedNullable && !param.isOptional &&
-                !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
+            !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
 
     private fun KType.isRequired(): Boolean = !isMarkedNullable

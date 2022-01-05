@@ -15,12 +15,13 @@ import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.Locale
+import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.declaredFunctions
-import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
@@ -174,3 +175,9 @@ private fun Collection<KFunction<*>>.filterOutSingleStringCallables(propertyName
 private fun KClass<*>.isPrimaryConstructor(kConstructor: KFunction<*>) = this.primaryConstructor.let {
     it == kConstructor || (it == null && this.constructors.size == 1)
 }
+
+/**
+ * Copied from Kotlin stdlib to support backwards compatibility with Kotlin 1.3
+ */
+private inline fun <reified T : Annotation> KAnnotatedElement.hasAnnotation(): Boolean =
+    findAnnotation<T>() != null
