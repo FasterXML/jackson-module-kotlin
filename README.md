@@ -260,3 +260,29 @@ underlying issue is fixed.  This allows us to know when the tested functionality
 unrelated code changes.
 
 See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.
+
+### Cross Version Kotlin Testing
+
+Unlike most of Jackson's other projects, cross-version testing of this project is performed with Gradle.
+
+To execute the test with the current version of Kotlin using Gradle use the following command:
+
+- Unix-like
+   ```shell
+   ./gradlew test
+   ```
+- Windows
+   ```cmd
+   gradlew.bat test
+   ```
+
+To execute tests with Kotlin 1.3 as a backwards compatibility check, use the following command:
+
+- Unix-like
+   ```shell
+   ./gradlew test -PcompatibilityTest
+   ```
+- Windows
+   ```bat
+   gradlew.bat test -PcompatibilityTest
+   ```
