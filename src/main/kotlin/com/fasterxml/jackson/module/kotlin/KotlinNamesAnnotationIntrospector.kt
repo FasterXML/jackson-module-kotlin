@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonCreator.Mode
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.PropertyName
 import com.fasterxml.jackson.databind.cfg.MapperConfig
@@ -14,12 +15,13 @@ import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
 import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.declaredFunctions
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
@@ -58,70 +60,46 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun findCreatorAnnotation(config: MapperConfig<*>, member: Annotated): JsonCreator.Mode? {
+    private fun hasCreatorAnnotation(member: AnnotatedConstructor): Mode {
         // don't add a JsonCreator to any constructor if one is declared already
+        val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
+            .apply { if (this in ignoredClassesForImplyingJsonCreator) return Mode.DISABLED }
+        val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return Mode.DISABLED
 
-        if (member is AnnotatedConstructor && !member.declaringClass.isEnum) {
-            // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
-            if (member.parameterCount > 0 && member.declaringClass.isKotlinClass()) {
-                val found = cache.checkConstructorIsCreatorAnnotated(member) {
-                    val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
-                    val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>)
+        // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
+        // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
+        // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
 
-                    if (kConstructor != null) {
-                        val isPrimaryConstructor = kClass.primaryConstructor == kConstructor ||
-                                (kClass.primaryConstructor == null && kClass.constructors.size == 1)
+        val propertyNames = kClass.memberProperties.map { it.name }.toSet()
 
-                        val propertyNames = kClass.memberProperties.map { it.name }.toSet()
+        return when {
+            kConstructor.isPossibleSingleString(propertyNames) -> Mode.DEFAULT
+            kConstructor.parameters.any { it.name == null } -> Mode.DEFAULT
+            !kClass.isPrimaryConstructor(kConstructor) -> Mode.DEFAULT
+            else -> {
+                val anyConstructorHasJsonCreator = kClass.constructors
+                    .filterOutSingleStringCallables(propertyNames)
+                    .any { it.hasAnnotation<JsonCreator>() }
 
-                        fun KFunction<*>.isPossibleSingleString(): Boolean {
-                            val result = parameters.size == 1 &&
-                                    parameters[0].name !in propertyNames &&
-                                    parameters[0].type.javaType == String::class.java &&
-                                    parameters[0].annotations.none { it.annotationClass.java == JsonProperty::class.java }
-                            return result
-                        }
+                val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
+                    ?.filterOutSingleStringCallables(propertyNames)
+                    ?.any { it.hasAnnotation<JsonCreator>() && it.hasAnnotation<JvmStatic>() }
+                    ?: false
 
-                        fun Collection<KFunction<*>>.filterOutSingleStringCallables(): Collection<KFunction<*>> {
-                            return this.filter { !it.isPossibleSingleString() }
-                        }
-
-                        val anyConstructorHasJsonCreator = kClass.constructors.filterOutSingleStringCallables()
-                                .any { it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                                }
-
-                        val anyCompanionMethodIsJsonCreator = member.type.rawClass.kotlin.companionObject?.declaredFunctions
-                                ?.filterOutSingleStringCallables()?.any {
-                                    it.annotations.any { it.annotationClass.java == JvmStatic::class.java } &&
-                                            it.annotations.any { it.annotationClass.java == JsonCreator::class.java }
-                                } ?: false
-
-                        // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
-                        // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
-                        // val areAllRequiredParametersInConstructor = kConstructor.parameters.all { requiredProperties.contains(it.name) }
-
-                        val areAllParametersValid = kConstructor.parameters.size == kConstructor.parameters.count { it.name != null }
-
-                        val isSingleStringConstructor = kConstructor.isPossibleSingleString()
-
-                        val implyCreatorAnnotation = isPrimaryConstructor
-                                && !(anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator)
-                                && areAllParametersValid
-                                && !isSingleStringConstructor
-                                && kClass !in ignoredClassesForImplyingJsonCreator
-
-                        implyCreatorAnnotation
-                    } else {
-                        false
-                    }
-                }
-                if (found) {
-                    return JsonCreator.Mode.PROPERTIES
+                if (anyConstructorHasJsonCreator || anyCompanionMethodIsJsonCreator) {
+                    Mode.DEFAULT
+                } else {
+                    Mode.PROPERTIES
                 }
             }
         }
-        return null
     }
+
+    override fun findCreatorAnnotation(config: MapperConfig<*>?, a: Annotated?): Mode =
+        if (a is AnnotatedConstructor && a.isKotlinConstructorWithParameters())
+            cache.checkConstructorIsCreatorAnnotated(a) { hasCreatorAnnotation(it) }
+        else
+            Mode.DEFAULT
 
     @Suppress("UNCHECKED_CAST")
     private fun findKotlinParameterName(param: AnnotatedParameter): String? {
@@ -167,3 +145,19 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     ReplaceWith("with(receiver) { declaringClass.declaredMethods.any { it.name.contains('-') } }")
 )
 private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
+
+// if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
+private fun AnnotatedConstructor.isKotlinConstructorWithParameters(): Boolean =
+    parameterCount > 0 && declaringClass.isKotlinClass() && !declaringClass.isEnum
+
+private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
+        parameters[0].name !in propertyNames &&
+        parameters[0].type.javaType == String::class.java &&
+        !parameters[0].hasAnnotation<JsonProperty>()
+
+private fun Collection<KFunction<*>>.filterOutSingleStringCallables(propertyNames: Set<String>): Collection<KFunction<*>> =
+    this.filter { !it.isPossibleSingleString(propertyNames) }
+
+private fun KClass<*>.isPrimaryConstructor(kConstructor: KFunction<*>) = this.primaryConstructor.let {
+    it == kConstructor || (it == null && this.constructors.size == 1)
+}

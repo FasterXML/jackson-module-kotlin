@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
@@ -37,7 +38,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
     private val javaMethodToKotlin = SimpleLookupCache<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorToValueCreator = SimpleLookupCache<Constructor<Any>, ConstructorValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToValueCreator = SimpleLookupCache<Method, MethodValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorIsCreatorAnnotated = SimpleLookupCache<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
+    private val javaConstructorIsCreatorAnnotated = SimpleLookupCache<AnnotatedConstructor, Mode>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = SimpleLookupCache<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
     private val kotlinGeneratedMethod = SimpleLookupCache<AnnotatedMethod, Boolean>(reflectionCacheSize, reflectionCacheSize)
 
@@ -79,8 +80,10 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
         else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
     } // we cannot reflect this method so do the default Java-ish behavior
 
-    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key)
+    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Mode): Mode {
+        return javaConstructorIsCreatorAnnotated.get(key)
             ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
+    }
 
     fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
             ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
