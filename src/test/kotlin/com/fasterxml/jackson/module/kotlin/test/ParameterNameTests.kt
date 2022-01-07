@@ -270,7 +270,7 @@ class TestJacksonWithKotlin {
     ) : TestFields {
         var factoryUsed: Boolean = false
         private companion object Named {
-            @JvmStatic @JsonCreator fun create(
+            @JvmStatic @JsonCreator private fun create(
                 @JsonProperty("name") nameThing: String,
                 @JsonProperty("age") age: Int,
                 @JsonProperty("primaryAddress") primaryAddress: String,
