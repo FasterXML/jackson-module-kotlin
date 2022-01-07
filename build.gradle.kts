@@ -30,7 +30,7 @@ sourceSets {
 val compatibilityTestEnabled =
     providers
         .gradleProperty("compatibilityTest")
-        .forUseAtConfigurationTime() // TODO: Remove `forUseAtConfigurationTime` when updating to Gradle 3.4
+        .forUseAtConfigurationTime() // TODO: Remove `forUseAtConfigurationTime` when updating to Gradle 7.4
         .map { it != "false" }
         .getOrElse(false)
 
