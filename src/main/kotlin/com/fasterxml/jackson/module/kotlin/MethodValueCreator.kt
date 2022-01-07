@@ -23,14 +23,19 @@ internal class MethodValueCreator<T> private constructor(
             // abort, we have some unknown case here
             if (!possibleCompanion.isCompanion) return null
 
+            // To prevent the call from failing, save the initial value and then rewrite the flag.
+            val initialCallableAccessible = callable.isAccessible
+            if (!initialCallableAccessible) callable.isAccessible = true
+
             val (companionObjectInstance: Any, accessible: Boolean) = try {
                 // throws ex
                 val instance = possibleCompanion.objectInstance!!
+
                 // If an instance of the companion object can be obtained, accessibility depends on the KFunction
-                instance to callable.isAccessible
+                instance to initialCallableAccessible
             } catch (ex: IllegalAccessException) {
                 // fallback for when an odd access exception happens through Kotlin reflection
-                possibleCompanion.java.enclosingClass.fields
+                possibleCompanion.java.enclosingClass.declaredFields
                     .firstOrNull { it.type.kotlin.isCompanion }
                     ?.let {
                         it.isAccessible = true
