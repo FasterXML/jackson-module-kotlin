@@ -111,7 +111,7 @@ internal class ArgumentBucket(
     override val size: Int
         get() = initializedCount
     override val values: Collection<Any?>
-        get() = values.filterIndexed { index, _ -> isInitialized(index) }
+        get() = actualValues.filterIndexed { index, _ -> isInitialized(index) }
 
     override fun containsKey(key: KParameter): Boolean = isInitialized(key.index)
 
