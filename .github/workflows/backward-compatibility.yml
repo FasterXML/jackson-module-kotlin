@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - "3.0"
       - "2.14"
     paths-ignore:
       - "README.md"
@@ -11,7 +10,6 @@ on:
   pull_request:
     branches:
       - master
-      - "3.0"
       - "2.14"
     paths-ignore:
       - "README.md"
@@ -25,7 +23,7 @@ jobs:
         java_version: [ '8', '11', '14' ]
         os: [ 'ubuntu-20.04' ]
         kotlin_compatibility_test: [ 'true', 'false' ]
-  steps:
+    steps:
     - uses: actions/checkout@v2
     - name: Set up JDK
       uses: actions/setup-java@v2
