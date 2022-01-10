@@ -12,6 +12,8 @@ internal class MethodValueCreator<T> private constructor(
     val companionObjectInstance: Any
 ) : ValueCreator<T>() {
     val instanceParameter: KParameter = callable.instanceParameter!!
+    override val bucketGenerator: BucketGenerator =
+        BucketGenerator.forMethod(callable.parameters, companionObjectInstance)
 
     companion object {
         fun <T> of(callable: KFunction<T>): MethodValueCreator<T>? {

@@ -22,12 +22,22 @@ internal sealed class ValueCreator<T> {
     protected abstract val accessible: Boolean
 
     /**
+     * A generator that generates an [ArgumentBucket] for binding arguments.
+     */
+    protected abstract val bucketGenerator: BucketGenerator
+
+    /**
      * ValueParameters of the KFunction to be called.
      */
     // If this result is cached, it will coexist with the SoftReference managed value in kotlin-reflect,
     // and there is a risk of doubling the memory consumption, so it should not be cached.
     // @see #584
     val valueParameters: List<KParameter> get() = callable.valueParameters
+
+    /**
+     * @return An [ArgumentBucket] to bind arguments to.
+     */
+    fun generateBucket(): ArgumentBucket = bucketGenerator.generate()
 
     /**
      * Checking process to see if access from context is possible.
@@ -45,5 +55,8 @@ internal sealed class ValueCreator<T> {
     /**
      * Function call with default values enabled.
      */
-    fun callBy(args: Map<KParameter, Any?>): T = callable.callBy(args)
+    fun callBy(args: ArgumentBucket): T = if (args.isFullInitialized())
+        SpreadWrapper.call(callable, args.actualValues)
+    else
+        callable.callBy(args)
 }
