@@ -29,25 +29,7 @@ internal class KotlinValueInstantiator(
     ): Any? {
         val valueCreator: ValueCreator<*> = cache.valueCreatorFromJava(_withArgsCreator)
             ?: return super.createFromObjectWith(ctxt, props, buffer)
-
-        val propCount: Int
-        var numCallableParameters: Int
-        val callableParameters: Array<KParameter?>
-        val jsonParamValueList: Array<Any?>
-
-        if (valueCreator is MethodValueCreator) {
-            propCount = props.size + 1
-            numCallableParameters = 1
-            callableParameters = arrayOfNulls<KParameter>(propCount)
-                .apply { this[0] = valueCreator.instanceParameter }
-            jsonParamValueList = arrayOfNulls<Any>(propCount)
-                .apply { this[0] = valueCreator.companionObjectInstance }
-        } else {
-            propCount = props.size
-            numCallableParameters = 0
-            callableParameters = arrayOfNulls(propCount)
-            jsonParamValueList = arrayOfNulls(propCount)
-        }
+        val argumentBucket: ArgumentBucket = valueCreator.generateBucket()
 
         valueCreator.valueParameters.forEachIndexed { idx, paramDef ->
             val jsonProp = props[idx]
@@ -115,24 +97,15 @@ internal class KotlinValueInstantiator(
                 }
             }
 
-            jsonParamValueList[numCallableParameters] = paramVal
-            callableParameters[numCallableParameters] = paramDef
-            numCallableParameters++
+            argumentBucket[paramDef.index] = paramVal
         }
 
-        return if (numCallableParameters == jsonParamValueList.size && valueCreator is ConstructorValueCreator) {
+        return if (valueCreator is ConstructorValueCreator && argumentBucket.isFullInitialized()) {
             // we didn't do anything special with default parameters, do a normal call
-            super.createFromObjectWith(ctxt, jsonParamValueList)
+            super.createFromObjectWith(ctxt, argumentBucket.actualValues)
         } else {
             valueCreator.checkAccessibility(ctxt)
-
-            val callableParametersByName = linkedMapOf<KParameter, Any?>()
-            callableParameters.mapIndexed { idx, paramDef ->
-                if (paramDef != null) {
-                    callableParametersByName[paramDef] = jsonParamValueList[idx]
-                }
-            }
-            valueCreator.callBy(callableParametersByName)
+            valueCreator.callBy(argumentBucket)
         }
 
     }
