@@ -269,8 +269,13 @@ class TestJacksonWithKotlin {
         override val createdDt: Date
     ) : TestFields {
         var factoryUsed: Boolean = false
-        private companion object Named {
-            @JvmStatic @JsonCreator private fun create(
+        companion object Named {
+
+            /**
+             * Method must not be private due to Kotlin compiler bug fixed in Kotlin 1.6
+             * https://github.com/FasterXML/jackson-module-kotlin/pull/534#issuecomment-1008126543
+             */
+            @JvmStatic @JsonCreator fun create(
                 @JsonProperty("name") nameThing: String,
                 @JsonProperty("age") age: Int,
                 @JsonProperty("primaryAddress") primaryAddress: String,

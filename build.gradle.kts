@@ -9,6 +9,22 @@ plugins {
 group = "com.fasterxml.jackson.module"
 version = "2.13.1-SNAPSHOT"
 
+val compatibilityTestEnabled =
+    providers
+        .gradleProperty("compatibilityTest")
+        .forUseAtConfigurationTime() // TODO: Remove `forUseAtConfigurationTime` when updating to Gradle 7.4
+        .map { it != "false" }
+        .getOrElse(false)
+
+if(compatibilityTestEnabled) {
+    configurations["testRuntimeClasspath"].resolutionStrategy.eachDependency {
+        if(requested.group == "org.jetbrains.kotlin") {
+            useVersion("1.3.72")
+            because("Testing backwards compatibility with Kotlin 1.3")
+        }
+    }
+}
+
 dependencies {
     implementation(kotlin("reflect"))
     implementation(platform("com.fasterxml.jackson:jackson-bom:$version"))
@@ -26,13 +42,6 @@ sourceSets {
         java.srcDirs(generatedSources)
     }
 }
-
-val compatibilityTestEnabled =
-    providers
-        .gradleProperty("compatibilityTest")
-        .forUseAtConfigurationTime() // TODO: Remove `forUseAtConfigurationTime` when updating to Gradle 7.4
-        .map { it != "false" }
-        .getOrElse(false)
 
 if (compatibilityTestEnabled) {
     tasks.withType<KotlinCompile>() {

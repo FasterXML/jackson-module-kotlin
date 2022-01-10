@@ -52,6 +52,7 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
+@Suppress("ClassName")
 internal class KotlinDeserializers_1_5 : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,
