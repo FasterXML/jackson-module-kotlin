@@ -1,7 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
 import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
 import kotlin.reflect.full.extensionReceiverParameter
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.jvm.isAccessible
@@ -9,9 +8,8 @@ import kotlin.reflect.jvm.isAccessible
 internal class MethodValueCreator<T> private constructor(
     override val callable: KFunction<T>,
     override val accessible: Boolean,
-    val companionObjectInstance: Any
+    companionObjectInstance: Any
 ) : ValueCreator<T>() {
-    val instanceParameter: KParameter = callable.instanceParameter!!
     override val bucketGenerator: BucketGenerator =
         BucketGenerator.forMethod(callable.parameters, companionObjectInstance)
 
