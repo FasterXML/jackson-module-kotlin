@@ -98,8 +98,6 @@ class KotlinModule @Deprecated(
         const val serialVersionUID = 1L
     }
 
-    private val ignoredClassesForImplyingJsonCreator = emptySet<KClass<*>>()
-
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
@@ -119,7 +117,7 @@ class KotlinModule @Deprecated(
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache))
 
         context.addDeserializers(KotlinDeserializers())
         context.addKeyDeserializers(KotlinKeyDeserializers)
