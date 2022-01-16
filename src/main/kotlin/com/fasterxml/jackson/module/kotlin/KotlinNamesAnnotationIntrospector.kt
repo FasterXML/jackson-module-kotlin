@@ -25,7 +25,6 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
     // since 2.4
@@ -103,19 +102,20 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
         return if (param.declaringClass.isKotlinClass()) {
             val member = param.owner.member
             if (member is Constructor<*>) {
-                val ctor = (member as Constructor<Any>)
-                val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
+                val ctorParmCount = member.parameterTypes.size
+
+                val ktor = cache.kotlinFromJava(member as Constructor<Any>)
+                val ktorParmCount = try { ktor?.parameters?.size ?: 0 }
                 catch (ex: KotlinReflectionInternalError) { 0 }
                 catch (ex: UnsupportedOperationException) { 0 }
                 if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
-                    ctor.kotlinFunction?.parameters?.get(param.index)?.name
+                    ktor?.parameters?.get(param.index)?.name
                 } else {
                     null
                 }
             } else if (member is Method) {
                 try {
-                    val temp = member.kotlinFunction
+                    val temp = cache.kotlinFromJava(member)
 
                     val firstParamKind = temp?.parameters?.firstOrNull()?.kind
                     val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index + 1 else param.index
