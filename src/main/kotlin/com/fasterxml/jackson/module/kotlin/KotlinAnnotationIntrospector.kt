@@ -176,9 +176,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         val member = this.member
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
 
+        @Suppress("UNCHECKED_CAST")
         val byNullability = when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
+            is Constructor<*> -> cache.kotlinFromJava(member as Constructor<Any>)?.isConstructorParameterRequired(index)
+            is Method         -> cache.kotlinFromJava(member)?.isMethodParameterRequired(index)
             else              -> null
         }
 
