@@ -46,7 +46,7 @@ internal class BucketGenerator private constructor(
         fun forConstructor(parameters: List<KParameter>): BucketGenerator {
             val paramSize = parameters.size
             // Since the constructor does not require any instance parameters, do not operation the values.
-            return BucketGenerator(paramSize, Array(paramSize) { null }, getOriginalMasks(paramSize), 0, parameters)
+            return BucketGenerator(paramSize, arrayOfNulls(paramSize), getOriginalMasks(paramSize), 0, parameters)
         }
 
         /**
@@ -59,7 +59,7 @@ internal class BucketGenerator private constructor(
 
             // In the jackson-module-kotlin process, instance parameters are always at the top,
             // so they should be placed at the top of originalValues.
-            val originalValues = Array<Any?>(paramSize) { null }.apply { this[0] = instance }
+            val originalValues = arrayOfNulls<Any?>(paramSize).apply { this[0] = instance }
             // Since the instance parameters have already been initialized,
             // the originalMasks must also be in the corresponding state.
             val originalMasks = getOriginalMasks(paramSize).apply { this[0] = this[0] and 1.inv() }
