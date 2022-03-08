@@ -55,7 +55,7 @@ internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer
             val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
             if (unboxed == null) {
-                provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
+                provider.findNullValueSerializer(null).serialize(null, gen, provider)
                 return
             }
 
