@@ -1,11 +1,15 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
+import com.fasterxml.jackson.module.kotlin.addMixIn
 import com.fasterxml.jackson.module.kotlin.contains
 import com.fasterxml.jackson.module.kotlin.convertValue
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.fasterxml.jackson.module.kotlin.minusAssign
 import com.fasterxml.jackson.module.kotlin.plusAssign
 import com.fasterxml.jackson.module.kotlin.readValue
@@ -81,5 +85,16 @@ class TestExtensionMethods {
 
         val convertValueResult: List<Person> = mapper.convertValue(tree)
         assertThat(convertValueResult, `is`(listOf(Person("Neo"))))
+    }
+
+    @Test fun mixInExtensionTest() {
+
+        data class Person(val name: String)
+        abstract class PersonMixIn { @JsonIgnore var name: String = "" }
+
+        val mapper: JsonMapper = jsonMapper { addMixIn<Person, PersonMixIn>() }
+        val serializedPerson: String = mapper.writeValueAsString(Person("test"))
+
+        assertThat(serializedPerson, `is`("{}"))
     }
 }
