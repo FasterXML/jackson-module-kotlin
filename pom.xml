@@ -185,12 +185,16 @@
             <plugin>
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>
-                <version>0.15.3</version>
+                <version>0.15.7</version>
                 <configuration>
                     <oldVersion>
                         <dependency>
                             <groupId>com.fasterxml.jackson.module</groupId>
                             <artifactId>jackson-module-kotlin</artifactId>
+			    <!-- 16-Mar-2022, tatu: Sometimes may need to change baseline or
+                                    use exclusions. But for now try keep 2.14 binary compatible
+                                    with 2.13(.0)
+			      -->
                             <version>2.13.0</version>
                             <type>jar</type>
                         </dependency>
