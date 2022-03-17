@@ -49,20 +49,20 @@ object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
 private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods
     .find { method -> Modifier.isStatic(method.modifiers) && method.annotations.any { it is JsonValue } }
 
-internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer<T>(t) {
-    object Unbox : ValueClassSerializer<Any>(Any::class.java) {
-        override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
-            val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
+object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
+    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+        val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
-            if (unboxed == null) {
-                provider.findNullValueSerializer(null).serialize(unboxed, gen, provider)
-                return
-            }
-
-            provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+        if (unboxed == null) {
+            provider.findNullValueSerializer(null).serialize(null, gen, provider)
+            return
         }
-    }
 
+        provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+    }
+}
+
+internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer<T>(t) {
     class StaticJsonValue<T : Any>(
         t: Class<T>, private val staticJsonValueGetter: Method
     ) : ValueClassSerializer<T>(t) {
@@ -83,9 +83,9 @@ internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer
         // If create a function with a JsonValue in the value class,
         // it will be compiled as a static method (= cannot be processed properly by Jackson),
         // so use a ValueClassSerializer.StaticJsonValue to handle this.
-        fun from(t: Class<*>): ValueClassSerializer<*> = t.getStaticJsonValueGetter()
+        fun from(t: Class<*>): StdSerializer<*> = t.getStaticJsonValueGetter()
             ?.let { StaticJsonValue(t, it) }
-            ?: Unbox
+            ?: ValueClassUnboxSerializer
     }
 }
 
