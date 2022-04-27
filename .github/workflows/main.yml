@@ -22,26 +22,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java_version: ['8', '11', '14']
+        java_version: ['8', '11', '17']
         os: ['ubuntu-20.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
-        distribution: "adopt"
+        distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
+        cache : 'maven'
         server-id: sonatype-nexus-snapshots
         server-username: CI_DEPLOY_USERNAME
         server-password: CI_DEPLOY_PASSWORD
-    - uses: actions/cache@v2.1.6
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
     - name: Build
       run: ./mvnw -V -B -ff -ntp verify
     - name: Deploy snapshot
