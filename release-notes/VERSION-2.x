@@ -18,6 +18,10 @@ Co-maintainers:
 
 No changes since 2.13
 
+2.13.3 (14-May-2022)
+
+No changes since 2.13.2
+
 2.13.2 (17-Mar-2022) -- delayed due to compatibility issues, compared
   to other components that were released on (06-Mar-2022)
 

@@ -12,7 +12,9 @@ on:
   pull_request:
     branches:
     - master
+    - "3.0"
     - "2.14"
+    - "2.13"
     paths-ignore:
     - "README.md"
     - "release-notes/*"
@@ -33,16 +35,22 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
-        cache : 'maven'
+        cache: 'maven'
         server-id: sonatype-nexus-snapshots
         server-username: CI_DEPLOY_USERNAME
         server-password: CI_DEPLOY_PASSWORD
+        # See https://github.com/actions/setup-java/blob/v2/docs/advanced-usage.md#Publishing-using-Apache-
+        # gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        # gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
     - name: Build
-      run: ./mvnw -V -B -ff -ntp verify
+      run: ./mvnw -B -q -ff -ntp verify
+    - name: Extract project Maven version
+      id: projectVersion
+      run: echo ::set-output name=version::$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout -Dexpression=project.version -q)
     - name: Deploy snapshot
-      if: github.event_name != 'pull_request' && matrix.java_version == '8'
+      if: github.event_name != 'pull_request' && matrix.java_version == '8' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT')
       env:
         CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
         CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
         # MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      run: ./mvnw -V -B -ff -DskipTests -ntp source:jar deploy
+      run: ./mvnw -B -q -ff -DskipTests -ntp source:jar deploy
