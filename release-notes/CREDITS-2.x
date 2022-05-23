@@ -135,3 +135,8 @@ Konstantin Volivach (kostya05983@github)
 
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
+
+Dmitry Spikhalskiy (Spikhalskiy@github)
+* Contributed fix for #556: Broken Kotlin 1.4 support in 2.13.2
+ (2.13.4)
+
