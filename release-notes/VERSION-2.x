@@ -18,6 +18,11 @@ Co-maintainers:
 
 No changes since 2.13
 
+2.13.4 (not yet released)
+
+#556: Broken Kotlin 1.4 support in 2.13.2
+ (contributed by Dmitry S)
+
 2.13.3 (14-May-2022)
 
 No changes since 2.13.2
