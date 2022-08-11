@@ -38,6 +38,13 @@
         </developer>
     </developers>
     <url>https://github.com/FasterXML/jackson-module-kotlin</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <scm>
         <connection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</connection>
         <developerConnection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</developerConnection>
