@@ -1,8 +1,8 @@
-[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](http://kotlinlang.org) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](http://slack.kotlinlang.org/)
+[![Kotlin](https://img.shields.io/badge/kotlin-1.5.x-blue.svg)](https://kotlinlang.org) [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](https://slack.kotlinlang.org/)
 
 # Overview
 
-Module that adds support for serialization/deserialization of [Kotlin](http://kotlinlang.org)
+Module that adds support for serialization/deserialization of [Kotlin](https://kotlinlang.org)
 classes and data classes.
 Previously a default constructor must have existed on the Kotlin object for Jackson to deserialize into the object.
 With this module, single constructor classes can be used automatically,
@@ -27,7 +27,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.13.2</version>
+    <version>2.13.3</version>
 </dependency>
 ```
 
