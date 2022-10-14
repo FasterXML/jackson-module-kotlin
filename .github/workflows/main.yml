@@ -25,6 +25,7 @@ jobs:
       fail-fast: false
       matrix:
         java_version: ['8', '11', '17']
+	kotlin_version: ['1.4.32', '1.5.32', '1.6.21', '1.7.20']
         os: ['ubuntu-20.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
@@ -43,7 +44,7 @@ jobs:
         # gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         # gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
     - name: Build
-      run: ./mvnw -B -q -ff -ntp verify
+      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} verify
     - name: Extract project Maven version
       id: projectVersion
       run: echo ::set-output name=version::$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout -Dexpression=project.version -q)
