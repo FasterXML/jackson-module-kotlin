@@ -2,8 +2,10 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@JsonIgnoreProperties("endExclusive")
 internal abstract class ClosedRangeMixin<T> @JsonCreator constructor(public val start: T, @get:JsonProperty("end") public val endInclusive: T)  {
     @JsonIgnore abstract public fun getEnd(): T
     @JsonIgnore abstract public fun getFirst(): T
