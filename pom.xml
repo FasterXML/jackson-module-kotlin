@@ -226,6 +226,7 @@
                             <exclude>com.fasterxml.jackson.databind.jsonschema.SchemaAware[com.fasterxml.jackson.databind.jsonschema.SchemaAware]</exclude>
                             <exclude>com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable[com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable]:INTERFACE_REMOVED, java.io.Serializable[java.io.Serializable]</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ClosedRangeMixin</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
