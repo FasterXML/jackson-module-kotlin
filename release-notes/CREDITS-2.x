@@ -13,7 +13,15 @@ Authors:
 
 Contributors:
 
-# 2.13.NEXT
+# 2.14.0
+
+Richard Kwasnicki (Richie94@github)
+* #582: Ignore open-ended ranges in `KotlinMixins.kt` (to help with Kotlin 1.7.20+)
+
+# 2.13.4
+
+Dmitry Spikhalskiy (Spikhalskiy@github)
+* #556: Broken Kotlin 1.4 support
 
 # 2.13.1
 
@@ -131,8 +139,4 @@ Konstantin Volivach (kostya05983@github)
 
 Laimonas Turauskas (Laimiux@github)
 * Contributed fix for #180: handle nullable method parameters correctly (for creator methods)
-
-Dmitry Spikhalskiy (Spikhalskiy@github)
-* Contributed fix for #556: Broken Kotlin 1.4 support in 2.13.2
- (2.13.4)
 
