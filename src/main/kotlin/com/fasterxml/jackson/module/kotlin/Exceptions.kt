@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import tools.jackson.core.JsonParser
+import tools.jackson.databind.exc.MismatchedInputException
 import java.io.Closeable
 import kotlin.reflect.KParameter
 

@@ -1,10 +1,10 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.core.JsonToken
-import com.fasterxml.jackson.core.exc.InputCoercionException
-import com.fasterxml.jackson.databind.*
-import com.fasterxml.jackson.databind.deser.jdk.JDKKeyDeserializer
-import com.fasterxml.jackson.databind.deser.jdk.JDKKeyDeserializers
+import tools.jackson.core.JsonToken
+import tools.jackson.core.exc.InputCoercionException
+import tools.jackson.databind.*
+import tools.jackson.databind.deser.jdk.JDKKeyDeserializer
+import tools.jackson.databind.deser.jdk.JDKKeyDeserializers
 
 // The reason why key is treated as nullable is to match the tentative behavior of JDKKeyDeserializer.
 // If JDKKeyDeserializer is modified, need to modify this too.

@@ -1,14 +1,14 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.deser.SettableBeanProperty
-import com.fasterxml.jackson.databind.deser.ValueInstantiator
-import com.fasterxml.jackson.databind.deser.ValueInstantiators
-import com.fasterxml.jackson.databind.deser.bean.PropertyValueBuffer
-import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider
-import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
+import tools.jackson.databind.BeanDescription
+import tools.jackson.databind.DeserializationConfig
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.deser.SettableBeanProperty
+import tools.jackson.databind.deser.ValueInstantiator
+import tools.jackson.databind.deser.ValueInstantiators
+import tools.jackson.databind.deser.bean.PropertyValueBuffer
+import tools.jackson.databind.deser.impl.NullsAsEmptyProvider
+import tools.jackson.databind.deser.std.StdValueInstantiator
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType

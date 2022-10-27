@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
+import tools.jackson.databind.deser.std.StdValueInstantiator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue

@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.core.exc.InputCoercionException
+import tools.jackson.core.exc.InputCoercionException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert.assertThrows

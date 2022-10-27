@@ -1,9 +1,9 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.ValueDeserializer
-import com.fasterxml.jackson.databind.deser.ValueDeserializerModifier
+import tools.jackson.databind.BeanDescription
+import tools.jackson.databind.DeserializationConfig
+import tools.jackson.databind.ValueDeserializer
+import tools.jackson.databind.deser.ValueDeserializerModifier
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 object KotlinValueDeserializerModifier : ValueDeserializerModifier() {

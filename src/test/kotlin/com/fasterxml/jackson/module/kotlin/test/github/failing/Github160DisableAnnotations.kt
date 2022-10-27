@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github.failing
 
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import tools.jackson.databind.MapperFeature
+import tools.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure

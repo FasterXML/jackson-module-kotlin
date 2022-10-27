@@ -7,10 +7,10 @@ module com.fasterxml.jackson.kotlin {
     requires kotlin.stdlib;
 
     requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.databind;
 
     exports com.fasterxml.jackson.module.kotlin;
 
-    provides com.fasterxml.jackson.databind.JacksonModule with
-        com.fasterxml.jackson.module.kotlin.KotlinModule;
+    provides tools.jackson.databind.JacksonModule with
+        tools.jackson.module.kotlin.KotlinModule;
 }

@@ -1,8 +1,8 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.KeyDeserializer
-import com.fasterxml.jackson.databind.module.SimpleModule
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.KeyDeserializer
+import tools.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Test
 
