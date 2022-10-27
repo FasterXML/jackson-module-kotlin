@@ -25,7 +25,8 @@ jobs:
       fail-fast: false
       matrix:
         java_version: ['8', '11', '17']
-        kotlin_version: ['1.4.32', '1.5.32', '1.6.21', '1.7.20']
+	# Jackson 3.0 will only support 1.5.x
+        kotlin_version: ['1.5.32', '1.6.21', '1.7.20']
         os: ['ubuntu-20.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
@@ -52,9 +53,9 @@ jobs:
       run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
     - name: Extract project Maven version
       id: projectVersion
-      run: echo "version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
+      run: echo "version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.3.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
     - name: Deploy snapshot
-      if: github.event_name != 'pull_request' && matrix.java_version == '8' && matrix.kotlin_version == '1.5.32' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT')
+      if: github.event_name != 'pull_request' && matrix.java_version == '8' && matrix.kotlin_version == '1.6.21' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT')
       env:
         CI_DEPLOY_USERNAME: ${{ secrets.CI_DEPLOY_USERNAME }}
         CI_DEPLOY_PASSWORD: ${{ secrets.CI_DEPLOY_PASSWORD }}
