@@ -204,6 +204,8 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
+			  <!-- 26-Oct-2022, tatu: fix to #582; bogus failure otherwise -->
+			  <exclude>com.fasterxml.jackson.module.kotlin.ClosedRangeMixin</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
