@@ -46,10 +46,10 @@ jobs:
 
     - name: Build
       # Note: build separately first using default kotlin-core
-      run: ./mvnw -B -q -ff -ntp clean package
+      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
     - name: Test
-      # Note: actual testing should use matrix kotlin-core version
-      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} verify
+      # Note: actual testing should use matrix kotlin-core version (note: MUST specify test phase)
+      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
     - name: Extract project Maven version
       id: projectVersion
       run: echo "version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
