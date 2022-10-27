@@ -130,7 +130,7 @@ println(arrayNode.toString()) // ["foo",true,1,1.0,"YmFy"]
 Different `kotlin-core` versions are supported by different Jackson Kotlin module minor versions.
 Here is an incomplete list of supported versions:
 
-* Jackson 2.14.x: Kotlin-core 1.5 - 1.7 (hope to figure out a way to support 1.4 too)
+* Jackson 2.14.x: Kotlin-core 1.4 - 1.7
 * Jackson 2.13.x: Kotlin-core 1.4 - 1.7
 
 # Annotations
@@ -226,6 +226,7 @@ Following developers have committer access to this project.
 
 * Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
 * Active Maintainers:
+    * Dmitry Spikhalskiy (@Spikhalski) -- since 2.14
     * Drew Stephens (@dinomite)
     * Vyacheslav Artemyev (@viartemev)
 * Co-maintainers:
