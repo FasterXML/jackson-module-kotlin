@@ -25,7 +25,6 @@ jobs:
       fail-fast: false
       matrix:
         java_version: ['8', '11', '17']
-	# Jackson 3.0 will only support 1.5.x
         kotlin_version: ['1.5.32', '1.6.21', '1.7.20']
         os: ['ubuntu-20.04']
     env:
