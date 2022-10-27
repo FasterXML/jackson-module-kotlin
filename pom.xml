@@ -30,6 +30,10 @@
             </roles>
         </developer>
         <developer>
+            <id>spikhalski</id>
+            <name>Dmitry Spikhalskiy</name>
+        </developer>
+        <developer>
             <id>dinomite</id>
             <name>Drew Stephens</name>
         </developer>
