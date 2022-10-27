@@ -1,10 +1,10 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import tools.jackson.core.JsonGenerator
+import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.databind.module.SimpleModule
+import tools.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Test

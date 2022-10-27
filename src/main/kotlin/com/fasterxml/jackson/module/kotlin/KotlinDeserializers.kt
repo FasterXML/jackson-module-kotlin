@@ -1,15 +1,15 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.core.JsonToken.VALUE_NUMBER_INT
-import com.fasterxml.jackson.core.exc.InputCoercionException
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.DeserializationConfig
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JavaType
-import com.fasterxml.jackson.databind.ValueDeserializer
-import com.fasterxml.jackson.databind.deser.Deserializers
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import tools.jackson.core.JsonParser
+import tools.jackson.core.JsonToken.VALUE_NUMBER_INT
+import tools.jackson.core.exc.InputCoercionException
+import tools.jackson.databind.BeanDescription
+import tools.jackson.databind.DeserializationConfig
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.JavaType
+import tools.jackson.databind.ValueDeserializer
+import tools.jackson.databind.deser.Deserializers
+import tools.jackson.databind.deser.std.StdDeserializer
 
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {

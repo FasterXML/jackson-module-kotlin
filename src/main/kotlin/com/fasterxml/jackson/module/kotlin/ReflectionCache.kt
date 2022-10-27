@@ -1,11 +1,11 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator.Mode
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember
-import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
-import com.fasterxml.jackson.databind.introspect.AnnotatedWithParams
-import com.fasterxml.jackson.databind.util.SimpleLookupCache
+import tools.jackson.databind.introspect.AnnotatedConstructor
+import tools.jackson.databind.introspect.AnnotatedMember
+import tools.jackson.databind.introspect.AnnotatedMethod
+import tools.jackson.databind.introspect.AnnotatedWithParams
+import tools.jackson.databind.util.SimpleLookupCache
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import kotlin.reflect.KClass

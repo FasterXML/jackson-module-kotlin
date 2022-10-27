@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
-import com.fasterxml.jackson.databind.deser.UnresolvedForwardReference
+import tools.jackson.databind.deser.UnresolvedForwardReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure

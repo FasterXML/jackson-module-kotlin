@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.DatabindException
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.DatabindException
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Rule

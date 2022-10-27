@@ -3,8 +3,8 @@ package com.fasterxml.jackson.module.kotlin.test
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.PropertyNamingStrategies
-import com.fasterxml.jackson.databind.SerializationFeature
+import tools.jackson.databind.PropertyNamingStrategies
+import tools.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat

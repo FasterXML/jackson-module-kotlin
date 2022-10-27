@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Test
 import kotlin.test.fail

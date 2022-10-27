@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.SerializationFeature
+import tools.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.*
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo

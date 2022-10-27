@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.module.SimpleModule
+import tools.jackson.databind.MapperFeature
+import tools.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap

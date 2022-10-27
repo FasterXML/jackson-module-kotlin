@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.SerializationFeature
+import tools.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure

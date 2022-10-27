@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.MapperFeature
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.MapperFeature
 import kotlin.reflect.KFunction
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.valueParameters

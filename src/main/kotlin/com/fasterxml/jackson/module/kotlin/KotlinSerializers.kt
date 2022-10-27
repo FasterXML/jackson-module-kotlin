@@ -2,14 +2,14 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonValue
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.BeanDescription
-import com.fasterxml.jackson.databind.JavaType
-import com.fasterxml.jackson.databind.SerializationConfig
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.ValueSerializer
-import com.fasterxml.jackson.databind.ser.Serializers
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import tools.jackson.core.JsonGenerator
+import tools.jackson.databind.BeanDescription
+import tools.jackson.databind.JavaType
+import tools.jackson.databind.SerializationConfig
+import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.ValueSerializer
+import tools.jackson.databind.ser.Serializers
+import tools.jackson.databind.ser.std.StdSerializer
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigInteger

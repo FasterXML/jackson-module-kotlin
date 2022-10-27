@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
+import tools.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Test
 

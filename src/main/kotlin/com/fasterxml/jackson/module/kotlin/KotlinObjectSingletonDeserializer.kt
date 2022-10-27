@@ -1,9 +1,9 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.core.JsonParser
-import com.fasterxml.jackson.databind.BeanProperty
-import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.ValueDeserializer
+import tools.jackson.core.JsonParser
+import tools.jackson.databind.BeanProperty
+import tools.jackson.databind.DeserializationContext
+import tools.jackson.databind.ValueDeserializer
 
 internal fun ValueDeserializer<*>.asSingletonDeserializer(singleton: Any) =
         KotlinObjectSingletonDeserializer(singleton, this)
