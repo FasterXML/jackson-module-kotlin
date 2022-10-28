@@ -226,7 +226,7 @@ Following developers have committer access to this project.
 
 * Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
 * Active Maintainers:
-    * Dmitry Spikhalskiy (@Spikhalski) -- since 2.14
+    * Dmitry Spikhalskiy (@Spikhalskiy) -- since 2.14
     * Drew Stephens (@dinomite)
     * Vyacheslav Artemyev (@viartemev)
 * Co-maintainers:
