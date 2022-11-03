@@ -22,18 +22,21 @@ object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
 }
 
 object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
-    override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) =
+    override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) {
         gen.writeNumber(value.toShort())
+    }
 }
 
 object UShortSerializer : StdSerializer<UShort>(UShort::class.java) {
-    override fun serialize(value: UShort, gen: JsonGenerator, provider: SerializerProvider) =
+    override fun serialize(value: UShort, gen: JsonGenerator, provider: SerializerProvider) {
         gen.writeNumber(value.toInt())
+    }
 }
 
 object UIntSerializer : StdSerializer<UInt>(UInt::class.java) {
-    override fun serialize(value: UInt, gen: JsonGenerator, provider: SerializerProvider) =
+    override fun serialize(value: UInt, gen: JsonGenerator, provider: SerializerProvider) {
         gen.writeNumber(value.toLong())
+    }
 }
 
 object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {

@@ -1,10 +1,10 @@
 package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.databind.exc.InvalidDefinitionException
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
+import tools.jackson.dataformat.xml.XmlMapper
+import tools.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
+import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty
+import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.Test

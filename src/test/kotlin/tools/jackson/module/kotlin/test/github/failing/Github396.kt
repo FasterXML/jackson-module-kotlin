@@ -1,7 +1,7 @@
 package tools.jackson.module.kotlin.test.github.failing
 
 import tools.jackson.databind.exc.MismatchedInputException
-import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import tools.jackson.dataformat.xml.XmlMapper
 import tools.jackson.module.kotlin.KotlinModule
 import tools.jackson.module.kotlin.test.expectFailure
 import kotlin.test.Test
