@@ -11,6 +11,6 @@ import kotlin.test.assertSame
 class TestGithub196 {
     @Test
     fun testUnitSingletonDeserialization() {
-        assertSame(_root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue("{}"), Unit)
+        assertSame(jacksonObjectMapper().readValue("{}"), Unit)
     }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.PropertyNamingStrategies
 import tools.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -45,11 +45,11 @@ class ParameterNameTests {
     private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000Z"}"""
     private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z"}"""
 
-    private val normalCasedMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+    private val normalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build()
 
-    private val pascalCasedMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+    private val pascalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .propertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE)
             .build()

@@ -14,7 +14,7 @@ class TestGithub42_FailOnNullForPrimitives {
 
     data class OptionalIntRequiredBoolean(val optInt: Int = -1, val reqBool: Boolean)
 
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+    val mapper = jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
             .build()
 
     @Rule

@@ -24,10 +24,10 @@ class TestGithub22 {
         val expectedJson = "\"test\""
         val expectedObj = StringValue("test")
 
-        val actualJson = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(expectedObj)
+        val actualJson = jacksonObjectMapper().writeValueAsString(expectedObj)
         assertEquals(expectedJson, actualJson)
 
-        val actualObj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<StringValue>("\"test\"")
+        val actualObj = jacksonObjectMapper().readValue<StringValue>("\"test\"")
         assertEquals(expectedObj.other, actualObj.other)
 
     }

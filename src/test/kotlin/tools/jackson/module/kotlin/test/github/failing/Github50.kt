@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped
 import tools.jackson.databind.exc.InvalidDefinitionException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -20,7 +20,7 @@ class TestGithub50 {
     fun testGithub50UnwrappedError() {
         val json = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
         expectFailure<InvalidDefinitionException>("GitHub #50 has been fixed!") {
-            val obj: Employee = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue(json)
+            val obj: Employee = jacksonObjectMapper().readValue(json)
             assertEquals(Name("John", "Smith"), obj.name)
             assertEquals("Manager", obj.position)
         }

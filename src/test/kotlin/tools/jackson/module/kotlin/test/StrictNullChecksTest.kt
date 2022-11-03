@@ -1,7 +1,7 @@
 package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
@@ -13,7 +13,7 @@ import kotlin.test.assertNull
 
 class StrictNullChecksTest {
     private val mapper = JsonMapper.builder()
-            .addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule { enable(StrictNullChecks) })
+            .addModule(kotlinModule { enable(StrictNullChecks) })
             .build()
 
     /** collection tests */
@@ -29,7 +29,7 @@ class StrictNullChecksTest {
 
     private data class ClassWithListOfInt(val samples: List<Int>)
 
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testListOfInt() {
         val json = """{"samples":[1, null]}"""
         mapper.readValue<ClassWithListOfInt>(json)
@@ -57,7 +57,7 @@ class StrictNullChecksTest {
 
     private data class ClassWithArrayOfInt(val samples: Array<Int>)
 
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testArrayOfInt() {
         val json = """{"samples":[1, null]}"""
         mapper.readValue<ClassWithArrayOfInt>(json)
@@ -85,7 +85,7 @@ class StrictNullChecksTest {
 
     private data class ClassWithMapOfStringToInt(val samples: Map<String, Int>)
 
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testMapOfStringToIntWithNullValue() {
         val json = """{ "samples": { "key": null } }"""
         mapper.readValue<ClassWithMapOfStringToInt>(json)
@@ -112,7 +112,7 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testListOfGenericWithNullValue() {
         val json = """{"samples":[1, null]}"""
         mapper.readValue<TestClass<List<Int>>>(json)
@@ -126,7 +126,7 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testMapOfGenericWithNullValue() {
         val json = """{ "samples": { "key": null } }"""
         mapper.readValue<TestClass<Map<String, Int>>>(json)
@@ -140,7 +140,7 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testArrayOfGenericWithNullValue() {
         val json = """{"samples":[1, null]}"""
         mapper.readValue<TestClass<Array<Int>>>(json)

@@ -18,7 +18,7 @@ class TestGithub120 {
 
     @Test
     fun testNestedJsonValue() {
-        val om = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val om = jacksonObjectMapper()
         val foo = Foo(4711L)
         val bar = Bar(foo)
         val asString = om.writeValueAsString(bar)

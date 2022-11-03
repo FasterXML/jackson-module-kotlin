@@ -39,7 +39,7 @@ class GitHub524 {
     fun test() {
         val sm = SimpleModule()
             .addSerializer(Serializer())
-        val writer = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().addModule(sm).build().writerWithDefaultPrettyPrinter()
+        val writer = jacksonMapperBuilder().addModule(sm).build().writerWithDefaultPrettyPrinter()
 
         // 18446744073709551615 is ULong.MAX_VALUE.
         assertEquals(
@@ -60,7 +60,7 @@ class GitHub524 {
 
     @Test
     fun failing() {
-        val writer = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+        val writer = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
 
         // JsonSerialize is not working now.
         assertNotEquals(

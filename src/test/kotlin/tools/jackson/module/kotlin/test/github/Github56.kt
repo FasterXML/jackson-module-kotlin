@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.exc.InvalidDefinitionException
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import org.junit.Before
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -58,7 +58,7 @@ class TestGithub56 {
 
     @Before
     fun setUp() {
-        mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        mapper = jacksonObjectMapper()
     }
 
     @Test

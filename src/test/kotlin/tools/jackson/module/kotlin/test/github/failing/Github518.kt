@@ -1,11 +1,11 @@
 package tools.jackson.module.kotlin.test.github.failing
 
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
+import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import kotlin.test.assertSame
 import org.junit.Test
 
@@ -20,7 +20,7 @@ class TestGithub518 {
      */
     @Test
     fun deserializeEmptyObjectToSingletonUnit() {
-        assertSame(_root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Unit>("{}"), Unit)
+        assertSame(jacksonObjectMapper().readValue<Unit>("{}"), Unit)
     }
 
     /**
@@ -30,7 +30,7 @@ class TestGithub518 {
     @Test
     fun deserializeEmptyObjectToSingletonUnitFails() {
         expectFailure<AssertionError>("GitHub #518 has been fixed!") {
-            assertSame(_root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Unit?>("{}"), Unit)
+            assertSame(jacksonObjectMapper().readValue<Unit?>("{}"), Unit)
         }
     }
 
@@ -41,7 +41,7 @@ class TestGithub518 {
      */
     @Test
     fun deserializeEmptyObjectToSingletonUnitWithSingletonSupport() {
-        val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper {
+        val objectMapper = jsonMapper {
             addModule(kotlinModule {
                 configure(
                     SingletonSupport,

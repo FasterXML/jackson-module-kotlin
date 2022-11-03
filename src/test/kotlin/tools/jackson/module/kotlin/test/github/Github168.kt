@@ -13,7 +13,7 @@ class TestGithub168 {
     @Suppress("UNUSED_PARAMETER")
     class TestClass(@JsonProperty(value = "foo", required = true) foo: String?, val baz: String)
 
-    final val MAPPER: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    final val MAPPER: ObjectMapper = jacksonObjectMapper()
 
     @Test
     fun testIfRequiredIsReallyRequiredWhenNullUsed() {
@@ -23,7 +23,7 @@ class TestGithub168 {
 
     @Test(expected = tools.jackson.module.kotlin.MissingKotlinParameterException::class)
     fun testIfRequiredIsReallyRequiredWhenAbsent() {
-        val obj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
+        val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
         assertEquals("whatever", obj.baz)
     }
 

@@ -37,7 +37,7 @@ class GitHub530 {
     @JvmInline
     value class JsonValueGetterImplementation(val value: Int) : JsonValueGetter
 
-    private val writer = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
+    private val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
 
     @Test
     fun valueParamGetterAnnotated() {

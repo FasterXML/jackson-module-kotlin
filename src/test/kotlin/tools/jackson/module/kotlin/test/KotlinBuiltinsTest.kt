@@ -9,7 +9,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class TestJacksonWithKotlinBuiltins {
-    private val mapper: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val mapper: ObjectMapper = jacksonObjectMapper()
 
     private data class ClassWithPair(val name: Pair<String, String>, val age: Int)
 

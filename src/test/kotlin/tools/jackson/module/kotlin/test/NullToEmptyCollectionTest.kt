@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import tools.jackson.module.kotlin.kotlinModule
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -27,7 +27,7 @@ class TestNullToEmptyCollection {
 
     private fun createMapper(): ObjectMapper {
         return JsonMapper.builder()
-                .addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule { enable(NullToEmptyCollection) })
+                .addModule(kotlinModule { enable(NullToEmptyCollection) })
                 .build()
     }
 }

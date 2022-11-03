@@ -16,10 +16,10 @@ class Github297JsonValueRegression {
         val expectedJson = "\"test\""
         val expectedObj = StringValue297("test")
 
-        val actualJson = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(expectedObj)
+        val actualJson = jacksonObjectMapper().writeValueAsString(expectedObj)
         assertEquals(expectedJson, actualJson)
 
-        val actualObj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<StringValue297>("\"test\"")
+        val actualObj = jacksonObjectMapper().readValue<StringValue297>("\"test\"")
         assertEquals(expectedObj, actualObj)
 
     }

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.module.kotlin.kotlinModule
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -37,7 +37,7 @@ class TestGithub153 {
 
     val xml = """<MyPojo><elements><element value="e1"/></elements></MyPojo>"""
 
-    val mapper = XmlMapper.builder().addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule()).build()
+    val mapper = XmlMapper.builder().addModule(kotlinModule()).build()
 
     @Test
     fun test_class() {

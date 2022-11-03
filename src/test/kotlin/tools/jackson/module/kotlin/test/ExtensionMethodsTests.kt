@@ -16,7 +16,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class TestExtensionMethods {
-    val mapper: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
+    val mapper: ObjectMapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
             .build()
 
     data class BasicPerson(val name: String, val age: Int)

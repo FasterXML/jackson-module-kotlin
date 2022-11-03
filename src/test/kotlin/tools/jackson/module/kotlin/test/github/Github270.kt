@@ -13,7 +13,7 @@ class TestGithub270 {
 
     @Test
     fun testPublicFieldOverlappingFunction() {
-        val json = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(Wrapper("Hello"))
+        val json = jacksonObjectMapper().writeValueAsString(Wrapper("Hello"))
         assertEquals("""{"upper":"HELLO"}""", json)
     }
 }

@@ -29,7 +29,7 @@ class TestGithub269 {
 
     @Test
     fun testGithub269WithFoo() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val testObject = Foo(Regex("test"))
         val testJson = mapper.writeValueAsString(testObject)
@@ -43,7 +43,7 @@ class TestGithub269 {
 
     @Test
     fun testGithub269WithBar() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val testObject = Bar(Regex("test"))
         val testJson = mapper.writeValueAsString(testObject)
@@ -57,7 +57,7 @@ class TestGithub269 {
 
     @Test
     fun testGithub269WithGoo() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val testObject = Goo(Regex("test_pattern_1"))
         val testJson = mapper.writeValueAsString(testObject)
@@ -68,7 +68,7 @@ class TestGithub269 {
 
     @Test
     fun testGithub269WithZoo() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val testObject = Zoo(Regex("test_pattern_1"))
         val testJson = mapper.writeValueAsString(testObject)

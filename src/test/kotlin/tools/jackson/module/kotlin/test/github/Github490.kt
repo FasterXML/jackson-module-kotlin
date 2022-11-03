@@ -9,7 +9,7 @@ import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
 
 class TestGithub490 {
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
     val value: DataClassWithAllNullableParams = mapper.readValue(
         "{" +
                 "\"jsonNodeValueWithNullAsDefaultProvidedNull\":null, " +

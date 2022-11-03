@@ -5,13 +5,13 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import tools.jackson.databind.deser.UnresolvedForwardReference
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
 
 class TestGithub54 {
     @Test
     fun testDeserWithIdentityInfo() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val entity1 = Entity1("test_entity1")
         val entity2 = Entity2("test_entity2", entity1 = entity1)

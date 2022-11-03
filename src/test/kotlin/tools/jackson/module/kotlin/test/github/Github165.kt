@@ -34,7 +34,7 @@ class TestGithub165 {
 
     @Test
     fun testJsonSetterCalledKotlin() {
-        val obj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Github165KotlinTest>("""{"name":"Fred","year":"1942"}""")
+        val obj = jacksonObjectMapper().readValue<Github165KotlinTest>("""{"name":"Fred","year":"1942"}""")
         assertEquals("1942", obj.showYear)
         assertEquals("Fred", obj.showName)
         assertTrue(obj.yearSetterCalled)
@@ -43,7 +43,7 @@ class TestGithub165 {
 
     @Test
     fun testJsonSetterCalledJava() {
-        val obj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val obj = jacksonObjectMapper()
             .readValue<tools.jackson.module.kotlin.test.github.Github165JavaTest>("""{"name":"Fred","year":"1942"}""")
         assertEquals("1942", obj.showYear)
         assertEquals("Fred", obj.showName)

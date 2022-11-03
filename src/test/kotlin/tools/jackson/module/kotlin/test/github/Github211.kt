@@ -15,7 +15,7 @@ class TestGithub211 {
         val original = Person("original", Address("Rivoli", "Paris"))
         val changes = JsonNodeFactory.instance.objectNode().put("username", "updated")
 
-        val merged = JsonMerger(_root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()).merge(original, changes)
+        val merged = JsonMerger(jacksonObjectMapper()).merge(original, changes)
 
         assertEquals(original.copy(username = "updated"), merged)
     }
@@ -24,7 +24,7 @@ class TestGithub211 {
     fun nested() {
         val original = Person("original", Address("Rivoli", "Paris"))
 
-        val merged = JsonMerger(_root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()).merge(original, nestedChanges())
+        val merged = JsonMerger(jacksonObjectMapper()).merge(original, nestedChanges())
 
         assertEquals(Person("updated", Address("Magenta", "Paris")), merged)
     }

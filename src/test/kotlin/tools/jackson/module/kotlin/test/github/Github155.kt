@@ -14,7 +14,7 @@ class TestGithub155 {
 
     @Test
     fun testGithub155() {
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Foo>("""
+        jacksonObjectMapper().readValue<Foo>("""
             {"name":"fred","age":12,"country":"Libertad","city":"Northville"}
         """.trimIndent())
 

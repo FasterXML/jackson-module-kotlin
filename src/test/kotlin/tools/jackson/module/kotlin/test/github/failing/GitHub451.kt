@@ -1,7 +1,7 @@
 package tools.jackson.module.kotlin.test.github.failing
 
 import tools.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.ComparisonFailure
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -17,7 +17,7 @@ class GitHub451 {
         fun getGraultGraply(): String = bazQux
     }
 
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
 
     @Test
     fun serializeTest() {

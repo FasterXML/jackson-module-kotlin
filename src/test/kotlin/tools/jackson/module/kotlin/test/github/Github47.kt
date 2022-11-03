@@ -12,7 +12,7 @@ class TestGithub47 {
 
     @Test
     fun testCaseInsensitivePropertyNames() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
             .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
             .build()
 

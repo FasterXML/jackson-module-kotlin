@@ -6,7 +6,7 @@ import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.assertEquals
 
 class TestGithub52 {
-    private val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val mapper = jacksonObjectMapper()
 
     @org.junit.Test
     fun testBooleanPropertyInConstructor() {

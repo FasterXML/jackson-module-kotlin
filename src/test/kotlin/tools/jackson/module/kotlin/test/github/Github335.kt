@@ -11,7 +11,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 class Github335Test {
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
 
     interface Payload
     data class UniquePayload(val data: String) : Payload

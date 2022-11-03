@@ -8,7 +8,7 @@ import kotlin.test.assertEquals
 class TestGithub80 {
     @Test
     fun testIsBool() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val example = IsBoolExample(true)
         val json = mapper.writeValueAsString(example)
@@ -20,7 +20,7 @@ class TestGithub80 {
 
     @Test
     fun testAnnotatedIsBool() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val example = IsBoolAnnotatedExample(true)
         val json = mapper.writeValueAsString(example)

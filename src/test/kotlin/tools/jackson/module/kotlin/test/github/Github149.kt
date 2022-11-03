@@ -35,7 +35,7 @@ class TestGithub149 {
 
     @Test
     fun testDeserializationOfManagedReferences() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
                 .changeDefaultVisibility { v -> v
                             .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
                             .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
@@ -77,7 +77,7 @@ class TestGithub149 {
 
     @Test
     fun testGithub129(){
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val c = Car(id = 100)
         val color = Color(id = 100, code = "#FFFFF").apply { car = c }
         c.colors.add(color)

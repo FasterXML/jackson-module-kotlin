@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import tools.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -18,7 +18,7 @@ import kotlin.test.fail
 private data class DataClassPerson(val name: String, val age: Int)
 
 class TestM11Changes {
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
 

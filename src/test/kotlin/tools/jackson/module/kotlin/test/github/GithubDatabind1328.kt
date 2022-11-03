@@ -11,7 +11,7 @@ import kotlin.test.assertEquals
 class TestGithubDatabind1328 {
     @Test
     fun testPolymorphicWithEnum() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val invite = mapper.readValue<Invite>(
                 """|{
                    |  "kind": "CONTACT",

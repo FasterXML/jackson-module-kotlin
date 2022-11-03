@@ -41,6 +41,10 @@
             <id>viartemev</id>
             <name>Vyacheslav Artemyev</name>
         </developer>
+        <developer>
+            <id>realyusufismail</id>
+            <name>Yusuf Arfan Ismail</name>
+        </developer>
     </developers>
     <url>https://github.com/FasterXML/jackson-module-kotlin</url>
     <scm>
@@ -55,7 +59,7 @@
         <version.kotlin>1.6.21</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
-        <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
+        <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>
         <packageVersion.package>${project.groupId}.kotlin</packageVersion.package>
 
         <!-- Configuration properties for the OSGi maven-bundle-plugin -->
@@ -214,16 +218,22 @@
         </plugins>
     </build>
 
+    <!-- Alas, need to include snapshot reference since otherwise can not find
+         snapshot of parent... -->
     <repositories>
         <repository>
-            <id>snapshots-repo</id>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-old-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots (old)</name>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
 </project>

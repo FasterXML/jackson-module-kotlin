@@ -1,7 +1,7 @@
 package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
@@ -10,7 +10,7 @@ import org.junit.Test
 
 class TestNullToDefault {
 	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
-		.addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule {
+		.addModule(kotlinModule {
             configure(
                 NullIsSameAsDefault,
                 allowDefaultingByNull

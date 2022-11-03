@@ -34,7 +34,7 @@ class TestPropertyRequiredness {
     }
 
     @Test fun shouldHandleFalseFailOnNullForPrimitives() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false).build()
         val testClass = TestClass::class.java
         "a".isOptionalForDeserializationOf(testClass, mapper)
@@ -58,7 +58,7 @@ class TestPropertyRequiredness {
     }
 
     @Test fun shouldHandleTrueFailOnNullForPrimitives() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true).build()
         val testClass = TestClass::class.java
         "a".isRequiredForDeserializationOf(testClass, mapper)
@@ -92,7 +92,7 @@ class TestPropertyRequiredness {
     )
 
     @Test fun shouldHandleFalseFailOnNullForPrimitivesForDataClasses() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false).build()
         val testClass = TestDataClass::class.java
 
@@ -128,7 +128,7 @@ class TestPropertyRequiredness {
     }
 
     @Test fun shouldHandleTrueFailOnNullForPrimitivesForDataClasses() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+        val mapper = jacksonMapperBuilder()
             .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true).build()
         val testClass = TestDataClass::class.java
 

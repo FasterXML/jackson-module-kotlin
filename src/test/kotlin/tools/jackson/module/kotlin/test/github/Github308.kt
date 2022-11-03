@@ -25,7 +25,7 @@ class TestGithub308 {
 
     @Test
     fun createTestDto() {
-        val dto: TestDto = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue("""{"id":12345}""")
+        val dto: TestDto = jacksonObjectMapper().readValue("""{"id":12345}""")
 
         assertNotNull(dto)
         assertNull(dto.id)

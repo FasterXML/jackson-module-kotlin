@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
+import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
@@ -12,7 +12,7 @@ import org.junit.Test
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 class TestObjectSingleton {
     val mapper: ObjectMapper = JsonMapper.builder()
-        .addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule { enable(SingletonSupport) })
+        .addModule(kotlinModule { enable(SingletonSupport) })
         .build()
 
     object Singleton {

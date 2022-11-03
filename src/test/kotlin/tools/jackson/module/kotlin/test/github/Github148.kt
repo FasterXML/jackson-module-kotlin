@@ -33,7 +33,7 @@ class TestGithub148 {
     )
 
     class DemoApplicationTests {
-        val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val objectMapper = jacksonObjectMapper()
 
         @Test
         fun correntBean() {

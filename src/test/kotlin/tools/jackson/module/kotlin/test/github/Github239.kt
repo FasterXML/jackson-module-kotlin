@@ -46,7 +46,7 @@ class TestGithub239 {
         }
     ]"""
 
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
 
     @Test
     fun test_implicit_subclasses() {

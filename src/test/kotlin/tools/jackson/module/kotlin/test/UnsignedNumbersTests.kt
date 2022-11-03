@@ -12,7 +12,7 @@ import org.junit.Assert.assertThrows
 
 internal class UnsignedNumbersTests {
 
-    val mapper: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper: ObjectMapper = jacksonObjectMapper()
 
     @Test
     fun `test UByte`() {

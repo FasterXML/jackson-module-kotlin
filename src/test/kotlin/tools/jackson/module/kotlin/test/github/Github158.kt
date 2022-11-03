@@ -20,7 +20,7 @@ class TestGithub158 {
 
     @Test
     fun testEnumSerDeser() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val original = SampleContainer(SampleImpl.One)
 

@@ -24,7 +24,7 @@ class TestGithub180 {
 
     @Test
     fun testMissingProperty() {
-        val obj = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<TestClass>("""{}""")
+        val obj = jacksonObjectMapper().readValue<TestClass>("""{}""")
         assertNull(obj.instantName)
         assertNull(obj.someInt)
     }

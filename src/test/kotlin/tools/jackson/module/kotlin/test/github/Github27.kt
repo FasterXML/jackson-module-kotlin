@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class TestGithub27 {
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
+    val mapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
             .build()
 
     private data class ClassWithNullableInt(val sample: Int?)

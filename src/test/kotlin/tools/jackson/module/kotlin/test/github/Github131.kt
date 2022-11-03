@@ -12,7 +12,7 @@ class TestGithub131 {
 
     @Test
     fun testFailureCase() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val x = mapper.readValue<DerivedClass>("""{"name":"abc"}""")
         assertEquals(DerivedClass("abc").name, x.name)
     }

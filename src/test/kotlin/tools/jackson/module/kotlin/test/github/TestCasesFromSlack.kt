@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import org.junit.Test
 
 class TestCasesFromSlack1 {
@@ -30,7 +30,7 @@ class TestCasesFromSlack1 {
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
 
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Event>("""
+        jacksonObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
     }
@@ -56,7 +56,7 @@ class TestCasesFromSlack2 {
     }
 
     @Test fun testCzarSpringThing2() {
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Event>("""
+        jacksonObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
     }

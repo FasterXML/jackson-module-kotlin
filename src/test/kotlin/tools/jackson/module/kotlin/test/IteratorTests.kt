@@ -12,7 +12,7 @@ class TestIteratorSubclass {
     class TinyPerson(val name: String, val age: Int)
     class KotlinPersonIterator(private val personList: List<TinyPerson>) : Iterator<TinyPerson> by personList.iterator()
 
-    val mapper: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
+    val mapper: ObjectMapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
             .build()
 
     @Test

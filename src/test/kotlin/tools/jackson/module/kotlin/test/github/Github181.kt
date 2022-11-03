@@ -21,9 +21,9 @@ class TestGithub181 {
     @Test
     fun testReflectionExceptionOnDelegatedMap() {
         val testInstance = HealthStatusMap(mapOf("failed" to HealthStatus.FAILED, "okey dokey" to HealthStatus.OK))
-        val json = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(testInstance)
+        val json = jacksonObjectMapper().writeValueAsString(testInstance)
         assertEquals("{\"failed\":\"FAILED\",\"okey dokey\":\"OK\"}", json)
-        val newInstance = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<HealthStatusMap>(json)
+        val newInstance = jacksonObjectMapper().readValue<HealthStatusMap>(json)
         assertEquals(testInstance, newInstance)
     }
 }

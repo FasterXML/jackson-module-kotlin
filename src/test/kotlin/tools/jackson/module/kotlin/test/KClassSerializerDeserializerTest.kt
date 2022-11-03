@@ -18,7 +18,7 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 
 class KClassSerializerDeserializerTest {
-    val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+    val objectMapper = jacksonMapperBuilder()
             .addModule(SimpleModule()
                     .addSerializer(Double::class, RoundingSerializer())
                     .addDeserializer(Double::class, RoundingDeserializer()))

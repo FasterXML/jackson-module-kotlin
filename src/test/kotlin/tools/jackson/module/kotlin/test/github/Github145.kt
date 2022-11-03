@@ -9,7 +9,7 @@ import org.junit.Test
 
 @Suppress("UNUSED_VARIABLE")
 class TestGithub145 {
-    private val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val objectMapper = jacksonObjectMapper()
 
     @Test
     fun workingTestWithoutKotlinModule() {

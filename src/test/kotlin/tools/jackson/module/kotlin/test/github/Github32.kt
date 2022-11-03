@@ -18,7 +18,7 @@ class TestGithub32 {
     var thrown: ExpectedException = ExpectedException.none()
 
     @Test fun `valid mandatory data class constructor param`() {
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Person>("""
+        jacksonObjectMapper().readValue<Person>("""
         {
             "firstName": "James",
             "lastName": "Bond"
@@ -30,7 +30,7 @@ class TestGithub32 {
         thrown.expect(missingFirstNameParameter())
         thrown.expect(pathMatches("firstName"))
         thrown.expect(location(line = 3, column = 1))
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Person>("""
+        jacksonObjectMapper().readValue<Person>("""
         {
             "lastName": "Bond"
         }
@@ -41,7 +41,7 @@ class TestGithub32 {
         thrown.expect(missingFirstNameParameter())
         thrown.expect(pathMatches("firstName"))
         thrown.expect(location(line = 4, column = 1))
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Person>("""
+        jacksonObjectMapper().readValue<Person>("""
         {
             "firstName": null,
             "lastName": "Bond"
@@ -53,7 +53,7 @@ class TestGithub32 {
         thrown.expect(missingFirstNameParameter())
         thrown.expect(pathMatches("person.firstName"))
         thrown.expect(location(line = 4, column = 5))
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<WrapperWithDefaultContructor>("""
+        jacksonObjectMapper().readValue<WrapperWithDefaultContructor>("""
         {
             "person": {
                 "lastName": "Bond"
@@ -66,7 +66,7 @@ class TestGithub32 {
         thrown.expect(missingFirstNameParameter())
         thrown.expect(pathMatches("person.firstName"))
         thrown.expect(location(line = 4, column = 5))
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<WrapperWithArgsContructor>("""
+        jacksonObjectMapper().readValue<WrapperWithArgsContructor>("""
         {
             "person": {
                 "lastName": "Bond"
@@ -79,7 +79,7 @@ class TestGithub32 {
         thrown.expect(missingFirstNameParameter())
         thrown.expect(pathMatches("people[0].firstName"))
         thrown.expect(location(line = 7, column = 9))
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().readValue<Crowd>("""
+        jacksonObjectMapper().readValue<Crowd>("""
         {
             "people": [
                 {

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.ComparisonFailure
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class GitHub478Test {
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper {
+    val mapper = jsonMapper {
         addModule(kotlinModule())
         changeDefaultPropertyInclusion { it.withValueInclusion(JsonInclude.Include.NON_DEFAULT) }
     }

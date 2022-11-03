@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 // verifying work around for this issue, no bug present
 
 class TestGithub179 {
-    val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val objectMapper = jacksonObjectMapper()
 
     @Test
     fun listOfStrings() {

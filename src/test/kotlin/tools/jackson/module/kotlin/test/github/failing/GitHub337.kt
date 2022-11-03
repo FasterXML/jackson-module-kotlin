@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
  * Fields named "is…" are only serialized if they are Boolean
  */
 class TestGitHub337 {
-    private val mapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper {
+    private val mapper = jsonMapper {
         enable(SORT_PROPERTIES_ALPHABETICALLY)
         changeDefaultPropertyInclusion { it.withValueInclusion(JsonInclude.Include.ALWAYS) }
     }

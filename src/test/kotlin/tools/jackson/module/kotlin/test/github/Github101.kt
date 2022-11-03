@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 class TestGithub101_JacksonInjectTest {
     @Test
     fun `JacksonInject-annotated parameters are populated when constructing Kotlin data classes`() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val contextualValue = UUID.randomUUID()
         assertEquals(SomeDatum("test", contextualValue),
                 mapper.readerFor(SomeDatum::class.java)

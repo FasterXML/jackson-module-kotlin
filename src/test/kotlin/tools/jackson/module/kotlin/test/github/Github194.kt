@@ -13,7 +13,7 @@ class TestGithub194 {
 
     @Test
     fun testIdentityInfo() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val value = mapper.readValue(json, WithIdentity::class.java)
         assertEquals(id, value.id)
         assertEquals(id.toString(), value.idString)
@@ -31,7 +31,7 @@ class TestGithub194 {
 
     @Test
     fun testIdentityInfo_WithDefaultId() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val value = mapper.readValue(json, WithIdentityAndDefaultId::class.java)
         assertEquals(id, value.id)
         assertEquals(id.toString(), value.idString)

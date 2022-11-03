@@ -15,7 +15,7 @@ class TestGithub161 {
     @Test
     fun testPrimitiveBeingZeroed() {
         val json = """{"foo":17}"""
-        val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+        val objectMapper = jacksonMapperBuilder().enable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
                 .build()
         try {
             objectMapper.readValue(json, Foo::class.java)

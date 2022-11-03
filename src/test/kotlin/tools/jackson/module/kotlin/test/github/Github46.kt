@@ -1,6 +1,6 @@
 package tools.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import org.junit.Assert
 import org.junit.Test
 import kotlin.reflect.full.primaryConstructor
@@ -10,7 +10,7 @@ class TestGithub46 {
     @Test fun `map 32 properties`() {
         // given
         val json = """{"prop1":true,"prop2":true,"prop3":true,"prop4":true,"prop5":true,"prop6":true,"prop7":true,"prop8":true,"prop9":true,"prop10":true,"prop11":true,"prop12":true,"prop13":true,"prop14":true,"prop15":true,"prop16":true,"prop17":true,"prop18":true,"prop19":true,"prop20":true,"prop21":true,"prop22":true,"prop23":true,"prop24":true,"prop25":true,"prop26":true,"prop27":true,"prop28":true,"prop29":true,"prop30":true,"prop31":true,"prop32":true}"""
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         // when
         val data: TestData = mapper.readValue(json)

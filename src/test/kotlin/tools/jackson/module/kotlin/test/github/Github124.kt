@@ -11,7 +11,7 @@ class TestGithub124 {
     // test for [module-kotlin#124]: broken in 2.9.3, fixed in 2.9.6
     @Test
     fun test() {
-        val objMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val objMapper = jacksonObjectMapper()
 
         // with 2.9.3 prints
         //     Foo(name=foo, query=NonSerializable, rawQuery=bar)

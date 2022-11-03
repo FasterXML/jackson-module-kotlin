@@ -7,7 +7,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 
 class TestGithub356 {
-    private val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val mapper = jacksonObjectMapper()
 
     @Test
     fun deserializeInlineClass() {

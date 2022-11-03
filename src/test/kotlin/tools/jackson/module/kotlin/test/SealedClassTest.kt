@@ -6,13 +6,13 @@ import com.fasterxml.jackson.annotation.JsonValue
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.exc.MismatchedInputException
 import tools.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.test.SealedClassTest.SuperClass.B
+import tools.jackson.module.kotlin.test.SealedClassTest.SuperClass.B
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class SealedClassTest {
-    private val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val mapper = jacksonObjectMapper()
 
     /**
      * Json of a Serialized B-Object.

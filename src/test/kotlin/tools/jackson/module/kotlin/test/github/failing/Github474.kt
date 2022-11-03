@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.ComparisonFailure
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -16,7 +16,7 @@ class TestGithub474 {
         expectFailure<ComparisonFailure>("GitHub #474 has been fixed!") {
             assertEquals(
                 """{"child-prop":"foo","parent-prop":"foo"}""",
-                _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(Child("foo"))
+                jacksonObjectMapper().writeValueAsString(Child("foo"))
             )
         }
     }

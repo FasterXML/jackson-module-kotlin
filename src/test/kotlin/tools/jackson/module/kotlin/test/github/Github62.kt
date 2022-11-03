@@ -9,7 +9,7 @@ class TestGithub62 {
     fun testAnonymousClassSerialization() {
         val externalValue = "ggg"
 
-        val result = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(object {
+        val result = jacksonObjectMapper().writeValueAsString(object {
             val value = externalValue
         })
 

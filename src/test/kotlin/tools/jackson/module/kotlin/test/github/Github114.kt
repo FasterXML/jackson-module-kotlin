@@ -25,7 +25,7 @@ class TestGithub114 {
 
     @Test
     fun testCompanionObjectCreatorWithDefaultParameters() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
 
         val foo = mapper.readValue<Foo>("""{"baz": "bazValue"}""")
         println(foo)
@@ -37,7 +37,7 @@ class TestGithub114 {
 
     @Test
     fun otherTestVariation() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val mapper = jacksonObjectMapper()
         val testObj = mapper.readValue<Obj>("""{"id":1}""")
 
         assertEquals("yes", testObj.prop)

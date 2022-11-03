@@ -12,7 +12,7 @@ class TestGithub210 {
     class ExampleNoFail(val regexItem: RegexLike, val stringItem: String)
     class RegexLike(val pattern: String, val options: List<String>)
 
-    val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    val mapper = jacksonObjectMapper()
 
     @Test
     fun testSerDesOfRegex() {

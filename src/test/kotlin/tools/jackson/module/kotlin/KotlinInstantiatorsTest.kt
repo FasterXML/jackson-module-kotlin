@@ -7,7 +7,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class KotlinInstantiatorsTest {
-    private val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+    private val mapper = jacksonObjectMapper()
     private val deserConfig = mapper.deserializationConfig()
 
     private val kotlinInstantiators = KotlinInstantiators(

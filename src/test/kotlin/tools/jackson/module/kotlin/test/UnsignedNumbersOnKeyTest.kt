@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 
 internal class UnsignedNumbersOnKeyTest {
     companion object {
-        val MAPPER = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val MAPPER = jacksonObjectMapper()
     }
 
     class ForUByte {

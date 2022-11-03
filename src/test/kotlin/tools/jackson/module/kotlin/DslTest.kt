@@ -2,12 +2,12 @@ package tools.jackson.module.kotlin
 
 import tools.jackson.core.json.JsonReadFeature
 import tools.jackson.core.json.JsonWriteFeature
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
+import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
+import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
+import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -18,19 +18,19 @@ class DslTest {
 
     @Test
     fun createModuleWithoutUsingInitializer() {
-        val module = _root_ide_package_.tools.jackson.module.kotlin.kotlinModule()
+        val module = kotlinModule()
         assertNotNull(module)
     }
 
     @Test
     fun createModuleWithEmptyInitializer() {
-        val module = _root_ide_package_.tools.jackson.module.kotlin.kotlinModule {}
+        val module = kotlinModule {}
         assertNotNull(module)
     }
 
     @Test
     fun createModuleWithBuilderOptions() {
-        val module = _root_ide_package_.tools.jackson.module.kotlin.kotlinModule {
+        val module = kotlinModule {
             withReflectionCacheSize(123)
             enable(NullToEmptyCollection)
             enable(NullToEmptyMap)
@@ -50,19 +50,19 @@ class DslTest {
 
     @Test
     fun createJsonMapperWithoutUsingInitializer() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper()
+        val mapper = jsonMapper()
         assertNotNull(mapper)
     }
 
     @Test
     fun createJsonMapperWithEmptyInitializer() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper {}
+        val mapper = jsonMapper {}
         assertNotNull(mapper)
     }
 
     @Test
     fun createJsonMapperWithBuilderOptions() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jsonMapper {
+        val mapper = jsonMapper {
             enable(JsonReadFeature.ALLOW_JAVA_COMMENTS)
             disable(JsonWriteFeature.QUOTE_PROPERTY_NAMES)
             configure(JsonReadFeature.ALLOW_SINGLE_QUOTES, true)
@@ -76,6 +76,6 @@ class DslTest {
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_JAVA_COMMENTS))
         assertFalse(mapper.isEnabled(JsonWriteFeature.QUOTE_PROPERTY_NAMES))
         assertTrue(mapper.isEnabled(JsonReadFeature.ALLOW_SINGLE_QUOTES))
-        assertTrue(mapper.registeredModules.any { it.moduleName == "com.fasterxml.jackson.module.kotlin.KotlinModule" })
+        assertTrue(mapper.registeredModules.any { it.moduleName == "tools.jackson.module.kotlin.KotlinModule" })
     }
 }

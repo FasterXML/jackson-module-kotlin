@@ -14,12 +14,12 @@ class TestGithub167 {
 
     @Test
     fun withKotlinExtension() {
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(samObject)
+        jacksonObjectMapper().writeValueAsString(samObject)
     }
 
     @Test
     fun withKotlinExtension_Synthetic() {
-        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(samObjectSynthetic)
+        jacksonObjectMapper().writeValueAsString(samObjectSynthetic)
     }
 
 

@@ -23,8 +23,8 @@ import java.net.URL
 import java.util.*
 import kotlin.reflect.KClass
 
-fun kotlinModule(initializer: tools.jackson.module.kotlin.KotlinModule.Builder.() -> Unit = {}): _root_ide_package_.tools.jackson.module.kotlin.KotlinModule {
-    val builder = _root_ide_package_.tools.jackson.module.kotlin.KotlinModule.Builder()
+fun kotlinModule(initializer: tools.jackson.module.kotlin.KotlinModule.Builder.() -> Unit = {}): KotlinModule {
+    val builder = KotlinModule.Builder()
     builder.initializer()
     return builder.build()
 }
@@ -36,8 +36,8 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
 }
 
 fun jacksonObjectMapper(): ObjectMapper =
-    _root_ide_package_.tools.jackson.module.kotlin.jsonMapper { addModule(kotlinModule()) }
-fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(_root_ide_package_.tools.jackson.module.kotlin.kotlinModule())
+    jsonMapper { addModule(kotlinModule()) }
+fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
 //fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(KotlinModule())

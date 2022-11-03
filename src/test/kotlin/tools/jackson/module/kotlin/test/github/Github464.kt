@@ -7,7 +7,7 @@ import tools.jackson.databind.SerializerProvider
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.StdSerializer
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import tools.jackson.module.kotlin.KotlinModule
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Ignore
 import org.junit.Test
@@ -70,7 +70,7 @@ class Github464 {
 
         @Test
         fun test() {
-            val writer: ObjectWriter = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+            val writer: ObjectWriter = jacksonMapperBuilder()
                 .addModule(
                     SimpleModule()
                         .setDefaultNullKeySerializer(NullValueClassKeySerializer)
@@ -113,7 +113,7 @@ class Github464 {
 
         @Test
         fun nullValueSerializerTest() {
-            val writer = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder()
+            val writer = jacksonMapperBuilder()
                 .addModule(
                     SimpleModule()
                         .setDefaultNullKeySerializer(NullValueClassKeySerializer)
@@ -173,7 +173,7 @@ class Github464 {
 
         @Test
         fun simpleTest() {
-            val om: ObjectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().addModule(sm).build()
+            val om: ObjectMapper = jacksonMapperBuilder().addModule(sm).build()
 
             assertEquals("""{"1":"2"}""", om.writeValueAsString(target))
         }

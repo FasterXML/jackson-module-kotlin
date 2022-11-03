@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.KeyDeserializer
 import tools.jackson.databind.module.SimpleModule
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.module.kotlin.*
 import org.junit.Test
 
 class TestGithub57 {
@@ -11,7 +11,7 @@ class TestGithub57 {
 
     @Test
     fun testProblemsWithMaps() {
-        val mapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonMapperBuilder().addModule(KotlinPairKeySerializerModule())
+        val mapper = jacksonMapperBuilder().addModule(KotlinPairKeySerializerModule())
                 .build()
         val test = Github57Data(mapOf(Pair("p1", "p2") to "value1"))
         val jsonString = mapper.writeValueAsString(test) //works: {"map":{"(string1, string2)":"string3"}}

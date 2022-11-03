@@ -13,7 +13,7 @@ class TestGithub104 {
 
     @Test
     fun testIt() {
-        val objectMapper = _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper()
+        val objectMapper = jacksonObjectMapper()
 
         val jsonValue = """{"name":"TestName"}"""
 

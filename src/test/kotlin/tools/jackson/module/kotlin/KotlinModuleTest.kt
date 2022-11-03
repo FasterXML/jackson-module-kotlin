@@ -1,12 +1,12 @@
 package tools.jackson.module.kotlin
 
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
+import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
+import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
+import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
+import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
+import tools.jackson.module.kotlin.SingletonSupport.DISABLED
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
