@@ -15,7 +15,7 @@
     <name>jackson-module-kotlin</name>
     <version>2.14.0-SNAPSHOT</version>
     <packaging>bundle</packaging>
-    <description>Add-on module for Jackson (https://github.tools/jackson/) to support
+    <description>Add-on module for Jackson (https://github.com/FasterXML/jackson/) to support
         Kotlin language, specifically introspection of method/constructor parameter names,
         without having to add explicit property name annotation.
     </description>
@@ -41,7 +41,7 @@
             <name>Vyacheslav Artemyev</name>
         </developer>
     </developers>
-    <url>https://github.tools/jackson-module-kotlin</url>
+    <url>https://github.com/FasterXML/jackson-module-kotlin</url>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -52,7 +52,7 @@
     <scm>
         <connection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</connection>
         <developerConnection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</developerConnection>
-        <url>https://github.tools/jackson-module-kotlin</url>
+        <url>https://github.com/FasterXML/jackson-module-kotlin</url>
         <tag>HEAD</tag>
     </scm>
 
@@ -66,13 +66,13 @@
         <version.kotlin>1.5.32</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
-        <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>
+        <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
         <packageVersion.package>${project.groupId}.kotlin</packageVersion.package>
 
         <!-- Configuration properties for the OSGi maven-bundle-plugin -->
         <osgi.includeResource>src/main/resources/, META-INF=target/classes/META-INF</osgi.includeResource>
         <osgi.import>
-            tools.jackson.*
+            com.fasterxml.jackson.*
             ,kotlin.*
             ,kotlin.reflect.*
         </osgi.import>
@@ -200,7 +200,7 @@
                 <configuration>
                     <oldVersion>
                         <dependency>
-                            <groupId>tools.jackson.module</groupId>
+                            <groupId>com.fasterxml.jackson.module</groupId>
                             <artifactId>jackson-module-kotlin</artifactId>
 			    <!-- 16-Mar-2022, tatu: Sometimes may need to change baseline or
                                     use exclusions. But for now try keep 2.14 binary compatible
@@ -222,15 +222,15 @@
                             <!--
                                 TODO Remove after release of 2.14 and update the oldVersion above to 2.14.
                             -->
-                            <exclude>tools.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassSerializer$StaticJsonValue</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassSerializer$Unbox</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassUnboxSerializer.serialize(java.lang.Object, tools.jackson.core.JsonGenerator, tools.jackson.databind.SerializerProvider)</exclude>
-                            <exclude>tools.jackson.databind.jsonschema.SchemaAware[tools.jackson.databind.jsonschema.SchemaAware]</exclude>
-                            <exclude>tools.jackson.databind.jsonFormatVisitors.JsonFormatVisitable[tools.jackson.databind.jsonFormatVisitors.JsonFormatVisitable]:INTERFACE_REMOVED, java.io.Serializable[java.io.Serializable]</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ClosedRangeMixin</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$StaticJsonValue</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$Unbox</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer.serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)</exclude>
+                            <exclude>com.fasterxml.jackson.databind.jsonschema.SchemaAware[com.fasterxml.jackson.databind.jsonschema.SchemaAware]</exclude>
+                            <exclude>com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable[com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable]:INTERFACE_REMOVED, java.io.Serializable[java.io.Serializable]</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ClosedRangeMixin</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
