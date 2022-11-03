@@ -9,8 +9,8 @@ module com.fasterxml.jackson.kotlin {
     requires com.fasterxml.jackson.annotation;
     requires com.fasterxml.jackson.databind;
 
-    exports tools.jackson.module.kotlin;
+    exports com.fasterxml.jackson.module.kotlin;
 
     provides com.fasterxml.jackson.databind.Module with
-        tools.jackson.module.kotlin.KotlinModule;
+        com.fasterxml.jackson.module.kotlin.KotlinModule;
 }

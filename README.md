@@ -40,16 +40,16 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
 // With Jackson 2.12 and later
-import tools.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 ...
 val mapper = jacksonObjectMapper()
 // or
-import tools.jackson.module.kotlin.registerKotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 ...
 val mapper = ObjectMapper().registerKotlinModule()
 // or
-import tools.jackson.module.kotlin.jsonMapper
-import tools.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 ...
 val mapper = jsonMapper {
   addModule(kotlinModule())
@@ -61,7 +61,7 @@ val mapper = jsonMapper {
 
 ```kotlin
 import com.fasterxml.jackson.databind.json.JsonMapper
-import tools.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 ...
 val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 ```
@@ -73,7 +73,7 @@ val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 
 ```kotlin
 import com.fasterxml.jackson.databind.ObjectMapper
-import tools.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 ...
 val mapper = ObjectMapper().registerModule(KotlinModule())
 ```
@@ -81,8 +81,8 @@ val mapper = ObjectMapper().registerModule(KotlinModule())
 
 A simple data class example:
 ```kotlin
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 
 data class MyStateObject(val name: String, val age: Int)
 
@@ -104,7 +104,7 @@ Also, there are some convenient operator overloading extension functions for Jso
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import tools.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.*
 
 // ...
 val objectNode: ObjectNode = JsonNodeFactory.instance.objectNode()
@@ -197,7 +197,7 @@ when(root){
 # Configuration
 
 The Kotlin module may be given a few configuration parameters at construction time;
-see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/tools/jackson/module/kotlin/KotlinModule.kt)
+see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt)
 for details on what options are available and what they do.
 
 ```kotlin
@@ -262,11 +262,11 @@ If you are going to write code, choose the appropriate base branch:
 
 ### Failing tests
 
-There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/tools/jackson/module/kotlin/test/github/failing)
+There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
 package but a few as part of other test suites.  Instead of ignoring these tests (with JUnit's `@Ignore` annotation)
 or excluding them from being run as part of automated testing, the tests are written to demonstrate the failure
 (either making a call that throws an exception or with an assertion that fails) but not fail the build, except if the
 underlying issue is fixed.  This allows us to know when the tested functionality has been incidentally fixed by
 unrelated code changes.
 
-See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/tools/jackson/module/kotlin/README.md) for more information.
+See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.

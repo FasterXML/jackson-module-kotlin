@@ -66,7 +66,7 @@
         <version.kotlin>1.5.32</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
-        <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>
+        <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
         <packageVersion.package>${project.groupId}.kotlin</packageVersion.package>
 
         <!-- Configuration properties for the OSGi maven-bundle-plugin -->
@@ -222,15 +222,15 @@
                             <!--
                                 TODO Remove after release of 2.14 and update the oldVersion above to 2.14.
                             -->
-                            <exclude>tools.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassSerializer$StaticJsonValue</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassSerializer$Unbox</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassUnboxSerializer.serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$StaticJsonValue</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassSerializer$Unbox</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer.serialize(java.lang.Object, com.fasterxml.jackson.core.JsonGenerator, com.fasterxml.jackson.databind.SerializerProvider)</exclude>
                             <exclude>com.fasterxml.jackson.databind.jsonschema.SchemaAware[com.fasterxml.jackson.databind.jsonschema.SchemaAware]</exclude>
                             <exclude>com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable[com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatVisitable]:INTERFACE_REMOVED, java.io.Serializable[java.io.Serializable]</exclude>
-                            <exclude>tools.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
-                            <exclude>tools.jackson.module.kotlin.ClosedRangeMixin</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ValueClassUnboxSerializer</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ClosedRangeMixin</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
