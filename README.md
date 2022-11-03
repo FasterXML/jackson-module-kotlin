@@ -10,7 +10,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.13.4` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.13)
+* release `2.13.4` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.tools/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.tools/jackson-module-kotlin/actions?query=branch%3A2.13)
 * release `2.12.7` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
 * release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 * release `2.10.5` (for Jackson `2.10.x`)
@@ -19,13 +19,13 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+"
+implementation "tools.jackson.module:jackson-module-kotlin:2.13.+"
 ```
 
 Maven:
 ```xml
 <dependency>
-    <groupId>com.fasterxml.jackson.module</groupId>
+    <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <version>2.13.4</version>
 </dependency>
@@ -40,16 +40,16 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
 // With Jackson 2.12 and later
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 ...
 val mapper = jacksonObjectMapper()
 // or
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import tools.jackson.module.kotlin.registerKotlinModule
 ...
 val mapper = ObjectMapper().registerKotlinModule()
 // or
-import com.fasterxml.jackson.module.kotlin.jsonMapper
-import com.fasterxml.jackson.module.kotlin.kotlinModule
+import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 ...
 val mapper = jsonMapper {
   addModule(kotlinModule())
@@ -60,8 +60,8 @@ val mapper = jsonMapper {
   <summary>Jackson versions prior to 2.10–2.11</summary>
 
 ```kotlin
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.KotlinModule
 ...
 val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 ```
@@ -72,8 +72,8 @@ val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
   <summary>Jackson versions prior to 2.10</summary>
 
 ```kotlin
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.KotlinModule
 ...
 val mapper = ObjectMapper().registerModule(KotlinModule())
 ```
@@ -81,8 +81,8 @@ val mapper = ObjectMapper().registerModule(KotlinModule())
 
 A simple data class example:
 ```kotlin
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.readValue
 
 data class MyStateObject(val name: String, val age: Int)
 
@@ -101,10 +101,10 @@ Therefore, using `readValue()` extension without the `Class` parameter will reif
 
 Also, there are some convenient operator overloading extension functions for JsonNode inheritors.
 ```kotlin
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
-import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import com.fasterxml.jackson.module.kotlin.*
+import tools.jackson.databind.node.ArrayNode
+import tools.jackson.databind.node.ObjectNode
+import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.module.kotlin.*
 
 // ...
 val objectNode: ObjectNode = JsonNodeFactory.instance.objectNode()
@@ -153,7 +153,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 # Caveats
 
 * The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation, e.g. `@JvmStatic`).  In these cases, annotate only one method as `JsonCreator`.
-* Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
+* Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.tools/jackson-module-kotlin/issues/4) for easy workarounds.
 * If using proguard:
     * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
     * If you're getting `java.lang.ExceptionInInitializerError`, you may also need: `-keep class kotlin.reflect.** { *; }`
@@ -174,8 +174,8 @@ These Kotlin classes are supported with the following fields for serialization/d
 
 # Sealed classes without @JsonSubTypes
 Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
-at compile-time to Kotlin. This makes `com.fasterxml.jackson.annotation.JsonSubTypes` redundant.
-A `com.fasterxml.jackson.annotation.@JsonTypeInfo` annotation at the base-class is still necessary. 
+at compile-time to Kotlin. This makes `tools.jackson.annotation.JsonSubTypes` redundant.
+A `tools.jackson.annotation.@JsonTypeInfo` annotation at the base-class is still necessary. 
 
 ```kotlin
   @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
@@ -197,7 +197,7 @@ when(root){
 # Configuration
 
 The Kotlin module may be given a few configuration parameters at construction time;
-see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt)
+see the [inline documentation](https://github.tools/jackson-module-kotlin/blob/master/src/main/kotlin/tools/jackson/module/kotlin/KotlinModule.kt)
 for details on what options are available and what they do.
 
 ```kotlin
@@ -244,13 +244,13 @@ active maintainers (at this point meaning both Drew and Vyacheslav :) ).
 ## Releases & Branches
 
 This module follows the release schedule of the rest of Jackson—the current version is consistent
-across all Jackson components & modules. See the [jackson-databind README](https://github.com/FasterXML/jackson#actively-developed-versions) for details.
+across all Jackson components & modules. See the [jackson-databind README](https://github.tools/jackson#actively-developed-versions) for details.
 
 ## Contributing
 
 We welcome any contributions—reports of issues, ideas for enhancements, and pull requests related to either of those.
 
-See the [main Jackson contribution guidlines](https://github.com/FasterXML/jackson/blob/master/CONTRIBUTING.md) for more details.
+See the [main Jackson contribution guidlines](https://github.tools/jackson/blob/master/CONTRIBUTING.md) for more details.
 
 ### Branches
 
@@ -262,11 +262,11 @@ If you are going to write code, choose the appropriate base branch:
 
 ### Failing tests
 
-There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
+There are a number of tests for functionality that is broken, mostly in the [failing](https://github.tools/jackson-module-kotlin/tree/master/src/test/kotlin/tools/jackson/module/kotlin/test/github/failing)
 package but a few as part of other test suites.  Instead of ignoring these tests (with JUnit's `@Ignore` annotation)
 or excluding them from being run as part of automated testing, the tests are written to demonstrate the failure
 (either making a call that throws an exception or with an assertion that fails) but not fail the build, except if the
 underlying issue is fixed.  This allows us to know when the tested functionality has been incidentally fixed by
 unrelated code changes.
 
-See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.
+See the [tests readme](https://github.tools/jackson-module-kotlin/tree/master/src/test/kotlin/tools/jackson/module/kotlin/README.md) for more information.

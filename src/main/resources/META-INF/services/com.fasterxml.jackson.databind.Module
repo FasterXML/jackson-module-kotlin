@@ -1,1 +1,1 @@
-com.fasterxml.jackson.module.kotlin.KotlinModule
+tools.jackson.module.kotlin.KotlinModule

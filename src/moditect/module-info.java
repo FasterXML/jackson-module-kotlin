@@ -1,16 +1,16 @@
 // Manually created 02-Nov-2020 for
-//   https://github.com/FasterXML/jackson-module-kotlin/issues/385
-module com.fasterxml.jackson.kotlin {
+//   https://github.tools/jackson-module-kotlin/issues/385
+module tools.jackson.kotlin {
     requires java.desktop;
 
     requires kotlin.reflect;
     requires kotlin.stdlib;
 
-    requires com.fasterxml.jackson.annotation;
-    requires com.fasterxml.jackson.databind;
+    requires tools.jackson.annotation;
+    requires tools.jackson.databind;
 
-    exports com.fasterxml.jackson.module.kotlin;
+    exports tools.jackson.module.kotlin;
 
-    provides com.fasterxml.jackson.databind.Module with
-        com.fasterxml.jackson.module.kotlin.KotlinModule;
+    provides tools.jackson.databind.Module with
+        tools.jackson.module.kotlin.KotlinModule;
 }

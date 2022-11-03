@@ -1,0 +1,35 @@
+package tools.jackson.module.kotlin.test.github
+
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import org.junit.Test
+import java.util.function.IntSupplier
+
+
+class TestGithub167 {
+    val samObject = IntSupplier { 42 }
+
+    val answer = 42
+    val samObjectSynthetic = IntSupplier { answer }
+
+    @Test
+    fun withKotlinExtension() {
+        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(samObject)
+    }
+
+    @Test
+    fun withKotlinExtension_Synthetic() {
+        _root_ide_package_.tools.jackson.module.kotlin.jacksonObjectMapper().writeValueAsString(samObjectSynthetic)
+    }
+
+
+    @Test
+    fun withoutKotlinExtension() {
+        ObjectMapper().writeValueAsString(samObject)
+    }
+
+    @Test
+    fun withoutKotlinExtension_Synthetic() {
+        ObjectMapper().writeValueAsString(samObjectSynthetic)
+    }
+}

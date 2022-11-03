@@ -4,7 +4,7 @@ Last Updated: 2022-09-20
 
 ## Supported Versions
 
-Current status of open branches, with new releases, can be found from [Jackson Releases](https://github.com/FasterXML/jackson/wiki/Jackson-Releases)
+Current status of open branches, with new releases, can be found from [Jackson Releases](https://github.tools/jackson/wiki/Jackson-Releases)
 wiki page
 
 ## Reporting a Vulnerability
@@ -27,6 +27,6 @@ This is important to give us time to provide a patch, if necessary, for the prob
 
 To verify that any given Jackson artifact has been signed with a valid key, have a look at `KEYS` file of the main Jackson repo:
 
-https://github.com/FasterXML/jackson/blob/master/KEYS
+https://github.tools/jackson/blob/master/KEYS
 
 which lists all known valid keys in use.
