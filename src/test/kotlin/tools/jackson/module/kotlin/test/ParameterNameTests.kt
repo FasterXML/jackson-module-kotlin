@@ -228,7 +228,9 @@ class ParameterNameTests {
     @Test fun findingFactoryMethod() {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactory::class.java)
         stateObj.validate()
-        assertThat(stateObj.factoryUsed, equalTo(true))
+        val newStateObj = StateObjectWithFactory.create(stateObj.name, stateObj.age, stateObj.primaryAddress,
+            stateObj.wrongName, stateObj.createdDt)
+        assertEquals(true, newStateObj.factoryUsed, "Factory method was not used")
     }
 
     private class StateObjectWithFactoryNoParamAnnotations(
@@ -269,7 +271,7 @@ class ParameterNameTests {
         override val createdDt: Date
     ) : TestFields {
         var factoryUsed: Boolean = false
-        private companion object Named {
+        companion object Named {
             @JvmStatic @JsonCreator fun create(
                 @JsonProperty("name") nameThing: String,
                 @JsonProperty("age") age: Int,
@@ -287,7 +289,9 @@ class ParameterNameTests {
     @Test fun findingFactoryMethod3() {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryOnNamedCompanion::class.java)
         stateObj.validate()
-        assertThat(stateObj.factoryUsed, equalTo(true))
+        val newStateObj = StateObjectWithFactoryOnNamedCompanion.create(stateObj.name, stateObj.age, stateObj.primaryAddress,
+            stateObj.wrongName, stateObj.createdDt)
+        assertEquals(true, newStateObj.factoryUsed, "Factory method was not used")
     }
 
     // GH #14 failing due to this enum type
