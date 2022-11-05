@@ -15,7 +15,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.14.0-rc3 (28-Oct-2022)
+2.14.0 (05-Nov-2022)
 
 #582: Ignore open-ended ranges in `KotlinMixins.kt` (to help with Kotlin 1.7.20+)
  (contributed by Richard K)
