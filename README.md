@@ -10,6 +10,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
+* release `2.14.0` (for Jackson `2.14.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
 * release `2.13.4` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.13)
 * release `2.12.7` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
 * release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
@@ -19,7 +20,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+"
+implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.14.+"
 ```
 
 Maven:
@@ -27,7 +28,7 @@ Maven:
 <dependency>
     <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.13.4</version>
+    <version>2.14.0</version>
 </dependency>
 ```
 
@@ -256,8 +257,8 @@ See the [main Jackson contribution guidlines](https://github.com/FasterXML/jacks
 
 If you are going to write code, choose the appropriate base branch:
 
-- `2.12` for bugfixes against the current stable version
-- `2.13` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
+- `2.14` for bugfixes against the current stable version
+- `2.15` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `master` for significant changes to existing behavior, which will be part of Jackson 3.0
 
 ### Failing tests

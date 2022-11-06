@@ -1,16 +1,18 @@
 package tools.jackson.module.kotlin
 
-import tools.jackson.core.json.PackageVersion
+import java.util.*
+
+import kotlin.reflect.KClass
+
 import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.module.SimpleModule
+
 import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import tools.jackson.module.kotlin.SingletonSupport.DISABLED
-import java.util.*
-import kotlin.reflect.KClass
 
 private const val metadataFqName = "kotlin.Metadata"
 
@@ -54,7 +56,7 @@ class KotlinModule @Deprecated(
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false
-) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+) : SimpleModule(KotlinModule::class.java.name, tools.jackson.module.kotlin.PackageVersion.VERSION) {
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int,
