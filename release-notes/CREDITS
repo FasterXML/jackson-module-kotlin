@@ -1,0 +1,24 @@
+Here are people who have contributed to development Jackson JSON processor
+Kotlin module, version 3.x
+
+(note: for older credits, see `CREDITS-2.x` instead)
+
+Authors:
+
+  Jayson Minard/@apatrida, jayson.minard@gmail.com: original author
+
+  Tatu Saloranta/@cowtowncoder (tatu.saloranta@iki.fi) : co-author
+
+  Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
+  Vyacheslav Artemyev (@viartemev) co-author (since 2.11)
+
+------------
+
+Contributors:
+
+Yusuf Arfan Ismail (RealYusufIsmail@github)
+
+* Contributed #596: Rename "com.fasterxml.jackson" -> "tools.jackson"
+ [3.0.0]
+
+
