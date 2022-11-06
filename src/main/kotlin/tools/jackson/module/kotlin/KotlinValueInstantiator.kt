@@ -81,7 +81,7 @@ internal class KotlinValueInstantiator(
             val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
             if (isMissingAndRequired ||
                 (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable)) {
-                throw tools.jackson.module.kotlin.MissingKotlinParameterException(
+                throw MissingKotlinParameterException(
                     parameter = paramDef,
                     processor = ctxt.parser,
                     msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"

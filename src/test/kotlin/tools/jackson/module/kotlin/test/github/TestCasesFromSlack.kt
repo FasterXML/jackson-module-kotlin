@@ -11,15 +11,16 @@ class TestCasesFromSlack1 {
             @param:JsonProperty("id") @get:JsonProperty("id") val id: String,
             @param:JsonProperty("name") @get:JsonProperty("name") val name: String)
 
-    data class Event @JsonCreator constructor(
-            @param:JsonProperty("host") @get:JsonProperty("host") val host: Host,
-            @param:JsonProperty("activity") @get:JsonProperty("activity") val activity: String,
-            @param:JsonProperty("invited") @get:JsonProperty("invited") val invited: List<Guest>)
-
     data class Guest @JsonCreator constructor(
             @param:JsonProperty("id") @get:JsonProperty("id") val id: String,
             @param:JsonProperty("name") @get:JsonProperty("name") val name: String,
             @param:JsonProperty("rsvp") @get:JsonProperty("rsvp") var rsvp: RSVP)
+
+    data class Event @JsonCreator constructor(
+        @param:JsonProperty("host") @get:JsonProperty("host") val host: Host,
+        @param:JsonProperty("activity") @get:JsonProperty("activity") val activity: String,
+        @param:JsonProperty("invited") @get:JsonProperty("invited") val invited: List<Guest>)
+
 
     enum class RSVP(val nameKey: String) {
         going("rsvp.going"), maybe("rsvp.maybe"), interested("rsvp.interested")
@@ -30,6 +31,7 @@ class TestCasesFromSlack1 {
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)
 
+        // fails with: java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
         jacksonObjectMapper().readValue<Event>("""
            {"host":{"id":"host123","name":"A Czar"},"activity":"Kotlin Programming","invited":[{"id":"Guest1","name":"Mr Kotlin","rsvp": "going"}]}
         """)

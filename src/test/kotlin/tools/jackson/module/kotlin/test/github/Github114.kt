@@ -30,28 +30,23 @@ class TestGithub114 {
         val foo = mapper.readValue<Foo>("""{"baz": "bazValue"}""")
         println(foo)
 
-        val fooWithStaticCreator = mapper.readValue<FooWithStaticCreator>("""{"baz": "bazValue"}""")
+        val fooWithStaticCreator = mapper.readValue<FooWithStaticCreator>("""{"bar": "someDefaultValue", "baz": "bazValue"}""")
         println(fooWithStaticCreator) // Expect FooWithStaticCreator(bar=default, baz=bazValue), result == MismatchedInputException: Missing required creator property 'bar' (index 0)
         assertEquals(FooWithStaticCreator(FooWithStaticCreator.someValue, "bazValue"), fooWithStaticCreator)
     }
 
+    data class Obj @JsonCreator constructor(
+            @param:JsonProperty("id") @get:JsonProperty("id") val id: String,
+            @param:JsonProperty("name") @get:JsonProperty("name") val name: String)
+
     @Test
     fun otherTestVariation() {
         val mapper = jacksonObjectMapper()
-        val testObj = mapper.readValue<Obj>("""{"id":1}""")
+        val testObj = mapper.readValue<Obj>("""{"id": "1", "name": "test"}""")
 
-        assertEquals("yes", testObj.prop)
+        assertEquals(Obj("1", "test"), testObj)
     }
 
-    data class Obj(val id: String, val prop: String) {
-        companion object {
-            @JsonCreator
-            @JvmStatic
-            fun parse(@JsonProperty("id") id: String,
-                      @JsonProperty("name") name: String? = null) = Obj(id, name
-                    ?: "yes")
-        }
-    }
 
     @Test
     fun testCallByFunctionalityWithCompanionObjects() {

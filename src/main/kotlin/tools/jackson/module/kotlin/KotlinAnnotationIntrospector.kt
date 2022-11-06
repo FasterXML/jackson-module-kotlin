@@ -204,7 +204,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     }
 
     private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index+1)
+        return isParameterRequired(index + 1)
     }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {

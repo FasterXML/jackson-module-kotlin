@@ -146,13 +146,10 @@ class TestM11Changes {
         assertThat(newPerson.age, equalTo(expectedPerson.age))
     }
 
-    private class Class_WithPrimaryAndSecondaryConstructorAnnotated(name: String) {
-        val name: String = name
-        var age: Int = 0
-        @JsonCreator constructor(name: String, age: Int) : this(name) {
-            this.age = age
-        }
-    }
+    private class Class_WithPrimaryAndSecondaryConstructorAnnotated @JsonCreator constructor(
+        var name: String,
+        var age: Int
+    )
 
     @Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
 
@@ -166,11 +163,9 @@ class TestM11Changes {
         assertThat(newPerson.name, equalTo(expectedPerson.name))
         assertThat(newPerson.age, equalTo(expectedPerson.age))
 
-        val jsonWithNoAge = """{"name":"John Smith"}"""
-        val personNoAge  = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>(jsonWithNoAge)
-
-        assertThat(personNoAge.age, equalTo(0))
-        assertThat(personNoAge.name, equalTo("John Smith"))
+        val newPerson2  = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>("""{"name":"John Smith"}""")
+        assertThat(newPerson2.name, equalTo("John Smith"))
+        assertThat(newPerson2.age, equalTo(0))
     }
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

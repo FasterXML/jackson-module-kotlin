@@ -23,7 +23,7 @@ import java.net.URL
 import java.util.*
 import kotlin.reflect.KClass
 
-fun kotlinModule(initializer: tools.jackson.module.kotlin.KotlinModule.Builder.() -> Unit = {}): KotlinModule {
+fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
     val builder = KotlinModule.Builder()
     builder.initializer()
     return builder.build()
@@ -35,8 +35,10 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
     return builder.build()
 }
 
+//TODO: causing java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
 fun jacksonObjectMapper(): ObjectMapper =
     jsonMapper { addModule(kotlinModule()) }
+
 fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
