@@ -33,7 +33,7 @@ fun serializeAndDeserializeTypeable() {
     val newEntity = mapper.readValue<MyEntity>(json)
 
     expectFailure<AssertionError>("GitHub #335 has been fixed!") {
-        // newEntity.type is hte string "null" instead of the null value
+        // newEntity.type is the string "null" instead of the null value
         assertNull(newEntity.type)
     }
 }
