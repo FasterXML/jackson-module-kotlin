@@ -9,7 +9,9 @@ import kotlin.test.assertEquals
 
 class TestGithub396 {
     /**
-     * Succeeds in Jackson 2.11.x, but fails in Jackson 2.12.0
+     * Succeeds in Jackson 2.11.x, but fails in Jackson 2.12.0.
+     * But succeeds again in 2.15.0.
+     *
      * See https://github.com/FasterXML/jackson-module-kotlin/issues/396
      */
     @Test
@@ -17,11 +19,9 @@ class TestGithub396 {
         val mapper = XmlMapper().registerKotlinModule()
 
         val xml = "<product><stuff></stuff></product>"
-        expectFailure<MismatchedInputException>("GitHub #396 has been fixed!") {
-            val product: Product = mapper.readValue(xml, Product::class.java)
+        val product: Product = mapper.readValue(xml, Product::class.java)
 
-            assertEquals(Product(null), product)
-        }
+        assertEquals(Product(Stuff(null)), product)
     }
 
     private data class Stuff(val str: String?)
