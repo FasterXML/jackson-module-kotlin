@@ -223,6 +223,6 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     private fun KType.isRequired(): Boolean = !isMarkedNullable
 
     companion object {
-        val UNIT_TYPE: KType = Unit::class.createType()
+        val UNIT_TYPE: KType by lazy { Unit::class.createType() }
     }
 }

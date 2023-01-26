@@ -14,6 +14,11 @@ Authors:
 
 Contributors:
 
+# 2.15.0
+
+Ilya Ryzhenkov (@orangy)
+* #580: Lazy load UNIT_TYPE
+
 # 2.14.0
 
 Richard Kwasnicki (Richie94@github)
