@@ -56,7 +56,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.kotlin>1.6.21</version.kotlin>
+        <version.kotlin>1.7.22</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>
