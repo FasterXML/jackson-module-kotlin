@@ -20,7 +20,7 @@ Co-maintainers:
 #396: (regression) no default no-arguments constructor found
  (fix via [jackson-dataformat-xml#547])
 #580: Lazy load UNIT_TYPE
- (contribtued by Ilya R)
+ (contributed by Ilya R)
 
 2.14.2 (28-Jan-2023)
 2.14.1 (21-Nov-2022)
