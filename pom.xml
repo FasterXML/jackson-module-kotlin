@@ -64,6 +64,8 @@
         <javac.target.version>1.8</javac.target.version>
 
         <version.kotlin>1.7.22</version.kotlin>
+        <kotlin.compiler.languageVersion>1.5</kotlin.compiler.languageVersion>
+        <kotlin.compiler.apiVersion>1.5</kotlin.compiler.apiVersion>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
