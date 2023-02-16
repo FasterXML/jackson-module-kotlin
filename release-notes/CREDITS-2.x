@@ -11,6 +11,7 @@ Authors:
   Dmitry Spikhalskiy (@Spikhalskiy) co-author (since 2.14)
   Drew Stephens/@dinomite (drew@dinomite.net) co-author (since 2.11)
   Vyacheslav Artemyev (@viartemev) co-author (since 2.11)
+  WrongWrong (@k163377) co-author (since 2.15)
 
 Contributors:
 
