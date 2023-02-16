@@ -229,6 +229,7 @@ Following developers have committer access to this project.
     * Dmitry Spikhalskiy (@Spikhalskiy) -- since 2.14
     * Drew Stephens (@dinomite)
     * Vyacheslav Artemyev (@viartemev)
+    * WrongWrong (@k163377) -- since 2.15
 * Co-maintainers:
     * Tatu Saloranta (@cowtowncoder)
 

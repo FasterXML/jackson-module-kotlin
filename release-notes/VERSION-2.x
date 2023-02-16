@@ -2,9 +2,10 @@ Project: jackson-module-kotlin
 
 Active Maintainers:
 
-* Dmitry Spikhalskiy (@Spikhalskiy)
+* Dmitry Spikhalskiy (@Spikhalskiy) (since 2.14)
 * Drew Stephens (@dinomite)
 * Vyacheslav Artemyev (@viartemev)
+* WrongWrong (@k163377) (since 2.15)
 
 Co-maintainers:
 
