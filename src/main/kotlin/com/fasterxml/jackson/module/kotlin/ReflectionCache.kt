@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedWithParams
 import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
+import java.lang.reflect.Executable
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
@@ -36,8 +37,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
     private val javaClassToKotlin = LRUMap<Class<Any>, KClass<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorToValueCreator = LRUMap<Constructor<Any>, ConstructorValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaMethodToValueCreator = LRUMap<Method, MethodValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
     private val kotlinGeneratedMethod = LRUMap<AnnotatedMethod, Boolean>(reflectionCacheSize, reflectionCacheSize)
@@ -63,22 +63,25 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
         is AnnotatedConstructor -> {
             val constructor = _withArgsCreator.annotated as Constructor<Any>
 
-            javaConstructorToValueCreator.get(constructor)
+            javaExecutableToValueCreator.get(constructor)
                 ?: kotlinFromJava(constructor)?.let {
                     val value = ConstructorValueCreator(it)
-                    javaConstructorToValueCreator.putIfAbsent(constructor, value) ?: value
+                    javaExecutableToValueCreator.putIfAbsent(constructor, value) ?: value
                 }
         }
         is AnnotatedMethod -> {
-            val method = _withArgsCreator.annotated as Method
+            val method = _withArgsCreator.annotated
 
-            javaMethodToValueCreator.get(method)
+            javaExecutableToValueCreator.get(method)
                 ?: kotlinFromJava(method)?.let {
                     val value = MethodValueCreator.of(it)
-                    javaMethodToValueCreator.putIfAbsent(method, value) ?: value
+                    javaExecutableToValueCreator.putIfAbsent(method, value) ?: value
                 }
         }
-        else -> throw IllegalStateException("Expected a constructor or method to create a Kotlin object, instead found ${_withArgsCreator.annotated.javaClass.name}")
+        else -> throw IllegalStateException(
+            "Expected a constructor or method to create a Kotlin object," +
+                    " instead found ${_withArgsCreator.annotated.javaClass.name}"
+        )
     } // we cannot reflect this method so do the default Java-ish behavior
 
     fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key)
