@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.util.LRUMap
 import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Method
-import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.kotlinFunction
-
 
 internal class ReflectionCache(reflectionCacheSize: Int) {
     sealed class BooleanTriState(val value: Boolean?) {
@@ -34,15 +32,11 @@ internal class ReflectionCache(reflectionCacheSize: Int) {
         }
     }
 
-    private val javaClassToKotlin = LRUMap<Class<Any>, KClass<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
-
-    fun kotlinFromJava(key: Class<Any>): KClass<Any> = javaClassToKotlin.get(key)
-            ?: key.kotlin.let { javaClassToKotlin.putIfAbsent(key, it) ?: it }
 
     fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key)
             ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
