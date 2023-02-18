@@ -20,6 +20,9 @@ Contributors:
 Ilya Ryzhenkov (@orangy)
 * #580: Lazy load UNIT_TYPE
 
+WrongWrong (@k163377)
+* #627: Merge creator cache for Constructor and Method
+
 # 2.14.0
 
 Richard Kwasnicki (Richie94@github)
