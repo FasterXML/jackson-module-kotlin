@@ -97,13 +97,13 @@ operator fun JsonNode.contains(index: Int) = has(index)
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, refFieldName: String) = JsonMappingException.wrapWithPath(this, refFrom, refFieldName)
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, index: Int) = JsonMappingException.wrapWithPath(this, refFrom, index)
 
-inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>) = this.apply {
-    addSerializer(kClass.java, serializer)
+fun <T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>): SimpleModule = this.apply {
+    kClass.javaPrimitiveType?.let { addSerializer(it, serializer) }
     addSerializer(kClass.javaObjectType, serializer)
 }
 
-inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>) = this.apply {
-    addDeserializer(kClass.java, deserializer)
+fun <T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: JsonDeserializer<T>): SimpleModule = this.apply {
+    kClass.javaPrimitiveType?.let { addDeserializer(it, deserializer) }
     addDeserializer(kClass.javaObjectType, deserializer)
 }
 
