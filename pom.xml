@@ -202,11 +202,12 @@
                         <dependency>
                             <groupId>com.fasterxml.jackson.module</groupId>
                             <artifactId>jackson-module-kotlin</artifactId>
-			    <!-- 16-Mar-2022, tatu: Sometimes may need to change baseline or
-                                    use exclusions. But for now try keep 2.14 binary compatible
-                                    with 2.13(.0)
+			    <!-- 16-Mar-2022, tatu: Sometimes may need to change baseline and
+				  if so, need to add temporary exclusions to avoid build breakage
+			    -->
+			    <!-- 19-Feb-2023, tatu: For 2.15, compare to 2.14 baseline
 			      -->
-                            <version>2.13.0</version>
+                            <version>2.14.0</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
