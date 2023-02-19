@@ -22,6 +22,7 @@ Ilya Ryzhenkov (@orangy)
 
 WrongWrong (@k163377)
 * #627: Merge creator cache for Constructor and Method
+* #628: Remove unnecessary cache
 
 # 2.14.0
 
