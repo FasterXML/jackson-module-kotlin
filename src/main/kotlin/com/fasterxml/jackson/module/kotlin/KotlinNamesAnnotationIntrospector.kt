@@ -63,7 +63,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     private fun hasCreatorAnnotation(member: AnnotatedConstructor): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
-        val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
+        val kClass = member.declaringClass.kotlin
             .apply { if (this in ignoredClassesForImplyingJsonCreator) return false }
         val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return false
 
