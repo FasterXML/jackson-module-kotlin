@@ -24,6 +24,7 @@ Co-maintainers:
  (contributed by Ilya R)
 #627: Merge creator cache for Constructor and Method
 #628: Remove unnecessary cache
+#631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(#558)
 
 2.14.2 (28-Jan-2023)
 2.14.1 (21-Nov-2022)
