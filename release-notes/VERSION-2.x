@@ -26,6 +26,9 @@ Co-maintainers:
 #628: Remove unnecessary cache
 #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(#558)
 
+It was also confirmed that the issue submitted in #301 is no longer reproduced,
+although it is unclear when it was explicitly fixed.
+
 2.14.2 (28-Jan-2023)
 2.14.1 (21-Nov-2022)
 
