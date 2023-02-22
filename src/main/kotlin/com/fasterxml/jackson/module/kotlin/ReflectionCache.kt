@@ -5,13 +5,18 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedWithParams
 import com.fasterxml.jackson.databind.util.LRUMap
+import java.io.Serializable
 import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.kotlinFunction
 
-internal class ReflectionCache(reflectionCacheSize: Int) {
+internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
+
     sealed class BooleanTriState(val value: Boolean?) {
         class True : BooleanTriState(true)
         class False : BooleanTriState(false)
