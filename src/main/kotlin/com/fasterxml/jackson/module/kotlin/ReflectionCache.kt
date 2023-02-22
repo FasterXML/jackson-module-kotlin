@@ -14,6 +14,7 @@ import kotlin.reflect.jvm.kotlinFunction
 
 internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     companion object {
+        // Increment is required when properties that use LRUMap are changed.
         private const val serialVersionUID = 1L
     }
 
