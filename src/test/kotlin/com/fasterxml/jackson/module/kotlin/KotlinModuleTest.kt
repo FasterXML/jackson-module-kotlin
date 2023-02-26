@@ -11,6 +11,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.test.assertNotNull
 
 class KotlinModuleTest {
     /**
@@ -102,5 +103,28 @@ class KotlinModuleTest {
         }.build()
 
         assertTrue(module.strictNullChecks)
+    }
+
+    @Test
+    fun jdkSerializabilityTest() {
+        val module = KotlinModule.Builder().apply {
+            withReflectionCacheSize(123)
+            enable(NullToEmptyCollection)
+            enable(NullToEmptyMap)
+            enable(NullIsSameAsDefault)
+            enable(SingletonSupport)
+            enable(StrictNullChecks)
+        }.build()
+
+        val serialized = jdkSerialize(module)
+        val deserialized = jdkDeserialize<KotlinModule>(serialized)
+
+        assertNotNull(deserialized)
+        assertEquals(123, deserialized.reflectionCacheSize)
+        assertTrue(deserialized.nullToEmptyCollection)
+        assertTrue(deserialized.nullToEmptyMap)
+        assertTrue(deserialized.nullIsSameAsDefault)
+        assertEquals(CANONICALIZE, deserialized.singletonSupport)
+        assertTrue(deserialized.strictNullChecks)
     }
 }
