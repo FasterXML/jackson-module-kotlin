@@ -62,7 +62,7 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     @Suppress("UNCHECKED_CAST")
     private fun hasCreatorAnnotation(member: AnnotatedConstructor): Mode {
         // don't add a JsonCreator to any constructor if one is declared already
-        val kClass = cache.kotlinFromJava(member.declaringClass as Class<Any>)
+        val kClass = member.declaringClass.kotlin
             .apply { if (this in ignoredClassesForImplyingJsonCreator) return Mode.DISABLED }
         val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return Mode.DISABLED
 

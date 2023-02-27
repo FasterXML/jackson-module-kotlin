@@ -102,12 +102,12 @@ internal fun DatabindException.wrapWithPath(refFrom: Any?, refFieldName: String)
 internal fun DatabindException.wrapWithPath(refFrom: Any?, index: Int) = DatabindException.wrapWithPath(this, refFrom, index)
 
 inline fun <reified T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: ValueSerializer<T>) = this.apply {
-    addSerializer(kClass.java, serializer)
+    kClass.javaPrimitiveType?.let { addSerializer(it, serializer) }
     addSerializer(kClass.javaObjectType, serializer)
 }
 
 inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: ValueDeserializer<T>) = this.apply {
-    addDeserializer(kClass.java, deserializer)
+    kClass.javaPrimitiveType?.let { addDeserializer(it, deserializer) }
     addDeserializer(kClass.javaObjectType, deserializer)
 }
 
