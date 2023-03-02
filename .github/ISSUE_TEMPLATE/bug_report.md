@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Test case or steps to reproduce the behavior or.  
+Test case or steps to reproduce the behavior.  
 It would be appreciated if you could provide code that can be executed with as few changes as possible,
 such as including `import`.
 
