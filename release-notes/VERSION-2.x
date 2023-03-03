@@ -33,8 +33,11 @@ Co-maintainers:
 #634: Fix ReflectionCache to be serializable(fixes #295)
  (contributed by wrongwrong)
 
-It was also confirmed that the issue submitted in #301 is no longer reproduced,
+It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.
+
+* #237
+* #301
 
 2.14.2 (28-Jan-2023)
 2.14.1 (21-Nov-2022)
