@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 **To Reproduce**
 Test case or steps to reproduce the behavior.  
 It would be appreciated if you could provide code that can be executed with as few changes as possible,
-such as including `import`.
+such as include `import` statements.
 
 Also, it would be appreciated if you could confirm in advance that the problem is reproduced
 only when using `Kotlin` or `kotlin-module`.  
