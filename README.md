@@ -201,9 +201,12 @@ see the [inline documentation](https://github.com/FasterXML/jackson-module-kotli
 for details on what options are available and what they do.
 
 ```kotlin
+val kotlinModule = KotlinModule.Builder()
+    .enable(KotlinFeature.StrictNullChecks)
+    .build()
 val mapper = JsonMapper.builder()
-        .addModule(KotlinModule(strictNullChecks = true))
-        .build()
+    .addModule(kotlinModule)
+    .build()
 ```
 
 If your `ObjectMapper` is constructed in Java, there is a builder method

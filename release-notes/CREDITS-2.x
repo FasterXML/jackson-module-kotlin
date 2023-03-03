@@ -23,7 +23,9 @@ Ilya Ryzhenkov (@orangy)
 WrongWrong (@k163377)
 * #627: Merge creator cache for Constructor and Method
 * #628: Remove unnecessary cache
-* #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(#558)
+* #629: Changed to not cache valueParameters
+* #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer
+* #634: Fix ReflectionCache to be serializable
 
 # 2.14.0
 
