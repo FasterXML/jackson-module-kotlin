@@ -22,9 +22,16 @@ Co-maintainers:
  (fix via [jackson-dataformat-xml#547])
 #580: Lazy load UNIT_TYPE
  (contributed by Ilya R)
-#627: Merge creator cache for Constructor and Method
-#628: Remove unnecessary cache
-#631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(#558)
+#627: Merge creator cache for Constructor and Method(related to #584)
+ (contributed by wrongwrong)
+#628: Remove unnecessary cache(related to #584)
+ (contributed by wrongwrong)
+#629: Changed to not cache valueParameters(related to #584)
+ (contributed by wrongwrong)
+#631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(fixes #558)
+ (contributed by wrongwrong)
+#634: Fix ReflectionCache to be serializable(fixes #295)
+ (contributed by wrongwrong)
 
 It was also confirmed that the issue submitted in #301 is no longer reproduced,
 although it is unclear when it was explicitly fixed.
