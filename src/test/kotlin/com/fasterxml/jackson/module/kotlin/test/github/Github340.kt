@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
@@ -28,5 +29,18 @@ class OwnerRequestTest {
     fun testDeserWithoutIssue() {
         val value: NoIsField = jackson.readValue(json)
         assertEquals("Got a foo", value.foo)
+    }
+
+    // A test case for isSetter to work, added with the fix for this issue.
+    class IsSetter {
+        lateinit var isFoo: String
+    }
+
+    @Test
+    fun isSetterTest() {
+        val json = """{"isFoo":"bar"}"""
+        val isSetter: IsSetter = jackson.readValue(json)
+
+        assertEquals("bar", isSetter.isFoo)
     }
 }
