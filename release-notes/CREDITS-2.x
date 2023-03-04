@@ -26,6 +26,7 @@ WrongWrong (@k163377)
 * #629: Changed to not cache valueParameters
 * #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer
 * #634: Fix ReflectionCache to be serializable
+* #640: Fixed problem with test failure in windows.
 
 # 2.14.0
 
