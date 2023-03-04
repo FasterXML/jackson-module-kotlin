@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
 import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.testPrettyWriter
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -16,7 +17,7 @@ class TestGitHub337 {
         enable(SORT_PROPERTIES_ALPHABETICALLY)
         changeDefaultPropertyInclusion { it.withValueInclusion(JsonInclude.Include.ALWAYS) }
     }
-    private val writer = mapper.writerWithDefaultPrettyPrinter()
+    private val writer = mapper.testPrettyWriter()
 
     @Test
     @Ignore

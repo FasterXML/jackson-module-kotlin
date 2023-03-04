@@ -7,6 +7,8 @@ import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.testPrettyWriter
+
 import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -39,7 +41,7 @@ class GitHub524 {
     fun test() {
         val sm = SimpleModule()
             .addSerializer(Serializer())
-        val writer = jacksonMapperBuilder().addModule(sm).build().writerWithDefaultPrettyPrinter()
+        val writer = jacksonMapperBuilder().addModule(sm).build().testPrettyWriter()
 
         // 18446744073709551615 is ULong.MAX_VALUE.
         assertEquals(

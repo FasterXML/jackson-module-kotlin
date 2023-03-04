@@ -1,7 +1,9 @@
 package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonValue
+
 import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.testPrettyWriter
 import kotlin.test.assertEquals
 import org.junit.Test
 
@@ -37,7 +39,7 @@ class GitHub530 {
     @JvmInline
     value class JsonValueGetterImplementation(val value: Int) : JsonValueGetter
 
-    private val writer = jacksonMapperBuilder().build().writerWithDefaultPrettyPrinter()
+    private val writer = jacksonMapperBuilder().build().testPrettyWriter()
 
     @Test
     fun valueParamGetterAnnotated() {

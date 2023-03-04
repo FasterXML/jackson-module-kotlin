@@ -9,6 +9,7 @@ import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.module.kotlin.KotlinModule
 import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.testPrettyWriter
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -76,7 +77,7 @@ class Github464 {
                         .setDefaultNullKeySerializer(NullValueClassKeySerializer)
                 )
                 .build()
-                .writerWithDefaultPrettyPrinter()
+                .testPrettyWriter()
 
             assertEquals(
                 """
@@ -120,7 +121,7 @@ class Github464 {
                         .setDefaultNullValueSerializer(NullValueSerializer)
                 )
                 .build()
-                .writerWithDefaultPrettyPrinter()
+                .testPrettyWriter()
 
             assertEquals(
                 """
