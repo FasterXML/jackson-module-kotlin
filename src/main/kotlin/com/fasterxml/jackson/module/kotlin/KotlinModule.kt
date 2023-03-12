@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.json.PackageVersion
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
@@ -12,9 +14,19 @@ import java.util.*
 import kotlin.reflect.KClass
 
 private const val metadataFqName = "kotlin.Metadata"
+private const val jsonIncludeAnnotation = "com.fasterxml.jackson.annotation.JsonInclude"
 
 fun Class<*>.isKotlinClass(): Boolean {
     return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
+}
+
+fun Class<*>.hasNonNullAnnotations(): Boolean {
+    return declaredAnnotations
+        .filter { it.annotationClass.java.name == jsonIncludeAnnotation }
+        .any {
+            it as JsonInclude
+            it.value == JsonInclude.Include.NON_NULL
+        }
 }
 
 /**

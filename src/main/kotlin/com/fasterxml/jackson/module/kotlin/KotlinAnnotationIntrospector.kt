@@ -71,6 +71,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
                         // If the return value of the getter is a value class,
                         // it will be serialized properly without doing anything.
                         if (this.returnType.isUnboxableValueClass()) return null
+                        // If outer class has JsonInclude.Include.NON_NULL value, then ignore value class
+                        // But we have to find how to get serialization configure of object mapper
+                        // because we don't have to serialize if object mapper has been configured by JsonInclude.Include.NON_NULL feature
+                        if (am.declaringClass.hasNonNullAnnotations()) return null
                     }
 
                     val kotlinProperty = getter
