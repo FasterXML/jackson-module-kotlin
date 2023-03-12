@@ -59,12 +59,16 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <!-- 16-Oct-2019, tatu: No point trying to target Java 7, Java 8 needed for build anyway -->
         <javac.src.version>1.8</javac.src.version>
         <javac.target.version>1.8</javac.target.version>
 
-        <version.kotlin>1.5.32</version.kotlin>
-
+	<!-- 11-Mar-2023, tatu: [kotlin#632] drops Kotlin 1.4 so target 1.5, but
+	       build with 1.6.x for now
+	  -->
+        <version.kotlin>1.6.21</version.kotlin>
+        <kotlin.compiler.languageVersion>1.5</kotlin.compiler.languageVersion>
+        <kotlin.compiler.apiVersion>1.5</kotlin.compiler.apiVersion>
+	
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
         <packageVersion.package>${project.groupId}.kotlin</packageVersion.package>

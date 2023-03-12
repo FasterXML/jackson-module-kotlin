@@ -23,7 +23,8 @@ jobs:
       fail-fast: false
       matrix:
         java_version: ['8', '11', '17']
-        kotlin_version: ['1.4.32', '1.5.32', '1.6.21', '1.7.20']
+	# Jackson 2.15 drops support for Kotlin 1.4, adds 1.8
+        kotlin_version: ['1.5.32', '1.6.21', '1.7.20', '1.8.10']
         os: ['ubuntu-20.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
