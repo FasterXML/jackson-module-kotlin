@@ -23,7 +23,10 @@ Ilya Ryzhenkov (@orangy)
 WrongWrong (@k163377)
 * #627: Merge creator cache for Constructor and Method
 * #628: Remove unnecessary cache
-* #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer(#558)
+* #629: Changed to not cache valueParameters
+* #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer
+* #634: Fix ReflectionCache to be serializable
+* #640: Fixed problem with test failure in windows.
 
 # 2.14.0
 
@@ -76,10 +79,6 @@ wrongwrong (k163377@github)
 * Contributed #438: Fixed mapping failure when `private` `companion object` is named
 
 # 2.12.5
-
-Jocelyn N'TAKPÉ (jntakpe@github)
-* #211: Contributed test case for @JsonMerge
-  (2.13)
 
 Marshall Pierce (marshallpierce@github)
 * #474: Reported disrespect for @JsonProperty on parent class

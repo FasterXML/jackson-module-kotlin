@@ -25,7 +25,7 @@ implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.14.+"
 Maven:
 ```xml
 <dependency>
-    <groupId>tools.jackson.module</groupId>
+    <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <version>2.14.2</version>
 </dependency>
@@ -40,16 +40,16 @@ To use, just register the Kotlin module with your ObjectMapper instance:
 
 ```kotlin
 // With Jackson 2.12 and later
-import tools.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 ...
 val mapper = jacksonObjectMapper()
 // or
-import tools.jackson.module.kotlin.registerKotlinModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 ...
 val mapper = ObjectMapper().registerKotlinModule()
 // or
-import tools.jackson.module.kotlin.jsonMapper
-import tools.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.kotlin.jsonMapper
+import com.fasterxml.jackson.module.kotlin.kotlinModule
 ...
 val mapper = jsonMapper {
   addModule(kotlinModule())
@@ -61,7 +61,7 @@ val mapper = jsonMapper {
 
 ```kotlin
 import com.fasterxml.jackson.databind.json.JsonMapper
-import tools.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 ...
 val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 ```
@@ -73,7 +73,7 @@ val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
 
 ```kotlin
 import com.fasterxml.jackson.databind.ObjectMapper
-import tools.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 ...
 val mapper = ObjectMapper().registerModule(KotlinModule())
 ```
@@ -81,8 +81,8 @@ val mapper = ObjectMapper().registerModule(KotlinModule())
 
 A simple data class example:
 ```kotlin
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 
 data class MyStateObject(val name: String, val age: Int)
 
@@ -104,7 +104,7 @@ Also, there are some convenient operator overloading extension functions for Jso
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.node.JsonNodeFactory
-import tools.jackson.module.kotlin.*
+import com.fasterxml.jackson.module.kotlin.*
 
 // ...
 val objectNode: ObjectNode = JsonNodeFactory.instance.objectNode()
@@ -201,9 +201,12 @@ see the [inline documentation](https://github.com/FasterXML/jackson-module-kotli
 for details on what options are available and what they do.
 
 ```kotlin
+val kotlinModule = KotlinModule.Builder()
+    .enable(KotlinFeature.StrictNullChecks)
+    .build()
 val mapper = JsonMapper.builder()
-        .addModule(KotlinModule(strictNullChecks = true))
-        .build()
+    .addModule(kotlinModule)
+    .build()
 ```
 
 If your `ObjectMapper` is constructed in Java, there is a builder method
