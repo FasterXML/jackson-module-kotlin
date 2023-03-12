@@ -62,12 +62,7 @@
         <javac.src.version>1.8</javac.src.version>
         <javac.target.version>1.8</javac.target.version>
 
-	<!-- 11-Mar-2023, tatu: [kotlin#632] drops Kotlin 1.4 so target 1.5, but
-	       build with 1.6.x for now
-	  -->
-        <version.kotlin>1.6.21</version.kotlin>
-        <kotlin.compiler.languageVersion>1.5</kotlin.compiler.languageVersion>
-        <kotlin.compiler.apiVersion>1.5</kotlin.compiler.apiVersion>
+        <version.kotlin>1.5.32</version.kotlin>
 	
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>com/fasterxml/jackson/module/kotlin</packageVersion.dir>
