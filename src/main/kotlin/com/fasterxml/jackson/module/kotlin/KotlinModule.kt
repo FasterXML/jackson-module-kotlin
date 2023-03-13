@@ -54,6 +54,13 @@ class KotlinModule @Deprecated(
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    init {
+        if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
+            // Kotlin 1.4 was deprecated when this process was introduced(jackson-module-kotlin 2.15).
+            throw IllegalStateException("jackson-module-kotlin requires Kotlin 1.5 or higher.")
+        }
+    }
+
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int,
