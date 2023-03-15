@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
@@ -54,6 +55,16 @@ class KotlinModule @Deprecated(
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    init {
+        if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
+            // Kotlin 1.4 was deprecated when this process was introduced(jackson-module-kotlin 2.15).
+            throw JsonMappingException(
+                null,
+                "KotlinModule requires Kotlin version >= 1.5 - Found ${KotlinVersion.CURRENT}"
+            )
+        }
+    }
+
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
     constructor(
         reflectionCacheSize: Int,
