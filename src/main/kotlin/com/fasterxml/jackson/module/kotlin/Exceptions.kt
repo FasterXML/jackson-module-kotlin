@@ -10,6 +10,14 @@ import kotlin.reflect.KParameter
  * Specialized [JsonMappingException] sub-class used to indicate that a mandatory Kotlin constructor
  * parameter was missing or null.
  */
+@Deprecated(
+    "It will be removed in jackson-module-kotlin 2.16. See #617 for details.",
+    ReplaceWith(
+        "MismatchedInputException",
+        "com.fasterxml.jackson.databind.exc.MismatchedInputException"
+    ),
+    DeprecationLevel.WARNING
+)
 class MissingKotlinParameterException(val parameter: KParameter,
                                       processor: JsonParser? = null,
                                       msg: String) : MismatchedInputException(processor, msg) {
