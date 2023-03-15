@@ -29,34 +29,34 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
-    override fun findImplicitPropertyName(config: MapperConfig<*>?, member: AnnotatedMember?): String? = when (member) {
-        is AnnotatedMethod -> if (member.name.contains('-') && member.parameterCount == 0) {
-            when {
-                member.name.startsWith("get") -> member.name.substringAfter("get")
-                member.name.startsWith("is") -> member.name.substringAfter("is")
-                else -> null
-            }?.replaceFirstChar { it.lowercase(Locale.getDefault()) }?.substringBefore('-')
-        } else null
-        is AnnotatedParameter -> findKotlinParameterName(member)
-        else -> null
-    }
+    override fun findImplicitPropertyName(config: MapperConfig<*>, member: AnnotatedMember): String? {
+        if (!member.declaringClass.isKotlinClass()) return null
 
-    // since 2.11: support Kotlin's way of handling "isXxx" backed properties where
-    // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
-    // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
-    //  https://github.com/FasterXML/jackson-databind/issues/2527
-    //  for details)
-    override fun findRenameByField(config: MapperConfig<*>,
-                                   field: AnnotatedField,
-                                   implName: PropertyName): PropertyName? {
-        val origSimple = implName.simpleName
-        if (field.declaringClass.isKotlinClass() && origSimple.startsWith("is")) {
-            val mangledName: String? = BeanUtil.stdManglePropertyName(origSimple, 2)
-            if ((mangledName != null) && !mangledName.equals(origSimple)) {
-                return PropertyName.construct(mangledName)
-            }
+        val name = member.name
+
+        return when (member) {
+            is AnnotatedMethod -> if (member.parameterCount == 0) {
+                // The reason for truncating after `-` is to truncate the random suffix
+                // given after the value class accessor name.
+                when {
+                    name.startsWith("get") -> name.takeIf { it.contains("-") }?.let { _ ->
+                        name.substringAfter("get")
+                            .replaceFirstChar { it.lowercase(Locale.getDefault()) }
+                            .substringBefore('-')
+                    }
+                    // since 2.15: support Kotlin's way of handling "isXxx" backed properties where
+                    // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
+                    // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
+                    //  https://github.com/FasterXML/jackson-databind/issues/2527 and
+                    //  https://github.com/FasterXML/jackson-module-kotlin/issues/340
+                    //  for details)
+                    name.startsWith("is") -> if (name.contains("-")) name.substringAfter("-") else name
+                    else -> null
+                }
+            } else null
+            is AnnotatedParameter -> findKotlinParameterName(member)
+            else -> null
         }
-        return null
     }
 
     @Suppress("UNCHECKED_CAST")

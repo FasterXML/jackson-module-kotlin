@@ -25,25 +25,33 @@ class ParameterNameTests {
         val primaryAddress: String
         val wrongName: Boolean
         val createdDt: Date
+        val isName: Boolean
 
         fun validate(
             nameField: String = name,
             ageField: Int = age,
             addressField: String = primaryAddress,
             wrongNameField: Boolean = wrongName,
-            createDtField: Date = createdDt
+            createDtField: Date = createdDt,
+            isNameField: Boolean = isName,
         ) {
             assertThat(nameField, equalTo("Frank"))
             assertThat(ageField, equalTo(30))
             assertThat(addressField, equalTo("something here"))
             assertThat(wrongNameField, equalTo(true))
             assertThat(createDtField, equalTo(Date(1477419948000)))
+            assertThat(isNameField, equalTo(false))
         }
     }
 
+<<<<<<< HEAD:src/test/kotlin/tools/jackson/module/kotlin/test/ParameterNameTests.kt
     // 24-Oct-2019, tatu: Note that format of timezone ("+00:00" vs "Z") varies between Jackson 2.x and 3.0
     private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000Z"}"""
     private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z"}"""
+=======
+    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000+00:00","isName":false}"""
+    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000+00:00","IsName":false}"""
+>>>>>>> 2.15:src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/ParameterNameTests.kt
 
     private val normalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
@@ -65,6 +73,7 @@ class ParameterNameTests {
 
         override var primaryAddress: String = ""
         override var createdDt: Date = Date()
+        override val isName: Boolean = false
     }
 
     @Test fun NoFailWithDefaultAndSpecificConstructor() {
@@ -79,7 +88,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         val renamed: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields {
         @JsonIgnore
         override val wrongName = renamed // here for the test validation only
@@ -97,7 +107,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         val renamed: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields {
         @JsonIgnore
         override val wrongName = renamed // here for the test validation only
@@ -121,7 +132,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         @JsonProperty("renamed") override val wrongName: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields
 
     @Test fun testDataClassWithExplicitJsonCreatorAndJsonProperty() {
@@ -141,7 +153,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         @JsonProperty("renamed") override val wrongName: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields
 
     @Test fun testNormalClassWithJsonCreator() {
@@ -155,7 +168,8 @@ class ParameterNameTests {
     private class StateObjectWithPartialFieldsInConstructor(
         override val name: String,
         override val age: Int,
-        override val primaryAddress: String
+        override val primaryAddress: String,
+        override val isName: Boolean
     ) : TestFields {
         @JsonProperty("renamed") override var wrongName: Boolean = false
         override var createdDt: Date by Delegates.notNull()
@@ -176,7 +190,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         @JsonProperty("renamed") override val wrongName: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields
 
     @Test fun testDataClassWithNonFieldParametersInConstructor() {
@@ -207,7 +222,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         override val wrongName: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields {
         var factoryUsed: Boolean = false
         companion object {
@@ -216,9 +232,10 @@ class ParameterNameTests {
                 @JsonProperty("age") age: Int,
                 @JsonProperty("primaryAddress") primaryAddress: String,
                 @JsonProperty("renamed") wrongName: Boolean,
-                @JsonProperty("createdDt") createdDt: Date
+                @JsonProperty("createdDt") createdDt: Date,
+                @JsonProperty("isName") isName: Boolean
             ): StateObjectWithFactory {
-                val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt)
+                val obj = StateObjectWithFactory(nameThing, age, primaryAddress, wrongName, createdDt, isName)
                 obj.factoryUsed = true
                 return obj
             }
@@ -238,7 +255,8 @@ class ParameterNameTests {
         val age: Int,
         val primaryAddress: String,
         val renamed: Boolean,
-        val createdDt: Date
+        val createdDt: Date,
+        val isName: Boolean
     ) {
         companion object {
             @JvmStatic @JsonCreator fun create(
@@ -246,9 +264,10 @@ class ParameterNameTests {
                 age: Int,
                 primaryAddress: String,
                 renamed: Boolean,
-                createdDt: Date
+                createdDt: Date,
+                isName: Boolean
             ): StateObjectWithFactoryNoParamAnnotations {
-                return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt)
+                return StateObjectWithFactoryNoParamAnnotations(name, age, primaryAddress, renamed, createdDt, isName)
             }
         }
     }
@@ -268,7 +287,8 @@ class ParameterNameTests {
         override val age: Int,
         override val primaryAddress: String,
         override val wrongName: Boolean,
-        override val createdDt: Date
+        override val createdDt: Date,
+        override val isName: Boolean
     ) : TestFields {
         var factoryUsed: Boolean = false
         companion object Named {
@@ -277,9 +297,10 @@ class ParameterNameTests {
                 @JsonProperty("age") age: Int,
                 @JsonProperty("primaryAddress") primaryAddress: String,
                 @JsonProperty("renamed") wrongName: Boolean,
-                @JsonProperty("createdDt") createdDt: Date
+                @JsonProperty("createdDt") createdDt: Date,
+                @JsonProperty("isName") isName: Boolean
             ): StateObjectWithFactoryOnNamedCompanion {
-                val obj = StateObjectWithFactoryOnNamedCompanion(nameThing, age, primaryAddress, wrongName, createdDt)
+                val obj = StateObjectWithFactoryOnNamedCompanion(nameThing, age, primaryAddress, wrongName, createdDt, isName)
                 obj.factoryUsed = true
                 return obj
             }
