@@ -32,6 +32,11 @@ Co-maintainers:
  (contributed by wrongwrong)
 #634: Fix ReflectionCache to be serializable(fixes #295)
  (contributed by wrongwrong)
+#646: Drop Kotlin 1.4 support from Kotlin module 2.15.
+    If Kotlin 1.4 or lower is detected, a JsonMappingException will be thrown when initializing a KotlinModule.
+ (contributed by wrongwrong, cowtowncoder, pjfanning)
+#647: Added deprecation to MissingKotlinParameterException(related to #617)
+ (contributed by wrongwrong)
 
 It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.
