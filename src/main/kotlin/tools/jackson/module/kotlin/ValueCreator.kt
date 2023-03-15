@@ -24,9 +24,12 @@ internal sealed class ValueCreator<T> {
     /**
      * ValueParameters of the KFunction to be called.
      */
-    val valueParameters: List<KParameter> by lazy { callable.valueParameters }
+    // If this result is cached, it will coexist with the SoftReference managed value in kotlin-reflect,
+    // and there is a risk of doubling the memory consumption, so it should not be cached.
+    // @see #584
+    val valueParameters: List<KParameter> get() = callable.valueParameters
 
-    /**
+/**
      * Checking process to see if access from context is possible.
      * @throws  IllegalAccessException
      */
