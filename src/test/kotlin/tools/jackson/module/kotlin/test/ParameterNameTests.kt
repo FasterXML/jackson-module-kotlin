@@ -44,14 +44,8 @@ class ParameterNameTests {
         }
     }
 
-<<<<<<< HEAD:src/test/kotlin/tools/jackson/module/kotlin/test/ParameterNameTests.kt
-    // 24-Oct-2019, tatu: Note that format of timezone ("+00:00" vs "Z") varies between Jackson 2.x and 3.0
-    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000Z"}"""
-    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z"}"""
-=======
-    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000+00:00","isName":false}"""
-    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000+00:00","IsName":false}"""
->>>>>>> 2.15:src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/ParameterNameTests.kt
+    private val normalCasedJson = """{"name":"Frank","age":30,"primaryAddress":"something here","renamed":true,"createdDt":"2016-10-25T18:25:48.000Z","isName":false}"""
+    private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z","IsName":false}"""
 
     private val normalCasedMapper = jacksonMapperBuilder()
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
@@ -246,7 +240,7 @@ class ParameterNameTests {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactory::class.java)
         stateObj.validate()
         val newStateObj = StateObjectWithFactory.create(stateObj.name, stateObj.age, stateObj.primaryAddress,
-            stateObj.wrongName, stateObj.createdDt)
+            stateObj.wrongName, stateObj.createdDt, true)
         assertEquals(true, newStateObj.factoryUsed, "Factory method was not used")
     }
 
@@ -311,7 +305,7 @@ class ParameterNameTests {
         val stateObj = normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryOnNamedCompanion::class.java)
         stateObj.validate()
         val newStateObj = StateObjectWithFactoryOnNamedCompanion.create(stateObj.name, stateObj.age, stateObj.primaryAddress,
-            stateObj.wrongName, stateObj.createdDt)
+            stateObj.wrongName, stateObj.createdDt, false)
         assertEquals(true, newStateObj.factoryUsed, "Factory method was not used")
     }
 
