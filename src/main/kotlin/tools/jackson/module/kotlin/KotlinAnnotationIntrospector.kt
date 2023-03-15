@@ -71,40 +71,34 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     // Find a serializer to handle the case where the getter returns an unboxed value from the value class.
     override fun findSerializer(config: MapperConfig<*>?, am: Annotated): StdSerializer<*>? = when (am) {
         is AnnotatedMethod -> {
-            when (KotlinVersion.CURRENT.isAtLeast(1, 5)) {
-                true -> {
-                    val getter = am.member.apply {
-                        // If the return value of the getter is a value class,
-                        // it will be serialized properly without doing anything.
-                        if (this.returnType.isUnboxableValueClass()) return null
-                    }
-
-                    val kotlinProperty = getter
-                        .declaringClass
-                        .kotlin
-                        .let {
-                            // KotlinReflectionInternalError is raised in GitHub167 test,
-                            // but it looks like an edge case, so it is ignored.
-                            try {
-                                it.memberProperties
-                            } catch (e: Error) {
-                                null
-                            }
-                        }?.find { it.javaGetter == getter }
-
-                    (kotlinProperty?.returnType?.classifier as? KClass<*>)
-                        ?.takeIf { it.isValue }
-                        ?.java
-                        ?.let { outerClazz ->
-                            val innerClazz = getter.returnType
-
-                            ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
-                                ?: @Suppress("UNCHECKED_CAST") ValueClassBoxSerializer(outerClazz, innerClazz)
-                        }
-                }
-                // Kotlin 1.4 and lower doesn't have value classes and we avoid the NoSuchMethodException on it.isValue
-                else -> null
+            val getter = am.member.apply {
+                // If the return value of the getter is a value class,
+                // it will be serialized properly without doing anything.
+                if (this.returnType.isUnboxableValueClass()) return null
             }
+
+            val kotlinProperty = getter
+                .declaringClass
+                .kotlin
+                .let {
+                    // KotlinReflectionInternalError is raised in GitHub167 test,
+                    // but it looks like an edge case, so it is ignored.
+                    try {
+                        it.memberProperties
+                    } catch (e: Error) {
+                        null
+                    }
+                }?.find { it.javaGetter == getter }
+
+            (kotlinProperty?.returnType?.classifier as? KClass<*>)
+                ?.takeIf { it.isValue }
+                ?.java
+                ?.let { outerClazz ->
+                    val innerClazz = getter.returnType
+
+                    ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
+                        ?: @Suppress("UNCHECKED_CAST") ValueClassBoxSerializer(outerClazz, innerClazz)
+                }
         }
         // Ignore the case of AnnotatedField, because JvmField cannot be set in the field of value class.
         else -> null
