@@ -27,6 +27,8 @@ WrongWrong (@k163377)
 * #631: Fix minor bugs in SimpleModule.addSerializer/addDeserializer
 * #634: Fix ReflectionCache to be serializable
 * #640: Fixed problem with test failure in windows.
+* #646: In 2.15, fixed to not be able to use Kotlin 1.4 or lower.
+* #647: Added deprecation to MissingKotlinParameterException.
 
 # 2.14.0
 
