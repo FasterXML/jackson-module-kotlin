@@ -137,12 +137,6 @@ internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val c
     }
 }
 
-@Deprecated(
-    "To be removed in 2.14",
-    ReplaceWith("with(receiver) { declaringClass.declaredMethods.any { it.name.contains('-') } }")
-)
-private fun AnnotatedMethod.isInlineClass() = declaringClass.declaredMethods.any { it.name.contains('-') }
-
 // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
 private fun AnnotatedConstructor.isKotlinConstructorWithParameters(): Boolean =
     parameterCount > 0 && declaringClass.isKotlinClass() && !declaringClass.isEnum
