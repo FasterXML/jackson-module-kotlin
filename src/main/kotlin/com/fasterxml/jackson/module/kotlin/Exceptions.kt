@@ -18,7 +18,9 @@ import kotlin.reflect.KParameter
     ),
     DeprecationLevel.WARNING
 )
-class MissingKotlinParameterException(val parameter: KParameter,
+// When deserialized by the JDK, the parameter property will be null, ignoring nullability.
+// This is a temporary workaround for #572 and we will eventually remove this class.
+class MissingKotlinParameterException(@Transient val parameter: KParameter,
                                       processor: JsonParser? = null,
                                       msg: String) : MismatchedInputException(processor, msg) {
     @Deprecated("Use main constructor", ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"))

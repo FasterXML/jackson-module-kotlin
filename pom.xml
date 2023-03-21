@@ -223,6 +223,7 @@
 			    -->
                           <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
