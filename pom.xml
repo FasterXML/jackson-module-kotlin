@@ -222,6 +222,7 @@
 			  <!-- Cache removal from ReflectionCache; internal change
 			    -->
                           <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
