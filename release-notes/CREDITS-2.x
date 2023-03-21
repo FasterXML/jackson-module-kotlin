@@ -30,6 +30,7 @@ WrongWrong (@k163377)
 * #641: Fixed is-getter names to match parameters and fields.
 * #646: In 2.15, fixed to not be able to use Kotlin 1.4 or lower.
 * #647: Added deprecation to MissingKotlinParameterException.
+* #652: Deletion of unused methods.
 
 # 2.14.0
 
