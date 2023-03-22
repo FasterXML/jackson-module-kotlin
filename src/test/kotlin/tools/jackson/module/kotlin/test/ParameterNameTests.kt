@@ -208,6 +208,16 @@ class ParameterNameTests {
         assertThat(test1out, equalTo(pascalCasedJson))
     }
 
+    private class HasSameParamNameConstructor(val value: Int) {
+        constructor(value: Short) : this(value.toInt() + 100)
+    }
+
+    @Test fun findingPrimaryConstructor() {
+        val json = "{\"value\":1}"
+
+        // If there is more than one constructor, the primary constructor will be used.
+        assertEquals(1, normalCasedMapper.readValue<HasSameParamNameConstructor>(json).value)
+    }
 
     // ==================
 

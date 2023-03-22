@@ -31,6 +31,7 @@ WrongWrong (@k163377)
 * #646: In 2.15, fixed to not be able to use Kotlin 1.4 or lower.
 * #647: Added deprecation to MissingKotlinParameterException.
 * #652: Deletion of unused methods.
+* #654: Change MKPE.parameter property to transient.
 
 # 2.14.0
 
