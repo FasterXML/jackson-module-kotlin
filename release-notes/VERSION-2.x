@@ -19,6 +19,7 @@ Co-maintainers:
 2.15.0 (not yet released)
 
 #652: Deletion of unused methods(fixes #508)
+#654: Change MKPE.parameter property to transient(fixes #572)
 
 2.15.0-rc1 (18-Mar-2023)
 
