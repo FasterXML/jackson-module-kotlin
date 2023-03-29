@@ -18,10 +18,7 @@ Co-maintainers:
 
 2.15.0 (not yet released)
 
-#652: Deletion of unused methods(fixes #508)
-#654: Change MKPE.parameter property to transient(fixes #572)
-
-2.15.0-rc1 (18-Mar-2023)
+2.15.0-rc2 (28-Mar-2023)
 
 #396: (regression) no default no-arguments constructor found
  (fix via [jackson-dataformat-xml#547])
@@ -44,6 +41,9 @@ Co-maintainers:
  (contributed by wrongwrong, cowtowncoder, pjfanning)
 #647: Added deprecation to MissingKotlinParameterException(related to #617)
  (contributed by wrongwrong)
+#652: Deletion of unused methods(fixes #508)
+#654: Change MKPE.parameter property to transient(fixes #572)
+
 
 It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.
