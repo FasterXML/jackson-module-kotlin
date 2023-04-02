@@ -9,7 +9,11 @@ import java.io.Serializable
 import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Method
+import java.util.*
+import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
@@ -43,6 +47,15 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
+
+    // Initial size is 0 because the value class is not always used
+    private val valueClassReturnTypeCache: LRUMap<AnnotatedMethod, Optional<KClass<*>>> =
+        LRUMap(0, reflectionCacheSize)
+
+    // TODO: Consider whether the cache size should be reduced more,
+    //       since the cache is used only twice locally at initialization per property.
+    private val valueClassBoxConverterCache: LRUMap<KClass<*>, ValueClassBoxConverter<*, *>> =
+        LRUMap(0, reflectionCacheSize)
 
     fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key)
             ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
@@ -87,4 +100,44 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
 
     fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
             ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
+
+    private fun AnnotatedMethod.getValueClassReturnType(): KClass<*>? {
+        val getter = this.member.apply {
+            // If the return value of the getter is a value class,
+            // it will be serialized properly without doing anything.
+            // TODO: Verify the case where a value class encompasses another value class.
+            if (this.returnType.isUnboxableValueClass()) return null
+        }
+
+        // Extract the return type from the property or getter-like.
+        val kotlinReturnType = getter.declaringClass.kotlin
+            .let { kClass ->
+                // KotlinReflectionInternalError is raised in GitHub167 test,
+                // but it looks like an edge case, so it is ignored.
+                val prop = runCatching { kClass.memberProperties }.getOrNull()?.find { it.javaGetter == getter }
+                (prop?.returnType ?: runCatching { getter.kotlinFunction }.getOrNull()?.returnType)
+                    ?.classifier as? KClass<*>
+            } ?: return null
+
+        // Since there was no way to directly determine whether returnType is a value class or not,
+        // Class is restored and processed.
+        return kotlinReturnType.takeIf { it.isValue }
+    }
+
+    fun findValueClassReturnType(getter: AnnotatedMethod): KClass<*>? {
+        val optional = valueClassReturnTypeCache.get(getter)
+
+        return if (optional != null) {
+            optional
+        } else {
+            val value = Optional.ofNullable(getter.getValueClassReturnType())
+            (valueClassReturnTypeCache.putIfAbsent(getter, value) ?: value)
+        }.orElse(null)
+    }
+
+    fun getValueClassBoxConverter(unboxedClass: Class<*>, valueClass: KClass<*>): ValueClassBoxConverter<*, *> =
+        valueClassBoxConverterCache.get(valueClass) ?: run {
+            val value = ValueClassBoxConverter(unboxedClass, valueClass)
+            (valueClassBoxConverterCache.putIfAbsent(valueClass, value) ?: value)
+        }
 }
