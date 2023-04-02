@@ -3,11 +3,13 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import com.fasterxml.jackson.databind.util.Converter
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
@@ -62,44 +64,23 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return super.findCreatorAnnotation(config, a)
     }
 
-    // Find a serializer to handle the case where the getter returns an unboxed value from the value class.
-    override fun findSerializer(am: Annotated): StdSerializer<*>? = when (am) {
-        is AnnotatedMethod -> {
-            val getter = am.member.apply {
-                // If the return value of the getter is a value class,
-                // it will be serialized properly without doing anything.
-                if (this.returnType.isUnboxableValueClass()) return null
-            }
-
-            val kotlinProperty = getter
-                .declaringClass
-                .kotlin
-                .let {
-                    // KotlinReflectionInternalError is raised in GitHub167 test,
-                    // but it looks like an edge case, so it is ignored.
-                    try {
-                        it.memberProperties
-                    } catch (e: Error) {
-                        null
-                    }
-                }?.find { it.javaGetter == getter }
-
-            (kotlinProperty?.returnType?.classifier as? KClass<*>)
-                ?.takeIf { it.isValue }
-                ?.java
-                ?.let { outerClazz ->
-                    val innerClazz = getter.returnType
-
-                    ValueClassStaticJsonValueSerializer.createdOrNull(outerClazz, innerClazz)
-                        ?: @Suppress("UNCHECKED_CAST") ValueClassBoxSerializer(outerClazz, innerClazz)
-                }
-        }
-        // Ignore the case of AnnotatedField, because JvmField cannot be set in the field of value class.
-        else -> null
+    // Find a converter to handle the case where the getter returns an unboxed value from the value class.
+    override fun findSerializationConverter(a: Annotated): Converter<*, *>? = (a as? AnnotatedMethod)?.let { _ ->
+        cache.findValueClassReturnType(a)?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
     }
 
+    // Determine if the unbox result of value class is nullAable
+    // @see findNullSerializer
+    private fun KClass<*>.requireRebox(): Boolean =
+        this.memberProperties.first { it.javaField != null }.returnType.isMarkedNullable
+
     // Perform proper serialization even if the value wrapped by the value class is null.
-    override fun findNullSerializer(am: Annotated) = findSerializer(am)
+    // If value is a non-null object type, it must not be reboxing.
+    override fun findNullSerializer(am: Annotated): JsonSerializer<*>? = (am as? AnnotatedMethod)?.let { _ ->
+        cache.findValueClassReturnType(am)
+            ?.takeIf { it.requireRebox() }
+            ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
+    }
 
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
