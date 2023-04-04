@@ -224,6 +224,9 @@
                           <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinAnnotationIntrospector</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
