@@ -63,7 +63,6 @@ class GitHub524 {
     fun getterAnnotated() {
         val writer = jacksonObjectMapper().testPrettyWriter()
 
-        // JsonSerialize is not working now.
         assertEquals(
             """
                 {
