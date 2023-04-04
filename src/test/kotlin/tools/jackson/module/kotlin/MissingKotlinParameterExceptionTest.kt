@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin
+package tools.jackson.module.kotlin
 
 import org.junit.Test
 import kotlin.test.assertNotNull

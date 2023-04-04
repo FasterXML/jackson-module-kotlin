@@ -131,27 +131,3 @@ internal class ValueClassBoxSerializer<T : Any>(
         provider.findValueSerializer(outerClazz).serialize(boxed, gen, provider)
     }
 }
-
-internal class ValueClassStaticJsonValueSerializer<T> private constructor(
-    innerClazz: Class<T>,
-    private val staticJsonValueGetter: Method
-) : StdSerializer<T>(innerClazz) {
-    override fun serialize(value: T?, gen: JsonGenerator, provider: SerializerProvider) {
-        // As shown in the processing of the factory function, jsonValueGetter is always a static method.
-        val jsonValue: Any? = staticJsonValueGetter.invoke(null, value)
-        jsonValue
-            ?.let { provider.findValueSerializer(it::class.java).serialize(it, gen, provider) }
-            ?: provider.findNullValueSerializer(null).serialize(null, gen, provider)
-    }
-
-    // Since JsonValue can be processed correctly if it is given to a non-static getter/field,
-    // this class will only process if it is a `static` method.
-    companion object {
-        fun <T> createdOrNull(
-            outerClazz: Class<out Any>,
-            innerClazz: Class<T>
-        ): ValueClassStaticJsonValueSerializer<T>? = outerClazz
-            .getStaticJsonValueGetter()
-            ?.let { ValueClassStaticJsonValueSerializer(innerClazz, it) }
-    }
-}

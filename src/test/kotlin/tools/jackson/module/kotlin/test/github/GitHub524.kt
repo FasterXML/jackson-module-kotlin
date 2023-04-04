@@ -11,7 +11,6 @@ import tools.jackson.module.kotlin.testPrettyWriter
 
 import org.junit.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 // Most of the current behavior has been tested on GitHub464, so only serializer-related behavior is tested here.
 class GitHub524 {
@@ -60,12 +59,12 @@ class GitHub524 {
 
     class SerializeByAnnotation(@get:JsonSerialize(using = Serializer::class) val foo: HasSerializer = HasSerializer(1))
 
+    // fixed on #659
     @Test
-    fun failing() {
-        val writer = jacksonObjectMapper().writerWithDefaultPrettyPrinter()
+    fun getterAnnotated() {
+        val writer = jacksonObjectMapper().testPrettyWriter()
 
-        // JsonSerialize is not working now.
-        assertNotEquals(
+        assertEquals(
             """
                 {
                   "foo" : "HasSerializer(value=1)"
