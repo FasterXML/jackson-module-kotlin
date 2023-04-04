@@ -18,6 +18,11 @@ Co-maintainers:
 
 2.15.0 (not yet released)
 
+#659: Improve serialization support for value class.
+    Fixes #618 and partially fixes #625.
+    Also fixed is serialization when a getter-like function returns a value class, and behavior when a getter is annotated with a `JsonSerialize` annotation.
+ (contributed by wrongwrong)
+
 2.15.0-rc2 (28-Mar-2023)
 
 #396: (regression) no default no-arguments constructor found
@@ -42,8 +47,9 @@ Co-maintainers:
 #647: Added deprecation to MissingKotlinParameterException(related to #617)
  (contributed by wrongwrong)
 #652: Deletion of unused methods(fixes #508)
+ (contributed by wrongwrong)
 #654: Change MKPE.parameter property to transient(fixes #572)
-
+ (contributed by wrongwrong)
 
 It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.

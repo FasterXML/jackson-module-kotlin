@@ -32,6 +32,7 @@ WrongWrong (@k163377)
 * #647: Added deprecation to MissingKotlinParameterException.
 * #652: Deletion of unused methods.
 * #654: Change MKPE.parameter property to transient.
+* #659: Improve serialization support for value class.
 
 # 2.14.0
 
