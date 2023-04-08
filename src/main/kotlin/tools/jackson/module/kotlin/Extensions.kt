@@ -63,7 +63,6 @@ inline fun <reified T> ObjectReader.readValueTyped(p: JsonParser): T = forType(j
 inline fun <reified T> ObjectReader.readValuesTyped(p: JsonParser): Iterator<T> = readValues(p, jacksonTypeRef<T>())
 inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(n))
 
-inline fun <reified T, reified U> ObjectMapper.addMixIn(): ObjectMapper = this.addMixIn(T::class.java, U::class.java)
 inline fun <reified T, reified U> JsonMapper.Builder.addMixIn(): JsonMapper.Builder = this.addMixIn(T::class.java, U::class.java)
 
 operator fun ArrayNode.plus(element: Boolean) = Unit.apply { add(element) }
