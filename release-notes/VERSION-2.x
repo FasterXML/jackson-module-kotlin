@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.15.0 (not yet released)
 
+#554: Add extension function for addMixin
+ (contributing by Sylvain-maillard)
 #659: Improve serialization support for value class.
     Fixes #618 and partially fixes #625.
     Also fixed is serialization when a getter-like function returns a value class, and behavior when a getter is annotated with a `JsonSerialize` annotation.

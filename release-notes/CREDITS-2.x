@@ -34,6 +34,9 @@ WrongWrong (@k163377)
 * #654: Change MKPE.parameter property to transient.
 * #659: Improve serialization support for value class.
 
+Sylvain-maillard (@Sylvain-maillard)
+* #554: Add extension function for addMixin.
+
 # 2.14.0
 
 Richard Kwasnicki (Richie94@github)
