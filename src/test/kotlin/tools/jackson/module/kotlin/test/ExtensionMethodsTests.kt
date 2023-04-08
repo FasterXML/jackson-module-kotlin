@@ -1,11 +1,15 @@
 package tools.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.SerializationFeature
+import tools.jackson.databind.json.JsonMapper
 import tools.jackson.databind.node.JsonNodeFactory
+import tools.jackson.module.kotlin.addMixIn
 import tools.jackson.module.kotlin.contains
 import tools.jackson.module.kotlin.convertValue
 import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.minusAssign
 import tools.jackson.module.kotlin.plusAssign
 import tools.jackson.module.kotlin.readValue
@@ -17,11 +21,12 @@ import org.junit.Test
 
 class TestExtensionMethods {
     val mapper: ObjectMapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
-            .build()
+        .build()
 
     data class BasicPerson(val name: String, val age: Int)
 
-    @Test fun testAllInferenceForms() {
+    @Test
+    fun testAllInferenceForms() {
         val json = """{"name":"John Smith","age":30}"""
 
         val inferRightSide = mapper.readValue<BasicPerson>(json)
@@ -37,13 +42,15 @@ class TestExtensionMethods {
 
     data class MyData(val a: String, val b: Int)
 
-    @Test fun testStackOverflow33368328() {
+    @Test
+    fun testStackOverflow33368328() {
         val jsonStr = """[{"a": "value1", "b": 1}, {"a": "value2", "b": 2}]"""
         val myList: List<MyData> = mapper.readValue(jsonStr)
         assertThat(myList, equalTo(listOf(MyData("value1", 1), MyData("value2", 2))))
     }
 
-    @Test fun testOperatorFunExtensions() {
+    @Test
+    fun testOperatorFunExtensions() {
         val factory = JsonNodeFactory.instance
 
         val objectNode = factory.objectNode()
@@ -69,8 +76,10 @@ class TestExtensionMethods {
         assertThat(arrayNode.size(), `is`(0))
     }
 
-    @Test fun noTypeErasure(){
+    @Test
+    fun noTypeErasure() {
         data class Person(val name: String)
+
         val source = """[ { "name" : "Neo" } ]"""
         val tree = mapper.readTree(source)
 
@@ -82,5 +91,19 @@ class TestExtensionMethods {
 
         val convertValueResult: List<Person> = mapper.convertValue(tree)
         assertThat(convertValueResult, `is`(listOf(Person("Neo"))))
+    }
+
+    @Test
+    fun mixInExtensionTest() {
+        data class Person(val name: String)
+        abstract class PersonMixIn {
+            @JsonIgnore
+            var name: String = ""
+        }
+
+        val mapper: JsonMapper = jsonMapper { addMixIn<Person, PersonMixIn>() }
+        val serializedPerson: String = mapper.writeValueAsString(Person("test"))
+
+        assertThat(serializedPerson, `is`("{}"))
     }
 }
