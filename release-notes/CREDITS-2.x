@@ -33,6 +33,7 @@ WrongWrong (@k163377)
 * #652: Deletion of unused methods.
 * #654: Change MKPE.parameter property to transient.
 * #659: Improve serialization support for value class.
+* #665: Modified to not load the entire Sequence into memory during serialization.
 
 Sylvain-maillard (@Sylvain-maillard)
 * #554: Add extension function for addMixin.
