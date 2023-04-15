@@ -49,6 +49,8 @@ Co-maintainers:
     Fixes #618 and partially fixes #625.
     Also fixed is serialization when a getter-like function returns a value class, and behavior when a getter is annotated with a `JsonSerialize` annotation.
  (contributed by wrongwrong)
+#665: Modified to not load the entire Sequence into memory during serialization(fixes #368).
+ (contributed by wrongwrong)
 
 It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.
