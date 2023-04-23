@@ -15,7 +15,10 @@ class GitHub530 {
     value class ValueParamGetterAnnotated(@get:JsonValue val value: Int)
 
     @JvmInline
-    value class ValueParamFieldAnnotated(@JvmField @field:JsonValue val value: Int)
+    value class ValueParamFieldAnnotated(
+        @JvmField @field:JsonValue
+        val value: Int
+    )
 
     @JvmInline
     value class PropertyWithOverriddenGetter(val value: Int) {
@@ -38,6 +41,13 @@ class GitHub530 {
 
     @JvmInline
     value class JsonValueGetterImplementation(val value: Int) : JsonValueGetter
+
+    @JvmInline
+    value class JsonValueGetterImplementationDisabled(val value: Int) : JsonValueGetter {
+        @get:JsonValue(false)
+        override val jsonValue: String
+            get() = super.jsonValue
+    }
 
     private val writer = jacksonMapperBuilder().build().testPrettyWriter()
 
@@ -180,6 +190,29 @@ class GitHub530 {
     }
 
     @Test
+    fun jsonValueGetterImplementationDisabled() {
+        data class Data(
+            val nonNull: JsonValueGetterImplementationDisabled,
+            val nullable: JsonValueGetterImplementationDisabled?
+        )
+
+        assertEquals(
+            """
+                {
+                  "nonNull" : 0,
+                  "nullable" : 1
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    JsonValueGetterImplementationDisabled(0),
+                    JsonValueGetterImplementationDisabled(1)
+                )
+            )
+        )
+    }
+
+    @Test
     fun jsonValueGetterImplementationAsGenericType() {
         data class Data(
             val nonNull: JsonValueGetter,
@@ -200,19 +233,34 @@ class GitHub530 {
                 )
             )
         )
+        assertEquals(
+            """
+                {
+                  "nonNull" : 0,
+                  "nullable" : 1
+                }
+            """.trimIndent(),
+            writer.writeValueAsString(
+                Data(
+                    JsonValueGetterImplementationDisabled(0),
+                    JsonValueGetterImplementationDisabled(1)
+                )
+            )
+        )
     }
 
     @Test
     fun inCollection() {
         assertEquals(
-            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\" ]",
+            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\", 5 ]",
             writer.writeValueAsString(
                 listOf(
                     ValueParamGetterAnnotated(0),
                     ValueParamFieldAnnotated(1),
                     PropertyWithOverriddenGetter(2),
                     DirectlyOverriddenGetter(3),
-                    JsonValueGetterImplementation(4)
+                    JsonValueGetterImplementation(4),
+                    JsonValueGetterImplementationDisabled(5)
                 )
             )
         )
@@ -221,14 +269,15 @@ class GitHub530 {
     @Test
     fun inArray() {
         assertEquals(
-            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\" ]",
+            "[ 0, 1, \"PropertyWithOverriddenGetter(value=2)\", \"DirectlyOverriddenGetter(value=3)\", \"JsonValueGetterImplementation(value=4)\", 5 ]",
             writer.writeValueAsString(
                 arrayOf(
                     ValueParamGetterAnnotated(0),
                     ValueParamFieldAnnotated(1),
                     PropertyWithOverriddenGetter(2),
                     DirectlyOverriddenGetter(3),
-                    JsonValueGetterImplementation(4)
+                    JsonValueGetterImplementation(4),
+                    JsonValueGetterImplementationDisabled(5)
                 )
             )
         )
