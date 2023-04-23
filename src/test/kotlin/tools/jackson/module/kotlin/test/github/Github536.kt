@@ -1,10 +1,10 @@
 package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonKey
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.testPrettyWriter
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.testPrettyWriter
 
 class Github536 {
     @JvmInline
