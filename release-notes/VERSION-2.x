@@ -53,6 +53,8 @@ Co-maintainers:
  (contributed by wrongwrong)
 #666: Fixed problem with value class where JsonValue flag was ignored.
  (contributed by wrongwrong)
+#667: Support JsonKey in value class.
+ (contributed by wrongwrong)
 
 It is also confirmed that the issue submitted below is no longer reproduced,
 although it is unclear when it was explicitly fixed.
