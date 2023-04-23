@@ -34,6 +34,7 @@ WrongWrong (@k163377)
 * #654: Change MKPE.parameter property to transient.
 * #659: Improve serialization support for value class.
 * #665: Modified to not load the entire Sequence into memory during serialization.
+* #666: Fixed problem with value class where JsonValue flag was ignored.
 
 Sylvain-maillard (@Sylvain-maillard)
 * #554: Add extension function for addMixin.
