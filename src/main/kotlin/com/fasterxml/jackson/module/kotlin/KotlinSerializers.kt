@@ -45,8 +45,9 @@ object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
 }
 
 // Class must be UnboxableValueClass.
-private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods
-    .find { method -> Modifier.isStatic(method.modifiers) && method.annotations.any { it is JsonValue } }
+private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods.find { method ->
+    Modifier.isStatic(method.modifiers) && method.annotations.any { it is JsonValue && it.value }
+}
 
 object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
     override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
