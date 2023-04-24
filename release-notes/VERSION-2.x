@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.15.0-rc3 (14-Apr-2023)
+2.15.0 (23-Apr-2023)
 
 #396: (regression) no default no-arguments constructor found
  (fix via [jackson-dataformat-xml#547])
