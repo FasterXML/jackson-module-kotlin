@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.16.0 (not yet relesed)
+
+No changes since 2.15
+
 2.15.0 (23-Apr-2023)
 
 #396: (regression) no default no-arguments constructor found
