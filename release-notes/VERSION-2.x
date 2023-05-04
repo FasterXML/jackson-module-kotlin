@@ -18,6 +18,11 @@ Co-maintainers:
 
 2.15.0 (23-Apr-2023)
 
+This version has a regression regarding the serialization result of `getter-like` functions starting with `is`.
+For example, a function defined as `fun isValid(): Boolean`, which was previously output with the name `valid`, is now output with the name `isValid`.
+
+See #670 for details.
+
 #396: (regression) no default no-arguments constructor found
  (fix via [jackson-dataformat-xml#547])
 #554: Add extension function for addMixin
