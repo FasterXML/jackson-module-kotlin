@@ -71,6 +71,7 @@ although it is unclear when it was explicitly fixed.
 * #237
 * #301
 
+2.14.3 (05-May-2023)
 2.14.2 (28-Jan-2023)
 2.14.1 (21-Nov-2022)
 
