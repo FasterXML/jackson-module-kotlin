@@ -13,6 +13,16 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigInteger
 
+@Deprecated(
+    message = "This class will be removed in 2.16 or later as it has been replaced by SequenceToIteratorConverter.",
+    replaceWith = ReplaceWith("com.fasterxml.jackson.module.kotlin.SequenceToIteratorConverter")
+)
+object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
+    override fun serialize(value: Sequence<*>, gen: JsonGenerator, provider: SerializerProvider) {
+        provider.defaultSerializeValue(value.iterator(), gen)
+    }
+}
+
 object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
     override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) =
         gen.writeNumber(value.toShort())
