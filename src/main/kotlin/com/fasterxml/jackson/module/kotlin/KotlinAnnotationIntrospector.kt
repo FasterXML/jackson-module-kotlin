@@ -64,9 +64,17 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         return super.findCreatorAnnotation(config, a)
     }
 
-    // Find a converter to handle the case where the getter returns an unboxed value from the value class.
-    override fun findSerializationConverter(a: Annotated): Converter<*, *>? = (a as? AnnotatedMethod)?.let { _ ->
-        cache.findValueClassReturnType(a)?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
+    override fun findSerializationConverter(a: Annotated): Converter<*, *>? = when (a) {
+        // Find a converter to handle the case where the getter returns an unboxed value from the value class.
+        is AnnotatedMethod -> cache.findValueClassReturnType(a)
+            ?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
+            ?: a.takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
+                ?.let { SequenceToIteratorConverter(it.type) }
+
+        is AnnotatedClass -> a
+            .takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
+            ?.let { SequenceToIteratorConverter(it.type) }
+        else -> null
     }
 
     // Determine if the unbox result of value class is nullAable

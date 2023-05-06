@@ -13,12 +13,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigInteger
 
-object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
-    override fun serialize(value: Sequence<*>, gen: JsonGenerator, provider: SerializerProvider) {
-        provider.defaultSerializeValue(value.iterator(), gen)
-    }
-}
-
 object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
     override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) =
         gen.writeNumber(value.toShort())
@@ -98,7 +92,6 @@ internal class KotlinSerializers : Serializers.Base() {
         val rawClass = type.rawClass
 
         return when {
-            Sequence::class.java.isAssignableFrom(rawClass) -> SequenceSerializer
             UByte::class.java.isAssignableFrom(rawClass) -> UByteSerializer
             UShort::class.java.isAssignableFrom(rawClass) -> UShortSerializer
             UInt::class.java.isAssignableFrom(rawClass) -> UIntSerializer
