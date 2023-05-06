@@ -68,9 +68,6 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         // Find a converter to handle the case where the getter returns an unboxed value from the value class.
         is AnnotatedMethod -> cache.findValueClassReturnType(a)
             ?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
-            ?: a.takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
-                ?.let { SequenceToIteratorConverter(it.type) }
-
         is AnnotatedClass -> a
             .takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
             ?.let { SequenceToIteratorConverter(it.type) }
