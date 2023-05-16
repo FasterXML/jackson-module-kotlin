@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.15.1 (16-May-2023)
+
+No changes since 2.15.0
+
 2.15.0 (23-Apr-2023)
 
 This version has a regression regarding the serialization result of `getter-like` functions starting with `is`.
