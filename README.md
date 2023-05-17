@@ -10,16 +10,15 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.14.2` (for Jackson `2.14.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
+* release `2.15.1` (for Jackson `2.15.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
+* release `2.14.3` (for Jackson `2.14.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
 * release `2.13.5` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.13)
-* release `2.12.7` (for Jackson `2.12.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.12)
-* release `2.11.4` (for Jackson `2.11.x`) [![CircleCI](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11.svg?style=svg)](https://circleci.com/gh/FasterXML/jackson-module-kotlin/tree/2.11)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 Gradle:
 ```
-implementation "tools.jackson.module:jackson-module-kotlin:2.14.+"
+implementation "tools.jackson.module:jackson-module-kotlin:3.0.+"
 ```
 
 Maven:
@@ -27,7 +26,7 @@ Maven:
 <dependency>
     <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.14.2</version>
+    <version>3.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -228,7 +227,7 @@ ObjectMapper objectMapper = JsonMapper.builder()
 
 Following developers have committer access to this project.
 
-* Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
+* Author: Jayson Minard (@apatrida) wrote this module originally (no longer active)
 * Active Maintainers:
     * Dmitry Spikhalskiy (@Spikhalskiy) -- since 2.14
     * Drew Stephens (@dinomite)
@@ -237,14 +236,14 @@ Following developers have committer access to this project.
 * Co-maintainers:
     * Tatu Saloranta (@cowtowncoder)
 
-You may at-reference them as necessary but please keep in mind that all
+You may at-reference maintainers as necessary but please keep in mind that all
 maintenance work is strictly voluntary (no one gets paid to work on this
 or any other Jackson components) so there is no guarantee for timeliness of
 responses.
 
 All Pull Requests should be reviewed by at least one of active maintainers;
 bigger architectural/design questions should be agreed upon by majority of
-active maintainers (at this point meaning both Drew and Vyacheslav :) ).
+active maintainers.
 
 ## Releases & Branches
 
