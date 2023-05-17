@@ -227,7 +227,7 @@ ObjectMapper objectMapper = JsonMapper.builder()
 
 Following developers have committer access to this project.
 
-* Author: Jayson Minard (@apatrida) wrote this module; still helps issues from time to time
+* Author: Jayson Minard (@apatrida) wrote this module originally (no longer active)
 * Active Maintainers:
     * Dmitry Spikhalskiy (@Spikhalskiy) -- since 2.14
     * Drew Stephens (@dinomite)
@@ -236,14 +236,14 @@ Following developers have committer access to this project.
 * Co-maintainers:
     * Tatu Saloranta (@cowtowncoder)
 
-You may at-reference them as necessary but please keep in mind that all
+You may at-reference maintainers as necessary but please keep in mind that all
 maintenance work is strictly voluntary (no one gets paid to work on this
 or any other Jackson components) so there is no guarantee for timeliness of
 responses.
 
 All Pull Requests should be reviewed by at least one of active maintainers;
 bigger architectural/design questions should be agreed upon by majority of
-active maintainers (at this point meaning both Drew and Vyacheslav :) ).
+active maintainers.
 
 ## Releases & Branches
 
