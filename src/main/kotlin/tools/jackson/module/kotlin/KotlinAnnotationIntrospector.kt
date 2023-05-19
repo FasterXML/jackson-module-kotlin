@@ -6,6 +6,7 @@ import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
 import tools.jackson.databind.cfg.MapperConfig
 import tools.jackson.databind.introspect.Annotated
+import tools.jackson.databind.introspect.AnnotatedClass
 import tools.jackson.databind.introspect.AnnotatedField
 import tools.jackson.databind.introspect.AnnotatedMember
 import tools.jackson.databind.introspect.AnnotatedMethod
@@ -70,9 +71,14 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
         return super.findCreatorAnnotation(config, a)
     }
 
-    // Find a converter to handle the case where the getter returns an unboxed value from the value class.
-    override fun findSerializationConverter(config: MapperConfig<*>?, a: Annotated): Converter<*, *>? = (a as? AnnotatedMethod)?.let { _ ->
-        cache.findValueClassReturnType(a)?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
+    override fun findSerializationConverter(config: MapperConfig<*>?, a: Annotated): Converter<*, *>? = when (a) {
+        // Find a converter to handle the case where the getter returns an unboxed value from the value class.
+        is AnnotatedMethod -> cache.findValueClassReturnType(a)
+            ?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
+        is AnnotatedClass -> a
+            .takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
+            ?.let { SequenceToIteratorConverter(it.type) }
+        else -> null
     }
 
     // Determine if the unbox result of value class is nullAable

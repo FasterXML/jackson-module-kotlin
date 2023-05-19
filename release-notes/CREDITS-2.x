@@ -15,6 +15,11 @@ Authors:
 
 Contributors:
 
+# 2.15.2
+
+WrongWrong (@k163377)
+* #675: Modified to use Converter in Sequence serialization
+
 # 2.15.0
 
 Ilya Ryzhenkov (@orangy)
