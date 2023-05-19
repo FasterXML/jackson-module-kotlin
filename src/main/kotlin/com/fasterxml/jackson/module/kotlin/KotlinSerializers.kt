@@ -13,6 +13,10 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigInteger
 
+@Deprecated(
+    message = "This class will be removed in 2.16 or later as it has been replaced by SequenceToIteratorConverter.",
+    replaceWith = ReplaceWith("com.fasterxml.jackson.module.kotlin.SequenceToIteratorConverter")
+)
 object SequenceSerializer : StdSerializer<Sequence<*>>(Sequence::class.java) {
     override fun serialize(value: Sequence<*>, gen: JsonGenerator, provider: SerializerProvider) {
         provider.defaultSerializeValue(value.iterator(), gen)
@@ -98,7 +102,6 @@ internal class KotlinSerializers : Serializers.Base() {
         val rawClass = type.rawClass
 
         return when {
-            Sequence::class.java.isAssignableFrom(rawClass) -> SequenceSerializer
             UByte::class.java.isAssignableFrom(rawClass) -> UByteSerializer
             UShort::class.java.isAssignableFrom(rawClass) -> UShortSerializer
             UInt::class.java.isAssignableFrom(rawClass) -> UIntSerializer
