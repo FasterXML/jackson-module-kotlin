@@ -18,7 +18,7 @@ Co-maintainers:
 
 2.16.0 (not yet relesed)
 
-2.15.2 (not yet relesed)
+2.15.2 (30-May-2023)
 
 #675: Modified to use Converter in Sequence serialization
  This change allows serialization-related annotations, such as `JsonSerialize(contentUsing = ...)`, to work on `Sequence`.
