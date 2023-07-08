@@ -16,7 +16,11 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.16.0 (not yet relesed)
+2.16.0 (not yet released)
+
+#682: Remove MissingKotlinParameterException and replace with MismatchedInputException
+ This change removes MissingKotlinParameterException and resolves #617.
+ This change is a prerequisite for future work to improve performance.
 
 2.15.2 (30-May-2023)
 

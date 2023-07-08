@@ -9,6 +9,7 @@ import tools.jackson.databind.deser.ValueInstantiators
 import tools.jackson.databind.deser.bean.PropertyValueBuffer
 import tools.jackson.databind.deser.impl.NullsAsEmptyProvider
 import tools.jackson.databind.deser.std.StdValueInstantiator
+import tools.jackson.databind.exc.MismatchedInputException
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
@@ -81,10 +82,12 @@ internal class KotlinValueInstantiator(
             val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
             if (isMissingAndRequired ||
                 (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable)) {
-                throw MissingKotlinParameterException(
-                    parameter = paramDef,
-                    processor = ctxt.parser,
-                    msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
+                throw MismatchedInputException.from(
+                    ctxt.parser,
+                    jsonProp.type,
+                    "Instantiation of $valueTypeDesc value failed for JSON property ${jsonProp.name} " +
+                            "due to missing (therefore NULL) value for creator parameter ${paramDef.name} " +
+                            "which is a non-nullable type"
                 ).wrapWithPath(this.valueClass, jsonProp.name)
             }
 
@@ -107,10 +110,10 @@ internal class KotlinValueInstantiator(
                 }
 
                 if (paramType != null && itemType != null) {
-                    throw tools.jackson.module.kotlin.MissingKotlinParameterException(
-                        parameter = paramDef,
-                        processor = ctxt.parser,
-                        msg = "Instantiation of $itemType $paramType failed for JSON property ${jsonProp.name} due to null value in a $paramType that does not allow null values"
+                    throw MismatchedInputException.from(
+                        ctxt.parser,
+                        jsonProp.type,
+                        "Instantiation of $itemType $paramType failed for JSON property ${jsonProp.name} due to null value in a $paramType that does not allow null values"
                     ).wrapWithPath(this.valueClass, jsonProp.name)
                 }
             }
