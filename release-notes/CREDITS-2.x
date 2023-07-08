@@ -15,6 +15,11 @@ Authors:
 
 Contributors:
 
+# 2.16.0 (not yet released)
+
+WrongWrong (@k163377)
+* #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
+
 # 2.15.2
 
 WrongWrong (@k163377)
