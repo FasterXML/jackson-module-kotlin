@@ -44,12 +44,12 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      */
     StrictNullChecks(enabledByDefault = false);
 
-    internal val bitSet: BitSet = 2.0.pow(ordinal).toInt().toBitSet()
+    internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 
     companion object {
         internal val defaults
-            get() = 0.toBitSet().apply {
-                values().filter { it.enabledByDefault }.forEach { or(it.bitSet) }
+            get() = values().fold(BitSet(Int.SIZE_BITS)) { acc, cur ->
+                acc.apply { if (cur.enabledByDefault) this.or(cur.bitSet) }
             }
     }
 }
