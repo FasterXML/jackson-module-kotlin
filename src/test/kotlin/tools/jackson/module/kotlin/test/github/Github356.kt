@@ -42,8 +42,8 @@ class TestGithub356 {
     }
 }
 
-// Deprecated usage kept at 1.5.0 upgrade; delete in the future
-inline class InlineClass(val value: String)
+@JvmInline
+value class InlineClass(val value: String)
 
 @JsonDeserialize(builder = ClassWithInlineMember.JacksonBuilder::class)
 data class ClassWithInlineMember(val inlineClassProperty: InlineClass) {

@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.16.0 (not yet released)
 
+#684: Kotlin 1.5 has been deprecated and the minimum supported Kotlin version will be updated to 1.6.
 #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
  This change removes MissingKotlinParameterException and resolves #617.
  This change is a prerequisite for future work to improve performance.
