@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.16.0 (not yet released)
 
+#685: Streamline default value management for KotlinFeatures.
+ This improves the initialization cost of kotlin-module a little.
 #684: Kotlin 1.5 has been deprecated and the minimum supported Kotlin version will be updated to 1.6.
 #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
  This change removes MissingKotlinParameterException and resolves #617.
