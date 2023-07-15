@@ -27,6 +27,8 @@ internal class KotlinValueInstantiator(
     private fun JavaType.requireEmptyValue() =
         (nullToEmptyCollection && this.isCollectionLikeType) || (nullToEmptyMap && this.isMapLikeType)
 
+    private fun KType.isGenericTypeVar() = javaType is TypeVariable<*>
+
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
         props: Array<out SettableBeanProperty>,
@@ -83,9 +85,9 @@ internal class KotlinValueInstantiator(
                     paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
                 } else {
                     val isMissingAndRequired = isMissing && jsonProp.isRequired
-                    val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
 
-                    if (isMissingAndRequired || (!isGenericTypeVar && !paramDef.type.isMarkedNullable)) {
+                    // Since #310 reported that the calculation cost is high, isGenericTypeVar is determined last.
+                    if (isMissingAndRequired || (!paramDef.type.isMarkedNullable && !paramDef.type.isGenericTypeVar())) {
                         throw MismatchedInputException.from(
                             ctxt.parser,
                             jsonProp.type,
