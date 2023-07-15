@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseKotlinPropertyNameForGetter
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
@@ -53,7 +54,8 @@ class KotlinModule @Deprecated(
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false
+    val strictNullChecks: Boolean = false,
+    val useKotlinPropertyNameForGetter: Boolean = false
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     init {
         if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
@@ -102,7 +104,8 @@ class KotlinModule @Deprecated(
             builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
             else -> DISABLED
         },
-        builder.isEnabled(StrictNullChecks)
+        builder.isEnabled(StrictNullChecks),
+        builder.isEnabled(UseKotlinPropertyNameForGetter)
     )
 
     companion object {
@@ -130,7 +133,13 @@ class KotlinModule @Deprecated(
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
+        context.appendAnnotationIntrospector(
+            KotlinNamesAnnotationIntrospector(
+                this,
+                cache,
+                ignoredClassesForImplyingJsonCreator,
+                useKotlinPropertyNameForGetter)
+        )
 
         context.addDeserializers(KotlinDeserializers())
         context.addKeyDeserializers(KotlinKeyDeserializers)

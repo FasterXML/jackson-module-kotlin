@@ -42,7 +42,23 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      * may contain null values after deserialization.
      * Enabling it protects against this but has significant performance impact.
      */
-    StrictNullChecks(enabledByDefault = false);
+    StrictNullChecks(enabledByDefault = false),
+
+    /**
+     * By enabling this feature, the property name on Kotlin will be used as the getter name.
+     *
+     * By default, the name based on the getter name on the JVM is used as the accessor name.
+     * This name may be different from the parameter/field name, in which case serialization results
+     * may be incorrect or annotations may malfunction.
+     * See [jackson-module-kotlin#630] for details.
+     *
+     * By enabling this feature, such malfunctions will not occur.
+     *
+     * On the other hand, enabling this option increases the amount of reflection processing,
+     * which may result in performance degradation for both serialization and deserialization.
+     * In addition, the adjustment of behavior using get:JvmName is disabled.
+     */
+    UseKotlinPropertyNameForGetter(enabledByDefault = false);
 
     internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 

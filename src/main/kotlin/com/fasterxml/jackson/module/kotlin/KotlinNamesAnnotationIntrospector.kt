@@ -27,7 +27,12 @@ import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
-internal class KotlinNamesAnnotationIntrospector(val module: KotlinModule, val cache: ReflectionCache, val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>) : NopAnnotationIntrospector() {
+internal class KotlinNamesAnnotationIntrospector(
+    val module: KotlinModule,
+    val cache: ReflectionCache,
+    val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
+    val useKotlinPropertyNameForGetter: Boolean
+) : NopAnnotationIntrospector() {
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (!member.declaringClass.isKotlinClass()) return null
