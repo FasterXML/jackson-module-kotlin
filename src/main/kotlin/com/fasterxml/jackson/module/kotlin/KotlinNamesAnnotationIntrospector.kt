@@ -33,31 +33,35 @@ internal class KotlinNamesAnnotationIntrospector(
     val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
     val useKotlinPropertyNameForGetter: Boolean
 ) : NopAnnotationIntrospector() {
+    private fun getterNameFromJava(member: AnnotatedMember): String? {
+        val name = member.name
+
+        // The reason for truncating after `-` is to truncate the random suffix
+        // given after the value class accessor name.
+        return when {
+            name.startsWith("get") -> name.takeIf { it.contains("-") }?.let { _ ->
+                name.substringAfter("get")
+                    .replaceFirstChar { it.lowercase(Locale.getDefault()) }
+                    .substringBefore('-')
+            }
+            // since 2.15: support Kotlin's way of handling "isXxx" backed properties where
+            // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
+            // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
+            //  https://github.com/FasterXML/jackson-databind/issues/2527 and
+            //  https://github.com/FasterXML/jackson-module-kotlin/issues/340
+            //  for details)
+            name.startsWith("is") -> if (name.contains("-")) name.substringAfter("-") else name
+            else -> null
+        }
+    }
+
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (!member.declaringClass.isKotlinClass()) return null
 
-        val name = member.name
-
         return when (member) {
             is AnnotatedMethod -> if (member.parameterCount == 0) {
-                // The reason for truncating after `-` is to truncate the random suffix
-                // given after the value class accessor name.
-                when {
-                    name.startsWith("get") -> name.takeIf { it.contains("-") }?.let { _ ->
-                        name.substringAfter("get")
-                            .replaceFirstChar { it.lowercase(Locale.getDefault()) }
-                            .substringBefore('-')
-                    }
-                    // since 2.15: support Kotlin's way of handling "isXxx" backed properties where
-                    // logical property name needs to remain "isXxx" and not become "xxx" as with Java Beans
-                    // (see https://kotlinlang.org/docs/reference/java-to-kotlin-interop.html and
-                    //  https://github.com/FasterXML/jackson-databind/issues/2527 and
-                    //  https://github.com/FasterXML/jackson-module-kotlin/issues/340
-                    //  for details)
-                    name.startsWith("is") -> if (name.contains("-")) name.substringAfter("-") else name
-                    else -> null
-                }
+                if (useKotlinPropertyNameForGetter) TODO() else getterNameFromJava(member)
             } else null
             is AnnotatedParameter -> findKotlinParameterName(member)
             else -> null
