@@ -24,6 +24,7 @@ import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
+import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -33,7 +34,7 @@ internal class KotlinNamesAnnotationIntrospector(
     val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
     val useKotlinPropertyNameForGetter: Boolean
 ) : NopAnnotationIntrospector() {
-    private fun getterNameFromJava(member: AnnotatedMember): String? {
+    private fun getterNameFromJava(member: AnnotatedMethod): String? {
         val name = member.name
 
         // The reason for truncating after `-` is to truncate the random suffix
@@ -55,13 +56,25 @@ internal class KotlinNamesAnnotationIntrospector(
         }
     }
 
+    private fun getterNameFromKotlin(member: AnnotatedMethod): String? {
+        val getter = member.member
+
+        return member.member.declaringClass.takeIf { it.isKotlinClass() }?.let { clazz ->
+            clazz.kotlin.memberProperties.find { it.javaGetter == getter }
+                ?.let { it.name }
+        }
+    }
+
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
         if (!member.declaringClass.isKotlinClass()) return null
 
         return when (member) {
             is AnnotatedMethod -> if (member.parameterCount == 0) {
-                if (useKotlinPropertyNameForGetter) TODO() else getterNameFromJava(member)
+                if (useKotlinPropertyNameForGetter) {
+                    // Fall back to default if it is a getter-like function
+                    getterNameFromKotlin(member) ?: getterNameFromJava(member)
+                } else getterNameFromJava(member)
             } else null
             is AnnotatedParameter -> findKotlinParameterName(member)
             else -> null
