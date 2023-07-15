@@ -18,6 +18,7 @@ Contributors:
 # 2.16.0 (not yet released)
 
 WrongWrong (@k163377)
+* #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith
 * #685: Streamline default value management for KotlinFeatures
 * #684: Update Kotlin Version to 1.6
 * #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
