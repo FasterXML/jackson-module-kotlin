@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
 import com.fasterxml.jackson.databind.DeserializationContext
+import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
@@ -23,6 +24,9 @@ internal class KotlinValueInstantiator(
     private val nullIsSameAsDefault: Boolean,
     private val strictNullChecks: Boolean
 ) : StdValueInstantiator(src) {
+    private fun JavaType.requireEmptyValue() =
+        (nullToEmptyCollection && this.isCollectionLikeType) || (nullToEmptyMap && this.isMapLikeType)
+
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
         props: Array<out SettableBeanProperty>,
@@ -74,24 +78,24 @@ internal class KotlinValueInstantiator(
                 }
             }
 
-            if (paramVal == null && ((nullToEmptyCollection && jsonProp.type.isCollectionLikeType) || (nullToEmptyMap && jsonProp.type.isMapLikeType))) {
-                paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
-            }
+            if (paramVal == null) {
+                if (jsonProp.type.requireEmptyValue()) {
+                    paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                } else {
+                    val isMissingAndRequired = isMissing && jsonProp.isRequired
+                    val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
 
-            val isGenericTypeVar = paramDef.type.javaType is TypeVariable<*>
-            val isMissingAndRequired = paramVal == null && isMissing && jsonProp.isRequired
-            if (isMissingAndRequired ||
-                (!isGenericTypeVar && paramVal == null && !paramDef.type.isMarkedNullable)) {
-                throw MismatchedInputException.from(
-                    ctxt.parser,
-                    jsonProp.type,
-                    "Instantiation of $valueTypeDesc value failed for JSON property ${jsonProp.name} " +
-                            "due to missing (therefore NULL) value for creator parameter ${paramDef.name} " +
-                            "which is a non-nullable type"
-                ).wrapWithPath(this.valueClass, jsonProp.name)
-            }
-
-            if (strictNullChecks && paramVal != null) {
+                    if (isMissingAndRequired || (!isGenericTypeVar && !paramDef.type.isMarkedNullable)) {
+                        throw MismatchedInputException.from(
+                            ctxt.parser,
+                            jsonProp.type,
+                            "Instantiation of $valueTypeDesc value failed for JSON property ${jsonProp.name} " +
+                                    "due to missing (therefore NULL) value for creator parameter ${paramDef.name} " +
+                                    "which is a non-nullable type"
+                        ).wrapWithPath(this.valueClass, jsonProp.name)
+                    }
+                }
+            } else if (strictNullChecks) {
                 var paramType: String? = null
                 var itemType: KType? = null
                 if (jsonProp.type.isCollectionLikeType && paramDef.type.arguments.getOrNull(0)?.type?.isMarkedNullable == false && (paramVal as Collection<*>).any { it == null }) {
