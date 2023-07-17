@@ -1,10 +1,15 @@
 package com.fasterxml.jackson.module.kotlin.test
 
+import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.JavaToKotlinDurationConverter
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
+import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.time.Duration
@@ -75,5 +80,39 @@ class DurationTests {
         assertEquals(result["a"], 1.hours)
         assertEquals(result["b"], 2.hours)
         assertEquals(result["c"], 3.hours)
+    }
+
+    data class Meeting(
+        val start: Instant,
+        @get:JsonDeserialize(converter = JavaToKotlinDurationConverter::class)
+        val duration: Duration,
+    ) {
+        companion object {
+            @JvmStatic
+            @JsonCreator
+            fun create(start: Instant, duration: Duration) = Meeting(start, duration)
+        }
+    }
+
+    @Test
+    fun `should serialize Kotlin duration inside data class using Java time module`() {
+        val mapper = jacksonObjectMapper()
+            .registerModule(JavaTimeModule())
+            .disable(WRITE_DATES_AS_TIMESTAMPS)
+            .disable(WRITE_DURATIONS_AS_TIMESTAMPS)
+
+        val result = mapper.writeValueAsString(Meeting(Instant.parse("2023-06-20T14:00:00Z"), 1.5.hours))
+
+        assertEquals("""{"start":"2023-06-20T14:00:00Z","duration":"PT1H30M"}""", result)
+    }
+
+    @Test
+    fun `should deserialize Kotlin duration inside data class`() {
+        val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+
+        val result = mapper.readValue<Meeting>("""{"start":"2023-06-20T14:00:00Z","duration":"PT1H30M"}""")
+
+        assertEquals(result.start, Instant.parse("2023-06-20T14:00:00Z"))
+        assertEquals(result.duration, 1.5.hours)
     }
 }

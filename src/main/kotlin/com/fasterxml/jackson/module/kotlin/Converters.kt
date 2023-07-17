@@ -22,6 +22,14 @@ internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, Jav
     override fun convert(value: KotlinDuration): JavaDuration = JavaDuration.parse(value.toIsoString())
 }
 
+// this class is needed as workaround for deserialization
+// data classes with kotlin.time.Duration field which is a value class
+//
+// @see DurationTests.`should deserialize Kotlin duration inside data class`
+object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
+    override fun convert(value: JavaDuration) = KotlinDuration.parseIsoString(value.toString())
+}
+
 // S is nullable because value corresponds to a nullable value class
 // @see KotlinNamesAnnotationIntrospector.findNullSerializer
 internal class ValueClassBoxConverter<S : Any?, D : Any>(
