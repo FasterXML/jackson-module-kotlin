@@ -10,11 +10,18 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.Deserializers
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import kotlin.time.Duration
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Sequence<*> {
         return ctxt.readValue(p, List::class.java).asSequence()
     }
+}
+
+internal object DurationDeserializer : StdDeserializer<Duration>(Duration::class.java) {
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext) = ctxt
+        .readValue(p, java.time.Duration::class.java)
+        ?.let { Duration.parseIsoString(it.toString()) }
 }
 
 object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
@@ -94,6 +101,7 @@ internal class KotlinDeserializers : Deserializers.Base() {
             type.rawClass == UShort::class.java -> UShortDeserializer
             type.rawClass == UInt::class.java -> UIntDeserializer
             type.rawClass == ULong::class.java -> ULongDeserializer
+            type.rawClass == Duration::class.java -> DurationDeserializer
             else -> null
         }
     }

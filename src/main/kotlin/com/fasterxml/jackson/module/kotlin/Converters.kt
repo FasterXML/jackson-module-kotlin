@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.databind.util.StdConverter
 import kotlin.reflect.KClass
+import java.time.Duration as JavaDuration
+import kotlin.time.Duration as KotlinDuration
 
 internal class SequenceToIteratorConverter(private val input: JavaType) : StdConverter<Sequence<*>, Iterator<*>>() {
     override fun convert(value: Sequence<*>): Iterator<*> = value.iterator()
@@ -14,6 +16,10 @@ internal class SequenceToIteratorConverter(private val input: JavaType) : StdCon
     override fun getOutputType(typeFactory: TypeFactory): JavaType = input.containedType(0)
         ?.let { typeFactory.constructCollectionLikeType(Iterator::class.java, it) }
         ?: typeFactory.constructType(Iterator::class.java)
+}
+
+internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, JavaDuration>() {
+    override fun convert(value: KotlinDuration): JavaDuration = JavaDuration.parse(value.toIsoString())
 }
 
 // S is nullable because value corresponds to a nullable value class

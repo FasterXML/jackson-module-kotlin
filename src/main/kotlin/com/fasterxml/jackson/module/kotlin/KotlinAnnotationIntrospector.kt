@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import com.fasterxml.jackson.databind.util.Converter
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
@@ -23,6 +22,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.*
+import kotlin.time.Duration
 
 
 internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
@@ -68,9 +68,13 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
         // Find a converter to handle the case where the getter returns an unboxed value from the value class.
         is AnnotatedMethod -> cache.findValueClassReturnType(a)
             ?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
-        is AnnotatedClass -> a
-            .takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
-            ?.let { SequenceToIteratorConverter(it.type) }
+        is AnnotatedClass -> lookupKotlinTypeConverter(a)
+        else -> null
+    }
+
+    private fun lookupKotlinTypeConverter(a: AnnotatedClass) = when {
+        Sequence::class.java.isAssignableFrom(a.rawType) -> SequenceToIteratorConverter(a.type)
+        Duration::class.java.isAssignableFrom(a.rawType) -> KotlinToJavaDurationConverter
         else -> null
     }
 
