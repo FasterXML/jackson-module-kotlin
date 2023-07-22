@@ -9,7 +9,7 @@ import kotlin.test.assertEquals
 
 class Github630 {
     private val mapper = ObjectMapper()
-        .registerModule(KotlinModule.Builder().enable(KotlinFeature.UseKotlinPropertyNameForGetter).build())!!
+        .registerModule(KotlinModule.Builder().enable(KotlinFeature.KotlinPropertyNameAsImplicitName).build())!!
 
     data class Dto(
         // from #570, #603

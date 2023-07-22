@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseKotlinPropertyNameForGetter
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
@@ -105,7 +105,7 @@ class KotlinModule @Deprecated(
             else -> DISABLED
         },
         builder.isEnabled(StrictNullChecks),
-        builder.isEnabled(UseKotlinPropertyNameForGetter)
+        builder.isEnabled(KotlinPropertyNameAsImplicitName)
     )
 
     companion object {

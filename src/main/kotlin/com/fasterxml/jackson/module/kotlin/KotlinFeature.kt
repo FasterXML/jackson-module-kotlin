@@ -1,7 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
 import java.util.BitSet
-import kotlin.math.pow
 
 /**
  * @see KotlinModule.Builder
@@ -45,9 +44,9 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
     StrictNullChecks(enabledByDefault = false),
 
     /**
-     * By enabling this feature, the property name on Kotlin will be used as the getter name.
+     * By enabling this feature, the property name on Kotlin is used as the implicit name for the getter.
      *
-     * By default, the name based on the getter name on the JVM is used as the accessor name.
+     * By default, the getter name is used during serialization.
      * This name may be different from the parameter/field name, in which case serialization results
      * may be incorrect or annotations may malfunction.
      * See [jackson-module-kotlin#630] for details.
@@ -57,8 +56,9 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      * On the other hand, enabling this option increases the amount of reflection processing,
      * which may result in performance degradation for both serialization and deserialization.
      * In addition, the adjustment of behavior using get:JvmName is disabled.
+     * Note also that this feature does not apply to setters.
      */
-    UseKotlinPropertyNameForGetter(enabledByDefault = false);
+    KotlinPropertyNameAsImplicitName(enabledByDefault = false);
 
     internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 
