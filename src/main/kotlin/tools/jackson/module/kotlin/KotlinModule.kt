@@ -1,18 +1,15 @@
 package tools.jackson.module.kotlin
 
-import java.util.*
-
 import kotlin.reflect.KClass
-
 import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.module.SimpleModule
-
 import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import tools.jackson.module.kotlin.SingletonSupport.DISABLED
+import java.util.*
 
 private const val metadataFqName = "kotlin.Metadata"
 
@@ -55,8 +52,9 @@ class KotlinModule @Deprecated(
     val nullToEmptyMap: Boolean = false,
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false
-) : SimpleModule(KotlinModule::class.java.name, tools.jackson.module.kotlin.PackageVersion.VERSION) {
+    val strictNullChecks: Boolean = false,
+    val useKotlinPropertyNameForGetter: Boolean = false
+) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     init {
         if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
             // Kotlin 1.4 was deprecated when this process was introduced(jackson-module-kotlin 2.15).
@@ -103,7 +101,8 @@ class KotlinModule @Deprecated(
             builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
             else -> DISABLED
         },
-        builder.isEnabled(StrictNullChecks)
+        builder.isEnabled(StrictNullChecks),
+        builder.isEnabled(KotlinFeature.KotlinPropertyNameAsImplicitName)
     )
 
     companion object {
@@ -132,7 +131,13 @@ class KotlinModule @Deprecated(
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(this, cache, ignoredClassesForImplyingJsonCreator))
+        context.appendAnnotationIntrospector(
+            KotlinNamesAnnotationIntrospector(
+                this,
+                cache,
+                ignoredClassesForImplyingJsonCreator,
+                useKotlinPropertyNameForGetter)
+        )
 
         context.addDeserializers(KotlinDeserializers())
         context.addKeyDeserializers(KotlinKeyDeserializers)

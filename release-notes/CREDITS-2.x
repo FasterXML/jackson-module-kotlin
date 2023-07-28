@@ -19,6 +19,7 @@ Contributors:
 
 WrongWrong (@k163377)
 * #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith
+* #686: Add KotlinPropertyNameAsImplicitName option
 * #685: Streamline default value management for KotlinFeatures
 * #684: Update Kotlin Version to 1.6
 * #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
