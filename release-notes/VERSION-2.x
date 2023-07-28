@@ -21,6 +21,9 @@ Co-maintainers:
 #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith.
  This improves deserialization throughput about 1.3 ~ 1.5 times faster.
  https://github.com/FasterXML/jackson-module-kotlin/pull/687#issuecomment-1637365799
+#686: Added KotlinPropertyNameAsImplicitName feature to use Kotlin property names as implicit names for getters.
+ Enabling this feature eliminates some of the problems summarized in #630,
+ but also causes some behavioral changes and performance degradation.
 #685: Streamline default value management for KotlinFeatures.
  This improves the initialization cost of kotlin-module a little.
 #684: Kotlin 1.5 has been deprecated and the minimum supported Kotlin version will be updated to 1.6.
