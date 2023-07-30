@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.databind.util.StdConverter
 import kotlin.reflect.KClass
+import kotlin.time.toJavaDuration
 import java.time.Duration as JavaDuration
 import kotlin.time.Duration as KotlinDuration
 
@@ -19,7 +20,7 @@ internal class SequenceToIteratorConverter(private val input: JavaType) : StdCon
 }
 
 internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, JavaDuration>() {
-    override fun convert(value: KotlinDuration): JavaDuration = JavaDuration.parse(value.toIsoString())
+    override fun convert(value: KotlinDuration) = value.toJavaDuration()
 }
 
 // this class is needed as workaround for deserialization
