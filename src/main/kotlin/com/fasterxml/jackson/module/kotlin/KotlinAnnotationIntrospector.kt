@@ -25,11 +25,13 @@ import kotlin.reflect.jvm.*
 import kotlin.time.Duration
 
 
-internal class KotlinAnnotationIntrospector(private val context: Module.SetupContext,
-                                            private val cache: ReflectionCache,
-                                            private val nullToEmptyCollection: Boolean,
-                                            private val nullToEmptyMap: Boolean,
-                                            private val nullIsSameAsDefault: Boolean) : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(
+    private val context: Module.SetupContext,
+    private val cache: ReflectionCache,
+    private val nullToEmptyCollection: Boolean,
+    private val nullToEmptyMap: Boolean,
+    private val nullIsSameAsDefault: Boolean,
+) : NopAnnotationIntrospector() {
 
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
@@ -106,7 +108,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val byAnnotation = (member as Field).isRequiredByAnnotation()
-        val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
+        val byNullability = (member as Field).kotlinProperty?.returnType?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
@@ -126,7 +128,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun Method.isRequiredByAnnotation(): Boolean? {
-       return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
+        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
     // Since Kotlin's property has the same Type for each field, getter, and setter,
@@ -180,7 +182,7 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     }
 
     private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index+1)
+        return isParameterRequired(index + 1)
     }
 
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
