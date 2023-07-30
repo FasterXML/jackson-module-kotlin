@@ -1,6 +1,8 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonFormat
+import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
@@ -12,7 +14,8 @@ import org.junit.Test
 import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
-import kotlin.time.Duration
+import kotlin.time.Duration as KotlinDuration
+import java.time.Duration as JavaDuration
 import kotlin.time.Duration.Companion.hours
 
 class DurationTests {
@@ -31,7 +34,7 @@ class DurationTests {
     fun `should deserialize Kotlin duration`() {
         val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
-        val result = mapper.readValue<Duration>("\"PT1H\"")
+        val result = mapper.readValue<KotlinDuration>("\"PT1H\"")
 
         assertEquals(1.hours, result)
     }
@@ -51,7 +54,7 @@ class DurationTests {
     fun `should deserialize Kotlin duration inside list`() {
         val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
-        val result = mapper.readValue<List<Duration>>("""["PT1H","PT2H","PT3H"]""")
+        val result = mapper.readValue<List<KotlinDuration>>("""["PT1H","PT2H","PT3H"]""")
 
         assertContentEquals(listOf(1.hours, 2.hours, 3.hours), result)
     }
@@ -75,7 +78,7 @@ class DurationTests {
     fun `should deserialize Kotlin duration inside map`() {
         val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
 
-        val result = mapper.readValue<Map<String, Duration>>("""{"a":"PT1H","b":"PT2H","c":"PT3H"}""")
+        val result = mapper.readValue<Map<String, KotlinDuration>>("""{"a":"PT1H","b":"PT2H","c":"PT3H"}""")
 
         assertEquals(result["a"], 1.hours)
         assertEquals(result["b"], 2.hours)
@@ -85,12 +88,12 @@ class DurationTests {
     data class Meeting(
         val start: Instant,
         @get:JsonDeserialize(converter = JavaToKotlinDurationConverter::class)
-        val duration: Duration,
+        val duration: KotlinDuration,
     ) {
         companion object {
             @JvmStatic
             @JsonCreator
-            fun create(start: Instant, duration: Duration) = Meeting(start, duration)
+            fun create(start: Instant, duration: KotlinDuration) = Meeting(start, duration)
         }
     }
 
@@ -114,5 +117,33 @@ class DurationTests {
 
         assertEquals(result.start, Instant.parse("2023-06-20T14:00:00Z"))
         assertEquals(result.duration, 1.5.hours)
+    }
+
+    data class JDTO(
+        val plain: JavaDuration = JavaDuration.ofHours(1),
+        val optPlain: JavaDuration? = JavaDuration.ofHours(1),
+        @field:JsonFormat(shape = STRING)
+        val shapeAnnotation: JavaDuration = JavaDuration.ofHours(1),
+        @field:JsonFormat(shape = STRING)
+        val optShapeAnnotation: JavaDuration? = JavaDuration.ofHours(1),
+    )
+
+    data class KDTO(
+        val plain: KotlinDuration = 1.hours,
+        val optPlain: KotlinDuration? = 1.hours,
+        @field:JsonFormat(shape = STRING)
+        val shapeAnnotation: KotlinDuration = 1.hours,
+        @field:JsonFormat(shape = STRING)
+        val optShapeAnnotation: KotlinDuration? = 1.hours,
+    )
+
+    @Test
+    fun `should serialize Kotlin duration exactly as Java duration`() {
+        val mapper = jacksonObjectMapper().registerModule(JavaTimeModule())
+
+        val jdto = JDTO()
+        val kdto = KDTO()
+
+        assertEquals(mapper.writeValueAsString(jdto), mapper.writeValueAsString(kdto))
     }
 }

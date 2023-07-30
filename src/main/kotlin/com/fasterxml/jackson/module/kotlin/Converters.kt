@@ -21,6 +21,8 @@ internal class SequenceToIteratorConverter(private val input: JavaType) : StdCon
 
 internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, JavaDuration>() {
     override fun convert(value: KotlinDuration) = value.toJavaDuration()
+
+    val delegatingSerializer: StdDelegatingSerializer by lazy { StdDelegatingSerializer(this) }
 }
 
 // this class is needed as workaround for deserialization
