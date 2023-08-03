@@ -118,7 +118,10 @@ internal class KotlinNamesAnnotationIntrospector(
         if (member is AnnotatedConstructor && member.isKotlinConstructorWithParameters())
             cache.checkConstructorIsCreatorAnnotated(member) { hasCreatorAnnotation(it) }
         else
-            false
+            member.isJvmInlineClassSyntheticBoxingFunction
+
+    private val Annotated.isJvmInlineClassSyntheticBoxingFunction: Boolean
+        get() = name == "box-impl"
 
     @Suppress("UNCHECKED_CAST")
     private fun findKotlinParameterName(param: AnnotatedParameter): String? {
