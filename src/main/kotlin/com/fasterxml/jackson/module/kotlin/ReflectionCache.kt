@@ -58,7 +58,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         LRUMap(0, reflectionCacheSize)
 
     fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key)
-            ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
+            ?: key.kotlinCtor?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
 
     fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key)
             ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
