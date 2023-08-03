@@ -25,10 +25,11 @@ internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, Jav
     val delegatingSerializer: StdDelegatingSerializer by lazy { StdDelegatingSerializer(this) }
 }
 
-// this class is needed as workaround for deserialization
-// data classes with kotlin.time.Duration field which is a value class
-//
-// @see DurationTests.`should deserialize Kotlin duration inside data class`
+/**
+ * Currently it is not possible to deduce type of [kotlin.time.Duration] fields therefore explicit annotation is needed on fields in order to properly deserialize POJO.
+ *
+ * @see [com.fasterxml.jackson.module.kotlin.test.DurationTests]
+ */
 object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
     override fun convert(value: JavaDuration) = KotlinDuration.parseIsoString(value.toString())
 }

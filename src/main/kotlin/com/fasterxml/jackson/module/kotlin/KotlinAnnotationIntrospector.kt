@@ -31,6 +31,7 @@ internal class KotlinAnnotationIntrospector(
     private val nullToEmptyCollection: Boolean,
     private val nullToEmptyMap: Boolean,
     private val nullIsSameAsDefault: Boolean,
+    private val useJavaDurationConversion: Boolean,
 ) : NopAnnotationIntrospector() {
 
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
@@ -75,7 +76,7 @@ internal class KotlinAnnotationIntrospector(
 
     private fun lookupKotlinTypeConverter(a: AnnotatedClass) = when {
         Sequence::class.java.isAssignableFrom(a.rawType) -> SequenceToIteratorConverter(a.type)
-        Duration::class.java.isAssignableFrom(a.rawType) -> KotlinToJavaDurationConverter
+        Duration::class.java.isAssignableFrom(a.rawType) -> KotlinToJavaDurationConverter.takeIf { useJavaDurationConversion }
         else -> null
     }
 
@@ -92,9 +93,9 @@ internal class KotlinAnnotationIntrospector(
         ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
 
     override fun findSerializer(am: Annotated): Any? = when ((am as? AnnotatedMethod)?.ktClass()) {
-        Duration::class -> KotlinToJavaDurationConverter.delegatingSerializer
-        else -> super.findSerializer(am)
-    }
+        Duration::class -> KotlinToJavaDurationConverter.delegatingSerializer.takeIf { useJavaDurationConversion }
+        else -> null
+    } ?: super.findSerializer(am)
 
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known

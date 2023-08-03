@@ -58,7 +58,14 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      * In addition, the adjustment of behavior using get:JvmName is disabled.
      * Note also that this feature does not apply to setters.
      */
-    KotlinPropertyNameAsImplicitName(enabledByDefault = false);
+    KotlinPropertyNameAsImplicitName(enabledByDefault = false),
+
+    /**
+     * This feature represents whether to handle [kotlin.time.Duration] using [java.time.Duration] as conversion bridge.
+     *
+     * This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
+     */
+    UseJavaDurationConversion(enabledByDefault = false);
 
     internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 

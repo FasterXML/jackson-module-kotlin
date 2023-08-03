@@ -8,6 +8,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
@@ -33,6 +34,8 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      the default, collections which are typed to disallow null members
  *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
  *                                      protects against this but has significant performance impact.
+ * @param   useJavaDurationConversion Default: false.  Whether to use [java.time.Duration] as a bridge for [kotlin.time.Duration].
+ *                                      This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
  */
 class KotlinModule @Deprecated(
     level = DeprecationLevel.WARNING,
@@ -55,7 +58,8 @@ class KotlinModule @Deprecated(
     val nullIsSameAsDefault: Boolean = false,
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false,
-    val useKotlinPropertyNameForGetter: Boolean = false
+    val useKotlinPropertyNameForGetter: Boolean = false,
+    private val useJavaDurationConversion: Boolean = false,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     init {
         if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
@@ -105,7 +109,8 @@ class KotlinModule @Deprecated(
             else -> DISABLED
         },
         builder.isEnabled(StrictNullChecks),
-        builder.isEnabled(KotlinPropertyNameAsImplicitName)
+        builder.isEnabled(KotlinPropertyNameAsImplicitName),
+        builder.isEnabled(UseJavaDurationConversion),
     )
 
     companion object {
@@ -132,7 +137,14 @@ class KotlinModule @Deprecated(
             }
         }
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(context, cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(
+            context,
+            cache,
+            nullToEmptyCollection,
+            nullToEmptyMap,
+            nullIsSameAsDefault,
+            useJavaDurationConversion
+        ))
         context.appendAnnotationIntrospector(
             KotlinNamesAnnotationIntrospector(
                 this,
@@ -141,7 +153,7 @@ class KotlinModule @Deprecated(
                 useKotlinPropertyNameForGetter)
         )
 
-        context.addDeserializers(KotlinDeserializers())
+        context.addDeserializers(KotlinDeserializers(useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())

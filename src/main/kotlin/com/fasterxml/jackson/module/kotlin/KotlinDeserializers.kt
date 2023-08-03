@@ -89,11 +89,13 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
-internal class KotlinDeserializers : Deserializers.Base() {
+internal class KotlinDeserializers(
+    private val useJavaDurationConversion: Boolean,
+) : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?
+        beanDesc: BeanDescription?,
     ): JsonDeserializer<*>? {
         return when {
             type.isInterface && type.rawClass == Sequence::class.java -> SequenceDeserializer
@@ -102,7 +104,7 @@ internal class KotlinDeserializers : Deserializers.Base() {
             type.rawClass == UShort::class.java -> UShortDeserializer
             type.rawClass == UInt::class.java -> UIntDeserializer
             type.rawClass == ULong::class.java -> ULongDeserializer
-            type.rawClass == KotlinDuration::class.java -> DurationDeserializer
+            type.rawClass == KotlinDuration::class.java -> DurationDeserializer.takeIf { useJavaDurationConversion }
             else -> null
         }
     }
