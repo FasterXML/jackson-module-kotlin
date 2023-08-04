@@ -81,8 +81,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
+            <groupId>com.github.wplong11</groupId>
             <artifactId>jackson-databind</artifactId>
+            <version>02f3fd2988</version>
         </dependency>
 
         <dependency>
@@ -252,6 +253,10 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 </project>
