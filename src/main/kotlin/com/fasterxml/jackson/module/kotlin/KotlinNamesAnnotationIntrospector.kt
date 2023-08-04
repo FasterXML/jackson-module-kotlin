@@ -2,16 +2,12 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.PropertyName
-import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedField
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
-import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.Locale
@@ -67,6 +63,10 @@ internal class KotlinNamesAnnotationIntrospector(
 
     // since 2.4
     override fun findImplicitPropertyName(member: AnnotatedMember): String? {
+        if (member.rawType.isKotlinDefaultConstructorMarker) {
+            return "DefaultConstructorMarker"
+        }
+
         if (!member.declaringClass.isKotlinClass()) return null
 
         return when (member) {
@@ -128,16 +128,7 @@ internal class KotlinNamesAnnotationIntrospector(
         return if (param.declaringClass.isKotlinClass()) {
             val member = param.owner.member
             if (member is Constructor<*>) {
-                val ctor = (member as Constructor<Any>)
-                val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
-                catch (ex: KotlinReflectionInternalError) { 0 }
-                catch (ex: UnsupportedOperationException) { 0 }
-                if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
-                    ctor.kotlinFunction?.parameters?.get(param.index)?.name
-                } else {
-                    null
-                }
+                member.kotlinFunction?.parameters?.elementAtOrNull(param.index)?.name
             } else if (member is Method) {
                 try {
                     val temp = member.kotlinFunction

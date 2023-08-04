@@ -159,6 +159,10 @@ internal class KotlinAnnotationIntrospector(private val context: Module.SetupCon
     private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
+        if (rawType.isKotlinDefaultConstructorMarker) {
+            return false
+        }
+
         val member = this.member
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
 

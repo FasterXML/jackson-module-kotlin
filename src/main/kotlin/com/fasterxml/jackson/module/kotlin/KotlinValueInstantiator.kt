@@ -138,6 +138,16 @@ internal class KotlinValueInstantiator(
             numCallableParameters++
         }
 
+        val isJvmInlineClassSyntheticConstructor: Boolean =
+            numCallableParameters == jsonParamValueList.size - 1
+            && valueCreator is ConstructorValueCreator
+            && props.last().type.rawClass.isKotlinDefaultConstructorMarker
+        if (isJvmInlineClassSyntheticConstructor) {
+            jsonParamValueList[numCallableParameters] = null
+            callableParameters[numCallableParameters] = null
+            numCallableParameters++
+        }
+
         return if (numCallableParameters == jsonParamValueList.size && valueCreator is ConstructorValueCreator) {
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParamValueList)
