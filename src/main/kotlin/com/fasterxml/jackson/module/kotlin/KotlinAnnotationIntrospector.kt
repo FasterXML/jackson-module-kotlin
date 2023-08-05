@@ -69,14 +69,14 @@ internal class KotlinAnnotationIntrospector(
 
     override fun findSerializationConverter(a: Annotated): Converter<*, *>? = when (a) {
         // Find a converter to handle the case where the getter returns an unboxed value from the value class.
-        is AnnotatedMethod -> a.ktClass()?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
+        is AnnotatedMethod -> a.findValueClassReturnType()?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
         is AnnotatedClass -> lookupKotlinTypeConverter(a)
         else -> null
     }
 
     private fun lookupKotlinTypeConverter(a: AnnotatedClass) = when {
         Sequence::class.java.isAssignableFrom(a.rawType) -> SequenceToIteratorConverter(a.type)
-        Duration::class.java.isAssignableFrom(a.rawType) -> KotlinToJavaDurationConverter.takeIf { useJavaDurationConversion }
+        Duration::class.java == a.rawType -> KotlinToJavaDurationConverter.takeIf { useJavaDurationConversion }
         else -> null
     }
 
@@ -88,11 +88,11 @@ internal class KotlinAnnotationIntrospector(
     // Perform proper serialization even if the value wrapped by the value class is null.
     // If value is a non-null object type, it must not be reboxing.
     override fun findNullSerializer(am: Annotated): JsonSerializer<*>? = (am as? AnnotatedMethod)
-        ?.ktClass()
+        ?.findValueClassReturnType()
         ?.takeIf { it.requireRebox() }
         ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
 
-    override fun findSerializer(am: Annotated): Any? = when ((am as? AnnotatedMethod)?.ktClass()) {
+    override fun findSerializer(am: Annotated): Any? = when ((am as? AnnotatedMethod)?.findValueClassReturnType()) {
         Duration::class -> KotlinToJavaDurationConverter.delegatingSerializer.takeIf { useJavaDurationConversion }
         else -> null
     } ?: super.findSerializer(am)
@@ -181,7 +181,7 @@ internal class KotlinAnnotationIntrospector(
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
 
-    private fun AnnotatedMethod.ktClass() = cache.findValueClassReturnType(this)
+    private fun AnnotatedMethod.findValueClassReturnType() = cache.findValueClassReturnType(this)
 
     private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
         return isParameterRequired(index)

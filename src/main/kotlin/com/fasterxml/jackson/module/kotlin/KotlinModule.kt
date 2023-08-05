@@ -59,7 +59,7 @@ class KotlinModule @Deprecated(
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = false,
     val useKotlinPropertyNameForGetter: Boolean = false,
-    private val useJavaDurationConversion: Boolean = false,
+    val useJavaDurationConversion: Boolean = false,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     init {
         if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
