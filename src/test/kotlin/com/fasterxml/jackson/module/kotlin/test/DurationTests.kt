@@ -91,11 +91,17 @@ class DurationTests {
         val duration: KotlinDuration,
     ) {
         companion object {
+            @Suppress("unused")
             @JvmStatic
             @JsonCreator
             fun create(start: Instant, duration: KotlinDuration) = Meeting(start, duration)
         }
     }
+
+    abstract class MeetingMixin(
+        @Suppress("unused") @field:JsonFormat(shape = STRING)
+        val duration: KotlinDuration,
+    )
 
     @Test
     fun `should serialize Kotlin duration inside data class using Java time module`() {
@@ -117,6 +123,30 @@ class DurationTests {
 
         assertEquals(result.start, Instant.parse("2023-06-20T14:00:00Z"))
         assertEquals(result.duration, 1.5.hours)
+    }
+
+    @Test
+    fun `should deserialize Kotlin duration inside data class using mixin`() {
+        val mapper = objectMapper
+            .registerModule(JavaTimeModule())
+            .addMixIn(Meeting::class.java, MeetingMixin::class.java)
+
+        val meeting = mapper.readValue<Meeting>("""{"start":"2023-06-20T14:00:00Z","duration":"PT1H30M"}""")
+
+        assertEquals(Instant.parse("2023-06-20T14:00:00Z"), meeting.start)
+        assertEquals(1.5.hours, meeting.duration)
+    }
+
+    @Test
+    fun `should serialize Kotlin duration inside data class using Java time module and mixin`() {
+        val mapper = objectMapper
+            .registerModule(JavaTimeModule())
+            .disable(WRITE_DATES_AS_TIMESTAMPS)
+            .addMixIn(Meeting::class.java, MeetingMixin::class.java)
+
+        val result = mapper.writeValueAsString(Meeting(Instant.parse("2023-06-20T14:00:00Z"), 1.5.hours))
+
+        assertEquals("""{"start":"2023-06-20T14:00:00Z","duration":"PT1H30M"}""", result)
     }
 
     data class JDTO(
