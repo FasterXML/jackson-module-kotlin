@@ -65,6 +65,7 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
      *
      * This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
      * `@JsonFormat` annotations need to be declared either on getter using `@get:JsonFormat` or field using `@field:JsonFormat`.
+     * See [jackson-module-kotlin#651] for details.
      */
     UseJavaDurationConversion(enabledByDefault = false);
 
