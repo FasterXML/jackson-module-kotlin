@@ -10,7 +10,7 @@ import tools.jackson.databind.JavaType
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.Deserializers
 import tools.jackson.databind.deser.std.StdDeserializer
-
+import kotlin.time.Duration as KotlinDuration
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Sequence<*> {
@@ -92,7 +92,9 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
-internal class KotlinDeserializers : Deserializers.Base() {
+internal class KotlinDeserializers(
+    private val useJavaDurationConversion: Boolean,
+) : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
@@ -105,17 +107,19 @@ internal class KotlinDeserializers : Deserializers.Base() {
             type.rawClass == UShort::class.java -> UShortDeserializer
             type.rawClass == UInt::class.java -> UIntDeserializer
             type.rawClass == ULong::class.java -> ULongDeserializer
+            type.rawClass == KotlinDuration::class.java ->
+                JavaToKotlinDurationConverter.takeIf { useJavaDurationConversion }?.delegatingDeserializer
             else -> null
         }
     }
 
-    override fun hasDeserializerFor(config: DeserializationConfig,
-                                    valueType: Class<*>): Boolean {
+    override fun hasDeserializerFor(config: DeserializationConfig, valueType: Class<*>): Boolean {
         return valueType == Sequence::class.java
                 || valueType == Regex::class.java
                 || valueType == UByte::class.java
                 || valueType == UShort::class.java
                 || valueType == UInt::class.java
                 || valueType == ULong::class.java
+                || valueType == KotlinDuration::class.java
     }
 }

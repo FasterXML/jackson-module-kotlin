@@ -27,18 +27,23 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaSetter
 import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
+import kotlin.time.Duration
 
-internal class KotlinAnnotationIntrospector(private val context: JacksonModule.SetupContext,
-                                            private val cache: ReflectionCache,
-                                            private val nullToEmptyCollection: Boolean,
-                                            private val nullToEmptyMap: Boolean,
-                                            private val nullIsSameAsDefault: Boolean) : NopAnnotationIntrospector() {
+internal class KotlinAnnotationIntrospector(
+    private val context: JacksonModule.SetupContext,
+    private val cache: ReflectionCache,
+    private val nullToEmptyCollection: Boolean,
+    private val nullToEmptyMap: Boolean,
+    private val nullIsSameAsDefault: Boolean,
+    private val useJavaDurationConversion: Boolean,
+) : NopAnnotationIntrospector() {
 
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
@@ -73,11 +78,23 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
 
     override fun findSerializationConverter(config: MapperConfig<*>?, a: Annotated): Converter<*, *>? = when (a) {
         // Find a converter to handle the case where the getter returns an unboxed value from the value class.
-        is AnnotatedMethod -> cache.findValueClassReturnType(a)
-            ?.let { cache.getValueClassBoxConverter(a.rawReturnType, it) }
-        is AnnotatedClass -> a
-            .takeIf { Sequence::class.java.isAssignableFrom(it.rawType) }
-            ?.let { SequenceToIteratorConverter(it.type) }
+        is AnnotatedMethod -> a.findValueClassReturnType()?.let {
+            if (useJavaDurationConversion && it == Duration::class) {
+                if (a.rawReturnType == Duration::class.java)
+                    KotlinToJavaDurationConverter
+                else
+                    KotlinDurationValueToJavaDurationConverter
+            } else {
+                cache.getValueClassBoxConverter(a.rawReturnType, it)
+            }
+        }
+        is AnnotatedClass -> lookupKotlinTypeConverter(a)
+        else -> null
+    }
+
+    private fun lookupKotlinTypeConverter(a: AnnotatedClass) = when {
+        Sequence::class.java.isAssignableFrom(a.rawType) -> SequenceToIteratorConverter(a.type)
+        Duration::class.java == a.rawType -> KotlinToJavaDurationConverter.takeIf { useJavaDurationConversion }
         else -> null
     }
 
@@ -88,10 +105,29 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
 
     // Perform proper serialization even if the value wrapped by the value class is null.
     // If value is a non-null object type, it must not be reboxing.
-    override fun findNullSerializer(config: MapperConfig<*>?, am: Annotated) = (am as? AnnotatedMethod)?.let { _ ->
-        cache.findValueClassReturnType(am)
-            ?.takeIf { it.requireRebox() }
-            ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
+    override fun findNullSerializer(config: MapperConfig<*>?, am: Annotated) = (am as? AnnotatedMethod)
+        ?.findValueClassReturnType()
+        ?.takeIf { it.requireRebox() }
+        ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
+
+    override fun findDeserializationConverter(config: MapperConfig<*>, a: Annotated): Any? {
+        if (!useJavaDurationConversion) return null
+
+        return (a as? AnnotatedParameter)?.let { param ->
+            @Suppress("UNCHECKED_CAST")
+            val function: KFunction<*> = when (val owner = param.owner.member) {
+                is Constructor<*> -> cache.kotlinFromJava(owner as Constructor<Any>)
+                is Method -> cache.kotlinFromJava(owner)
+                else -> null
+            } ?: return@let null
+            val valueParameter = function.valueParameters[a.index]
+
+            if (valueParameter.type.classifier == Duration::class) {
+                JavaToKotlinDurationConverter
+            } else {
+                null
+            }
+        }
     }
 
     /**
@@ -111,7 +147,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val byAnnotation = (member as Field).isRequiredByAnnotation()
-        val byNullability =  (member as Field).kotlinProperty?.returnType?.isRequired()
+        val byNullability = (member as Field).kotlinProperty?.returnType?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
@@ -131,7 +167,7 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
     }
 
     private fun Method.isRequiredByAnnotation(): Boolean? {
-       return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
+        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
     }
 
     // Since Kotlin's property has the same Type for each field, getter, and setter,
@@ -179,6 +215,8 @@ internal class KotlinAnnotationIntrospector(private val context: JacksonModule.S
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
+
+    private fun AnnotatedMethod.findValueClassReturnType() = cache.findValueClassReturnType(this)
 
     private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
         return isParameterRequired(index)
