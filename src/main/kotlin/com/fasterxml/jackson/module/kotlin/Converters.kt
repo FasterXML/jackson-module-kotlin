@@ -1,6 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.JavaType
+import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer
 import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.databind.util.StdConverter
@@ -33,6 +34,10 @@ internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, Jav
  */
 internal object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
     override fun convert(value: JavaDuration) = value.toKotlinDuration()
+
+    val delegatingDeserializer: StdDelegatingDeserializer<KotlinDuration> by lazy {
+        StdDelegatingDeserializer(this)
+    }
 }
 
 // S is nullable because value corresponds to a nullable value class
