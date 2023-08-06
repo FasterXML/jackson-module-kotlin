@@ -13,6 +13,7 @@ import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
@@ -21,6 +22,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.*
 import kotlin.time.Duration
 
@@ -96,6 +98,26 @@ internal class KotlinAnnotationIntrospector(
         Duration::class -> KotlinToJavaDurationConverter.delegatingSerializer.takeIf { useJavaDurationConversion }
         else -> null
     } ?: super.findSerializer(am)
+
+    override fun findDeserializationConverter(a: Annotated): Any? {
+        if (!useJavaDurationConversion) return null
+
+        return (a as? AnnotatedParameter)?.let { param ->
+            @Suppress("UNCHECKED_CAST")
+            val function: KFunction<*> = when (val owner = param.owner.member) {
+                is Constructor<*> -> cache.kotlinFromJava(owner as Constructor<Any>)
+                is Method -> cache.kotlinFromJava(owner)
+                else -> null
+            } ?: return@let null
+            val valueParameter = function.valueParameters[a.index]
+
+            if (valueParameter.type.classifier == Duration::class) {
+                JavaToKotlinDurationConverter
+            } else {
+                null
+            }
+        }
+    }
 
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known

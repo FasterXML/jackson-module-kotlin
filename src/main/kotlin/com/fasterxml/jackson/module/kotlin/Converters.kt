@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory
 import com.fasterxml.jackson.databind.util.StdConverter
 import kotlin.reflect.KClass
 import kotlin.time.toJavaDuration
+import kotlin.time.toKotlinDuration
 import java.time.Duration as JavaDuration
 import kotlin.time.Duration as KotlinDuration
 
@@ -30,8 +31,8 @@ internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, Jav
  *
  * @see [com.fasterxml.jackson.module.kotlin.test.DurationTests]
  */
-object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
-    override fun convert(value: JavaDuration) = KotlinDuration.parseIsoString(value.toString())
+internal object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
+    override fun convert(value: JavaDuration) = value.toKotlinDuration()
 }
 
 // S is nullable because value corresponds to a nullable value class

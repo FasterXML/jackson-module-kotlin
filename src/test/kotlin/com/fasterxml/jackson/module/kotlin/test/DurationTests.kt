@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
 import com.fasterxml.jackson.databind.SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.module.kotlin.JavaToKotlinDurationConverter
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
@@ -90,7 +88,6 @@ class DurationTests {
 
     data class Meeting(
         val start: Instant,
-        @get:JsonDeserialize(converter = JavaToKotlinDurationConverter::class)
         val duration: KotlinDuration,
     ) {
         companion object {
