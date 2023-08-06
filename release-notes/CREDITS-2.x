@@ -17,6 +17,9 @@ Contributors:
 
 # 2.16.0 (not yet released)
 
+kkurczewski
+* #689: Add KotlinDuration support
+
 WrongWrong (@k163377)
 * #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith
 * #686: Add KotlinPropertyNameAsImplicitName option

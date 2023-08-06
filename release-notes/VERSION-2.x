@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.16.0 (not yet released)
 
+#689: Added UseJavaDurationConversion feature.
+ By enabling this feature and adding the Java Time module, Kotlin Duration can be handled in the same way as Java Duration.
 #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith.
  This improves deserialization throughput about 1.3 ~ 1.5 times faster.
  https://github.com/FasterXML/jackson-module-kotlin/pull/687#issuecomment-1637365799
