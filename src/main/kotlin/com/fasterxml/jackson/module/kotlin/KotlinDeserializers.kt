@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.Deserializers
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import kotlin.time.Duration as KotlinDuration
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Sequence<*> {
@@ -81,11 +82,13 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
-internal class KotlinDeserializers : Deserializers.Base() {
+internal class KotlinDeserializers(
+    private val useJavaDurationConversion: Boolean,
+) : Deserializers.Base() {
     override fun findBeanDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?
+        beanDesc: BeanDescription?,
     ): JsonDeserializer<*>? {
         return when {
             type.isInterface && type.rawClass == Sequence::class.java -> SequenceDeserializer
@@ -94,6 +97,8 @@ internal class KotlinDeserializers : Deserializers.Base() {
             type.rawClass == UShort::class.java -> UShortDeserializer
             type.rawClass == UInt::class.java -> UIntDeserializer
             type.rawClass == ULong::class.java -> ULongDeserializer
+            type.rawClass == KotlinDuration::class.java ->
+                JavaToKotlinDurationConverter.takeIf { useJavaDurationConversion }?.delegatingDeserializer
             else -> null
         }
     }
