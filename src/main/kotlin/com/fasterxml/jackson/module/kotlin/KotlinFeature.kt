@@ -63,8 +63,8 @@ enum class KotlinFeature(private val enabledByDefault: Boolean) {
     /**
      * This feature represents whether to handle [kotlin.time.Duration] using [java.time.Duration] as conversion bridge.
      *
-     * This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule] for serialization.
-     * For deserialization explicit creator method and annotation on Duration is needed.
+     * This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
+     * `@JsonFormat` annotations need to be declared either on getter using `@get:JsonFormat` or field using `@field:JsonFormat`.
      */
     UseJavaDurationConversion(enabledByDefault = false);
 
