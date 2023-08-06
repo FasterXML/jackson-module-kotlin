@@ -21,10 +21,14 @@ internal class SequenceToIteratorConverter(private val input: JavaType) : StdCon
         ?: typeFactory.constructType(Iterator::class.java)
 }
 
+internal object KotlinDurationValueToJavaDurationConverter : StdConverter<Long, JavaDuration>() {
+    private val boxConverter by lazy { ValueClassBoxConverter(Long::class.java, KotlinDuration::class) }
+
+    override fun convert(value: Long): JavaDuration = KotlinToJavaDurationConverter.convert(boxConverter.convert(value))
+}
+
 internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, JavaDuration>() {
     override fun convert(value: KotlinDuration) = value.toJavaDuration()
-
-    val delegatingSerializer: StdDelegatingSerializer by lazy { StdDelegatingSerializer(this) }
 }
 
 /**
