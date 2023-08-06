@@ -16,6 +16,7 @@ import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
 import java.time.Duration as JavaDuration
 import kotlin.time.Duration as KotlinDuration
 
@@ -175,6 +176,31 @@ class DurationTests {
         val kdto = KDTO()
 
         assertEquals(mapper.writeValueAsString(jdto), mapper.writeValueAsString(kdto))
+    }
+
+    data class DurationWithFormattedUnits(
+        @field:JsonFormat(pattern = "HOURS") val formatted: KotlinDuration,
+        val default: KotlinDuration,
+    ) {
+        companion object {
+            @Suppress("unused")
+            @JvmStatic
+            @JsonCreator
+            fun create(
+                formatted: KotlinDuration,
+                default: KotlinDuration,
+            ) = DurationWithFormattedUnits(formatted, default)
+        }
+    }
+
+    @Test
+    fun `should deserialize using custom units specified by format annotation`() {
+        val mapper = objectMapper.registerModule(JavaTimeModule())
+
+        val actual = mapper.readValue<DurationWithFormattedUnits>("""{"formatted":1,"default":1}""")
+
+        assertEquals(1.hours, actual.formatted)
+        assertEquals(1.seconds, actual.default)
     }
 
     private fun jacksonObjectMapper(
