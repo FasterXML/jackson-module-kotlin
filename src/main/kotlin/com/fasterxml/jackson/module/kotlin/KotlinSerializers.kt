@@ -102,10 +102,10 @@ internal class KotlinSerializers : Serializers.Base() {
         val rawClass = type.rawClass
 
         return when {
-            UByte::class.java.isAssignableFrom(rawClass) -> UByteSerializer
-            UShort::class.java.isAssignableFrom(rawClass) -> UShortSerializer
-            UInt::class.java.isAssignableFrom(rawClass) -> UIntSerializer
-            ULong::class.java.isAssignableFrom(rawClass) -> ULongSerializer
+            UByte::class.java == rawClass -> UByteSerializer
+            UShort::class.java == rawClass -> UShortSerializer
+            UInt::class.java == rawClass -> UIntSerializer
+            ULong::class.java == rawClass -> ULongSerializer
             // The priority of Unboxing needs to be lowered so as not to break the serialization of Unsigned Integers.
             rawClass.isUnboxableValueClass() -> ValueClassSerializer.from(rawClass)
             else -> null
