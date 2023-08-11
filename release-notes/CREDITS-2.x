@@ -21,6 +21,7 @@ kkurczewski
 * #689: Add KotlinDuration support
 
 WrongWrong (@k163377)
+* #700: Reduce the load on the search process for serializers
 * #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith
 * #686: Add KotlinPropertyNameAsImplicitName option
 * #685: Streamline default value management for KotlinFeatures
