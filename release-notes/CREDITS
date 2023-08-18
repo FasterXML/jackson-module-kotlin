@@ -17,6 +17,9 @@ Authors:
 
 Contributors:
 
+hokita
+* #702: Fix outdated link in master branch README
+
 Yusuf Arfan Ismail (RealYusufIsmail@github)
 
 * Contributed #596: Rename "com.fasterxml.jackson" -> "tools.jackson"
