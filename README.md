@@ -198,7 +198,7 @@ when(root){
 # Configuration
 
 The Kotlin module may be given a few configuration parameters at construction time;
-see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/com/fasterxml/jackson/module/kotlin/KotlinModule.kt)
+see the [inline documentation](https://github.com/FasterXML/jackson-module-kotlin/blob/master/src/main/kotlin/tools/jackson/module/kotlin/KotlinModule.kt)
 for details on what options are available and what they do.
 
 ```kotlin
