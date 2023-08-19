@@ -1,0 +1,19 @@
+name: Question
+description: Anything you're not sure about? Just ask us
+labels: [ "question" ]
+assignees: [ ]
+
+body:
+  - type: markdown
+    attributes:
+      value: "Before asking your question, please check out the docs."
+  - type: textarea
+    id: user-question
+    attributes:
+      label: Your question
+      placeholder: "What would you like to know?"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: "Thanks for reaching out! We'll do our best to help."
