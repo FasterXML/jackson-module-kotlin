@@ -1,0 +1,61 @@
+name: Bug report
+description: Create a report to help us improve
+labels: [ "bug" ]
+assignees: [ ]
+
+body:
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Search before asking
+      description: "Please search [issues](https://github.com/FasterXML/jackson-module-kotlin/issues) to check if your issue has already been reported."
+      options:
+        - label: "I searched in the [issues](https://github.com/FasterXML/jackson-module-kotlin/issues) and found nothing similar."
+          required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Describe the bug
+      description: "A clear and concise description of what the bug is."
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: To Reproduce
+      description: "Test case or steps to reproduce the behavior. It would be appreciated if you could provide code that can be executed with as few changes as possible, such as include 'import' statements."
+      value: |
+        ```kotlin
+        // Your code here
+        ```
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: "Also, it would be appreciated if you could confirm in advance that the problem is reproduced only when using `Kotlin` or `kotlin-module`. For issues that are reproduced only in `Java`, please submit them to the appropriate repository, such as [FasterXML/jackson-databind](https://github.com/FasterXML/jackson-databind)."
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: "A clear and concise description of what you expected to happen."
+    validations:
+      required: false
+  - type: textarea
+    id: version-info
+    attributes:
+      label: Versions
+      description: "Please provide the versions you are using:"
+      value: |
+        Kotlin: 
+        Jackson-module-kotlin: 
+        Jackson-databind: 
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: "Add any other context about the problem here."
+  - type: markdown
+    attributes:
+      value: "Thanks for reporting the bug!"
