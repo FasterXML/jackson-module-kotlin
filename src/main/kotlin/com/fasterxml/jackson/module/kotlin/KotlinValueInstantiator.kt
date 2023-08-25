@@ -35,7 +35,7 @@ internal class KotlinValueInstantiator(
     private fun List<KTypeProjection>.markedNonNullAt(index: Int) = getOrNull(index)?.type?.isMarkedNullable == false
 
     private fun SettableBeanProperty.skipNulls(): Boolean =
-        nullIsSameAsDefault || (getAnnotation(JsonSetter::class.java).nulls == Nulls.SKIP)
+        nullIsSameAsDefault || (getAnnotation(JsonSetter::class.java)?.nulls == Nulls.SKIP)
 
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
