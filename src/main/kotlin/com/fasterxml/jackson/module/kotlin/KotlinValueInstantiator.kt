@@ -1,6 +1,5 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
 import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.DeserializationConfig
@@ -35,7 +34,7 @@ internal class KotlinValueInstantiator(
     private fun List<KTypeProjection>.markedNonNullAt(index: Int) = getOrNull(index)?.type?.isMarkedNullable == false
 
     private fun SettableBeanProperty.skipNulls(): Boolean =
-        nullIsSameAsDefault || (getAnnotation(JsonSetter::class.java)?.nulls == Nulls.SKIP)
+        nullIsSameAsDefault || (metadata.valueNulls == Nulls.SKIP)
 
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
