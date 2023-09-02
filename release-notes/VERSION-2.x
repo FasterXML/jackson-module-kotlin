@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.16.0 (not yet released)
 
+#707: If JsonSetter(nulls = Nulls.SKIP) is specified, the default argument is now used when null.
 #700: Reduce the load on the search process for serializers.
 #689: Added UseJavaDurationConversion feature.
  By enabling this feature and adding the Java Time module, Kotlin Duration can be handled in the same way as Java Duration.

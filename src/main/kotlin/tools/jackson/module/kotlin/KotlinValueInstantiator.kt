@@ -1,5 +1,6 @@
 package tools.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.Nulls
 import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.DeserializationConfig
 import tools.jackson.databind.DeserializationContext
@@ -31,6 +32,9 @@ internal class KotlinValueInstantiator(
     private fun KType.isGenericTypeVar() = javaType is TypeVariable<*>
 
     private fun List<KTypeProjection>.markedNonNullAt(index: Int) = getOrNull(index)?.type?.isMarkedNullable == false
+
+    private fun SettableBeanProperty.skipNulls(): Boolean =
+        nullIsSameAsDefault || (metadata.valueNulls == Nulls.SKIP)
 
     override fun createFromObjectWith(
         ctxt: DeserializationContext,
@@ -70,12 +74,12 @@ internal class KotlinValueInstantiator(
             val paramType = paramDef.type
             var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
                 val tempParamVal = buffer.getParameter(jsonProp)
-                if (nullIsSameAsDefault && tempParamVal == null && paramDef.isOptional) {
+                if (tempParamVal == null && jsonProp.skipNulls() && paramDef.isOptional) {
                     return@forEachIndexed
                 }
                 tempParamVal
             } else {
-                if(paramType.isMarkedNullable) {
+                if (paramType.isMarkedNullable) {
                     // do not try to create any object if it is nullable and the value is missing
                     null
                 } else {
