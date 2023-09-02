@@ -21,6 +21,7 @@ kkurczewski
 * #689: Add KotlinDuration support
 
 WrongWrong (@k163377)
+* #707: Changed to use default argument on null if JsonSetter(nulls = Nulls.SKIP) is specified.
 * #700: Reduce the load on the search process for serializers
 * #687: Optimize and Refactor KotlinValueInstantiator.createFromObjectWith
 * #686: Add KotlinPropertyNameAsImplicitName option
