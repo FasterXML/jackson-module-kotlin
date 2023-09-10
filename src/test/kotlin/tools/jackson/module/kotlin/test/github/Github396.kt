@@ -1,13 +1,11 @@
-package tools.jackson.module.kotlin.test.github.failing
+package tools.jackson.module.kotlin.test.github
 
-import tools.jackson.databind.exc.MismatchedInputException
 import tools.jackson.dataformat.xml.XmlMapper
-import tools.jackson.module.kotlin.KotlinModule
-import tools.jackson.module.kotlin.test.expectFailure
+import tools.jackson.module.kotlin.kotlinModule
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestGithub396 {
+class Github396 {
     /**
      * Succeeds in Jackson 2.11.x, but fails in Jackson 2.12.0.
      * But succeeds again in 2.15.0.
@@ -17,7 +15,7 @@ class TestGithub396 {
     @Test
     fun testMissingConstructor() {
         val mapper = XmlMapper.builder()
-                .addModule(KotlinModule())
+                .addModule(kotlinModule())
                 .build()
 
         val xml = "<product><stuff></stuff></product>"
