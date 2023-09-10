@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github.failing
+package tools.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
