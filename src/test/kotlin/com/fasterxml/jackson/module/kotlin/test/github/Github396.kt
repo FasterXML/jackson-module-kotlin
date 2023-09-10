@@ -1,13 +1,11 @@
-package com.fasterxml.jackson.module.kotlin.test.github.failing
+package com.fasterxml.jackson.module.kotlin.test.github
 
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class TestGithub396 {
+class Github396 {
     /**
      * Succeeds in Jackson 2.11.x, but fails in Jackson 2.12.0.
      * But succeeds again in 2.15.0.
