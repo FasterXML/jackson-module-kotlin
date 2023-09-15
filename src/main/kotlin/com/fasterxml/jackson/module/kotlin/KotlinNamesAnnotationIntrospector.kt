@@ -2,16 +2,12 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.PropertyName
-import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
-import com.fasterxml.jackson.databind.introspect.AnnotatedField
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
-import com.fasterxml.jackson.databind.util.BeanUtil
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 import java.util.Locale
@@ -57,10 +53,11 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     private fun getterNameFromKotlin(member: AnnotatedMethod): String? {
-        val getter = member.member
+        val getterName = member.member.name
 
         return member.member.declaringClass.takeIf { it.isKotlinClass() }?.let { clazz ->
-            clazz.kotlin.memberProperties.find { it.javaGetter == getter }
+            // For edge case, methods must be compared by name, not directly.
+            clazz.kotlin.memberProperties.find { it.javaGetter?.name == getterName }
                 ?.let { it.name }
         }
     }
