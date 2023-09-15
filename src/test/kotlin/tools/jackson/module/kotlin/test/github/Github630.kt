@@ -1,15 +1,16 @@
 package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.junit.Test
+import tools.jackson.module.kotlin.KotlinFeature
+import tools.jackson.module.kotlin.KotlinModule
+import tools.jackson.module.kotlin.jsonMapper
 import kotlin.test.assertEquals
 
 class Github630 {
-    private val mapper = ObjectMapper()
-        .registerModule(KotlinModule.Builder().enable(KotlinFeature.KotlinPropertyNameAsImplicitName).build())!!
+    private val mapper = jsonMapper {
+        addModule(KotlinModule.Builder().enable(KotlinFeature.KotlinPropertyNameAsImplicitName).build())
+    }
 
     data class Dto(
         // from #570, #603
