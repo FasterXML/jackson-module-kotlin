@@ -55,10 +55,11 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     private fun getterNameFromKotlin(member: AnnotatedMethod): String? {
-        val getter = member.member
+        val getterName = member.member.name
 
         return member.member.declaringClass.takeIf { it.isKotlinClass() }?.let { clazz ->
-            clazz.kotlin.memberProperties.find { it.javaGetter == getter }
+            // For edge case, methods must be compared by name, not directly.
+            clazz.kotlin.memberProperties.find { it.javaGetter?.name == getterName }
                 ?.let { it.name }
         }
     }
