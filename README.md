@@ -215,7 +215,7 @@ provided for configuring these options:
 
 ```java
 KotlinModule kotlinModule = new KotlinModule.Builder()
-        .strictNullChecks(true)
+        .enable(KotlinFeature.StrictNullChecks)
         .build();
 ObjectMapper objectMapper = JsonMapper.builder()
         .addModule(kotlinModule)
