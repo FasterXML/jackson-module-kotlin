@@ -154,6 +154,7 @@ Note that using `lateinit` or `Delegates.notNull()` will ensure that the value i
 # Caveats
 
 * The `@JsonCreator` annotation is optional unless you have more than one constructor that is valid, or you want to use a static factory method (which also must have `platformStatic` annotation, e.g. `@JvmStatic`).  In these cases, annotate only one method as `JsonCreator`.
+* During deserialization, if the definition on `Kotlin` is a non-null primitive and `null` is entered explicitly on `JSON`, processing will continue with an unintended default value. [This problem is fixed by enabling `DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES` on `ObjectMapper`](https://github.com/FasterXML/jackson-module-kotlin/issues/242#issuecomment-792570655).
 * Serializing a member or top-level Kotlin class that implements Iterator requires a workaround, see [Issue #4](https://github.com/FasterXML/jackson-module-kotlin/issues/4) for easy workarounds.
 * If using proguard:
     * `kotlin.Metadata` annotations may be stripped, preventing deserialization. Add a proguard rule to keep the `kotlin.Metadata` class: `-keep class kotlin.Metadata { *; }`
