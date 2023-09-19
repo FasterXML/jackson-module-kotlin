@@ -10,7 +10,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.15.1` (for Jackson `2.15.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
+* release `2.15.2` (for Jackson `2.15.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.15)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.15)
 * release `2.14.3` (for Jackson `2.14.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.14)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.14)
 * release `2.13.5` (for Jackson `2.13.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.13)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.13)
 
@@ -26,7 +26,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.15.1</version>
+    <version>2.15.2</version>
 </dependency>
 ```
 
@@ -262,8 +262,8 @@ See the [main Jackson contribution guidlines](https://github.com/FasterXML/jacks
 
 If you are going to write code, choose the appropriate base branch:
 
-- `2.14` for bugfixes against the current stable version
-- `2.15` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
+- `2.15` for bugfixes against the current stable version
+- `2.16` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `master` for significant changes to existing behavior, which will be part of Jackson 3.0
 
 ### Failing tests
