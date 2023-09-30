@@ -216,9 +216,9 @@
 			    <!-- 16-Mar-2022, tatu: Sometimes may need to change baseline and
 				  if so, need to add temporary exclusions to avoid build breakage
 			    -->
-			    <!-- 19-Feb-2023, tatu: For 2.15, compare to 2.14 baseline
-			      -->
-                            <version>2.14.0</version>
+			    <!-- 30-Sep-2023, wrongwrong: For 2.16, compare to 2.15.2 baseline
+			    -->
+                            <version>2.15.2</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
@@ -231,14 +231,15 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
-			  <!-- Cache removal from ReflectionCache; internal change
-			    -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
+                <!-- public -->
+                          <!-- options added -->
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule</exclude>
+                          <!-- class removed -->
                           <exclude>com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException</exclude>
+                <!-- internal -->
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinAnnotationIntrospector</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ValueClassBoxSerializer</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ValueClassStaticJsonValueSerializer</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinDeserializers</exclude>
                         </excludes>
                     </parameter>
                 </configuration>

@@ -61,6 +61,11 @@ class KotlinModule @Deprecated(
     val useKotlinPropertyNameForGetter: Boolean = false,
     val useJavaDurationConversion: Boolean = false,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    companion object {
+        // Increment when option is added
+        const val serialVersionUID = 2L
+    }
+
     init {
         if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
             // Kotlin 1.4 was deprecated when this process was introduced(jackson-module-kotlin 2.15).
@@ -112,10 +117,6 @@ class KotlinModule @Deprecated(
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),
     )
-
-    companion object {
-        const val serialVersionUID = 1L
-    }
 
     private val ignoredClassesForImplyingJsonCreator = emptySet<KClass<*>>()
 
