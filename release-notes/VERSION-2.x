@@ -36,6 +36,10 @@ Co-maintainers:
  This change removes MissingKotlinParameterException and resolves #617.
  This change is a prerequisite for future work to improve performance.
 
+2.15.3 (12-Oct-2023)
+
+No changes since 2.15.2
+
 2.15.2 (30-May-2023)
 
 #675: Modified to use Converter in Sequence serialization
