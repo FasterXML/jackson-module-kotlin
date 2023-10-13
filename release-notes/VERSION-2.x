@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.15.3 (12-Oct-2023)
+
+No changes since 2.15.2
+
 2.15.2 (30-May-2023)
 
 #675: Modified to use Converter in Sequence serialization
