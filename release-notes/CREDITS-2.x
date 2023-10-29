@@ -29,7 +29,6 @@ WrongWrong (@k163377)
 * #686: Add KotlinPropertyNameAsImplicitName option
 * #685: Streamline default value management for KotlinFeatures
 * #684: Update Kotlin Version to 1.6
-* #682: Remove MissingKotlinParameterException and replace with MismatchedInputException
 
 # 2.15.2
 
