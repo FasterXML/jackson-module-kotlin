@@ -11,7 +11,9 @@ import kotlin.reflect.KParameter
  * parameter was missing or null.
  */
 @Deprecated(
-    "It will be removed in jackson-module-kotlin 2.16. See #617 for details.",
+    "It is recommended that MismatchedInputException be referenced when possible," +
+            " as the change is discussed for 2.17 and later." +
+            " See #617 for details.",
     ReplaceWith(
         "MismatchedInputException",
         "com.fasterxml.jackson.databind.exc.MismatchedInputException"
@@ -20,9 +22,16 @@ import kotlin.reflect.KParameter
 )
 // When deserialized by the JDK, the parameter property will be null, ignoring nullability.
 // This is a temporary workaround for #572 and we will eventually remove this class.
-class MissingKotlinParameterException(@Transient val parameter: KParameter,
-                                      processor: JsonParser? = null,
-                                      msg: String) : MismatchedInputException(processor, msg) {
+class MissingKotlinParameterException(
+    @property:Deprecated(
+        "KParameter is not serializable and will be removed in 2.17 or later. See #572 for details.",
+        level = DeprecationLevel.WARNING
+    )
+    @Transient
+    val parameter: KParameter,
+    processor: JsonParser? = null,
+    msg: String
+) : MismatchedInputException(processor, msg) {
     @Deprecated("Use main constructor", ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"))
     constructor(
             parameter: KParameter,
