@@ -234,8 +234,6 @@
                 <!-- public -->
                           <!-- options added -->
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule</exclude>
-                          <!-- class removed -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException</exclude>
                 <!-- internal -->
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinAnnotationIntrospector</exclude>

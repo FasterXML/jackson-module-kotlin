@@ -98,12 +98,10 @@ internal class KotlinValueInstantiator(
 
                     // Since #310 reported that the calculation cost is high, isGenericTypeVar is determined last.
                     if (isMissingAndRequired || (!paramType.isMarkedNullable && !paramType.isGenericTypeVar())) {
-                        throw MismatchedInputException.from(
-                            ctxt.parser,
-                            propType,
-                            "Instantiation of $valueTypeDesc value failed for JSON property ${jsonProp.name} " +
-                                    "due to missing (therefore NULL) value for creator parameter ${paramDef.name} " +
-                                    "which is a non-nullable type"
+                        throw MissingKotlinParameterException(
+                            parameter = paramDef,
+                            processor = ctxt.parser,
+                            msg = "Instantiation of ${this.valueTypeDesc} value failed for JSON property ${jsonProp.name} due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type"
                         ).wrapWithPath(this.valueClass, jsonProp.name)
                     }
                 }
@@ -129,10 +127,10 @@ internal class KotlinValueInstantiator(
                 }
 
                 if (paramTypeStr != null && itemType != null) {
-                    throw MismatchedInputException.from(
-                        ctxt.parser,
-                        propType,
-                        "Instantiation of $itemType $paramTypeStr failed for JSON property ${jsonProp.name} due to null value in a $paramTypeStr that does not allow null values"
+                    throw MissingKotlinParameterException(
+                        parameter = paramDef,
+                        processor = ctxt.parser,
+                        msg = "Instantiation of $itemType $paramType failed for JSON property ${jsonProp.name} due to null value in a $paramType that does not allow null values"
                     ).wrapWithPath(this.valueClass, jsonProp.name)
                 }
             }
