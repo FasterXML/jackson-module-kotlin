@@ -1,15 +1,14 @@
 package tools.jackson.module.kotlin.test.github
 
-import tools.jackson.databind.DatabindException
-import tools.jackson.databind.exc.MismatchedInputException
+import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
 import org.hamcrest.CustomTypeSafeMatcher
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
+import tools.jackson.databind.DatabindException
 import kotlin.reflect.KParameter
-
 
 class TestGithub32 {
 
@@ -94,7 +93,6 @@ class TestGithub32 {
 
 }
 
-
 private data class Person(val firstName: String, val lastName: String)
 
 private data class WrapperWithArgsContructor(val person: Person)
@@ -106,20 +104,16 @@ private data class Crowd(val people: List<Person>)
 
 private fun missingFirstNameParameter() = missingConstructorParam(::Person.parameters[0])
 
-private fun missingConstructorParam(
-    param: KParameter
-) = object : CustomTypeSafeMatcher<MismatchedInputException>(
-    "MissingKotlinParameterException with missing `${param.name}` parameter"
-) {
-    override fun matchesSafely(e: MismatchedInputException): Boolean = param.name == e.path.last().propertyName
+private fun missingConstructorParam(param: KParameter) = object : CustomTypeSafeMatcher<MissingKotlinParameterException>("MissingKotlinParameterException with missing `${param.name}` parameter") {
+    override fun matchesSafely(e: MissingKotlinParameterException): Boolean = e.parameter.equals(param)
 }
 
-private fun pathMatches(path: String) = object : CustomTypeSafeMatcher<MismatchedInputException>("MissingKotlinParameterException with path `$path`") {
-    override fun matchesSafely(e: MismatchedInputException): Boolean = e.getHumanReadablePath().equals(path)
+private fun pathMatches(path: String) = object : CustomTypeSafeMatcher<tools.jackson.module.kotlin.MissingKotlinParameterException>("MissingKotlinParameterException with path `$path`") {
+    override fun matchesSafely(e: tools.jackson.module.kotlin.MissingKotlinParameterException): Boolean = e.getHumanReadablePath().equals(path)
 }
 
-private fun location(line: Int, column: Int) = object : CustomTypeSafeMatcher<MismatchedInputException>("MissingKotlinParameterException with location (line=$line, column=$column)") {
-    override fun matchesSafely(e: MismatchedInputException): Boolean {
+private fun location(line: Int, column: Int) = object : CustomTypeSafeMatcher<MissingKotlinParameterException>("MissingKotlinParameterException with location (line=$line, column=$column)") {
+    override fun matchesSafely(e: MissingKotlinParameterException): Boolean {
         return e.location != null && line.equals(e.location.lineNr) && column.equals(e.location.columnNr)
     }
 }

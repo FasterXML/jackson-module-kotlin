@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.ObjectMapper
-import tools.jackson.databind.exc.MismatchedInputException
+import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
 import org.junit.Test
@@ -21,7 +21,7 @@ class TestGithub168 {
         assertEquals("whatever", obj.baz)
     }
 
-    @Test(expected = MismatchedInputException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun testIfRequiredIsReallyRequiredWhenAbsent() {
         val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
         assertEquals("whatever", obj.baz)

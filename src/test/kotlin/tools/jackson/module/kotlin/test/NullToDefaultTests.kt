@@ -1,8 +1,8 @@
 package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.json.JsonMapper
-import tools.jackson.databind.exc.MismatchedInputException
 import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
+import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
 import org.junit.Assert
@@ -144,7 +144,7 @@ class TestNullToDefault {
         Assert.assertEquals(true, item.canBeProcessed)
     }
 
-    @Test(expected = MismatchedInputException::class)
+    @Test(expected = MissingKotlinParameterException::class)
     fun shouldThrowExceptionWhenProvidedNullForNotNullFieldWithoutDefault() {
         createMapper(true).readValue<TestClass>(
             """{
