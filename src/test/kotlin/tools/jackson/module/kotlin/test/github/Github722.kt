@@ -1,11 +1,11 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.databind.InjectableValues
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.databind.InjectableValues
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
