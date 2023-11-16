@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.17.0 (not yet released)
+
+-
+
 2.16.0 (15-Nov-2023)
 
 #707: If JsonSetter(nulls = Nulls.SKIP) is specified, the default argument is now used when null.
