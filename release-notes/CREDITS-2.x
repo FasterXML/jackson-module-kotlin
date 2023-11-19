@@ -15,7 +15,9 @@ Authors:
 
 Contributors:
 
-# 2.16.0 (not yet released)
+# 2.17.0 (not yet released)
+
+# 2.16.0
 
 kkurczewski
 * #689: Add KotlinDuration support
