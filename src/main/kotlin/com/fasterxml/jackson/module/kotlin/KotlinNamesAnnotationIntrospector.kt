@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
@@ -111,11 +112,13 @@ internal class KotlinNamesAnnotationIntrospector(
         }
     }
 
-    override fun hasCreatorAnnotation(member: Annotated): Boolean =
-        if (member is AnnotatedConstructor && member.isKotlinConstructorWithParameters())
-            cache.checkConstructorIsCreatorAnnotated(member) { hasCreatorAnnotation(it) }
-        else
-            false
+    override fun findCreatorAnnotation(config: MapperConfig<*>, ann: Annotated): JsonCreator.Mode? {
+        if (ann !is AnnotatedConstructor || !ann.isKotlinConstructorWithParameters()) return null
+
+        return JsonCreator.Mode.DEFAULT.takeIf {
+            cache.checkConstructorIsCreatorAnnotated(ann) { hasCreatorAnnotation(it) }
+        }
+    }
 
     @Suppress("UNCHECKED_CAST")
     private fun findKotlinParameterName(param: AnnotatedParameter): String? {
