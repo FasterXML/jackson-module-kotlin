@@ -36,9 +36,7 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
 }
 
 //TODO: causing java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
-fun jacksonObjectMapper(): ObjectMapper =
-    jsonMapper { addModule(kotlinModule()) }
-
+fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule()) }
 fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
@@ -46,8 +44,8 @@ fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object : TypeReference<T>() {}
 
-inline fun <reified T> ObjectMapper.readValue(p: JsonParser): T = readValue(p, jacksonTypeRef<T>())
-inline fun <reified T> ObjectMapper.readValues(p: JsonParser): MappingIterator<T> = readValues(p, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
 
 inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>())
@@ -59,9 +57,9 @@ inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src
 inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
 inline fun <reified T> ObjectMapper.convertValue(from: Any): T = convertValue(from, jacksonTypeRef<T>())
 
-inline fun <reified T> ObjectReader.readValueTyped(p: JsonParser): T = forType(jacksonTypeRef<T>()).readValue(p)
-inline fun <reified T> ObjectReader.readValuesTyped(p: JsonParser): Iterator<T> = readValues(p, jacksonTypeRef<T>())
-inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(n))
+inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = forType(jacksonTypeRef<T>()).readValue(jp)
+inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> = readValues(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectReader.treeToValue(jp: TreeNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(jp))
 
 inline fun <reified T, reified U> JsonMapper.Builder.addMixIn(): JsonMapper.Builder = this.addMixIn(T::class.java, U::class.java)
 

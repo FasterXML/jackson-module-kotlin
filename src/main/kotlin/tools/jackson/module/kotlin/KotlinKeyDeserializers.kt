@@ -61,7 +61,7 @@ internal object KotlinKeyDeserializers : JDKKeyDeserializers() {
     override fun findKeyDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?
+        beanDesc: BeanDescription?,
     ): KeyDeserializer? = when (type.rawClass) {
         UByte::class.java -> UByteKeyDeserializer
         UShort::class.java -> UShortKeyDeserializer

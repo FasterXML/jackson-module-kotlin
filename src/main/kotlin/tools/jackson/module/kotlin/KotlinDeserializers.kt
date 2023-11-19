@@ -42,16 +42,6 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
     }
 }
 
-/*
-internal class KotlinDeserializers: Deserializers.Base() {
-    override fun findBeanDeserializer(type: JavaType, config: DeserializationConfig?, beanDesc: BeanDescription?): ValueDeserializer<*>? {
-        return if (type.isInterface && type.rawClass == Sequence::class.java) {
-            SequenceDeserializer
-        } else if (type.rawClass == Regex::class.java) {
-            RegexDeserializer
-        } else {
-            null
-*/
 object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.shortValue.asUByte() ?: throw InputCoercionException(
@@ -98,7 +88,7 @@ internal class KotlinDeserializers(
     override fun findBeanDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?
+        beanDesc: BeanDescription?,
     ): ValueDeserializer<*>? {
         return when {
             type.isInterface && type.rawClass == Sequence::class.java -> SequenceDeserializer

@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin
 import kotlin.reflect.KFunction
 import kotlin.reflect.jvm.isAccessible
 
-internal class ConstructorValueCreator<T>(override val callable: KFunction<T>) : tools.jackson.module.kotlin.ValueCreator<T>() {
+internal class ConstructorValueCreator<T>(override val callable: KFunction<T>) : ValueCreator<T>() {
     override val accessible: Boolean = callable.isAccessible
 
     init {

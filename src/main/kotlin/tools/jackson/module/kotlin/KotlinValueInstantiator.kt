@@ -140,7 +140,7 @@ internal class KotlinValueInstantiator(
             numCallableParameters++
         }
 
-        return if (numCallableParameters == jsonParamValueList.size && valueCreator is tools.jackson.module.kotlin.ConstructorValueCreator) {
+        return if (numCallableParameters == jsonParamValueList.size && valueCreator is ConstructorValueCreator) {
             // we didn't do anything special with default parameters, do a normal call
             super.createFromObjectWith(ctxt, jsonParamValueList)
         } else {
