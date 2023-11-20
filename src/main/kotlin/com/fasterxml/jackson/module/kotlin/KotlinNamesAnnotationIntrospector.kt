@@ -112,6 +112,8 @@ internal class KotlinNamesAnnotationIntrospector(
         }
     }
 
+    // TODO: possible work around for JsonValue class that requires the class constructor to have the JsonCreator(DELEGATED) set?
+    //   since we infer the creator at times for these methods, the wrong mode could be implied.
     override fun findCreatorAnnotation(config: MapperConfig<*>, ann: Annotated): JsonCreator.Mode? {
         if (ann !is AnnotatedConstructor || !ann.isKotlinConstructorWithParameters()) return null
 
