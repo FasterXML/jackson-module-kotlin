@@ -46,7 +46,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     private val javaConstructorToKotlin = SimpleLookupCache<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToKotlin = SimpleLookupCache<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = SimpleLookupCache<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorIsCreatorAnnotated = SimpleLookupCache<AnnotatedConstructor, Mode>(reflectionCacheSize, reflectionCacheSize)
+    private val javaConstructorIsCreatorAnnotated = SimpleLookupCache<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = SimpleLookupCache<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
 
     // Initial size is 0 because the value class is not always used
@@ -96,10 +96,8 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         )
     } // we cannot reflect this method so do the default Java-ish behavior
 
-    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Mode): Mode {
-        return javaConstructorIsCreatorAnnotated.get(key)
-            ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
-    }
+    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key)
+        ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
 
     fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
             ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }

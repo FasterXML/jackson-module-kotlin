@@ -1,6 +1,5 @@
 package tools.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
@@ -13,7 +12,6 @@ import tools.jackson.databind.introspect.AnnotatedMethod
 import tools.jackson.databind.introspect.AnnotatedParameter
 import tools.jackson.databind.introspect.NopAnnotationIntrospector
 import tools.jackson.databind.jsontype.NamedType
-import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.databind.util.Converter
 import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Constructor
@@ -65,15 +63,6 @@ internal class KotlinAnnotationIntrospector(
             } catch (ex: UnsupportedOperationException) {
                 null
             }
-    }
-
-    override fun findCreatorAnnotation(config: MapperConfig<*>, a: Annotated): JsonCreator.Mode? {
-
-        // TODO: possible work around for JsonValue class that requires the class constructor to have the JsonCreator(Mode.DELEGATED) set?
-        // since we infer the creator at times for these methods, the wrong mode could be implied.
-
-        // findCreatorBinding used to be a clearer way to set this, but we need to set the mode here to disambugiate the intent of the constructor
-        return super.findCreatorAnnotation(config, a)
     }
 
     override fun findSerializationConverter(config: MapperConfig<*>?, a: Annotated): Converter<*, *>? = when (a) {

@@ -18,7 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
--
+#727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation.
 
 2.16.0 (15-Nov-2023)
 
