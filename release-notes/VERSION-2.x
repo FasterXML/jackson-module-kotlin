@@ -21,6 +21,10 @@ Co-maintainers:
 #732: SequenceSerializer removed.
 #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation.
 
+2.16.1 (not yet released)
+
+#733: Fix problem with Serializable objects not implementing readResolve.
+
 2.16.0 (15-Nov-2023)
 
 #707: If JsonSetter(nulls = Nulls.SKIP) is specified, the default argument is now used when null.

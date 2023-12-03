@@ -21,6 +21,11 @@ WrongWrong (@k163377)
 * #732: SequenceSerializer removed.
 * #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation
 
+# 2.16.1 (not yet released)
+
+WrongWrong (@k163377)
+* #733: Fix problem with Serializable objects not implementing readResolve
+
 # 2.16.0
 
 kkurczewski
