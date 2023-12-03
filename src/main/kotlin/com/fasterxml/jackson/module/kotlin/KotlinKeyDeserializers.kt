@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.deser.std.StdKeyDeserializers
 // If StdKeyDeserializer is modified, need to modify this too.
 
 internal object UByteKeyDeserializer : StdKeyDeserializer(TYPE_SHORT, UByte::class.java) {
+    private fun readResolve(): Any = UByteKeyDeserializer
+
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UByte? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Short).asUByte() ?: throw InputCoercionException(
@@ -22,6 +24,8 @@ internal object UByteKeyDeserializer : StdKeyDeserializer(TYPE_SHORT, UByte::cla
 }
 
 internal object UShortKeyDeserializer : StdKeyDeserializer(TYPE_INT, UShort::class.java) {
+    private fun readResolve(): Any = UShortKeyDeserializer
+
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UShort? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Int).asUShort() ?: throw InputCoercionException(
@@ -34,6 +38,8 @@ internal object UShortKeyDeserializer : StdKeyDeserializer(TYPE_INT, UShort::cla
 }
 
 internal object UIntKeyDeserializer : StdKeyDeserializer(TYPE_LONG, UInt::class.java) {
+    private fun readResolve(): Any = UIntKeyDeserializer
+
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): UInt? = super.deserializeKey(key, ctxt)
         ?.let {
             (it as Long).asUInt() ?: throw InputCoercionException(
@@ -47,6 +53,8 @@ internal object UIntKeyDeserializer : StdKeyDeserializer(TYPE_LONG, UInt::class.
 
 // kind parameter is dummy.
 internal object ULongKeyDeserializer : StdKeyDeserializer(TYPE_LONG, ULong::class.java) {
+    private fun readResolve(): Any = ULongKeyDeserializer
+
     override fun deserializeKey(key: String?, ctxt: DeserializationContext): ULong? = key?.let {
         it.toBigInteger().asULong() ?: throw InputCoercionException(
             null,
@@ -58,6 +66,8 @@ internal object ULongKeyDeserializer : StdKeyDeserializer(TYPE_LONG, ULong::clas
 }
 
 internal object KotlinKeyDeserializers : StdKeyDeserializers() {
+    private fun readResolve(): Any = KotlinKeyDeserializers
+
     override fun findKeyDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
