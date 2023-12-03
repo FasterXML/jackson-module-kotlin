@@ -16,6 +16,9 @@ Authors:
 Contributors:
 
 # 2.17.0 (not yet released)
+
+WrongWrong (@k163377)
+* #732: SequenceSerializer removed.
 * #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation
 
 # 2.16.0
