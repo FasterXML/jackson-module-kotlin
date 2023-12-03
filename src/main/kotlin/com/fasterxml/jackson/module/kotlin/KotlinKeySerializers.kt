@@ -13,6 +13,8 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 
 internal object ValueClassUnboxKeySerializer : StdSerializer<Any>(Any::class.java) {
+    private fun readResolve(): Any = ValueClassUnboxKeySerializer
+
     override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
         val method = value::class.java.getMethod("unbox-impl")
         val unboxed = method.invoke(value)

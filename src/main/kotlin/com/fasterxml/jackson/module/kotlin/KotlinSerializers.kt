@@ -14,21 +14,29 @@ import java.lang.reflect.Modifier
 import java.math.BigInteger
 
 object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
+    private fun readResolve(): Any = UByteSerializer
+
     override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) =
         gen.writeNumber(value.toShort())
 }
 
 object UShortSerializer : StdSerializer<UShort>(UShort::class.java) {
+    private fun readResolve(): Any = UShortSerializer
+
     override fun serialize(value: UShort, gen: JsonGenerator, provider: SerializerProvider) =
         gen.writeNumber(value.toInt())
 }
 
 object UIntSerializer : StdSerializer<UInt>(UInt::class.java) {
+    private fun readResolve(): Any = UIntSerializer
+
     override fun serialize(value: UInt, gen: JsonGenerator, provider: SerializerProvider) =
         gen.writeNumber(value.toLong())
 }
 
 object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
+    private fun readResolve(): Any = ULongSerializer
+
     override fun serialize(value: ULong, gen: JsonGenerator, provider: SerializerProvider) {
         val longValue = value.toLong()
         when {
@@ -44,6 +52,8 @@ private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods.
 }
 
 object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
+    private fun readResolve(): Any = ValueClassUnboxSerializer
+
     override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
         val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
