@@ -260,7 +260,7 @@ across all Jackson components & modules. See the [jackson-databind README](https
 
 We welcome any contributions—reports of issues, ideas for enhancements, and pull requests related to either of those.
 
-See the [main Jackson contribution guidlines](https://github.com/FasterXML/jackson/blob/master/CONTRIBUTING.md) for more details.
+See the [main Jackson contribution guidelines](https://github.com/FasterXML/jackson/blob/master/CONTRIBUTING.md) for more details.
 
 ### Branches
 
