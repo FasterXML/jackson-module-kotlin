@@ -13,12 +13,16 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import kotlin.time.Duration as KotlinDuration
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {
+    private fun readResolve(): Any = SequenceDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Sequence<*> {
         return ctxt.readValue(p, List::class.java).asSequence()
     }
 }
 
 object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
+    private fun readResolve(): Any = RegexDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Regex {
         val node = ctxt.readTree(p)
 
@@ -43,6 +47,8 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
 }
 
 object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
+    private fun readResolve(): Any = UByteDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.shortValue.asUByte() ?: throw InputCoercionException(
             p,
@@ -53,6 +59,8 @@ object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
 }
 
 object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
+    private fun readResolve(): Any = UShortDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.intValue.asUShort() ?: throw InputCoercionException(
             p,
@@ -63,6 +71,8 @@ object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
 }
 
 object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
+    private fun readResolve(): Any = UIntDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.longValue.asUInt() ?: throw InputCoercionException(
             p,
@@ -73,6 +83,8 @@ object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
 }
 
 object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
+    private fun readResolve(): Any = ULongDeserializer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.bigIntegerValue.asULong() ?: throw InputCoercionException(
             p,
