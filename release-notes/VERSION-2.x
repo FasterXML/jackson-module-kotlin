@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#738: JacksonInject is now preferred over the default argument(fixes #722).
 #732: SequenceSerializer removed.
 #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation.
 

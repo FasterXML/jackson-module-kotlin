@@ -8,7 +8,6 @@ import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 
 class Github722 {
     data class FailingDto @JsonCreator constructor(
@@ -43,8 +42,7 @@ class Github722 {
             .with(InjectableValues.Std(injectValues))
             .readValue<FailingDto>("{}")
 
-        assertNotEquals(result, expected, "GitHubXXX fixed.")
-        assertEquals(FailingDto(), result)
+        assertEquals(expected, result)
     }
 
     data class WithoutDefaultValue(
