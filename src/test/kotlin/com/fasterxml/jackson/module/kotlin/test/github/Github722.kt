@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -43,8 +44,7 @@ class Github722 {
             .with(InjectableValues.Std(injectValues))
             .readValue<FailingDto>("{}")
 
-        assertNotEquals(result, expected, "GitHubXXX fixed.")
-        assertEquals(FailingDto(), result)
+        assertEquals(expected, result)
     }
 
     data class WithoutDefaultValue(
