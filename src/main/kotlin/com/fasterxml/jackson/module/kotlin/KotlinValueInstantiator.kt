@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.deser.ValueInstantiators
 import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider
 import com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
 import kotlin.reflect.KType
@@ -67,24 +66,20 @@ internal class KotlinValueInstantiator(
             val jsonProp = props[idx]
             val isMissing = !buffer.hasParameter(jsonProp)
 
-            if (isMissing && paramDef.isOptional) {
-                return@forEachIndexed
-            }
-
             val paramType = paramDef.type
-            var paramVal = if (!isMissing || paramDef.isPrimitive() || jsonProp.hasInjectableValueId()) {
+            var paramVal = if (!isMissing || jsonProp.hasInjectableValueId()) {
                 val tempParamVal = buffer.getParameter(jsonProp)
                 if (tempParamVal == null && jsonProp.skipNulls() && paramDef.isOptional) {
                     return@forEachIndexed
                 }
                 tempParamVal
             } else {
-                if(paramType.isMarkedNullable) {
+                when {
+                    paramDef.isOptional -> return@forEachIndexed
                     // do not try to create any object if it is nullable and the value is missing
-                    null
-                } else {
+                    paramType.isMarkedNullable -> null
                     // to get suitable "missing" value provided by deserializer
-                    jsonProp.valueDeserializer?.getAbsentValue(ctxt)
+                    else -> jsonProp.valueDeserializer?.getAbsentValue(ctxt)
                 }
             }
 
@@ -155,13 +150,6 @@ internal class KotlinValueInstantiator(
             valueCreator.callBy(callableParametersByName)
         }
 
-    }
-
-    private fun KParameter.isPrimitive(): Boolean {
-        return when (val javaType = type.javaType) {
-            is Class<*> -> javaType.isPrimitive
-            else -> false
-        }
     }
 
     private fun SettableBeanProperty.hasInjectableValueId(): Boolean = injectableValueId != null
