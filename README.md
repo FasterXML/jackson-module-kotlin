@@ -55,28 +55,8 @@ val mapper = jsonMapper {
 }
 ```
 
-<details>
-  <summary>Jackson versions prior to 2.10–2.11</summary>
-
-```kotlin
-import com.fasterxml.jackson.databind.json.JsonMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-...
-val mapper = JsonMapper.builder().addModule(KotlinModule()).build()
-```
-</details>
-
-
-<details>
-  <summary>Jackson versions prior to 2.10</summary>
-
-```kotlin
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-...
-val mapper = ObjectMapper().registerModule(KotlinModule())
-```
-</details>
+In 2.17 and later, the `jacksonObjectMapper {}` and `registerKotlinModule {}` lambdas allow configuration for `KotlinModule`.  
+See [#Configuration](#Configuration) for details on the available configuration items.
 
 A simple data class example:
 ```kotlin
