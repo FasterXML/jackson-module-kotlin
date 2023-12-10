@@ -78,6 +78,8 @@ internal class KotlinValueInstantiator(
                     paramDef.isOptional -> return@forEachIndexed
                     // do not try to create any object if it is nullable and the value is missing
                     paramType.isMarkedNullable -> null
+                    // Primitive types always try to get from a buffer, considering several settings
+                    jsonProp.type.isPrimitive -> buffer.getParameter(jsonProp)
                     // to get suitable "missing" value provided by deserializer
                     else -> jsonProp.valueDeserializer?.getAbsentValue(ctxt)
                 }
