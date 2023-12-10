@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#740: Reduce conversion cache from Executable to KFunction.
+ This will reduce memory usage efficiency and total memory consumption, but may result in a minor performance degradation in use cases where a large number of factory functions are used as JsonCreator.
 #738: JacksonInject is now preferred over the default argument(fixes #722).
 #732: SequenceSerializer removed.
 #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation.
