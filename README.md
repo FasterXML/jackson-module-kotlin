@@ -55,6 +55,9 @@ val mapper = jsonMapper {
 }
 ```
 
+In 2.17 and later, the `jacksonObjectMapper {}` and `registerKotlinModule {}` lambdas allow configuration for `KotlinModule`.  
+See [#Configuration](#Configuration) for details on the available configuration items.
+
 <details>
   <summary>Jackson versions prior to 2.10–2.11</summary>
 
