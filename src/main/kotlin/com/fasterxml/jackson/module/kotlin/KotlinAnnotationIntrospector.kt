@@ -95,9 +95,8 @@ internal class KotlinAnnotationIntrospector(
         if (!useJavaDurationConversion) return null
 
         return (a as? AnnotatedParameter)?.let { param ->
-            @Suppress("UNCHECKED_CAST")
             val function: KFunction<*> = when (val owner = param.owner.member) {
-                is Constructor<*> -> cache.kotlinFromJava(owner as Constructor<Any>)
+                is Constructor<*> -> cache.kotlinFromJava(owner)
                 is Method -> cache.kotlinFromJava(owner)
                 else -> null
             } ?: return@let null

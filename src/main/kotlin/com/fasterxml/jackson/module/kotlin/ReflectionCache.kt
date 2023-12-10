@@ -42,7 +42,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         }
     }
 
-    private val javaConstructorToKotlin = LRUMap<Constructor<Any>, KFunction<Any>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaConstructorToKotlin = LRUMap<Constructor<*>, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
@@ -57,7 +57,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     private val valueClassBoxConverterCache: LRUMap<KClass<*>, ValueClassBoxConverter<*, *>> =
         LRUMap(0, reflectionCacheSize)
 
-    fun kotlinFromJava(key: Constructor<Any>): KFunction<Any>? = javaConstructorToKotlin.get(key)
+    fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = javaConstructorToKotlin.get(key)
             ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
 
     fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key)
