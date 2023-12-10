@@ -79,13 +79,12 @@ internal class KotlinNamesAnnotationIntrospector(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     private fun hasCreatorAnnotation(member: AnnotatedConstructor): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
 
         val kClass = member.declaringClass.kotlin
             .apply { if (this in ignoredClassesForImplyingJsonCreator) return false }
-        val kConstructor = cache.kotlinFromJava(member.annotated as Constructor<Any>) ?: return false
+        val kConstructor = cache.kotlinFromJava(member.annotated) ?: return false
 
         // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
         // val requiredProperties = kClass.declaredMemberProperties.filter {!it.returnType.isMarkedNullable }.map { it.name }.toSet()
