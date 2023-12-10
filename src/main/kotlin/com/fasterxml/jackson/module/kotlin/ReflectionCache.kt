@@ -19,7 +19,7 @@ import kotlin.reflect.jvm.kotlinFunction
 internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     companion object {
         // Increment is required when properties that use LRUMap are changed.
-        private const val serialVersionUID = 1L
+        private const val serialVersionUID = 2L
     }
 
     sealed class BooleanTriState(val value: Boolean?) {
@@ -42,8 +42,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         }
     }
 
-    private val javaConstructorToKotlin = LRUMap<Constructor<*>, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaMethodToKotlin = LRUMap<Method, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
+    private val javaExecutableToKotlin = LRUMap<Executable, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
@@ -57,11 +56,11 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     private val valueClassBoxConverterCache: LRUMap<KClass<*>, ValueClassBoxConverter<*, *>> =
         LRUMap(0, reflectionCacheSize)
 
-    fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = javaConstructorToKotlin.get(key)
-            ?: key.kotlinFunction?.let { javaConstructorToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = javaExecutableToKotlin.get(key)
+        ?: key.kotlinFunction?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
 
-    fun kotlinFromJava(key: Method): KFunction<*>? = javaMethodToKotlin.get(key)
-            ?: key.kotlinFunction?.let { javaMethodToKotlin.putIfAbsent(key, it) ?: it }
+    fun kotlinFromJava(key: Method): KFunction<*>? = javaExecutableToKotlin.get(key)
+        ?: key.kotlinFunction?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
 
     /**
      * return null if...
