@@ -9,7 +9,6 @@ import tools.jackson.databind.deser.SettableBeanProperty
 import tools.jackson.databind.deser.ValueInstantiator
 import tools.jackson.databind.deser.ValueInstantiators
 import tools.jackson.databind.deser.bean.PropertyValueBuffer
-import tools.jackson.databind.deser.impl.NullsAsEmptyProvider
 import tools.jackson.databind.deser.std.StdValueInstantiator
 import java.lang.reflect.TypeVariable
 import kotlin.reflect.KParameter
@@ -89,7 +88,7 @@ internal class KotlinValueInstantiator(
 
             if (paramVal == null) {
                 if (propType.requireEmptyValue()) {
-                    paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                    paramVal = jsonProp.valueDeserializer!!.getEmptyValue(ctxt)
                 } else {
                     val isMissingAndRequired = isMissing && jsonProp.isRequired
 
