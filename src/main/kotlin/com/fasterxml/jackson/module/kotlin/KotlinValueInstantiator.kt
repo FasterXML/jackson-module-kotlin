@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.deser.SettableBeanProperty
 import com.fasterxml.jackson.databind.deser.ValueInstantiator
 import com.fasterxml.jackson.databind.deser.ValueInstantiators
-import com.fasterxml.jackson.databind.deser.impl.NullsAsEmptyProvider
 import com.fasterxml.jackson.databind.deser.impl.PropertyValueBuffer
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
 import java.lang.reflect.TypeVariable
@@ -89,7 +88,7 @@ internal class KotlinValueInstantiator(
 
             if (paramVal == null) {
                 if (propType.requireEmptyValue()) {
-                    paramVal = NullsAsEmptyProvider(jsonProp.valueDeserializer).getNullValue(ctxt)
+                    paramVal = jsonProp.valueDeserializer!!.getEmptyValue(ctxt)
                 } else {
                     val isMissingAndRequired = isMissing && jsonProp.isRequired
 
