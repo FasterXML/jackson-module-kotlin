@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#742: Minor performance improvements to NullToEmptyCollection/Map.
 #741: Changed to allow KotlinFeature to be set in the function that registers a KotlinModule.
  The `jacksonObjectMapper {}` and `registerKotlinModule {}` lambdas allow configuration for KotlinModule.
 #740: Reduce conversion cache from Executable to KFunction.
