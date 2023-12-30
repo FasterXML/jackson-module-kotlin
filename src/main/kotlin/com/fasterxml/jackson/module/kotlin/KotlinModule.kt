@@ -59,7 +59,7 @@ class KotlinModule @Deprecated(
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     companion object {
         // Increment when option is added
-        const val serialVersionUID = 2L
+        private const val serialVersionUID = 2L
     }
 
     init {
