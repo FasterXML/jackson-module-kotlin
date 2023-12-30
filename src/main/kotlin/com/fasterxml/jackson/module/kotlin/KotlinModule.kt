@@ -151,15 +151,8 @@ class KotlinModule @Deprecated(
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 
-        fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
-            context.setMixInAnnotations(clazz, mixin)
-        }
-
         // ranges
-        addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+        context.setMixInAnnotations(ClosedRange::class.java, ClosedRangeMixin::class.java)
     }
 
     class Builder {
