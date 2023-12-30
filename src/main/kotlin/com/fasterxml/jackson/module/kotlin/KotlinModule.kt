@@ -38,8 +38,8 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
  */
 class KotlinModule @Deprecated(
-    level = DeprecationLevel.WARNING,
-    message = "Use KotlinModule.Builder instead of named constructor parameters.",
+    level = DeprecationLevel.ERROR,
+    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be HIDDEN at 2.18.",
     replaceWith = ReplaceWith(
         """KotlinModule.Builder()
             .withReflectionCacheSize(reflectionCacheSize)
@@ -76,7 +76,14 @@ class KotlinModule @Deprecated(
         }
     }
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(
+        level = DeprecationLevel.HIDDEN,
+        message = "If you have no choice but to initialize KotlinModule from reflection, use this constructor."
+    )
+    @Suppress("DEPRECATION_ERROR")
+    constructor() : this()
+
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
     constructor(
         reflectionCacheSize: Int,
         nullToEmptyCollection: Boolean,
@@ -89,7 +96,7 @@ class KotlinModule @Deprecated(
             .disable(NullIsSameAsDefault)
     )
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
     constructor(
         reflectionCacheSize: Int,
         nullToEmptyCollection: Boolean,
@@ -103,7 +110,7 @@ class KotlinModule @Deprecated(
             .configure(NullIsSameAsDefault, nullIsSameAsDefault)
     )
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION_ERROR")
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
         builder.isEnabled(NullToEmptyCollection),
@@ -198,14 +205,16 @@ class KotlinModule @Deprecated(
             bitSet.intersects(feature.bitSet)
 
         @Deprecated(
-            message = "Deprecated, use withReflectionCacheSize(reflectionCacheSize) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use withReflectionCacheSize(reflectionCacheSize) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith("withReflectionCacheSize(reflectionCacheSize)")
         )
         fun reflectionCacheSize(reflectionCacheSize: Int): Builder =
             withReflectionCacheSize(reflectionCacheSize)
 
         @Deprecated(
-            message = "Deprecated, use isEnabled(NullToEmptyCollection) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use isEnabled(NullToEmptyCollection) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "isEnabled(KotlinFeature.NullToEmptyCollection)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -215,7 +224,8 @@ class KotlinModule @Deprecated(
             isEnabled(NullToEmptyCollection)
 
         @Deprecated(
-            message = "Deprecated, use configure(NullToEmptyCollection, enabled) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use configure(NullToEmptyCollection, enabled) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -225,7 +235,8 @@ class KotlinModule @Deprecated(
             configure(NullToEmptyCollection, nullToEmptyCollection)
 
         @Deprecated(
-            message = "Deprecated, use isEnabled(NullToEmptyMap) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use isEnabled(NullToEmptyMap) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "isEnabled(KotlinFeature.NullToEmptyMap)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -235,7 +246,8 @@ class KotlinModule @Deprecated(
             isEnabled(NullToEmptyMap)
 
         @Deprecated(
-            message = "Deprecated, use configure(NullToEmptyMap, enabled) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use configure(NullToEmptyMap, enabled) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -245,7 +257,8 @@ class KotlinModule @Deprecated(
             configure(NullToEmptyMap, nullToEmptyMap)
 
         @Deprecated(
-            message = "Deprecated, use isEnabled(NullIsSameAsDefault) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use isEnabled(NullIsSameAsDefault) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "isEnabled(KotlinFeature.NullIsSameAsDefault)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -255,7 +268,8 @@ class KotlinModule @Deprecated(
             isEnabled(NullIsSameAsDefault)
 
         @Deprecated(
-            message = "Deprecated, use configure(NullIsSameAsDefault, enabled) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use configure(NullIsSameAsDefault, enabled) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -265,7 +279,8 @@ class KotlinModule @Deprecated(
             configure(NullIsSameAsDefault, nullIsSameAsDefault)
 
         @Deprecated(
-            message = "Deprecated, use isEnabled(SingletonSupport) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use isEnabled(SingletonSupport) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "isEnabled(KotlinFeature.SingletonSupport)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -278,7 +293,8 @@ class KotlinModule @Deprecated(
             }
 
         @Deprecated(
-            message = "Deprecated, use configure(SingletonSupport, enabled) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use configure(SingletonSupport, enabled) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "configure(KotlinFeature.SingletonSupport, singletonSupport)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -291,7 +307,8 @@ class KotlinModule @Deprecated(
             }
 
         @Deprecated(
-            message = "Deprecated, use isEnabled(StrictNullChecks) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use isEnabled(StrictNullChecks) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "isEnabled(KotlinFeature.StrictNullChecks)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"
@@ -301,7 +318,8 @@ class KotlinModule @Deprecated(
             isEnabled(StrictNullChecks)
 
         @Deprecated(
-            message = "Deprecated, use configure(StrictNullChecks, enabled) instead.",
+            level = DeprecationLevel.ERROR,
+            message = "Deprecated, use configure(StrictNullChecks, enabled) instead. It will be removed in 2.18.",
             replaceWith = ReplaceWith(
                 "configure(KotlinFeature.StrictNullChecks, strictNullChecks)",
                 "com.fasterxml.jackson.module.kotlin.KotlinFeature"

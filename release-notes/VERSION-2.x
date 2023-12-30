@@ -18,7 +18,13 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
-* #743: The handling of deserialization using vararg arguments has been improved to allow deserialization even when the input to the vararg argument is undefined.
+#744: Functions that were already marked as deprecated,
+ such as the primary constructor in KotlinModule and some functions in Builder,
+  are scheduled for removal in 2.18 and their DeprecationLevel has been raised to Error.
+  Hidden constructors that were left in for compatibility are also marked for removal.
+  This PR also adds a hidden no-argument constructor to facilitate initialization from reflection.
+  See the PR for details.
+#743: The handling of deserialization using vararg arguments has been improved to allow deserialization even when the input to the vararg argument is undefined.
  In addition, vararg arguments are now reported as non-required.
 #742: Minor performance improvements to NullToEmptyCollection/Map.
 #741: Changed to allow KotlinFeature to be set in the function that registers a KotlinModule.

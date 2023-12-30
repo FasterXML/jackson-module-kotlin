@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
@@ -126,5 +127,11 @@ class KotlinModuleTest {
         assertTrue(deserialized.nullIsSameAsDefault)
         assertEquals(CANONICALIZE, deserialized.singletonSupport)
         assertTrue(deserialized.strictNullChecks)
+    }
+
+    @Test
+    fun findAndRegisterModulesTest() {
+        val mapper = ObjectMapper().findAndRegisterModules()
+        assertTrue(mapper.registeredModuleIds.contains("com.fasterxml.jackson.module.kotlin.KotlinModule"))
     }
 }
