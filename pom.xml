@@ -236,6 +236,7 @@
                           <exclude>com.fasterxml.jackson.module.kotlin.SequenceSerializer</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#serialVersionUID</exclude>
                 <!-- internal -->
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
                         </excludes>
                     </parameter>
                 </configuration>

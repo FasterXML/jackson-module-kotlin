@@ -140,7 +140,6 @@ class KotlinModule @Deprecated(
         ))
         context.appendAnnotationIntrospector(
             KotlinNamesAnnotationIntrospector(
-                this,
                 cache,
                 ignoredClassesForImplyingJsonCreator,
                 useKotlinPropertyNameForGetter)
