@@ -74,7 +74,7 @@ internal class KotlinValueInstantiator(
                 tempParamVal
             } else {
                 when {
-                    paramDef.isOptional -> return@forEachIndexed
+                    paramDef.isOptional || paramDef.isVararg -> return@forEachIndexed
                     // do not try to create any object if it is nullable and the value is missing
                     paramType.isMarkedNullable -> null
                     // Primitive types always try to get from a buffer, considering several settings
