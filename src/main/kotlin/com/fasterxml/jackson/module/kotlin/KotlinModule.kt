@@ -14,11 +14,7 @@ import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
 import kotlin.reflect.KClass
 
-private const val metadataFqName = "kotlin.Metadata"
-
-fun Class<*>.isKotlinClass(): Boolean {
-    return declaredAnnotations.any { it.annotationClass.java.name == metadataFqName }
-}
+fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
 /**
  * @param   reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
