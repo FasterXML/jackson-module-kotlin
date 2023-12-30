@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #746: The KotlinModule#serialVersionUID is set to private.
 * #745: Modified isKotlinClass determination method.
 * #744: API deprecation update for KotlinModule.
 * #743: Fix handling of vararg deserialization.
