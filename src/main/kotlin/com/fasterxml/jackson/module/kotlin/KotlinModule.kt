@@ -39,7 +39,7 @@ fun Class<*>.isKotlinClass(): Boolean {
  */
 class KotlinModule @Deprecated(
     level = DeprecationLevel.ERROR,
-    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be PRIVATE at 2.18.",
+    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be HIDDEN at 2.18.",
     replaceWith = ReplaceWith(
         """KotlinModule.Builder()
             .withReflectionCacheSize(reflectionCacheSize)
