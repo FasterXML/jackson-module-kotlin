@@ -38,8 +38,8 @@ fun Class<*>.isKotlinClass(): Boolean {
  *                                      This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
  */
 class KotlinModule @Deprecated(
-    level = DeprecationLevel.WARNING,
-    message = "Use KotlinModule.Builder instead of named constructor parameters.",
+    level = DeprecationLevel.ERROR,
+    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be PRIVATE at 2.18.",
     replaceWith = ReplaceWith(
         """KotlinModule.Builder()
             .withReflectionCacheSize(reflectionCacheSize)
@@ -103,7 +103,7 @@ class KotlinModule @Deprecated(
             .configure(NullIsSameAsDefault, nullIsSameAsDefault)
     )
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION_ERROR")
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
         builder.isEnabled(NullToEmptyCollection),
