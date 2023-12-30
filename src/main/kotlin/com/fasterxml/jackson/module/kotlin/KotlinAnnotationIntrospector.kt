@@ -207,13 +207,12 @@ internal class KotlinAnnotationIntrospector(
     private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
         val param = parameters[index]
         val paramType = param.type
-        val javaType = paramType.javaType
-        val isPrimitive = when (javaType) {
+        val isPrimitive = when (val javaType = paramType.javaType) {
             is Class<*> -> javaType.isPrimitive
             else -> false
         }
 
-        return !paramType.isMarkedNullable && !param.isOptional &&
+        return !paramType.isMarkedNullable && !param.isOptional && !param.isVararg &&
                 !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
 
