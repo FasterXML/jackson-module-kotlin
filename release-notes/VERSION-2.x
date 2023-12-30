@@ -18,7 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
-* #743: The handling of deserialization using vararg arguments has been improved to allow deserialization even when the input to the vararg argument is undefined.
+#743: The handling of deserialization using vararg arguments has been improved to allow deserialization even when the input to the vararg argument is undefined.
  In addition, vararg arguments are now reported as non-required.
 #742: Minor performance improvements to NullToEmptyCollection/Map.
 #741: Changed to allow KotlinFeature to be set in the function that registers a KotlinModule.
