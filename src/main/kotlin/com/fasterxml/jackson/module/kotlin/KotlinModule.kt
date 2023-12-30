@@ -76,7 +76,7 @@ class KotlinModule @Deprecated(
         }
     }
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
     constructor(
         reflectionCacheSize: Int,
         nullToEmptyCollection: Boolean,
@@ -89,7 +89,7 @@ class KotlinModule @Deprecated(
             .disable(NullIsSameAsDefault)
     )
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility")
+    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
     constructor(
         reflectionCacheSize: Int,
         nullToEmptyCollection: Boolean,
