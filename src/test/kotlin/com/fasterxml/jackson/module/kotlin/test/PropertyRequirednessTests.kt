@@ -76,7 +76,7 @@ class TestPropertyRequiredness {
 
     // ---
 
-    private data class TestDataClass(
+    private class TestDataClass(
             val a: Int,
             val b: Int?,
             val c: Int = 5,
@@ -85,6 +85,7 @@ class TestPropertyRequiredness {
             val f: TestParamClass?,
             val g: TestParamClass = TestParamClass(),
             val h: TestParamClass? = TestParamClass(),
+            vararg val i: Int,
             @JsonProperty("x", required = true) val x: Int?, // TODO: either error in test case with this not being on the property getter, or error in introspection not seeing this on the constructor parameter
             @get:JsonProperty("z", required = true) val z: Int
     )
@@ -116,6 +117,9 @@ class TestPropertyRequiredness {
 
         "h".isOptionalForSerializationOf(testClass, mapper)
         "h".isOptionalForDeserializationOf(testClass, mapper)
+
+        "i".isRequiredForSerializationOf(testClass, mapper)
+        "i".isOptionalForDeserializationOf(testClass, mapper)
 
         "x".isRequiredForDeserializationOf(testClass, mapper)
         "x".isOptionalForSerializationOf(testClass, mapper)
