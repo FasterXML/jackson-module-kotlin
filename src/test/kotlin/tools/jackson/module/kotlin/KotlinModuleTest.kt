@@ -11,6 +11,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.databind.json.JsonMapper
 import kotlin.test.assertNotNull
 
 class KotlinModuleTest {
@@ -126,5 +128,11 @@ class KotlinModuleTest {
         assertTrue(deserialized.nullIsSameAsDefault)
         assertEquals(CANONICALIZE, deserialized.singletonSupport)
         assertTrue(deserialized.strictNullChecks)
+    }
+
+    @Test
+    fun findAndRegisterModulesTest() {
+        val mapper = JsonMapper.builder().findAndAddModules().build()
+        assertTrue(mapper.registeredModules.any { it is KotlinModule })
     }
 }
