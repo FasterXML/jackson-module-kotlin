@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#745: Modified isKotlinClass determination method.
 #744: Functions that were already marked as deprecated,
  such as the primary constructor in KotlinModule and some functions in Builder,
   are scheduled for removal in 2.18 and their DeprecationLevel has been raised to Error.
