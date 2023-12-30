@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #744: API deprecation update for KotlinModule.
 * #743: Fix handling of vararg deserialization.
 * #742: Minor performance improvements to NullToEmptyCollection/Map.
 * #741: Changed to allow KotlinFeature to be set in the function that registers a KotlinModule.
