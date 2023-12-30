@@ -26,10 +26,9 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(
-    val module: KotlinModule,
-    val cache: ReflectionCache,
-    val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
-    val useKotlinPropertyNameForGetter: Boolean
+    private val cache: ReflectionCache,
+    private val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
+    private val useKotlinPropertyNameForGetter: Boolean
 ) : NopAnnotationIntrospector() {
     private fun getterNameFromJava(member: AnnotatedMethod): String? {
         val name = member.name

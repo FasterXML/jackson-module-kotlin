@@ -18,6 +18,9 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#747: Improved performance related to KotlinModule initialization and setupModule.
+ With this change, the KotlinModule initialization error when using Kotlin 1.4 or lower has been eliminated.
+#746: The KotlinModule#serialVersionUID is set to private.
 #745: Modified isKotlinClass determination method.
 #744: Functions that were already marked as deprecated,
  such as the primary constructor in KotlinModule and some functions in Builder,

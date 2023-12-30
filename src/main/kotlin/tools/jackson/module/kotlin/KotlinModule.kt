@@ -53,16 +53,7 @@ class KotlinModule @Deprecated(
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     companion object {
         // Increment when option is added
-        const val serialVersionUID = 2L
-    }
-
-    init {
-        if (!KotlinVersion.CURRENT.isAtLeast(1, 5)) {
-            // Kotlin 1.4 was deprecated when this process was introduced(jackson-module-kotlin 2.15).
-            throw IllegalStateException(
-                "KotlinModule requires Kotlin version >= 1.5 - Found ${KotlinVersion.CURRENT}"
-            )
-        }
+        private const val serialVersionUID = 2L
     }
 
     @Deprecated(
@@ -145,7 +136,6 @@ class KotlinModule @Deprecated(
         ))
         context.appendAnnotationIntrospector(
             KotlinNamesAnnotationIntrospector(
-                this,
                 cache,
                 ignoredClassesForImplyingJsonCreator,
                 useKotlinPropertyNameForGetter)
@@ -156,15 +146,8 @@ class KotlinModule @Deprecated(
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 
-        fun addMixIn(clazz: Class<*>, mixin: Class<*>) {
-            context.setMixIn(clazz, mixin)
-        }
-
         // ranges
-        addMixIn(IntRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(CharRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(LongRange::class.java, ClosedRangeMixin::class.java)
-        addMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+        context.setMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
     }
 
     class Builder {
