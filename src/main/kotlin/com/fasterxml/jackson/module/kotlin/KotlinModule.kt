@@ -76,6 +76,13 @@ class KotlinModule @Deprecated(
         }
     }
 
+    @Deprecated(
+        level = DeprecationLevel.HIDDEN,
+        message = "If you have no choice but to initialize KotlinModule from reflection, use this constructor."
+    )
+    @Suppress("DEPRECATION_ERROR")
+    constructor() : this()
+
     @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
     constructor(
         reflectionCacheSize: Int,
