@@ -11,21 +11,23 @@ import java.util.*
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
 /**
- * @param   reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
- * @param   nullToEmptyCollection   Default: false.  Whether to deserialize null values for collection properties as
- *                                      empty collections.
- * @param   nullToEmptyMap          Default: false.  Whether to deserialize null values for a map property to an empty
- *                                      map object.
- * @param   nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
- *                                      using the default value provided in Kotlin.
- * @param   singletonSupport        Default: DISABLED.  Mode for singleton handling.
- *                                      See {@link tools.jackson.module.kotlin.SingletonSupport label}
- * @param   strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
- *                                      the default, collections which are typed to disallow null members
- *                                      (e.g. List<String>) may contain null values after deserialization.  Enabling it
- *                                      protects against this but has significant performance impact.
- * @param   useJavaDurationConversion Default: false.  Whether to use [java.time.Duration] as a bridge for [kotlin.time.Duration].
- *                                      This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
+ * @property reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
+ * @property nullToEmptyCollection   Default: false.  Whether to deserialize null values for collection properties as
+ *  empty collections.
+ * @property nullToEmptyMap          Default: false.  Whether to deserialize null values for a map property to an empty
+ *  map object.
+ * @property nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
+ *  using the default value provided in Kotlin.
+ * @property singletonSupport        Default: DISABLED.  Mode for singleton handling.
+ *  See {@link tools.jackson.module.kotlin.SingletonSupport label}
+ * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
+ *  the default, collections which are typed to disallow null members
+ *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
+ *  protects against this but has significant performance impact.
+ * @property kotlinPropertyNameAsImplicitName Default: false.  Whether to use the Kotlin property name as the implicit name.
+ *  See [KotlinFeature.KotlinPropertyNameAsImplicitName] for details.
+ * @property useJavaDurationConversion Default: false.  Whether to use [java.time.Duration] as a bridge for [kotlin.time.Duration].
+ *  This allows use Kotlin Duration type with [tools.jackson.datatype.jsr310.JavaTimeModule].
  */
 class KotlinModule @Deprecated(
     level = DeprecationLevel.ERROR,
