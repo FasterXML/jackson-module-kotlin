@@ -5,7 +5,7 @@ import java.util.BitSet
 /**
  * @see KotlinModule.Builder
  */
-enum class KotlinFeature(private val enabledByDefault: Boolean) {
+enum class KotlinFeature(internal val enabledByDefault: Boolean) {
     /**
      * This feature represents whether to deserialize `null` values for collection properties as empty collections.
      */
