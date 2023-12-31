@@ -47,14 +47,14 @@ class KotlinModule @Deprecated(
         "com.fasterxml.jackson.module.kotlin.KotlinFeature"
     )
 ) constructor(
-    val reflectionCacheSize: Int = 512,
-    val nullToEmptyCollection: Boolean = false,
-    val nullToEmptyMap: Boolean = false,
-    val nullIsSameAsDefault: Boolean = false,
+    val reflectionCacheSize: Int = Builder.DEFAULT_CACHE_SIZE,
+    val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
+    val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
+    val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false,
-    val useKotlinPropertyNameForGetter: Boolean = false,
-    val useJavaDurationConversion: Boolean = false,
+    val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
+    val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
+    val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     companion object {
         // Increment when option is added
@@ -155,7 +155,11 @@ class KotlinModule @Deprecated(
     }
 
     class Builder {
-        var reflectionCacheSize: Int = 512
+        companion object {
+            internal const val DEFAULT_CACHE_SIZE = 512
+        }
+
+        var reflectionCacheSize: Int = DEFAULT_CACHE_SIZE
             private set
 
         private val bitSet: BitSet = KotlinFeature.defaults
