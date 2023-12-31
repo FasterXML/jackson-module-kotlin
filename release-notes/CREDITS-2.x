@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #751: Marked useKotlinPropertyNameForGetter as deprecated.
 * #747: Improved performance related to KotlinModule initialization and setupModule.
 * #746: The KotlinModule#serialVersionUID is set to private.
 * #745: Modified isKotlinClass determination method.

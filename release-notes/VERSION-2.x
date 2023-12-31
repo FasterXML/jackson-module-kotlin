@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#751: The KotlinModule#useKotlinPropertyNameForGetter property was deprecated because it differed from the name of the KotlinFeature.
+ Please use KotlinModule#kotlinPropertyNameAsImplicitName from now on.
 #747: Improved performance related to KotlinModule initialization and setupModule.
  With this change, the KotlinModule initialization error when using Kotlin 1.4 or lower has been eliminated.
 #746: The KotlinModule#serialVersionUID is set to private.
