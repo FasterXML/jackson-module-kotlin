@@ -42,15 +42,23 @@ class KotlinModule @Deprecated(
         "tools.jackson.module.kotlin.KotlinFeature"
     )
 ) constructor(
-    val reflectionCacheSize: Int = 512,
-    val nullToEmptyCollection: Boolean = false,
-    val nullToEmptyMap: Boolean = false,
-    val nullIsSameAsDefault: Boolean = false,
+    val reflectionCacheSize: Int = Builder.DEFAULT_CACHE_SIZE,
+    val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
+    val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
+    val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: SingletonSupport = DISABLED,
-    val strictNullChecks: Boolean = false,
-    val useKotlinPropertyNameForGetter: Boolean = false,
-    val useJavaDurationConversion: Boolean = false,
+    val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "There was a discrepancy between the property name and the Feature name." +
+            " To migrate to the correct property name, it will be ERROR in 2.18 and removed in 2.19.",
+        replaceWith = ReplaceWith("kotlinPropertyNameAsImplicitName")
+    )
+    val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
+    val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
+
     companion object {
         // Increment when option is added
         private const val serialVersionUID = 2L
@@ -151,7 +159,11 @@ class KotlinModule @Deprecated(
     }
 
     class Builder {
-        var reflectionCacheSize: Int = 512
+        companion object {
+            internal const val DEFAULT_CACHE_SIZE = 512
+        }
+
+        var reflectionCacheSize: Int = DEFAULT_CACHE_SIZE
             private set
 
         private val bitSet: BitSet = KotlinFeature.defaults

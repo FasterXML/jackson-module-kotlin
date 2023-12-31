@@ -1,36 +1,14 @@
 package tools.jackson.module.kotlin
 
-import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
-import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
-import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
-import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
-import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
-import tools.jackson.module.kotlin.SingletonSupport.DISABLED
+import tools.jackson.module.kotlin.KotlinFeature.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.json.JsonMapper
 import kotlin.test.assertNotNull
 
 class KotlinModuleTest {
-    /**
-     * Ensure that the default Builder matches Feature default settings.
-     */
-    @Test
-    fun builderDefaultsMatchFeatures() {
-        val module = KotlinModule.Builder().build()
-
-        assertEquals(module.reflectionCacheSize, 512)
-        assertFalse(module.nullToEmptyCollection)
-        assertFalse(module.nullToEmptyMap)
-        assertFalse(module.nullIsSameAsDefault)
-        assertEquals(module.singletonSupport, DISABLED)
-        assertFalse(module.strictNullChecks)
-    }
-
     @Test
     fun builder_Defaults() {
         val module = KotlinModule.Builder().build()
@@ -39,8 +17,10 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertEquals(DISABLED, module.singletonSupport)
+        assertEquals(SingletonSupport.DISABLED, module.singletonSupport)
         assertFalse(module.strictNullChecks)
+        assertFalse(module.kotlinPropertyNameAsImplicitName)
+        assertFalse(module.useJavaDurationConversion)
     }
 
     @Test
@@ -52,14 +32,18 @@ class KotlinModuleTest {
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
             enable(StrictNullChecks)
+            enable(KotlinPropertyNameAsImplicitName)
+            enable(UseJavaDurationConversion)
         }.build()
 
         assertEquals(123, module.reflectionCacheSize)
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertEquals(CANONICALIZE, module.singletonSupport)
+        assertEquals(SingletonSupport.CANONICALIZE, module.singletonSupport)
         assertTrue(module.strictNullChecks)
+        assertTrue(module.kotlinPropertyNameAsImplicitName)
+        assertTrue(module.useJavaDurationConversion)
     }
 
     @Test
@@ -95,7 +79,7 @@ class KotlinModuleTest {
             enable(SingletonSupport)
         }.build()
 
-        assertEquals(CANONICALIZE, module.singletonSupport)
+        assertEquals(SingletonSupport.CANONICALIZE, module.singletonSupport)
     }
 
     @Test
@@ -126,7 +110,7 @@ class KotlinModuleTest {
         assertTrue(deserialized.nullToEmptyCollection)
         assertTrue(deserialized.nullToEmptyMap)
         assertTrue(deserialized.nullIsSameAsDefault)
-        assertEquals(CANONICALIZE, deserialized.singletonSupport)
+        assertEquals(SingletonSupport.CANONICALIZE, deserialized.singletonSupport)
         assertTrue(deserialized.strictNullChecks)
     }
 
