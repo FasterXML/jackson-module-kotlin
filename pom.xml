@@ -237,6 +237,9 @@
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#serialVersionUID</exclude>
                 <!-- internal -->
                           <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ValueCreator</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ConstructorValueCreator</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.MethodValueCreator</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
