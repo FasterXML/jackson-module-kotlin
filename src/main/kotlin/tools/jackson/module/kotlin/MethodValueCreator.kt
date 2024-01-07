@@ -9,9 +9,11 @@ import kotlin.reflect.jvm.isAccessible
 internal class MethodValueCreator<T> private constructor(
     override val callable: KFunction<T>,
     override val accessible: Boolean,
-    val companionObjectInstance: Any
+    companionObjectInstance: Any
 ) : ValueCreator<T>() {
-    val instanceParameter: KParameter = callable.instanceParameter!!
+    override val bucketGenerator: BucketGenerator = callable.parameters.let {
+        BucketGenerator.forMethod(it.size, it[0], companionObjectInstance)
+    }
 
     companion object {
         fun <T> of(callable: KFunction<T>): MethodValueCreator<T>? {
