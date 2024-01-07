@@ -21,6 +21,10 @@ internal sealed class ValueCreator<T> {
      */
     protected abstract val accessible: Boolean
 
+    protected abstract val bucketGenerator: BucketGenerator
+
+    fun generateBucket(): ArgumentBucket = bucketGenerator.generate()
+
     /**
      * ValueParameters of the KFunction to be called.
      */
@@ -45,5 +49,9 @@ internal sealed class ValueCreator<T> {
     /**
      * Function call with default values enabled.
      */
-    fun callBy(args: Map<KParameter, Any?>): T = callable.callBy(args)
+    fun callBy(args: ArgumentBucket): T = if (args.isFullInitialized) {
+        callable.call(*args.arguments)
+    } else {
+        callable.callBy(args)
+    }
 }

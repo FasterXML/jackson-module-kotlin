@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#755: Changes in constructor invocation and argument management.
+ This change degrades performance in cases where the constructor is called without default arguments, but improves performance in other cases.
 #751: The KotlinModule#useKotlinPropertyNameForGetter property was deprecated because it differed from the name of the KotlinFeature.
  Please use KotlinModule#kotlinPropertyNameAsImplicitName from now on.
 #747: Improved performance related to KotlinModule initialization and setupModule.
