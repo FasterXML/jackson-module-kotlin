@@ -28,7 +28,7 @@ jobs:
       matrix:
         java_version: ['8', '11', '17', '21']
         # kotlin-reflect 1.8.2x has a bug and some tests fail, so we are downgrading to 1.8.10.
-        kotlin_version: ['1.7.22', '1.8.10', '1.9.21']
+        kotlin_version: ['1.7.22', '1.8.10', '1.9.22', '2.0.0-Beta2']
         os: ['ubuntu-20.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
