@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #758: Deprecated SingletonSupport.
 * #755: Changes in constructor invocation and argument management.
 * #752: Fix KDoc for KotlinModule.
 * #751: Marked useKotlinPropertyNameForGetter as deprecated.

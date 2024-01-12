@@ -20,6 +20,8 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  using the default value provided in Kotlin.
  * @property singletonSupport        Default: DISABLED.  Mode for singleton handling.
  *  See {@link tools.jackson.module.kotlin.SingletonSupport label}
+ * @property enabledSingletonSupport Default: false.  A temporary property that is maintained until the return value of `singletonSupport` is changed.
+ *  It will be removed in 2.21.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
  *  the default, collections which are typed to disallow null members
  *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
@@ -48,6 +50,11 @@ class KotlinModule @Deprecated(
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
+    @property:Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "The return value will be Boolean in 2.19. Until then, use enabledSingletonSupport.",
+        replaceWith = ReplaceWith("enabledSingletonSupport")
+    )
     val singletonSupport: SingletonSupport = DISABLED,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     @Deprecated(
@@ -60,6 +67,7 @@ class KotlinModule @Deprecated(
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
+    val enabledSingletonSupport: Boolean get() = singletonSupport == CANONICALIZE
 
     companion object {
         // Increment when option is added

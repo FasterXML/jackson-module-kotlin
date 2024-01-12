@@ -8,10 +8,17 @@ body:
     id: pre-check
     attributes:
       label: Search before asking
-      description: "Please search [issues](https://github.com/FasterXML/jackson-module-kotlin/issues) to check if your issue has already been reported."
+      description: |-
+        Please search [issues](https://github.com/FasterXML/jackson-module-kotlin/issues) to check if your issue has already been reported.
+        Also, KotlinModule is only an extension of databind, so it is not an appropriate place to report problems with databind or other modules.
+        Please try to ensure that the problem occurs only in Kotlin, and not regular Java objects.
       options:
         - label: "I searched in the [issues](https://github.com/FasterXML/jackson-module-kotlin/issues) and found nothing similar."
           required: true
+        - label: "I searched in the [issues of databind](https://github.com/FasterXML/jackson-databind/issues) and other modules used and found nothing similar."
+          required: false
+        - label: "I have confirmed that the problem only occurs when using Kotlin."
+          required: false
   - type: textarea
     id: bug-description
     attributes:
