@@ -68,10 +68,9 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
      * - contains extensionReceiverParameter
      * - instance parameter is not companion object or can't get
      */
-    @Suppress("UNCHECKED_CAST")
     fun valueCreatorFromJava(_withArgsCreator: AnnotatedWithParams): ValueCreator<*>? = when (_withArgsCreator) {
         is AnnotatedConstructor -> {
-            val constructor = _withArgsCreator.annotated as Constructor<Any>
+            val constructor = _withArgsCreator.annotated
 
             javaExecutableToValueCreator.get(constructor)
                 ?: kotlinFromJava(constructor)?.let {
