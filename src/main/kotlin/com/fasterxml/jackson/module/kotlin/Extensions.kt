@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.MappingIterator
@@ -20,7 +19,6 @@ import java.io.Reader
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
-import java.util.*
 import kotlin.reflect.KClass
 
 fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
@@ -105,9 +103,6 @@ operator fun ObjectNode.minusAssign(fields: Collection<String>) = Unit.apply { r
 operator fun JsonNode.contains(field: String) = has(field)
 operator fun JsonNode.contains(index: Int) = has(index)
 
-internal fun JsonMappingException.wrapWithPath(refFrom: Any?, refFieldName: String) = JsonMappingException.wrapWithPath(this, refFrom, refFieldName)
-internal fun JsonMappingException.wrapWithPath(refFrom: Any?, index: Int) = JsonMappingException.wrapWithPath(this, refFrom, index)
-
 fun <T : Any> SimpleModule.addSerializer(kClass: KClass<T>, serializer: JsonSerializer<T>): SimpleModule = this.apply {
     kClass.javaPrimitiveType?.let { addSerializer(it, serializer) }
     addSerializer(kClass.javaObjectType, serializer)
@@ -117,23 +112,3 @@ fun <T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: Json
     kClass.javaPrimitiveType?.let { addDeserializer(it, deserializer) }
     addDeserializer(kClass.javaObjectType, deserializer)
 }
-
-internal fun Int.toBitSet(): BitSet {
-    var i = this
-    var index = 0
-    val bits = BitSet(32)
-    while (i != 0) {
-        if (i % 2 != 0) {
-            bits.set(index)
-        }
-        ++index
-        i = i shr 1
-    }
-    return bits
-}
-
-// In the future, value classes without @JvmInline will be available, and unboxing may not be able to handle it.
-// https://github.com/FasterXML/jackson-module-kotlin/issues/464
-// The JvmInline annotation can be added to Java classes,
-// so the isKotlinClass decision is necessary (the order is preferable in terms of possible frequency).
-internal fun Class<*>.isUnboxableValueClass() = annotations.any { it is JvmInline } && this.isKotlinClass()
