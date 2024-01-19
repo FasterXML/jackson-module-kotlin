@@ -48,9 +48,9 @@ internal object JavaToKotlinDurationConverter : StdConverter<JavaDuration, Kotli
 // @see KotlinNamesAnnotationIntrospector.findNullSerializer
 internal class ValueClassBoxConverter<S : Any?, D : Any>(
     unboxedClass: Class<S>,
-    valueClass: KClass<D>
+    val boxedClass: KClass<D>
 ) : StdConverter<S, D>() {
-    private val boxMethod = valueClass.java.getDeclaredMethod("box-impl", unboxedClass).apply {
+    private val boxMethod = boxedClass.java.getDeclaredMethod("box-impl", unboxedClass).apply {
         if (!this.isAccessible) this.isAccessible = true
     }
 
