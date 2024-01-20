@@ -207,7 +207,7 @@
             <plugin>
                 <groupId>com.github.siom79.japicmp</groupId>
                 <artifactId>japicmp-maven-plugin</artifactId>
-                <version>0.15.7</version>
+                <version>0.18.3</version>
                 <configuration>
                     <oldVersion>
                         <dependency>
@@ -240,6 +240,11 @@
                           <exclude>com.fasterxml.jackson.module.kotlin.ValueCreator</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.ConstructorValueCreator</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.MethodValueCreator</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#isUnboxableValueClass(java.lang.Class)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#toBitSet(int)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,java.lang.String)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,int)</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
