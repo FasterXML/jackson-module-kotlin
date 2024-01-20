@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #760: Improved processing related to parameter parsing on Kotlin.
 * #759: Organize internal commons.
 * #758: Deprecated SingletonSupport.
 * #755: Changes in constructor invocation and argument management.
