@@ -9,21 +9,16 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.NopAnnotationIntrospector
-import java.lang.reflect.Constructor
-import java.lang.reflect.Method
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
 
 internal class KotlinNamesAnnotationIntrospector(
     private val cache: ReflectionCache,
@@ -120,43 +115,7 @@ internal class KotlinNamesAnnotationIntrospector(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun findKotlinParameterName(param: AnnotatedParameter): String? {
-        return if (param.declaringClass.isKotlinClass()) {
-            val member = param.owner.member
-            if (member is Constructor<*>) {
-                val ctor = (member as Constructor<Any>)
-                val ctorParmCount = ctor.parameterTypes.size
-                val ktorParmCount = try { ctor.kotlinFunction?.parameters?.size ?: 0 }
-                catch (ex: KotlinReflectionInternalError) { 0 }
-                catch (ex: UnsupportedOperationException) { 0 }
-                if (ktorParmCount > 0 && ktorParmCount == ctorParmCount) {
-                    ctor.kotlinFunction?.parameters?.get(param.index)?.name
-                } else {
-                    null
-                }
-            } else if (member is Method) {
-                try {
-                    val temp = member.kotlinFunction
-
-                    val firstParamKind = temp?.parameters?.firstOrNull()?.kind
-                    val idx = if (firstParamKind != KParameter.Kind.VALUE) param.index + 1 else param.index
-                    val parmCount = temp?.parameters?.size ?: 0
-                    if (parmCount > idx) {
-                        temp?.parameters?.get(idx)?.name
-                    } else {
-                        null
-                    }
-                } catch (ex: KotlinReflectionInternalError) {
-                    null
-                }
-            } else {
-                null
-            }
-        } else {
-            null
-        }
-    }
+    private fun findKotlinParameterName(param: AnnotatedParameter): String? = cache.findKotlinParameter(param)?.name
 }
 
 // if has parameters, is a Kotlin class, and the parameters all have parameter annotations, then pretend we have a JsonCreator
