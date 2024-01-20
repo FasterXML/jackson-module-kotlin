@@ -113,7 +113,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
                 // KotlinReflectionInternalError is raised in GitHub167 test,
                 // but it looks like an edge case, so it is ignored.
                 val prop = runCatching { kClass.memberProperties }.getOrNull()?.find { it.javaGetter == getter }
-                (prop?.returnType ?: runCatching { getter.kotlinFunction }.getOrNull()?.returnType)
+                (prop?.returnType ?: runCatching { kotlinFromJava(getter) }.getOrNull()?.returnType)
                     ?.classifier as? KClass<*>
             } ?: return null
 
