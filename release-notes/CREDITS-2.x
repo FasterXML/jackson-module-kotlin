@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #759: Organize internal commons.
 * #758: Deprecated SingletonSupport.
 * #755: Changes in constructor invocation and argument management.
 * #752: Fix KDoc for KotlinModule.
