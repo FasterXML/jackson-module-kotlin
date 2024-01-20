@@ -3,6 +3,7 @@ package com.fasterxml.jackson.module.kotlin
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
+import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
 import com.fasterxml.jackson.databind.introspect.AnnotatedWithParams
 import com.fasterxml.jackson.databind.util.LRUMap
 import java.io.Serializable
@@ -12,7 +13,9 @@ import java.lang.reflect.Method
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.valueParameters
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -68,10 +71,9 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
      * - contains extensionReceiverParameter
      * - instance parameter is not companion object or can't get
      */
-    @Suppress("UNCHECKED_CAST")
     fun valueCreatorFromJava(_withArgsCreator: AnnotatedWithParams): ValueCreator<*>? = when (_withArgsCreator) {
         is AnnotatedConstructor -> {
-            val constructor = _withArgsCreator.annotated as Constructor<Any>
+            val constructor = _withArgsCreator.annotated
 
             javaExecutableToValueCreator.get(constructor)
                 ?: kotlinFromJava(constructor)?.let {
@@ -114,7 +116,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
                 // KotlinReflectionInternalError is raised in GitHub167 test,
                 // but it looks like an edge case, so it is ignored.
                 val prop = runCatching { kClass.memberProperties }.getOrNull()?.find { it.javaGetter == getter }
-                (prop?.returnType ?: runCatching { getter.kotlinFunction }.getOrNull()?.returnType)
+                (prop?.returnType ?: runCatching { kotlinFromJava(getter) }.getOrNull()?.returnType)
                     ?.classifier as? KClass<*>
             } ?: return null
 
@@ -139,4 +141,10 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
             val value = ValueClassBoxConverter(unboxedClass, valueClass)
             (valueClassBoxConverterCache.putIfAbsent(valueClass, value) ?: value)
         }
+
+    fun findKotlinParameter(param: AnnotatedParameter): KParameter? = when (val owner = param.owner.member) {
+        is Constructor<*> -> kotlinFromJava(owner)
+        is Method -> kotlinFromJava(owner)
+        else -> null
+    }?.valueParameters?.get(param.index)
 }
