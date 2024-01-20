@@ -7,6 +7,10 @@ import java.util.*
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
+internal val defaultConstructorMarker: Class<*> by lazy {
+    Class.forName("kotlin.jvm.internal.DefaultConstructorMarker")
+}
+
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, refFieldName: String) = JsonMappingException.wrapWithPath(this, refFrom, refFieldName)
 internal fun JsonMappingException.wrapWithPath(refFrom: Any?, index: Int) = JsonMappingException.wrapWithPath(this, refFrom, index)
 
