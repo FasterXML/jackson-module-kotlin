@@ -99,12 +99,7 @@ internal class KotlinAnnotationIntrospector(
         if (!useJavaDurationConversion) return null
 
         return (a as? AnnotatedParameter)?.let { param ->
-            val function: KFunction<*> = when (val owner = param.owner.member) {
-                is Constructor<*> -> cache.kotlinFromJava(owner)
-                is Method -> cache.kotlinFromJava(owner)
-                else -> null
-            } ?: return@let null
-            val valueParameter = function.valueParameters[a.index]
+            val valueParameter = cache.findKotlinParameter(param) ?: return@let null
 
             if (valueParameter.type.classifier == Duration::class) {
                 JavaToKotlinDurationConverter
