@@ -90,14 +90,16 @@ internal class KotlinDeserializers(
         config: DeserializationConfig?,
         beanDesc: BeanDescription?,
     ): ValueDeserializer<*>? {
+        val rawClass = type.rawClass
+
         return when {
-            type.isInterface && type.rawClass == Sequence::class.java -> SequenceDeserializer
-            type.rawClass == Regex::class.java -> RegexDeserializer
-            type.rawClass == UByte::class.java -> UByteDeserializer
-            type.rawClass == UShort::class.java -> UShortDeserializer
-            type.rawClass == UInt::class.java -> UIntDeserializer
-            type.rawClass == ULong::class.java -> ULongDeserializer
-            type.rawClass == KotlinDuration::class.java ->
+            type.isInterface && rawClass == Sequence::class.java -> SequenceDeserializer
+            rawClass == Regex::class.java -> RegexDeserializer
+            rawClass == UByte::class.java -> UByteDeserializer
+            rawClass == UShort::class.java -> UShortDeserializer
+            rawClass == UInt::class.java -> UIntDeserializer
+            rawClass == ULong::class.java -> ULongDeserializer
+            rawClass == KotlinDuration::class.java ->
                 JavaToKotlinDurationConverter.takeIf { useJavaDurationConversion }?.delegatingDeserializer
             else -> null
         }

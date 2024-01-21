@@ -5,13 +5,13 @@ import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.DeserializationConfig
 import tools.jackson.databind.DeserializationContext
 import tools.jackson.databind.JavaType
+import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.SettableBeanProperty
 import tools.jackson.databind.deser.ValueInstantiator
 import tools.jackson.databind.deser.ValueInstantiators
 import tools.jackson.databind.deser.bean.PropertyValueBuffer
 import tools.jackson.databind.deser.std.StdValueInstantiator
 import java.lang.reflect.TypeVariable
-import kotlin.reflect.KParameter
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.jvm.javaType
@@ -47,14 +47,15 @@ internal class KotlinValueInstantiator(
         valueCreator.valueParameters.forEachIndexed { idx, paramDef ->
             val jsonProp = props[idx]
             val isMissing = !buffer.hasParameter(jsonProp)
+            val valueDeserializer: ValueDeserializer<*>? by lazy { jsonProp.valueDeserializer }
 
             val paramType = paramDef.type
             var paramVal = if (!isMissing || jsonProp.hasInjectableValueId()) {
-                val tempParamVal = buffer.getParameter(jsonProp)
-                if (tempParamVal == null && jsonProp.skipNulls() && paramDef.isOptional) {
-                    return@forEachIndexed
-                }
-                tempParamVal
+               buffer.getParameter(jsonProp) ?: run {
+                   if (jsonProp.skipNulls() && paramDef.isOptional) return@forEachIndexed
+
+                   null
+               }
             } else {
                 when {
                     paramDef.isOptional || paramDef.isVararg -> return@forEachIndexed
@@ -63,7 +64,7 @@ internal class KotlinValueInstantiator(
                     // Primitive types always try to get from a buffer, considering several settings
                     jsonProp.type.isPrimitive -> buffer.getParameter(jsonProp)
                     // to get suitable "missing" value provided by deserializer
-                    else -> jsonProp.valueDeserializer?.getAbsentValue(ctxt)
+                    else -> valueDeserializer?.getAbsentValue(ctxt)
                 }
             }
 
@@ -71,7 +72,7 @@ internal class KotlinValueInstantiator(
 
             if (paramVal == null) {
                 if (propType.requireEmptyValue()) {
-                    paramVal = jsonProp.valueDeserializer!!.getEmptyValue(ctxt)
+                    paramVal = valueDeserializer!!.getEmptyValue(ctxt)
                 } else {
                     val isMissingAndRequired = isMissing && jsonProp.isRequired
 

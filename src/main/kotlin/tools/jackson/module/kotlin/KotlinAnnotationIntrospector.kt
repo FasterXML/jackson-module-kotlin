@@ -14,12 +14,12 @@ import tools.jackson.databind.introspect.NopAnnotationIntrospector
 import tools.jackson.databind.jsontype.NamedType
 import tools.jackson.databind.util.Converter
 import java.lang.reflect.AccessibleObject
-import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
+import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
@@ -30,7 +30,6 @@ import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaSetter
 import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
 import kotlin.reflect.jvm.kotlinProperty
 import kotlin.time.Duration
 
@@ -103,12 +102,7 @@ internal class KotlinAnnotationIntrospector(
         if (!useJavaDurationConversion) return null
 
         return (a as? AnnotatedParameter)?.let { param ->
-            val function: KFunction<*> = when (val owner = param.owner.member) {
-                is Constructor<*> -> cache.kotlinFromJava(owner)
-                is Method -> cache.kotlinFromJava(owner)
-                else -> null
-            } ?: return@let null
-            val valueParameter = function.valueParameters[a.index]
+            val valueParameter = cache.findKotlinParameter(param) ?: return@let null
 
             if (valueParameter.type.classifier == Duration::class) {
                 JavaToKotlinDurationConverter
@@ -177,11 +171,11 @@ internal class KotlinAnnotationIntrospector(
     }
 
     // Is the member method a regular method of the data class or
-    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = this.kotlinFunction?.let { method ->
+    private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = cache.kotlinFromJava(this)?.let { func ->
         val byAnnotation = this.isRequiredByAnnotation()
         return when {
-            method.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.returnType.isRequired())
-            method.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, method.isMethodParameterRequired(0))
+            func.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, func.returnType.isRequired())
+            func.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, func.valueParameters[0].isRequired())
             else -> null
         }
     }
@@ -190,37 +184,22 @@ internal class KotlinAnnotationIntrospector(
     private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
     private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
-        val member = this.member
         val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
-
-        val byNullability = when (member) {
-            is Constructor<*> -> member.kotlinFunction?.isConstructorParameterRequired(index)
-            is Method         -> member.kotlinFunction?.isMethodParameterRequired(index)
-            else              -> null
-        }
+        val byNullability = cache.findKotlinParameter(this)?.isRequired()
 
         return requiredAnnotationOrNullability(byAnnotation, byNullability)
     }
 
     private fun AnnotatedMethod.findValueClassReturnType() = cache.findValueClassReturnType(this)
 
-    private fun KFunction<*>.isConstructorParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index)
-    }
-
-    private fun KFunction<*>.isMethodParameterRequired(index: Int): Boolean {
-        return isParameterRequired(index + 1)
-    }
-
-    private fun KFunction<*>.isParameterRequired(index: Int): Boolean {
-        val param = parameters[index]
-        val paramType = param.type
+    private fun KParameter.isRequired(): Boolean {
+        val paramType = type
         val isPrimitive = when (val javaType = paramType.javaType) {
             is Class<*> -> javaType.isPrimitive
             else -> false
         }
 
-        return !paramType.isMarkedNullable && !param.isOptional && !param.isVararg &&
+        return !paramType.isMarkedNullable && !isOptional && !isVararg &&
                 !(isPrimitive && !context.isEnabled(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES))
     }
 
