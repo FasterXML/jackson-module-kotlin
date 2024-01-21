@@ -52,11 +52,11 @@ internal class KotlinValueInstantiator(
 
             val paramType = paramDef.type
             var paramVal = if (!isMissing || jsonProp.hasInjectableValueId()) {
-                val tempParamVal = buffer.getParameter(jsonProp)
-                if (tempParamVal == null && jsonProp.skipNulls() && paramDef.isOptional) {
-                    return@forEachIndexed
-                }
-                tempParamVal
+               buffer.getParameter(jsonProp) ?: run {
+                   if (jsonProp.skipNulls() && paramDef.isOptional) return@forEachIndexed
+
+                   null
+               }
             } else {
                 when {
                     paramDef.isOptional || paramDef.isVararg -> return@forEachIndexed
