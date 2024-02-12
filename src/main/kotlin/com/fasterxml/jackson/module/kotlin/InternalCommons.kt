@@ -1,6 +1,8 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.databind.JsonMappingException
+import java.lang.reflect.AnnotatedElement
 import java.util.*
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
@@ -29,3 +31,7 @@ internal fun Int.toBitSet(): BitSet {
 internal fun Class<*>.isUnboxableValueClass() = annotations.any { it is JvmInline } && this.isKotlinClass()
 
 internal fun KType.erasedType(): Class<out Any> = this.jvmErasure.java
+
+internal fun AnnotatedElement.hasCreatorAnnotation(): Boolean = getAnnotation(JsonCreator::class.java)
+    ?.let { it.mode != JsonCreator.Mode.DISABLED }
+    ?: false

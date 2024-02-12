@@ -247,6 +247,7 @@
                           <exclude>com.fasterxml.jackson.module.kotlin.ConstructorValueCreator</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.MethodValueCreator</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinDeserializers</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#isUnboxableValueClass(java.lang.Class)</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#toBitSet(int)</exclude>
                           <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,java.lang.String)</exclude>
