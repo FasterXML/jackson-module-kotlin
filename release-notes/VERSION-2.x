@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.17.0 (not yet released)
 
+#768: Added value class deserialization support.
 #760: Caching is now applied to the entire parameter parsing process on Kotlin.
 #758: Deprecated SingletonSupport and related properties to be consistent with KotlinFeature.SingletonSupport.
 #755: Changes in constructor invocation and argument management.
