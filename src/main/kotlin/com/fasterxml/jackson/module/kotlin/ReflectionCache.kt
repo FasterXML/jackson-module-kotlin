@@ -146,7 +146,11 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         is Constructor<*> -> kotlinFromJava(owner)
         is Method -> kotlinFromJava(owner)
         else -> null
-    }?.valueParameters?.get(param.index)
+    }
+        ?.valueParameters
+        // Functions defined in value class may have a different index when retrieved as KFunction,
+        // so use getOrNull to avoid errors.
+        ?.getOrNull(param.index)
 }
 
 private fun Constructor<*>.valueClassAwareKotlinFunction(): KFunction<*>? {
