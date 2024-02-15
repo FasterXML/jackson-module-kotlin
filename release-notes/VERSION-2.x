@@ -37,6 +37,7 @@ Co-maintainers:
  This improves the initialization cost of kotlin-module a little.
 #684: Kotlin 1.5 has been deprecated and the minimum supported Kotlin version will be updated to 1.6.
 
+2.15.4 (15-Feb-2024)
 2.15.3 (12-Oct-2023)
 
 No changes since 2.15.2
