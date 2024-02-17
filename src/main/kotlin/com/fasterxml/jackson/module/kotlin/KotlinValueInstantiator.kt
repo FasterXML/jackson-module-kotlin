@@ -32,6 +32,15 @@ internal class KotlinValueInstantiator(
 
     private fun List<KTypeProjection>.markedNonNullAt(index: Int) = getOrNull(index)?.type?.isMarkedNullable == false
 
+    // If the argument is a value class that wraps nullable and non-null,
+    // and the input is explicit null, the value class is instantiated with null as input.
+    private fun requireValueClassSpecialNullValue(
+        isNullableParam: Boolean,
+        valueDeserializer: JsonDeserializer<*>?
+    ): Boolean = !isNullableParam &&
+            valueDeserializer is WrapsNullableValueClassDeserializer<*> &&
+            valueDeserializer.handledType().kotlin.wrapsNullable()
+
     private fun SettableBeanProperty.skipNulls(): Boolean =
         nullIsSameAsDefault || (metadata.valueNulls == Nulls.SKIP)
 
@@ -53,6 +62,12 @@ internal class KotlinValueInstantiator(
             val paramType = paramDef.type
             var paramVal = if (!isMissing || jsonProp.hasInjectableValueId()) {
                buffer.getParameter(jsonProp) ?: run {
+                   // Deserializer.getNullValue could not be used because there is no way to get and parse parameters
+                   // from the BeanDescription and using AnnotationIntrospector would override user customization.
+                   if (requireValueClassSpecialNullValue(paramDef.type.isMarkedNullable, valueDeserializer)) {
+                       (valueDeserializer as WrapsNullableValueClassDeserializer<*>).boxedNullValue?.let { return@run it }
+                   }
+
                    if (jsonProp.skipNulls() && paramDef.isOptional) return@forEachIndexed
 
                    null
