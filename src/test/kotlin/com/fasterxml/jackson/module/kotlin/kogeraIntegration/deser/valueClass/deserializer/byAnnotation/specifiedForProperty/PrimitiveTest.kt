@@ -25,17 +25,19 @@ class PrimitiveTest {
         val fieldAnn: Primitive
     )
 
-    @Test
-    fun nonNull() {
-        val result = mapper.readValue<NonNull>(
-            """
+    class NonNullTest {
+        @Test
+        fun nonNull() {
+            val result = mapper.readValue<NonNull>(
+                """
                 {
                   "getterAnn" : 1,
                   "fieldAnn" : 2
                 }
             """.trimIndent()
-        )
-        assertEquals(NonNull(Primitive(101), Primitive(102)), result)
+            )
+            assertEquals(NonNull(Primitive(101), Primitive(102)), result)
+        }
     }
 
     @Ignore

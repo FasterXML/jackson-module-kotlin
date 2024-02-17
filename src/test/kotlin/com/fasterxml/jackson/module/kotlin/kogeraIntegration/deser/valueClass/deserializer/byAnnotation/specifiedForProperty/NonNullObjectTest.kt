@@ -25,17 +25,19 @@ class NonNullObjectTest {
         val fieldAnn: NonNullObject
     )
 
-    @Test
-    fun nonNull() {
-        val result = mapper.readValue<NonNull>(
-            """
+    class NonNullTest {
+        @Test
+        fun nonNull() {
+            val result = mapper.readValue<NonNull>(
+                """
                 {
                   "getterAnn" : "foo",
                   "fieldAnn" : "bar"
                 }
             """.trimIndent()
-        )
-        assertEquals(NonNull(NonNullObject("foo-deser"), NonNullObject("bar-deser")), result)
+            )
+            assertEquals(NonNull(NonNullObject("foo-deser"), NonNullObject("bar-deser")), result)
+        }
     }
 
     @Ignore

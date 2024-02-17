@@ -40,7 +40,8 @@ class SpecifiedForObjectMapperTest {
             assertEquals(NonNullObject("foo-deser"), result)
         }
 
-        @Suppress("ClassName")class NullableObject_ {
+        @Suppress("ClassName")
+        class NullableObject_ {
             @Test
             fun value() {
                 val result = mapper.readValue<NullableObject>(""""foo"""")
@@ -69,51 +70,53 @@ class SpecifiedForObjectMapperTest {
         val noN: NullableObject?
     )
 
-    @Test
-    fun nonNull() {
-        val base = Dst(
-            Primitive(1),
-            Primitive(2),
-            NonNullObject("foo"),
-            NonNullObject("bar"),
-            NullableObject("baz"),
-            NullableObject("qux")
-        )
-        val src = mapper.writeValueAsString(base)
-        val result = mapper.readValue<Dst>(src)
+    class InParameterDeserialize {
+        @Test
+        fun nonNull() {
+            val base = Dst(
+                Primitive(1),
+                Primitive(2),
+                NonNullObject("foo"),
+                NonNullObject("bar"),
+                NullableObject("baz"),
+                NullableObject("qux")
+            )
+            val src = mapper.writeValueAsString(base)
+            val result = mapper.readValue<Dst>(src)
 
-        val expected = Dst(
-            Primitive(101),
-            Primitive(102),
-            NonNullObject("foo-deser"),
-            NonNullObject("bar-deser"),
-            NullableObject("baz-deser"),
-            NullableObject("qux-deser")
-        )
-        assertEquals(expected, result)
-    }
+            val expected = Dst(
+                Primitive(101),
+                Primitive(102),
+                NonNullObject("foo-deser"),
+                NonNullObject("bar-deser"),
+                NullableObject("baz-deser"),
+                NullableObject("qux-deser")
+            )
+            assertEquals(expected, result)
+        }
 
-    @Test
-    fun withNull() {
-        val base = Dst(
-            Primitive(1),
-            null,
-            NonNullObject("foo"),
-            null,
-            NullableObject(null),
-            null
-        )
-        val src = mapper.writeValueAsString(base)
-        val result = mapper.readValue<Dst>(src)
+        @Test
+        fun withNull() {
+            val base = Dst(
+                Primitive(1),
+                null,
+                NonNullObject("foo"),
+                null,
+                NullableObject(null),
+                null
+            )
+            val src = mapper.writeValueAsString(base)
+            val result = mapper.readValue<Dst>(src)
 
-        val expected = Dst(
-            Primitive(101),
-            null,
-            NonNullObject("foo-deser"),
-            null,
-            NullableObject("null-value-deser"),
-            null
-        )
-        assertEquals(expected, result)
+            val expected = Dst(
+                Primitive(101),
+                null,
+                NonNullObject("foo-deser"),
+                null,
+                NullableObject("null-value-deser"),
+                null
+            )
+            assertEquals(expected, result)
+        }
     }
 }
