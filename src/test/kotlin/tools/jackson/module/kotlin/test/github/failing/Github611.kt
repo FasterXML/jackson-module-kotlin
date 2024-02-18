@@ -1,11 +1,10 @@
 package tools.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import tools.jackson.databind.DatabindException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.Test
+import kotlin.test.assertEquals
 
 class TestGithub611 {
 
@@ -24,8 +23,7 @@ class TestGithub611 {
     @Test
     fun testJsonParsing() {
         val mapper = jacksonObjectMapper()
-        expectFailure<DatabindException>("GitHub #611 has been fixed!") {
-            val dataClassInstance = mapper.readValue<TestClass>(jsonData)
-        }
+        val dataClassInstance = mapper.readValue<TestClass>(jsonData)
+        assertEquals(50000.toUShort(), dataClassInstance.id)
     }
 }

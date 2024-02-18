@@ -18,6 +18,7 @@ Contributors:
 # 2.17.0 (not yet released)
 
 WrongWrong (@k163377)
+* #768: Added value class deserialization support.
 * #763: Minor refactoring to support value class in deserialization.
 * #760: Improved processing related to parameter parsing on Kotlin.
 * #759: Organize internal commons.

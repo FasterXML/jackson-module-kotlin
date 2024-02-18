@@ -159,7 +159,7 @@ class KotlinModule @Deprecated(
                 useKotlinPropertyNameForGetter)
         )
 
-        context.addDeserializers(KotlinDeserializers(useJavaDurationConversion))
+        context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())

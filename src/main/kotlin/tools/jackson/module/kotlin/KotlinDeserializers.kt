@@ -10,6 +10,11 @@ import tools.jackson.databind.JavaType
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.Deserializers
 import tools.jackson.databind.deser.std.StdDeserializer
+import tools.jackson.databind.exc.InvalidDefinitionException
+import java.lang.reflect.Method
+import java.lang.reflect.Modifier
+import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.jvm.javaMethod
 import kotlin.time.Duration as KotlinDuration
 
 object SequenceDeserializer : StdDeserializer<Sequence<*>>(Sequence::class.java) {
@@ -82,7 +87,58 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
+internal class WrapsNullableValueClassBoxDeserializer<S, D : Any>(
+    private val creator: Method,
+    private val converter: ValueClassBoxConverter<S, D>
+) : WrapsNullableValueClassDeserializer<D>(converter.boxedClass) {
+    private val inputType: Class<*> = creator.parameterTypes[0]
+
+    init {
+        creator.apply { if (!this.isAccessible) this.isAccessible = true }
+    }
+
+    // Cache the result of wrapping null, since the result is always expected to be the same.
+    @get:JvmName("boxedNullValue")
+    private val boxedNullValue: D by lazy { instantiate(null) }
+
+    override fun getBoxedNullValue(): D = boxedNullValue
+
+    // To instantiate the value class in the same way as other classes,
+    // it is necessary to call creator(e.g. constructor-impl) -> box-impl in that order.
+    // Input is null only when called from KotlinValueInstantiator.
+    @Suppress("UNCHECKED_CAST")
+    private fun instantiate(input: Any?): D = converter.convert(creator.invoke(null, input) as S)
+
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D {
+        val input = p.readValueAs(inputType)
+        return instantiate(input)
+    }
+}
+
+private fun invalidCreatorMessage(m: Method): String =
+    "The argument size of a Creator that does not return a value class on the JVM must be 1, " +
+            "please fix it or use JsonDeserializer.\n" +
+            "Detected: ${m.parameters.joinToString(prefix = "${m.name}(", separator = ", ", postfix = ")") { it.name }}"
+
+private fun findValueCreator(type: JavaType, clazz: Class<*>): Method? {
+    clazz.declaredMethods.forEach { method ->
+        if (Modifier.isStatic(method.modifiers) && method.hasCreatorAnnotation()) {
+            // Do nothing if a correctly functioning Creator is defined
+            return method.takeIf { clazz != method.returnType }?.apply {
+                // Creator with an argument size not equal to 1 is currently not supported.
+                if (parameterCount != 1) {
+                    throw InvalidDefinitionException.from(null as JsonParser?, invalidCreatorMessage(method), type)
+                }
+            }
+        }
+    }
+
+    // primaryConstructor.javaMethod for the value class returns constructor-impl
+    return clazz.kotlin.primaryConstructor?.javaMethod
+}
+
 internal class KotlinDeserializers(
+    private val cache: ReflectionCache,
     private val useJavaDurationConversion: Boolean,
 ) : Deserializers.Base() {
     override fun findBeanDeserializer(
@@ -101,6 +157,11 @@ internal class KotlinDeserializers(
             rawClass == ULong::class.java -> ULongDeserializer
             rawClass == KotlinDuration::class.java ->
                 JavaToKotlinDurationConverter.takeIf { useJavaDurationConversion }?.delegatingDeserializer
+            rawClass.isUnboxableValueClass() -> findValueCreator(type, rawClass)?.let {
+                val unboxedClass = it.returnType
+                val converter = cache.getValueClassBoxConverter(unboxedClass, rawClass.kotlin)
+                WrapsNullableValueClassBoxDeserializer(it, converter)
+            }
             else -> null
         }
     }
