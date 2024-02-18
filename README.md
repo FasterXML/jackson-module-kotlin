@@ -159,6 +159,9 @@ These Kotlin classes are supported with the following fields for serialization/d
 * CharRange _(start, end)_
 * LongRange _(start, end)_
 
+Deserialization for `value class` is also supported since 2.17.  
+Please refer to [this page](./docs/value-class-support.md) for more information on using `value class`, including serialization.
+
 (others are likely to work, but may not be tuned for Jackson)
 
 # Sealed classes without @JsonSubTypes
