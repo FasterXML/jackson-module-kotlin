@@ -136,10 +136,10 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         }.orElse(null)
     }
 
-    fun getValueClassBoxConverter(unboxedClass: Class<*>, valueClass: KClass<*>): ValueClassBoxConverter<*, *> =
-        valueClassBoxConverterCache.get(valueClass) ?: run {
-            val value = ValueClassBoxConverter(unboxedClass, valueClass)
-            (valueClassBoxConverterCache.putIfAbsent(valueClass, value) ?: value)
+    fun getValueClassBoxConverter(unboxedClass: Class<*>, boxedClass: KClass<*>): ValueClassBoxConverter<*, *> =
+        valueClassBoxConverterCache.get(boxedClass) ?: run {
+            val value = ValueClassBoxConverter(unboxedClass, boxedClass)
+            (valueClassBoxConverterCache.putIfAbsent(boxedClass, value) ?: value)
         }
 
     fun findKotlinParameter(param: AnnotatedParameter): KParameter? = when (val owner = param.owner.member) {
