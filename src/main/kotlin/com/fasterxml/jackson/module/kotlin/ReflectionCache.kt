@@ -60,7 +60,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         LRUMap(0, reflectionCacheSize)
 
     fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = javaExecutableToKotlin.get(key)
-        ?: key.kotlinFunction?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
+        ?: key.valueClassAwareKotlinFunction()?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
 
     fun kotlinFromJava(key: Method): KFunction<*>? = javaExecutableToKotlin.get(key)
         ?: key.kotlinFunction?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
@@ -146,5 +146,28 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         is Constructor<*> -> kotlinFromJava(owner)
         is Method -> kotlinFromJava(owner)
         else -> null
-    }?.valueParameters?.get(param.index)
+    }
+        ?.valueParameters
+        // Functions defined in value class may have a different index when retrieved as KFunction,
+        // so use getOrNull to avoid errors.
+        ?.getOrNull(param.index)
+}
+
+private fun Constructor<*>.valueClassAwareKotlinFunction(): KFunction<*>? {
+    kotlinFunction?.apply { return this }
+
+    // The javaConstructor that corresponds to the KFunction of the constructor that
+    // takes value class as an argument is a synthetic constructor.
+    // Therefore, in Kotlin 1.5.30, KFunction cannot be obtained from a constructor that is processed
+    // by jackson-module-kotlin.
+    // To deal with this situation, a synthetic constructor is obtained and a KFunction is obtained from it.
+    return try {
+        // The arguments of the synthetic constructor are the normal constructor arguments
+        // with the DefaultConstructorMarker appended to the end.
+        declaringClass
+            .getDeclaredConstructor(*parameterTypes, defaultConstructorMarker)
+            .kotlinFunction
+    } catch (t: Throwable) {
+        null
+    }
 }

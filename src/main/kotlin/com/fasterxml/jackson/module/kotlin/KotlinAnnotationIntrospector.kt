@@ -8,10 +8,8 @@ import com.fasterxml.jackson.databind.introspect.*
 import com.fasterxml.jackson.databind.jsontype.NamedType
 import com.fasterxml.jackson.databind.util.Converter
 import java.lang.reflect.AccessibleObject
-import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
-import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KParameter
@@ -19,9 +17,7 @@ import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
-import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.valueParameters
-import kotlin.reflect.jvm.javaField
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaSetter
 import kotlin.reflect.jvm.javaType
@@ -83,16 +79,11 @@ internal class KotlinAnnotationIntrospector(
         else -> null
     }
 
-    // Determine if the unbox result of value class is nullAable
-    // @see findNullSerializer
-    private fun KClass<*>.requireRebox(): Boolean =
-        this.memberProperties.first { it.javaField != null }.returnType.isMarkedNullable
-
     // Perform proper serialization even if the value wrapped by the value class is null.
     // If value is a non-null object type, it must not be reboxing.
     override fun findNullSerializer(am: Annotated): JsonSerializer<*>? = (am as? AnnotatedMethod)
         ?.findValueClassReturnType()
-        ?.takeIf { it.requireRebox() }
+        ?.takeIf { it.wrapsNullable() }
         ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
 
     override fun findDeserializationConverter(a: Annotated): Any? {

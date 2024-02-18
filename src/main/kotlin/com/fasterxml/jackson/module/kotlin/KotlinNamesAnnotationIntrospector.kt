@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
@@ -72,6 +73,17 @@ internal class KotlinNamesAnnotationIntrospector(
             else -> null
         }
     }
+
+    override fun refineDeserializationType(config: MapperConfig<*>, a: Annotated, baseType: JavaType): JavaType =
+        (a as? AnnotatedParameter)?.let { _ ->
+            cache.findKotlinParameter(a)?.let { param ->
+                val rawType = a.rawType
+                (param.type.classifier as? KClass<*>)
+                    ?.java
+                    ?.takeIf { it.isUnboxableValueClass() && it != rawType }
+                    ?.let { config.constructType(it) }
+            }
+        } ?: baseType
 
     private fun hasCreatorAnnotation(member: AnnotatedConstructor): Boolean {
         // don't add a JsonCreator to any constructor if one is declared already
