@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.17.0 (not yet released)
+2.17.0-rc1 (26-Feb-2024)
 
 #768: Added value class deserialization support.
 #760: Caching is now applied to the entire parameter parsing process on Kotlin.
