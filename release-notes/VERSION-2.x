@@ -46,6 +46,10 @@ Co-maintainers:
 #732: SequenceSerializer removed.
 #727: Fixed overriding findCreatorAnnotation instead of hasCreatorAnnotation.
 
+2.16.2 (09-Mar-2024)
+
+No changes since 2.16.1
+
 2.16.1 (24-Dec-2023)
 
 #733: Fix problem with Serializable objects not implementing readResolve.
