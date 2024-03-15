@@ -86,20 +86,6 @@ internal class KotlinAnnotationIntrospector(
         ?.takeIf { it.wrapsNullable() }
         ?.let { cache.getValueClassBoxConverter(am.rawReturnType, it).delegatingSerializer }
 
-    override fun findDeserializationConverter(a: Annotated): Any? {
-        if (!useJavaDurationConversion) return null
-
-        return (a as? AnnotatedParameter)?.let { param ->
-            val valueParameter = cache.findKotlinParameter(param) ?: return@let null
-
-            if (valueParameter.type.classifier == Duration::class) {
-                JavaToKotlinDurationConverter
-            } else {
-                null
-            }
-        }
-    }
-
     /**
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.
