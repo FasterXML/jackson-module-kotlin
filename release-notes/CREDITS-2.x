@@ -15,7 +15,12 @@ Authors:
 
 Contributors:
 
-# 2.17.0 (not yet released)
+# 2.17.1 (not yet released)
+
+WrongWrong (@k163377)
+* #776: Delete Duration conversion that was no longer needed
+
+# 2.17.0
 
 WrongWrong (@k163377)
 * #768: Added value class deserialization support.

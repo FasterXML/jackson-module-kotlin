@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.17.1 (not yet released)
+
+#776: Delete Duration conversion that was no longer needed.
+
 2.17.0 (12-Mar-2024)
 
 #768: Added value class deserialization support.
