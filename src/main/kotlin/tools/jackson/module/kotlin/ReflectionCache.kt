@@ -59,8 +59,15 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     private val valueClassBoxConverterCache: SimpleLookupCache<KClass<*>, ValueClassBoxConverter<*, *>> =
         SimpleLookupCache(0, reflectionCacheSize)
 
-    fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = javaExecutableToKotlin.get(key)
-        ?: key.valueClassAwareKotlinFunction()?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
+    // If the Record type defined in Java is processed,
+    // an error will occur, so if it is not defined in Kotlin, skip the process.
+    // see https://github.com/FasterXML/jackson-module-kotlin/issues/778
+    fun kotlinFromJava(key: Constructor<*>): KFunction<*>? = if (key.declaringClass.isKotlinClass()) {
+        javaExecutableToKotlin.get(key)
+            ?: key.valueClassAwareKotlinFunction()?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
+    } else {
+        null
+    }
 
     fun kotlinFromJava(key: Method): KFunction<*>? = javaExecutableToKotlin.get(key)
         ?: key.kotlinFunction?.let { javaExecutableToKotlin.putIfAbsent(key, it) ?: it }
