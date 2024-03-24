@@ -19,6 +19,7 @@ Co-maintainers:
 2.17.1 (not yet released)
 
 #776: Delete Duration conversion that was no longer needed.
+#779: Errors no longer occur when processing Record types defined in Java.
 
 2.17.0 (12-Mar-2024)
 
