@@ -19,6 +19,7 @@ Contributors:
 
 WrongWrong (@k163377)
 * #776: Delete Duration conversion that was no longer needed
+* #779: Fixed to not process constructors of Java classes
 
 # 2.17.0
 
