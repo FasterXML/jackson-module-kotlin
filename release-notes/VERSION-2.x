@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.18.0 (not yet released)
+
+No changes since 2.17
+
 2.17.1 (not yet released)
 
 #776: Delete Duration conversion that was no longer needed.
