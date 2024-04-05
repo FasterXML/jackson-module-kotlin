@@ -224,7 +224,7 @@
 			    -->
 			    <!-- 30-Sep-2023, wrongwrong: For 2.16, compare to 2.15.2 baseline
 			    -->
-                            <version>2.16.0</version>
+                            <version>2.17.0</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
@@ -239,19 +239,20 @@
                         <excludes>
                 <!-- public -->
                           <!-- removed -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.SequenceSerializer</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#serialVersionUID</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#KotlinModule(int,boolean,boolean,boolean,com.fasterxml.jackson.module.kotlin.SingletonSupport,boolean,boolean,boolean)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullIsSameAsDefault()</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullIsSameAsDefault(boolean)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullToEmptyCollection()</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullToEmptyCollection(boolean)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullToEmptyMap()</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullToEmptyMap(boolean)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getSingletonSupport()</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#singletonSupport(com.fasterxml.jackson.module.kotlin.SingletonSupport)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getStrictNullChecks()</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#strictNullChecks(boolean)</exclude>
+                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#reflectionCacheSize(int)</exclude>
                 <!-- internal -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ConstructorValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.MethodValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinDeserializers</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#isUnboxableValueClass(java.lang.Class)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#toBitSet(int)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,java.lang.String)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,int)</exclude>
+
                         </excludes>
                     </parameter>
                 </configuration>
