@@ -130,7 +130,7 @@ class KotlinModule @Deprecated(
             KotlinNamesAnnotationIntrospector(
                 cache,
                 ignoredClassesForImplyingJsonCreator,
-                useKotlinPropertyNameForGetter)
+                kotlinPropertyNameAsImplicitName)
         )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
