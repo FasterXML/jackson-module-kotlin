@@ -222,21 +222,8 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
-                <!-- public -->
-                          <!-- removed -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.SequenceSerializer</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#serialVersionUID</exclude>
-                <!-- internal -->
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ConstructorValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.MethodValueCreator</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.TypesKt</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.KotlinDeserializers</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#isUnboxableValueClass(java.lang.Class)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#toBitSet(int)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,java.lang.String)</exclude>
-                          <exclude>com.fasterxml.jackson.module.kotlin.ExtensionsKt#wrapWithPath(com.fasterxml.jackson.databind.JsonMappingException,java.lang.Object,int)</exclude>
+                          <!-- Since it is not compatible with 2.x and the official release of 3.x is not yet available, compatibility checks have been disabled. -->
+                          <exclude>*</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
