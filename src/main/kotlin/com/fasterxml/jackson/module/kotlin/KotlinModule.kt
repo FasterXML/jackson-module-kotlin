@@ -141,11 +141,8 @@ class KotlinModule @Deprecated(
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        when (singletonSupport) {
-            DISABLED -> Unit
-            CANONICALIZE -> {
-                context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
-            }
+        if (enabledSingletonSupport) {
+            context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(
