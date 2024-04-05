@@ -16,6 +16,8 @@ import kotlin.reflect.KClass
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
 /**
+ * @constructor To avoid binary compatibility issues, the primary constructor is not published.
+ *  Please use KotlinModule.Builder or extensions that use it.
  * @property reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
  * @property nullToEmptyCollection   Default: false.  Whether to deserialize null values for collection properties as
  *  empty collections.
@@ -36,21 +38,7 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  * @property useJavaDurationConversion Default: false.  Whether to use [java.time.Duration] as a bridge for [kotlin.time.Duration].
  *  This allows use Kotlin Duration type with [com.fasterxml.jackson.datatype.jsr310.JavaTimeModule].
  */
-class KotlinModule @Deprecated(
-    level = DeprecationLevel.ERROR,
-    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be HIDDEN at 2.18.",
-    replaceWith = ReplaceWith(
-        """KotlinModule.Builder()
-            .withReflectionCacheSize(reflectionCacheSize)
-            .configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)
-            .configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)
-            .configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)
-            .configure(KotlinFeature.SingletonSupport, singletonSupport)
-            .configure(KotlinFeature.StrictNullChecks, strictNullChecks)
-            .build()""",
-        "com.fasterxml.jackson.module.kotlin.KotlinFeature"
-    )
-) constructor(
+class KotlinModule private constructor(
     val reflectionCacheSize: Int = Builder.DEFAULT_CACHE_SIZE,
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
@@ -83,7 +71,6 @@ class KotlinModule @Deprecated(
         level = DeprecationLevel.HIDDEN,
         message = "If you have no choice but to initialize KotlinModule from reflection, use this constructor."
     )
-    @Suppress("DEPRECATION_ERROR")
     constructor() : this()
 
     @Suppress("DEPRECATION_ERROR")
