@@ -7,7 +7,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -44,7 +43,7 @@ class DslTest {
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertEquals(module.singletonSupport, CANONICALIZE)
+        assertTrue(module.enabledSingletonSupport)
         assertTrue(module.strictNullChecks)
     }
 
