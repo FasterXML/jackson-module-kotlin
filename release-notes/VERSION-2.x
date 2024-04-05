@@ -18,7 +18,9 @@ Co-maintainers:
 
 2.18.0 (not yet released)
 
-No changes since 2.17
+#782: Content marked as deprecated has been reorganized.
+  Several constructors and accessors to properties of KotlinModule.Builder that were marked as DeprecationLevel.ERROR have been removed.
+  Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
 
 2.17.1 (not yet released)
 
