@@ -8,8 +8,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.CANONICALIZE
-import com.fasterxml.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -44,14 +42,15 @@ class KotlinModule private constructor(
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     @property:Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "The return value will be Boolean in 2.19. Until then, use enabledSingletonSupport.",
         replaceWith = ReplaceWith("enabledSingletonSupport")
     )
-    val singletonSupport: SingletonSupport = DISABLED,
+    @Suppress("DEPRECATION_ERROR")
+    val singletonSupport: SingletonSupport = SingletonSupport.DISABLED,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     @Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "There was a discrepancy between the property name and the Feature name." +
             " To migrate to the correct property name, it will be ERROR in 2.18 and removed in 2.19.",
         replaceWith = ReplaceWith("kotlinPropertyNameAsImplicitName")
@@ -59,8 +58,10 @@ class KotlinModule private constructor(
     val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    @Suppress("DEPRECATION_ERROR")
     val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
-    val enabledSingletonSupport: Boolean get() = singletonSupport == CANONICALIZE
+    @Suppress("DEPRECATION_ERROR")
+    val enabledSingletonSupport: Boolean get() = singletonSupport == SingletonSupport.CANONICALIZE
 
     companion object {
         // Increment when option is added
@@ -73,15 +74,15 @@ class KotlinModule private constructor(
     )
     constructor() : this()
 
-    @Suppress("DEPRECATION_ERROR")
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
         builder.isEnabled(NullToEmptyCollection),
         builder.isEnabled(NullToEmptyMap),
         builder.isEnabled(NullIsSameAsDefault),
+        @Suppress("DEPRECATION_ERROR")
         when {
-            builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
-            else -> DISABLED
+            builder.isEnabled(KotlinFeature.SingletonSupport) -> SingletonSupport.CANONICALIZE
+            else -> SingletonSupport.DISABLED
         },
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
