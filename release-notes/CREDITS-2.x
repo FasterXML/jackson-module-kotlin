@@ -15,6 +15,9 @@ Authors:
 
 Contributors:
 
+# 2.18.0 (not yet released)
+* #782: Organize deprecated contents
+
 # 2.17.1 (not yet released)
 
 WrongWrong (@k163377)

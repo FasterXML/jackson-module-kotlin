@@ -17,7 +17,6 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertEquals(SingletonSupport.DISABLED, module.singletonSupport)
         assertFalse(module.enabledSingletonSupport)
         assertFalse(module.strictNullChecks)
         assertFalse(module.kotlinPropertyNameAsImplicitName)
@@ -41,7 +40,6 @@ class KotlinModuleTest {
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertEquals(SingletonSupport.CANONICALIZE, module.singletonSupport)
         assertTrue(module.enabledSingletonSupport)
         assertTrue(module.strictNullChecks)
         assertTrue(module.kotlinPropertyNameAsImplicitName)
@@ -81,7 +79,7 @@ class KotlinModuleTest {
             enable(SingletonSupport)
         }.build()
 
-        assertEquals(SingletonSupport.CANONICALIZE, module.singletonSupport)
+        assertTrue(module.enabledSingletonSupport)
     }
 
     @Test
@@ -112,7 +110,7 @@ class KotlinModuleTest {
         assertTrue(deserialized.nullToEmptyCollection)
         assertTrue(deserialized.nullToEmptyMap)
         assertTrue(deserialized.nullIsSameAsDefault)
-        assertEquals(SingletonSupport.CANONICALIZE, deserialized.singletonSupport)
+        assertTrue(deserialized.enabledSingletonSupport)
         assertTrue(deserialized.strictNullChecks)
     }
 

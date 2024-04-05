@@ -11,6 +11,8 @@ import java.util.*
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
 /**
+ * @constructor To avoid binary compatibility issues, the primary constructor is not published.
+ *  Please use KotlinModule.Builder or extensions that use it.
  * @property reflectionCacheSize     Default: 512.  Size, in items, of the caches used for mapping objects.
  * @property nullToEmptyCollection   Default: false.  Whether to deserialize null values for collection properties as
  *  empty collections.
@@ -51,14 +53,15 @@ class KotlinModule @Deprecated(
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     @property:Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "The return value will be Boolean in 2.19. Until then, use enabledSingletonSupport.",
         replaceWith = ReplaceWith("enabledSingletonSupport")
     )
-    val singletonSupport: SingletonSupport = DISABLED,
+    @Suppress("DEPRECATION_ERROR")
+    val singletonSupport: SingletonSupport = SingletonSupport.DISABLED,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     @Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "There was a discrepancy between the property name and the Feature name." +
             " To migrate to the correct property name, it will be ERROR in 2.18 and removed in 2.19.",
         replaceWith = ReplaceWith("kotlinPropertyNameAsImplicitName")
@@ -66,8 +69,10 @@ class KotlinModule @Deprecated(
     val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+    @Suppress("DEPRECATION_ERROR")
     val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
-    val enabledSingletonSupport: Boolean get() = singletonSupport == CANONICALIZE
+    @Suppress("DEPRECATION_ERROR")
+    val enabledSingletonSupport: Boolean get() = singletonSupport == SingletonSupport.CANONICALIZE
 
     companion object {
         // Increment when option is added
@@ -78,45 +83,17 @@ class KotlinModule @Deprecated(
         level = DeprecationLevel.HIDDEN,
         message = "If you have no choice but to initialize KotlinModule from reflection, use this constructor."
     )
-    @Suppress("DEPRECATION_ERROR")
     constructor() : this()
 
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
-    constructor(
-        reflectionCacheSize: Int,
-        nullToEmptyCollection: Boolean,
-        nullToEmptyMap: Boolean
-    ) : this(
-        Builder()
-            .withReflectionCacheSize(reflectionCacheSize)
-            .configure(NullToEmptyCollection, nullToEmptyCollection)
-            .configure(NullToEmptyMap, nullToEmptyMap)
-            .disable(NullIsSameAsDefault)
-    )
-
-    @Deprecated(level = DeprecationLevel.HIDDEN, message = "For ABI compatibility. It will be removed in 2.18.")
-    constructor(
-        reflectionCacheSize: Int,
-        nullToEmptyCollection: Boolean,
-        nullToEmptyMap: Boolean,
-        nullIsSameAsDefault: Boolean
-    ) : this(
-        Builder()
-            .withReflectionCacheSize(reflectionCacheSize)
-            .configure(NullToEmptyCollection, nullToEmptyCollection)
-            .configure(NullToEmptyMap, nullToEmptyMap)
-            .configure(NullIsSameAsDefault, nullIsSameAsDefault)
-    )
-
-    @Suppress("DEPRECATION_ERROR")
     private constructor(builder: Builder) : this(
         builder.reflectionCacheSize,
         builder.isEnabled(NullToEmptyCollection),
         builder.isEnabled(NullToEmptyMap),
         builder.isEnabled(NullIsSameAsDefault),
+        @Suppress("DEPRECATION_ERROR")
         when {
-            builder.isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
-            else -> DISABLED
+            builder.isEnabled(KotlinFeature.SingletonSupport) -> SingletonSupport.CANONICALIZE
+            else -> SingletonSupport.DISABLED
         },
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
@@ -156,7 +133,7 @@ class KotlinModule @Deprecated(
             KotlinNamesAnnotationIntrospector(
                 cache,
                 ignoredClassesForImplyingJsonCreator,
-                useKotlinPropertyNameForGetter)
+                kotlinPropertyNameAsImplicitName)
         )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))

@@ -4,7 +4,7 @@ package tools.jackson.module.kotlin
  * Special handling for singletons.
  */
 @Deprecated(
-    level = DeprecationLevel.WARNING,
+    level = DeprecationLevel.ERROR,
     message = "It will be removed in 2.19 to unify with KotlinFeature.",
     replaceWith = ReplaceWith("KotlinFeature.SingletonSupport")
 )
