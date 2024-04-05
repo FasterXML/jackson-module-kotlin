@@ -4,8 +4,6 @@ import kotlin.reflect.KClass
 import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.module.kotlin.KotlinFeature.*
-import tools.jackson.module.kotlin.SingletonSupport.CANONICALIZE
-import tools.jackson.module.kotlin.SingletonSupport.DISABLED
 import java.util.*
 
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
@@ -33,21 +31,7 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  * @property useJavaDurationConversion Default: false.  Whether to use [java.time.Duration] as a bridge for [kotlin.time.Duration].
  *  This allows use Kotlin Duration type with [tools.jackson.datatype.jsr310.JavaTimeModule].
  */
-class KotlinModule @Deprecated(
-    level = DeprecationLevel.ERROR,
-    message = "Use KotlinModule.Builder instead of named constructor parameters. It will be HIDDEN at 2.18.",
-    replaceWith = ReplaceWith(
-        """KotlinModule.Builder()
-            .withReflectionCacheSize(reflectionCacheSize)
-            .configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)
-            .configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)
-            .configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)
-            .configure(KotlinFeature.SingletonSupport, singletonSupport)
-            .configure(KotlinFeature.StrictNullChecks, strictNullChecks)
-            .build()""",
-        "tools.jackson.module.kotlin.KotlinFeature"
-    )
-) constructor(
+class KotlinModule private constructor(
     val reflectionCacheSize: Int = Builder.DEFAULT_CACHE_SIZE,
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
@@ -92,7 +76,7 @@ class KotlinModule @Deprecated(
         builder.isEnabled(NullIsSameAsDefault),
         @Suppress("DEPRECATION_ERROR")
         when {
-            builder.isEnabled(KotlinFeature.SingletonSupport) -> SingletonSupport.CANONICALIZE
+            builder.isEnabled(SingletonSupport) -> SingletonSupport.CANONICALIZE
             else -> SingletonSupport.DISABLED
         },
         builder.isEnabled(StrictNullChecks),
@@ -113,12 +97,9 @@ class KotlinModule @Deprecated(
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        when (singletonSupport) {
-            DISABLED -> Unit
-            CANONICALIZE -> {
- 	        // [module-kotlin#225]: keep Kotlin singletons as singletons
-                context.addDeserializerModifier(KotlinValueDeserializerModifier)
-            }
+        if (enabledSingletonSupport) {
+            // [module-kotlin#225]: keep Kotlin singletons as singletons
+            context.addDeserializerModifier(KotlinValueDeserializerModifier)
         }
 
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(
@@ -175,130 +156,6 @@ class KotlinModule @Deprecated(
 
         fun isEnabled(feature: KotlinFeature): Boolean =
             bitSet.intersects(feature.bitSet)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use withReflectionCacheSize(reflectionCacheSize) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith("withReflectionCacheSize(reflectionCacheSize)")
-        )
-        fun reflectionCacheSize(reflectionCacheSize: Int): Builder =
-            withReflectionCacheSize(reflectionCacheSize)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use isEnabled(NullToEmptyCollection) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "isEnabled(KotlinFeature.NullToEmptyCollection)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun getNullToEmptyCollection(): Boolean =
-            isEnabled(NullToEmptyCollection)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use configure(NullToEmptyCollection, enabled) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "configure(KotlinFeature.NullToEmptyCollection, nullToEmptyCollection)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun nullToEmptyCollection(nullToEmptyCollection: Boolean): Builder =
-            configure(NullToEmptyCollection, nullToEmptyCollection)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use isEnabled(NullToEmptyMap) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "isEnabled(KotlinFeature.NullToEmptyMap)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun getNullToEmptyMap(): Boolean =
-            isEnabled(NullToEmptyMap)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use configure(NullToEmptyMap, enabled) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "configure(KotlinFeature.NullToEmptyMap, nullToEmptyMap)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun nullToEmptyMap(nullToEmptyMap: Boolean): Builder =
-            configure(NullToEmptyMap, nullToEmptyMap)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use isEnabled(NullIsSameAsDefault) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "isEnabled(KotlinFeature.NullIsSameAsDefault)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun getNullIsSameAsDefault(): Boolean =
-            isEnabled(NullIsSameAsDefault)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use configure(NullIsSameAsDefault, enabled) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "configure(KotlinFeature.NullIsSameAsDefault, nullIsSameAsDefault)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun nullIsSameAsDefault(nullIsSameAsDefault: Boolean): Builder =
-            configure(NullIsSameAsDefault, nullIsSameAsDefault)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use isEnabled(SingletonSupport) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "isEnabled(KotlinFeature.SingletonSupport)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun getSingletonSupport(): SingletonSupport =
-            when {
-                isEnabled(KotlinFeature.SingletonSupport) -> CANONICALIZE
-                else -> DISABLED
-            }
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use configure(SingletonSupport, enabled) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "configure(KotlinFeature.SingletonSupport, singletonSupport)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun singletonSupport(singletonSupport: SingletonSupport): Builder =
-            when (singletonSupport) {
-                CANONICALIZE -> enable(KotlinFeature.SingletonSupport)
-                else -> disable(KotlinFeature.SingletonSupport)
-            }
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use isEnabled(StrictNullChecks) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "isEnabled(KotlinFeature.StrictNullChecks)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun getStrictNullChecks(): Boolean =
-            isEnabled(StrictNullChecks)
-
-        @Deprecated(
-            level = DeprecationLevel.ERROR,
-            message = "Deprecated, use configure(StrictNullChecks, enabled) instead. It will be removed in 2.18.",
-            replaceWith = ReplaceWith(
-                "configure(KotlinFeature.StrictNullChecks, strictNullChecks)",
-                "tools.jackson.module.kotlin.KotlinFeature"
-            )
-        )
-        fun strictNullChecks(strictNullChecks: Boolean): Builder =
-            configure(StrictNullChecks, strictNullChecks)
 
         fun build(): KotlinModule =
             KotlinModule(this)
