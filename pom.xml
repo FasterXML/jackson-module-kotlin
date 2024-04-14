@@ -53,7 +53,7 @@
         <connection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</connection>
         <developerConnection>scm:git:git@github.com:FasterXML/jackson-module-kotlin.git</developerConnection>
         <url>https://github.com/FasterXML/jackson-module-kotlin</url>
-        <tag>jackson-module-kotlin-2.17.1</tag>
+        <tag>jackson-module-kotlin-2.18.0-rc1</tag>
     </scm>
 
     <properties>
