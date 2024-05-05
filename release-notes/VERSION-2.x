@@ -22,7 +22,7 @@ Co-maintainers:
   Several constructors and accessors to properties of KotlinModule.Builder that were marked as DeprecationLevel.ERROR have been removed.
   Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
 
-2.17.1 (not yet released)
+2.17.1 (04-May-2024)
 
 #776: Delete Duration conversion that was no longer needed.
 #779: Errors no longer occur when processing Record types defined in Java.
