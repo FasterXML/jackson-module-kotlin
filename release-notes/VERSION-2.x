@@ -22,6 +22,9 @@ Co-maintainers:
   Several constructors and accessors to properties of KotlinModule.Builder that were marked as DeprecationLevel.ERROR have been removed.
   Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
 
+2.17.2 (not yet released)
+#799: Fixed problem with code compiled with 2.17.x losing backward compatibility.
+
 2.17.1 (04-May-2024)
 
 #776: Delete Duration conversion that was no longer needed.

@@ -33,16 +33,18 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
     return builder.build()
 }
 
-// region: JvmOverloads is set for bytecode compatibility for versions below 2.17.
-@JvmOverloads
+// region: Do not remove the default argument for functions that take a builder as an argument for compatibility.
+//   The default argument can be removed in 2.21 or later. See #775 for the history.
+fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule()) }
 fun jacksonObjectMapper(initializer: KotlinModule.Builder.() -> Unit = {}): ObjectMapper =
     jsonMapper { addModule(kotlinModule(initializer)) }
-@JvmOverloads
+
+fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
 fun jacksonMapperBuilder(initializer: KotlinModule.Builder.() -> Unit = {}): JsonMapper.Builder =
     JsonMapper.builder().addModule(kotlinModule(initializer))
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
-// @JvmOverloads
+// fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(kotlinModule())
 // fun ObjectMapper.registerKotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): ObjectMapper =
 //     this.registerModule(kotlinModule(initializer))
 // endregion
