@@ -15,7 +15,12 @@ Authors:
 
 Contributors:
 
-# 2.17.1 (not yet released)
+# 2.17.2 (not yet released)
+
+WrongWrong (@k163377)
+* #799: Fixed problem with code compiled with 2.17.x losing backward compatibility.
+
+# 2.17.1 (04-May-2024)
 
 WrongWrong (@k163377)
 * #776: Delete Duration conversion that was no longer needed
