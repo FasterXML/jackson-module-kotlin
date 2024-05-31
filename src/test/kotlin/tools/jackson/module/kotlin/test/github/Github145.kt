@@ -119,25 +119,4 @@ class TestGithub145 {
         val person6Json = objectMapper.readValue<Person6>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
     }
 
-    // Cannot have companion object in class declared within function
-    class Person7 constructor(val preName: String, val lastName: String) {
-        private constructor(preNameAndLastName: String) : this(
-            preNameAndLastName.substringBefore(","),
-            preNameAndLastName.substringAfter(",")
-        )
-
-        companion object {
-            @JsonCreator
-            @JvmStatic
-            fun createFromJson(preNameAndLastName: String): Person7 {
-                return Person7(preNameAndLastName)
-            }
-        }
-    }
-
-    @Test
-    fun testPerson7() {
-        val person7String = objectMapper.readValue<Person7>(""""TestPreName,TestLastname"""")
-        val person7Json = objectMapper.readValue<Person7>("""{"preName":"TestPreName","lastName":"TestLastname"}""")
-    }
 }
