@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.18.0 (not yet released)
 
+#803: Kotlin has been upgraded to 1.8.10.
+  The reason 1.8.22 is not used is to avoid KT-65156.
 #782: Content marked as deprecated has been reorganized.
   Several constructors and accessors to properties of KotlinModule.Builder that were marked as DeprecationLevel.ERROR have been removed.
   Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
