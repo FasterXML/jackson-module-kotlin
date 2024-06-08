@@ -17,7 +17,9 @@ jobs:
       matrix:
         java_version: ['8', '17', '21']
         # Versions need to align with ones in 'main.yml' workflow
-        kotlin_version: ['1.7.22', '1.8.10', '1.9.23', '2.0.0-Beta4']
+        # kotlin-reflect 1.8.2x has a bug and some tests fail, so we are downgrading to 1.8.10.
+        # https://youtrack.jetbrains.com/issue/KT-65156
+        kotlin_version: ['1.8.10', '1.9.23', '2.0.0-Beta4']
         os: ['ubuntu-22.04']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
