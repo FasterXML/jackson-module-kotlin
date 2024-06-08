@@ -56,7 +56,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <version.kotlin>1.7.22</version.kotlin>
+
+        <javac.src.version>1.8</javac.src.version>
+        <javac.target.version>1.8</javac.target.version>
+
+        <!-- kotlin-reflect 1.8.2x has a bug and some tests fail, so we are downgrading to 1.8.10. -->
+        <!-- https://youtrack.jetbrains.com/issue/KT-65156 -->
+        <version.kotlin>1.8.10</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>
