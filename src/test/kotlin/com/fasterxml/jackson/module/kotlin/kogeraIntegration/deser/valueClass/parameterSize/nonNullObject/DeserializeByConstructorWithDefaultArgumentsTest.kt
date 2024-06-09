@@ -50,10 +50,12 @@ class DeserializeByConstructorWithDefaultArgumentsTest {
         val p31: NonNullObject = NonNullObject("31")
     )
 
-    // #762
     @Test(expected = KotlinReflectionInternalError::class)
     fun test32() {
         assertEquals(Dst32(), defaultMapper.readValue<Dst32>("{}"))
+        // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
+        //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
+        if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
     }
 
     data class Dst33(
@@ -164,10 +166,12 @@ class DeserializeByConstructorWithDefaultArgumentsTest {
         val p63: NonNullObject = NonNullObject("63")
     )
 
-    // #762
     @Test(expected = KotlinReflectionInternalError::class)
     fun test64() {
         assertEquals(Dst64(), defaultMapper.readValue<Dst64>("{}"))
+        // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
+        //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
+        if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
     }
 
     data class Dst65(
