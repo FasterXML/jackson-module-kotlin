@@ -4,6 +4,7 @@ import tools.jackson.core.JsonParser
 import tools.jackson.core.TreeNode
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.JsonNode
+import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.MappingIterator
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectReader
@@ -35,13 +36,21 @@ fun jsonMapper(initializer: JsonMapper.Builder.() -> Unit = {}): JsonMapper {
 
 // region: Do not remove the default argument for functions that take a builder as an argument for compatibility.
 //   The default argument can be removed in 2.21 or later. See #775 for the history.
-fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule()) }
+fun jacksonObjectMapper(): ObjectMapper = jsonMapper { addModule(kotlinModule())
+    // [kotlin-module#807] 2024.06.21 : default value changed in Jackson 3, let's keep it enabled until we properly address the issue.
+    .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS) }
 fun jacksonObjectMapper(initializer: KotlinModule.Builder.() -> Unit = {}): ObjectMapper =
-    jsonMapper { addModule(kotlinModule(initializer)) }
+    jsonMapper { addModule(kotlinModule(initializer))
+        // [kotlin-module#807] 2024.06.21 : default value changed in Jackson 3, let's keep it enabled until we properly address the issue.
+        .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS) }
 
 fun jacksonMapperBuilder(): JsonMapper.Builder = JsonMapper.builder().addModule(kotlinModule())
+    // [kotlin-module#807] 2024.06.21 : default value changed in Jackson 3, let's keep it enabled until we properly address the issue.
+    .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
 fun jacksonMapperBuilder(initializer: KotlinModule.Builder.() -> Unit = {}): JsonMapper.Builder =
     JsonMapper.builder().addModule(kotlinModule(initializer))
+        // [kotlin-module#807] 2024.06.21 : default value changed in Jackson 3, let's keep it enabled until we properly address the issue.
+        .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
 
 // 22-Jul-2019, tatu: Can not be implemented same way as in 2.x, addition via mapper.builder():
 // fun ObjectMapper.registerKotlinModule(): ObjectMapper = this.registerModule(kotlinModule())
