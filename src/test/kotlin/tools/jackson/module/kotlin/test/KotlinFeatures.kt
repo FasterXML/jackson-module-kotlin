@@ -10,6 +10,7 @@ import tools.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
+import tools.jackson.databind.MapperFeature
 import kotlin.properties.Delegates
 import kotlin.test.assertNull
 import kotlin.test.fail
@@ -19,6 +20,9 @@ private data class DataClassPerson(val name: String, val age: Int)
 
 class TestM11Changes {
     val mapper = jacksonObjectMapper()
+    val mapperWithFinalFieldsAsMutators = jacksonMapperBuilder()
+        .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+        .build()
 
     private class Class_With_One_Constructor(val name: String, val age: Int)
 
@@ -61,8 +65,9 @@ class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30,"otherThing":"franky"}"""
         val expectedPerson = Class_With_Init_Constructor("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson  = mapper.readValue<Class_With_Init_Constructor>(actualJson)
+        // 22-Jun-2024, tatu: Requires forcibly setting val (final field) hence:
+        val actualJson = mapperWithFinalFieldsAsMutators.writeValueAsString(expectedPerson)
+        val newPerson  = mapperWithFinalFieldsAsMutators.readValue<Class_With_Init_Constructor>(actualJson)
 
         assertThat(actualJson, equalTo(expectedJson))
         assertThat(newPerson, equalTo(expectedPerson))

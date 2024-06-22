@@ -7,13 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.Test
+import tools.jackson.databind.MapperFeature
 
 @Suppress("UNUSED_VARIABLE")
 class TestGithub149 {
 
     class Foo(val name: String, attributes: List<FooAtt>) {
         @JsonManagedReference
-        private val _attributes: MutableList<FooAtt> = attributes.toMutableList()
+        val _attributes: MutableList<FooAtt> = attributes.toMutableList()
 
         val attributes: List<FooAtt>
             @JsonProperty("attributes")
@@ -36,6 +37,8 @@ class TestGithub149 {
     @Test
     fun testDeserializationOfManagedReferences() {
         val mapper = jacksonMapperBuilder()
+                // 22-Jun-2024, tatu: Requires forcibly setting val (final field) hence:
+                .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
                 .changeDefaultVisibility { v -> v
                             .withFieldVisibility(JsonAutoDetect.Visibility.ANY)
                             .withIsGetterVisibility(JsonAutoDetect.Visibility.NONE)
