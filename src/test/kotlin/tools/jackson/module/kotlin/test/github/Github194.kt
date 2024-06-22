@@ -1,13 +1,16 @@
 package tools.jackson.module.kotlin.test.github
 
+import java.util.UUID
+
+import kotlin.test.assertEquals
+
+import org.junit.Test
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.Test
 import tools.jackson.databind.MapperFeature
 import tools.jackson.module.kotlin.jacksonMapperBuilder
-import java.util.UUID
-import kotlin.test.assertEquals
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class TestGithub194 {
     val mapperWithFinalFieldsAsMutators = jacksonMapperBuilder()

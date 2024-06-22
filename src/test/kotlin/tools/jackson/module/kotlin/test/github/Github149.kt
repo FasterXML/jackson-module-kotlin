@@ -14,7 +14,7 @@ class TestGithub149 {
 
     class Foo(val name: String, attributes: List<FooAtt>) {
         @JsonManagedReference
-        val _attributes: MutableList<FooAtt> = attributes.toMutableList()
+        private val _attributes: MutableList<FooAtt> = attributes.toMutableList()
 
         val attributes: List<FooAtt>
             @JsonProperty("attributes")
