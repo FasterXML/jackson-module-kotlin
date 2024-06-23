@@ -23,7 +23,6 @@ import kotlin.reflect.jvm.javaType
 
 internal class KotlinNamesAnnotationIntrospector(
     private val cache: ReflectionCache,
-    private val ignoredClassesForImplyingJsonCreator: Set<KClass<*>>,
     private val useKotlinPropertyNameForGetter: Boolean
 ) : NopAnnotationIntrospector() {
     private fun getterNameFromJava(member: AnnotatedMethod): String? {
@@ -89,7 +88,6 @@ internal class KotlinNamesAnnotationIntrospector(
         // don't add a JsonCreator to any constructor if one is declared already
 
         val kClass = member.declaringClass.kotlin
-            .apply { if (this in ignoredClassesForImplyingJsonCreator) return false }
         val kConstructor = cache.kotlinFromJava(member.annotated) ?: return false
 
         // TODO:  should we do this check or not?  It could cause failures if we miss another way a property could be set
