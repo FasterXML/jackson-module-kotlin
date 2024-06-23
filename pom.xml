@@ -165,6 +165,10 @@
                         <goals>
                             <goal>test-compile</goal>
                         </goals>
+                        <configuration>
+                            <args>
+                            </args>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

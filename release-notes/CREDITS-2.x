@@ -17,6 +17,7 @@ Contributors:
 
 # 2.18.0 (not yet released)
 * #782: Organize deprecated contents
+* #542: Remove meaningless checks and properties in KNAI
 
 # 2.17.2 (not yet released)
 

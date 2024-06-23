@@ -23,6 +23,7 @@ Co-maintainers:
 #782: Content marked as deprecated has been reorganized.
   Several constructors and accessors to properties of KotlinModule.Builder that were marked as DeprecationLevel.ERROR have been removed.
   Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
+#542: Remove meaningless checks and properties in KNAI.
 
 2.17.2 (not yet released)
 #799: Fixed problem with code compiled with 2.17.x losing backward compatibility.

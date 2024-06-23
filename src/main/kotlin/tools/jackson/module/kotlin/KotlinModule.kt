@@ -84,8 +84,6 @@ class KotlinModule private constructor(
         builder.isEnabled(UseJavaDurationConversion),
     )
 
-    private val ignoredClassesForImplyingJsonCreator = emptySet<KClass<*>>()
-
     override fun setupModule(context: SetupContext) {
         super.setupModule(context)
 
@@ -110,12 +108,7 @@ class KotlinModule private constructor(
             nullIsSameAsDefault,
             useJavaDurationConversion
         ))
-        context.appendAnnotationIntrospector(
-            KotlinNamesAnnotationIntrospector(
-                cache,
-                ignoredClassesForImplyingJsonCreator,
-                kotlinPropertyNameAsImplicitName)
-        )
+        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(cache, kotlinPropertyNameAsImplicitName))
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)
