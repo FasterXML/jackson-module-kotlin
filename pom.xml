@@ -271,6 +271,9 @@
                             <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#reflectionCacheSize(int)
                             </exclude>
                             <!-- internal -->
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,java.util.Set,boolean)
+                            </exclude>
 
                         </excludes>
                     </parameter>
