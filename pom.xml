@@ -168,7 +168,6 @@
                         </goals>
                         <configuration>
                             <args>
-                                <arg>-Xinline-classes</arg>
                             </args>
                         </configuration>
                     </execution>
