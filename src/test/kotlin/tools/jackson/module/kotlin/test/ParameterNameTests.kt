@@ -9,6 +9,7 @@ import tools.jackson.module.kotlin.*
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Test
+import tools.jackson.databind.MapperFeature
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
@@ -48,6 +49,7 @@ class ParameterNameTests {
     private val pascalCasedJson = """{"Name":"Frank","Age":30,"PrimaryAddress":"something here","Renamed":true,"CreatedDt":"2016-10-25T18:25:48.000Z","IsName":false}"""
 
     private val normalCasedMapper = jacksonMapperBuilder()
+            .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build()
 

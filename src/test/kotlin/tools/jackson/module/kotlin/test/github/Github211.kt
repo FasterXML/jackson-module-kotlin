@@ -1,21 +1,30 @@
 package tools.jackson.module.kotlin.test.github
 
+import kotlin.test.assertEquals
+
+import org.junit.Test
+
 import com.fasterxml.jackson.annotation.JsonMerge
+
 import tools.jackson.databind.JsonNode
+import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.node.JsonNodeFactory
 import tools.jackson.databind.node.ObjectNode
-import tools.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.Test
-import kotlin.test.assertEquals
+
+import tools.jackson.module.kotlin.jacksonMapperBuilder
 
 class TestGithub211 {
+    val mapperWithFinalFieldsAsMutators = jacksonMapperBuilder()
+        .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+        .build()
+
     @Test
     fun simple() {
         val original = Person("original", Address("Rivoli", "Paris"))
         val changes = JsonNodeFactory.instance.objectNode().put("username", "updated")
 
-        val merged = JsonMerger(jacksonObjectMapper()).merge(original, changes)
+        val merged = JsonMerger(mapperWithFinalFieldsAsMutators).merge(original, changes)
 
         assertEquals(original.copy(username = "updated"), merged)
     }
@@ -24,7 +33,7 @@ class TestGithub211 {
     fun nested() {
         val original = Person("original", Address("Rivoli", "Paris"))
 
-        val merged = JsonMerger(jacksonObjectMapper()).merge(original, nestedChanges())
+        val merged = JsonMerger(mapperWithFinalFieldsAsMutators).merge(original, nestedChanges())
 
         assertEquals(Person("updated", Address("Magenta", "Paris")), merged)
     }

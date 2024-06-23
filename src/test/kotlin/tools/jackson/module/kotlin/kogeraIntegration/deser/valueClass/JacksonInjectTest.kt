@@ -1,11 +1,13 @@
 package tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass
 
 import com.fasterxml.jackson.annotation.JacksonInject
-import tools.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
 import tools.jackson.databind.InjectableValues
+import tools.jackson.databind.MapperFeature
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.jacksonObjectMapper
 
 class JacksonInjectTest {
     // This is specified as a getter because there is a possibility of problems if it is assigned to a field.
@@ -63,7 +65,9 @@ class JacksonInjectTest {
     fun dataBind4218Failing() {
         val injectables = InjectableValues.Std(mapOf("pNn" to Primitive(0), "pN" to Primitive(1)))
 
-        val reader = jacksonObjectMapper()
+        val reader = jacksonMapperBuilder()
+            .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
+            .build()
             .readerFor(DataBind4218FailingDto::class.java)
             .with(injectables)
 
