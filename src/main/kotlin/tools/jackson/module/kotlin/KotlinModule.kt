@@ -18,10 +18,8 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  map object.
  * @property nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
  *  using the default value provided in Kotlin.
- * @property singletonSupport        Default: DISABLED.  Mode for singleton handling.
+ * @property enabledSingletonSupport        Default: DISABLED.  Mode for singleton handling.
  *  See {@link tools.jackson.module.kotlin.SingletonSupport label}
- * @property enabledSingletonSupport Default: false.  A temporary property that is maintained until the return value of `singletonSupport` is changed.
- *  It will be removed in 2.21.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
  *  the default, collections which are typed to disallow null members
  *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
@@ -36,27 +34,11 @@ class KotlinModule private constructor(
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
-    @property:Deprecated(
-        level = DeprecationLevel.ERROR,
-        message = "The return value will be Boolean in 2.19. Until then, use enabledSingletonSupport.",
-        replaceWith = ReplaceWith("enabledSingletonSupport")
-    )
-    @Suppress("DEPRECATION_ERROR")
-    val singletonSupport: SingletonSupport = SingletonSupport.DISABLED,
+    val enabledSingletonSupport: Boolean = KotlinFeature.SingletonSupport.enabledByDefault,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
-    @Deprecated(
-        level = DeprecationLevel.ERROR,
-        message = "There was a discrepancy between the property name and the Feature name." +
-            " To migrate to the correct property name, it will be ERROR in 2.18 and removed in 2.19.",
-        replaceWith = ReplaceWith("kotlinPropertyNameAsImplicitName")
-    )
-    val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
+    val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
-    @Suppress("DEPRECATION_ERROR")
-    val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
-    @Suppress("DEPRECATION_ERROR")
-    val enabledSingletonSupport: Boolean get() = singletonSupport == SingletonSupport.CANONICALIZE
 
     companion object {
         // Increment when option is added
@@ -74,11 +56,7 @@ class KotlinModule private constructor(
         builder.isEnabled(NullToEmptyCollection),
         builder.isEnabled(NullToEmptyMap),
         builder.isEnabled(NullIsSameAsDefault),
-        @Suppress("DEPRECATION_ERROR")
-        when {
-            builder.isEnabled(SingletonSupport) -> SingletonSupport.CANONICALIZE
-            else -> SingletonSupport.DISABLED
-        },
+        builder.isEnabled(SingletonSupport),
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),
