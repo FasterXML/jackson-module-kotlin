@@ -18,8 +18,7 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  map object.
  * @property nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
  *  using the default value provided in Kotlin.
- * @property enabledSingletonSupport        Default: DISABLED.  Mode for singleton handling.
- *  See {@link tools.jackson.module.kotlin.SingletonSupport label}
+ * @property enabledSingletonSupport        Default: false.  Whether to enable singleton handling.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
  *  the default, collections which are typed to disallow null members
  *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
