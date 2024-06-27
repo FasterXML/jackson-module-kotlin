@@ -34,7 +34,7 @@ class KotlinModule private constructor(
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
-    val enabledSingletonSupport: Boolean = KotlinFeature.SingletonSupport.enabledByDefault,
+    val enabledSingletonSupport: Boolean = SingletonSupport.enabledByDefault,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
