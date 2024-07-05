@@ -25,7 +25,8 @@ Co-maintainers:
   Also, the content marked as DeprecationLevel.WARNING is now DeprecationLevel.ERROR.
 #542: Remove meaningless checks and properties in KNAI.
 
-2.17.2 (not yet released)
+2.17.2 (05-Jul-2024)
+
 #799: Fixed problem with code compiled with 2.17.x losing backward compatibility.
 
 2.17.1 (04-May-2024)
