@@ -27,7 +27,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.17.0</version>
+    <version>2.17.2</version>
 </dependency>
 ```
 
