@@ -16,6 +16,9 @@ Authors:
 Contributors:
 
 # 2.18.0 (not yet released)
+
+WrongWrong (@k163377)
+* #817: Fixed nullability of convertValue function argument
 * #782: Organize deprecated contents
 * #542: Remove meaningless checks and properties in KNAI
 
