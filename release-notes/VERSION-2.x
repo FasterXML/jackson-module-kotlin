@@ -18,6 +18,11 @@ Co-maintainers:
 
 2.18.0 (not yet released)
 
+#818: The implementation of the search process for the `JsonCreator` (often the primary constructor)
+  used by default for deserialization has been changed to `AnnotationIntrospector#findDefaultCreator`.
+  This has improved first-time processing performance and memory usage.
+  It also solves the problem of `findCreatorAnnotation` results by `AnnotationIntrospector` registered by the user
+  being ignored depending on the order in which modules are registered.
 #817: The convertValue extension function now accepts null
 #803: Kotlin has been upgraded to 1.8.10.
   The reason 1.8.22 is not used is to avoid KT-65156.

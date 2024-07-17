@@ -22,7 +22,7 @@ import kotlin.reflect.jvm.kotlinFunction
 internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     companion object {
         // Increment is required when properties that use LRUMap are changed.
-        private const val serialVersionUID = 2L
+        private const val serialVersionUID = 3L
     }
 
     sealed class BooleanTriState(val value: Boolean?) {
@@ -47,7 +47,6 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
 
     private val javaExecutableToKotlin = LRUMap<Executable, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaConstructorIsCreatorAnnotated = LRUMap<AnnotatedConstructor, Boolean>(reflectionCacheSize, reflectionCacheSize)
     private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
 
     // Initial size is 0 because the value class is not always used
@@ -102,9 +101,6 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
                     " instead found ${_withArgsCreator.annotated.javaClass.name}"
         )
     } // we cannot reflect this method so do the default Java-ish behavior
-
-    fun checkConstructorIsCreatorAnnotated(key: AnnotatedConstructor, calc: (AnnotatedConstructor) -> Boolean): Boolean = javaConstructorIsCreatorAnnotated.get(key)
-            ?: calc(key).let { javaConstructorIsCreatorAnnotated.putIfAbsent(key, it) ?: it }
 
     fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
             ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
