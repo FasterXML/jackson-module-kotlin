@@ -124,7 +124,8 @@ private fun KFunction<*>.isPossibleCreator(propertyNames: Set<String>): Boolean 
     && !isPossibleSingleString(propertyNames)
     && parameters.none { it.name == null }
 
-private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.size == 1 &&
-    parameters[0].name !in propertyNames &&
-    parameters[0].type.javaType == String::class.java &&
-    !parameters[0].hasAnnotation<JsonProperty>()
+private fun KFunction<*>.isPossibleSingleString(propertyNames: Set<String>): Boolean = parameters.singleOrNull()?.let {
+    it.name !in propertyNames
+        && it.type.javaType == String::class.java
+        && !it.hasAnnotation<JsonProperty>()
+} == true
