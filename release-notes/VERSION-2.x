@@ -16,7 +16,11 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.18.0 (not yet released)
+2.19.0 (not yet released)
+
+- No changes since 2.18
+
+2.18.0 (26-Sep-2024)
 
 #818: The implementation of the search process for the `JsonCreator` (often the primary constructor)
   used by default for deserialization has been changed to `AnnotationIntrospector#findDefaultCreator`.
