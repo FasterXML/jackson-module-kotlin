@@ -30,7 +30,6 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
      * Deserializing a singleton overwrites the value of the single instance.
      *
      * See [jackson-module-kotlin#225]: keep Kotlin singletons as singletons.
-     * @see com.fasterxml.jackson.module.kotlin.SingletonSupport
      */
     SingletonSupport(enabledByDefault = false),
 
