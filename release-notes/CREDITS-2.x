@@ -15,7 +15,7 @@ Authors:
 
 Contributors:
 
-# 2.18.0 (not yet released)
+# 2.18.0 (26-Sep-2024)
 
 WrongWrong (@k163377)
 * #818: Optimize the search process for creators
