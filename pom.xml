@@ -239,6 +239,9 @@
                         <excludes>
                             <!-- public -->
                             <!-- removed -->
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinModule#getUseKotlinPropertyNameForGetter()
+                            </exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#getSingletonSupport()</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.SingletonSupport</exclude>
                             <!-- internal -->

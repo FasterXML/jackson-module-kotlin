@@ -43,18 +43,9 @@ class KotlinModule private constructor(
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
-    @Deprecated(
-        level = DeprecationLevel.ERROR,
-        message = "There was a discrepancy between the property name and the Feature name." +
-            " To migrate to the correct property name, it will be ERROR in 2.18 and removed in 2.19.",
-        replaceWith = ReplaceWith("kotlinPropertyNameAsImplicitName")
-    )
-    val useKotlinPropertyNameForGetter: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
+    val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
-    @Suppress("DEPRECATION_ERROR")
-    val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
-
     /*
      * Prior to 2.18, an older Enum called SingletonSupport was used to manage feature.
      * To deprecate it and replace it with singletonSupport: Boolean, the following steps are in progress.
