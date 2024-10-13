@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
 import java.util.*
-import kotlin.reflect.KClass
 
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
@@ -23,8 +23,8 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  map object.
  * @property nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
  *  using the default value provided in Kotlin.
- * @property singletonSupport        Default: DISABLED.  Mode for singleton handling.
- *  See {@link com.fasterxml.jackson.module.kotlin.SingletonSupport label}
+ * @property singletonSupport        Default: false.  Mode for singleton handling.
+ *  See [KotlinFeature.SingletonSupport]
  * @property enabledSingletonSupport Default: false.  A temporary property that is maintained until the return value of `singletonSupport` is changed.
  *  It will be removed in 2.21.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
@@ -41,13 +41,7 @@ class KotlinModule private constructor(
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
-    @property:Deprecated(
-        level = DeprecationLevel.ERROR,
-        message = "The return value will be Boolean in 2.19. Until then, use enabledSingletonSupport.",
-        replaceWith = ReplaceWith("enabledSingletonSupport")
-    )
-    @Suppress("DEPRECATION_ERROR")
-    val singletonSupport: SingletonSupport = SingletonSupport.DISABLED,
+    val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     @Deprecated(
         level = DeprecationLevel.ERROR,
@@ -60,12 +54,28 @@ class KotlinModule private constructor(
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     @Suppress("DEPRECATION_ERROR")
     val kotlinPropertyNameAsImplicitName: Boolean get() = useKotlinPropertyNameForGetter
-    @Suppress("DEPRECATION_ERROR")
-    val enabledSingletonSupport: Boolean get() = singletonSupport == SingletonSupport.CANONICALIZE
+
+    /*
+     * Prior to 2.18, an older Enum called SingletonSupport was used to manage feature.
+     * To deprecate it and replace it with singletonSupport: Boolean, the following steps are in progress.
+     *
+     * 1. add enabledSingletonSupport: Boolean property
+     * 2. delete SingletonSupport class and change the property to singletonSupport: Boolean
+     * 3. remove the enabledSingletonSupport property
+     *
+     * Now that 2 is complete, deprecation is in progress for 3.
+     */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This property is scheduled to be removed in 2.21 or later" +
+                " in order to unify the use of KotlinFeature.",
+        replaceWith = ReplaceWith("singletonSupport")
+    )
+    val enabledSingletonSupport: Boolean get() = singletonSupport
 
     companion object {
         // Increment when option is added
-        private const val serialVersionUID = 2L
+        private const val serialVersionUID = 3L
     }
 
     @Deprecated(
@@ -79,11 +89,7 @@ class KotlinModule private constructor(
         builder.isEnabled(NullToEmptyCollection),
         builder.isEnabled(NullToEmptyMap),
         builder.isEnabled(NullIsSameAsDefault),
-        @Suppress("DEPRECATION_ERROR")
-        when {
-            builder.isEnabled(KotlinFeature.SingletonSupport) -> SingletonSupport.CANONICALIZE
-            else -> SingletonSupport.DISABLED
-        },
+        builder.isEnabled(SingletonSupport),
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),
