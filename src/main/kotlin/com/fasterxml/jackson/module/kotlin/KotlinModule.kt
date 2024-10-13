@@ -106,7 +106,7 @@ class KotlinModule private constructor(
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        if (enabledSingletonSupport) {
+        if (singletonSupport) {
             context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
         }
 
