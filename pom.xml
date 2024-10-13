@@ -224,7 +224,7 @@
                             -->
                             <!-- 30-Sep-2023, wrongwrong: For 2.16, compare to 2.15.2 baseline
                             -->
-                            <version>2.17.0</version>
+                            <version>2.18.0</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
@@ -239,43 +239,9 @@
                         <excludes>
                             <!-- public -->
                             <!-- removed -->
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule#KotlinModule(int,boolean,boolean,boolean,com.fasterxml.jackson.module.kotlin.SingletonSupport,boolean,boolean,boolean)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullIsSameAsDefault()
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullIsSameAsDefault(boolean)
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullToEmptyCollection()
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullToEmptyCollection(boolean)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getNullToEmptyMap()
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#nullToEmptyMap(boolean)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getSingletonSupport()
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#singletonSupport(com.fasterxml.jackson.module.kotlin.SingletonSupport)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#getStrictNullChecks()
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#strictNullChecks(boolean)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule$Builder#reflectionCacheSize(int)
-                            </exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#getSingletonSupport()</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.SingletonSupport</exclude>
                             <!-- internal -->
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,java.util.Set,boolean)
-                            </exclude>
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.ReflectionCache#checkConstructorIsCreatorAnnotated(com.fasterxml.jackson.databind.introspect.AnnotatedConstructor,kotlin.jvm.functions.Function1)
-                            </exclude>
 
                         </excludes>
                     </parameter>
