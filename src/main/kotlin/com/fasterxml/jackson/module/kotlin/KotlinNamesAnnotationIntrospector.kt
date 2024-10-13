@@ -1,12 +1,10 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JavaType
 import com.fasterxml.jackson.databind.cfg.MapperConfig
 import com.fasterxml.jackson.databind.introspect.Annotated
 import com.fasterxml.jackson.databind.introspect.AnnotatedClass
-import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
 import com.fasterxml.jackson.databind.introspect.AnnotatedParameter
@@ -16,18 +14,15 @@ import java.lang.reflect.Constructor
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
-import kotlin.reflect.full.companionObject
-import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
-import kotlin.reflect.jvm.javaConstructor
 import kotlin.reflect.jvm.javaGetter
 import kotlin.reflect.jvm.javaType
 
 internal class KotlinNamesAnnotationIntrospector(
     private val cache: ReflectionCache,
-    private val useKotlinPropertyNameForGetter: Boolean
+    private val kotlinPropertyNameAsImplicitName: Boolean
 ) : NopAnnotationIntrospector() {
     private fun getterNameFromJava(member: AnnotatedMethod): String? {
         val name = member.name
@@ -67,7 +62,7 @@ internal class KotlinNamesAnnotationIntrospector(
 
         return when (member) {
             is AnnotatedMethod -> if (member.parameterCount == 0) {
-                if (useKotlinPropertyNameForGetter) {
+                if (kotlinPropertyNameAsImplicitName) {
                     // Fall back to default if it is a getter-like function
                     getterNameFromKotlin(member) ?: getterNameFromJava(member)
                 } else getterNameFromJava(member)
