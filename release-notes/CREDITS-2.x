@@ -18,6 +18,7 @@ Contributors:
 # 2.19.0 (not yet released)
 
 WrongWrong (@k163377)
+* #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName
 * #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport
 
 # 2.18.0 (26-Sep-2024)
