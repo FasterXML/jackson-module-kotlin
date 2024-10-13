@@ -43,7 +43,7 @@ class DslTest {
         assertTrue(module.nullToEmptyCollection)
         assertTrue(module.nullToEmptyMap)
         assertTrue(module.nullIsSameAsDefault)
-        assertTrue(module.enabledSingletonSupport)
+        assertTrue(module.singletonSupport)
         assertTrue(module.strictNullChecks)
     }
 

@@ -22,7 +22,7 @@ import kotlin.reflect.jvm.javaType
 
 internal class KotlinNamesAnnotationIntrospector(
     private val cache: ReflectionCache,
-    private val useKotlinPropertyNameForGetter: Boolean
+    private val kotlinPropertyNameAsImplicitName: Boolean
 ) : NopAnnotationIntrospector() {
     private fun getterNameFromJava(member: AnnotatedMethod): String? {
         val name = member.name
@@ -62,7 +62,7 @@ internal class KotlinNamesAnnotationIntrospector(
 
         return when (member) {
             is AnnotatedMethod -> if (member.parameterCount == 0) {
-                if (useKotlinPropertyNameForGetter) {
+                if (kotlinPropertyNameAsImplicitName) {
                     // Fall back to default if it is a getter-like function
                     getterNameFromKotlin(member) ?: getterNameFromJava(member)
                 } else getterNameFromJava(member)

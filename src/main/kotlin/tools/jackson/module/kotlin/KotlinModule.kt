@@ -1,6 +1,5 @@
 package tools.jackson.module.kotlin
 
-import kotlin.reflect.KClass
 import tools.jackson.databind.MapperFeature
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.module.kotlin.KotlinFeature.*
@@ -18,7 +17,10 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  map object.
  * @property nullIsSameAsDefault     Default false.  Whether to treat null values as absent when deserializing, thereby
  *  using the default value provided in Kotlin.
- * @property enabledSingletonSupport        Default: false.  Whether to enable singleton handling.
+ * @property singletonSupport        Default: false.  Mode for singleton handling.
+ *  See [KotlinFeature.SingletonSupport]
+ * @property enabledSingletonSupport Default: false.  A temporary property that is maintained until the return value of `singletonSupport` is changed.
+ *  It will be removed in 2.21.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
  *  the default, collections which are typed to disallow null members
  *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
@@ -33,7 +35,7 @@ class KotlinModule private constructor(
     val nullToEmptyCollection: Boolean = NullToEmptyCollection.enabledByDefault,
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
-    val enabledSingletonSupport: Boolean = SingletonSupport.enabledByDefault,
+    val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
     val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
@@ -41,7 +43,7 @@ class KotlinModule private constructor(
 
     companion object {
         // Increment when option is added
-        private const val serialVersionUID = 2L
+        private const val serialVersionUID = 3L
     }
 
     @Deprecated(
@@ -72,7 +74,7 @@ class KotlinModule private constructor(
 
         context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
 
-        if (enabledSingletonSupport) {
+        if (singletonSupport) {
             // [module-kotlin#225]: keep Kotlin singletons as singletons
             context.addDeserializerModifier(KotlinValueDeserializerModifier)
         }
