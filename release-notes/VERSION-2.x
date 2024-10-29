@@ -21,6 +21,10 @@ Co-maintainers:
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
 
+2.18.1 (28-Oct-2024)
+
+No changes since 2.18.0
+
 2.18.0 (26-Sep-2024)
 
 #818: The implementation of the search process for the `JsonCreator` (often the primary constructor)
