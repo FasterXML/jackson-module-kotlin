@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.18.1 (28-Oct-2024)
+
+No changes since 2.18.0
+
 2.18.0 (26-Sep-2024)
 
 #818: The implementation of the search process for the `JsonCreator` (often the primary constructor)
