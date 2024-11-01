@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.17.3 (01-Nov-2024)
+
+No changes since 2.17.2
+
 2.17.2 (05-Jul-2024)
 
 #799: Fixed problem with code compiled with 2.17.x losing backward compatibility.
