@@ -18,6 +18,7 @@ class DslTest {
     @Test
     fun createModuleWithoutUsingInitializer() {
         val module = kotlinModule()
+        
         assertNotNull(module)
     }
 
