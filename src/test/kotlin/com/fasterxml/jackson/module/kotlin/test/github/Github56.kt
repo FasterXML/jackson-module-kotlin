@@ -3,7 +3,6 @@ package com.fasterxml.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.module.kotlin.*
 import org.junit.Before
 import org.junit.Test
@@ -67,9 +66,12 @@ class TestGithub56 {
         assertEquals(validJson, result)
     }
 
-    @Test(expected = InvalidDefinitionException::class)
-    fun deserializesWithError() {
-        mapper.readValue<TestGalleryWidget_BAD>(validJson)
+    @Test
+    fun deserializesSuccessful() {
+        val obj = mapper.readValue<TestGalleryWidget_BAD>(validJson)
+        assertEquals("widgetReferenceId", obj.widgetReferenceId)
+        assertEquals(gallery, obj.gallery)
+
     }
 
     @Test

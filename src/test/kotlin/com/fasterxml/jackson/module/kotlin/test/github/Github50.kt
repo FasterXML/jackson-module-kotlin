@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github.failing
+package com.fasterxml.jackson.module.kotlin.test.github;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
@@ -19,10 +19,8 @@ class TestGithub50 {
     @Test
     fun testGithub50UnwrappedError() {
         val json = """{"firstName":"John","lastName":"Smith","position":"Manager"}"""
-        expectFailure<InvalidDefinitionException>("GitHub #50 has been fixed!") {
-            val obj: Employee = jacksonObjectMapper().readValue(json)
-            assertEquals(Name("John", "Smith"), obj.name)
-            assertEquals("Manager", obj.position)
-        }
+        val obj: Employee = jacksonObjectMapper().readValue(json)
+        assertEquals(Name("John", "Smith"), obj.name)
+        assertEquals("Manager", obj.position)
     }
 }
