@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github.failing
+package com.fasterxml.jackson.module.kotlin.test.github;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
