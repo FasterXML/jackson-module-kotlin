@@ -14,11 +14,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java_version: ['8', '17', '21', '22']
+        java_version: ['8', '17', '21', '23']
         # Versions need to align with ones in 'main.yml' workflow
         # kotlin-reflect 1.8.2x has a bug and some tests fail, so we are downgrading to 1.8.10.
         # https://youtrack.jetbrains.com/issue/KT-65156
-        kotlin_version: ['1.8.10', '1.9.23', '2.0.0']
+        kotlin_version: ['1.8.10', '1.9.24', '2.0.21']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     steps:
