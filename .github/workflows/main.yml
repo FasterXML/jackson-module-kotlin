@@ -30,7 +30,7 @@ jobs:
         java_version: ['8', '11', '17', '21', '23']
         # kotlin-reflect 1.8.2x has a bug and some tests fail, so we are downgrading to 1.8.10.
         # https://youtrack.jetbrains.com/issue/KT-65156
-        kotlin_version: ['1.8.10', '1.9.24', '2.0.21', '2.1.0-RC']
+        kotlin_version: ['1.8.10', '1.9.24', '2.0.21', '2.1.0-RC2']
         include:
           - java_version: '8'
             kotlin_version: '1.8.10'
