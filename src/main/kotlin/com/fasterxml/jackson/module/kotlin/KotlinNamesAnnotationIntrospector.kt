@@ -91,13 +91,11 @@ internal class KotlinNamesAnnotationIntrospector(
     ): PotentialCreator? {
         val kClass = valueClass.creatableKotlinClass() ?: return null
 
-        val propertyNames = kClass.memberProperties.map { it.name }.toSet()
-
-        val defaultCreator = kClass.let { _ ->
-            // By default, the primary constructor or the only publicly available constructor may be used
-            val ctor = kClass.primaryConstructor ?: kClass.constructors.takeIf { it.size == 1 }?.single()
-            ctor?.takeIf { it.isPossibleCreator(propertyNames) }
-        }
+        val defaultCreator = kClass.primarilyConstructor()
+            ?.takeIf { ctor ->
+                val propertyNames = kClass.memberProperties.map { it.name }.toSet()
+                ctor.isPossibleCreator(propertyNames)
+            }
             ?: return null
 
         return declaredConstructors.find {
@@ -114,6 +112,9 @@ internal class KotlinNamesAnnotationIntrospector(
 private fun AnnotatedClass.creatableKotlinClass(): KClass<*>? = annotated
     .takeIf { it.isKotlinClass() && !it.isEnum }
     ?.kotlin
+
+// By default, the primary constructor or the only publicly available constructor may be used
+private fun KClass<*>.primarilyConstructor() = primaryConstructor ?: constructors.singleOrNull()
 
 private fun KFunction<*>.isPossibleCreator(propertyNames: Set<String>): Boolean = 0 < parameters.size
     && !isPossibleSingleString(propertyNames)
