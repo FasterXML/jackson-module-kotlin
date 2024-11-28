@@ -22,6 +22,7 @@ Co-maintainers:
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
 
+2.18.2 (27-Nov-2024)
 2.18.1 (28-Oct-2024)
 
 No changes since 2.18.0
