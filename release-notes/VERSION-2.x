@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#861: Kotlin has been upgraded to 1.9.24.
 #858: Minor performance improvement of findDefaultCreator in edge cases.
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
