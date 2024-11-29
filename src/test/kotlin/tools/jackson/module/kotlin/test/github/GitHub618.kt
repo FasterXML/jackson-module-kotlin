@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test.github
 
 import org.junit.Test
 import tools.jackson.core.JsonGenerator
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.module.kotlin.jacksonObjectMapper
@@ -13,7 +13,7 @@ class GitHub618 {
     @JvmInline
     value class V(val value: String) {
         class Serializer : StdSerializer<V>(V::class.java) {
-            override fun serialize(p0: V, p1: JsonGenerator, p2: SerializerProvider) {
+            override fun serialize(p0: V, p1: JsonGenerator, p2: SerializationContext) {
                 p1.writeString(p0.toString())
             }
         }

@@ -6,7 +6,7 @@ import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.SerializationConfig
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.ser.Serializers
 import tools.jackson.databind.ser.std.StdSerializer
@@ -15,25 +15,25 @@ import java.lang.reflect.Modifier
 import java.math.BigInteger
 
 object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
-    override fun serialize(value: UByte, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: UByte, gen: JsonGenerator, ctxt: SerializationContext) {
         gen.writeNumber(value.toShort())
     }
 }
 
 object UShortSerializer : StdSerializer<UShort>(UShort::class.java) {
-    override fun serialize(value: UShort, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: UShort, gen: JsonGenerator, ctxt: SerializationContext) {
         gen.writeNumber(value.toInt())
     }
 }
 
 object UIntSerializer : StdSerializer<UInt>(UInt::class.java) {
-    override fun serialize(value: UInt, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: UInt, gen: JsonGenerator, ctxt: SerializationContext) {
         gen.writeNumber(value.toLong())
     }
 }
 
 object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
-    override fun serialize(value: ULong, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: ULong, gen: JsonGenerator, ctxt: SerializationContext) {
         val longValue = value.toLong()
         when {
             longValue >= 0 -> gen.writeNumber(longValue)
@@ -48,15 +48,15 @@ private fun Class<*>.getStaticJsonValueGetter(): Method? = this.declaredMethods.
 }
 
 object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
-    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: Any, gen: JsonGenerator, ctxt: SerializationContext) {
         val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
         if (unboxed == null) {
-            provider.findNullValueSerializer(null).serialize(null, gen, provider)
+            ctxt.findNullValueSerializer(null).serialize(null, gen, ctxt)
             return
         }
 
-        provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+        ctxt.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, ctxt)
     }
 }
 
@@ -66,13 +66,13 @@ internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer
     ) : ValueClassSerializer<T>(t) {
         private val unboxMethod: Method = t.getMethod("unbox-impl")
 
-        override fun serialize(value: T, gen: JsonGenerator, provider: SerializerProvider) {
+        override fun serialize(value: T, gen: JsonGenerator, ctxt: SerializationContext) {
             val unboxed = unboxMethod.invoke(value)
             // As shown in the processing of the factory function, jsonValueGetter is always a static method.
             val jsonValue: Any? = staticJsonValueGetter.invoke(null, unboxed)
             jsonValue
-                ?.let { provider.findValueSerializer(it::class.java).serialize(it, gen, provider) }
-                ?: provider.findNullValueSerializer(null).serialize(null, gen, provider)
+                ?.let { ctxt.findValueSerializer(it::class.java).serialize(it, gen, ctxt) }
+                ?: ctxt.findNullValueSerializer(null).serialize(null, gen, ctxt)
         }
     }
 

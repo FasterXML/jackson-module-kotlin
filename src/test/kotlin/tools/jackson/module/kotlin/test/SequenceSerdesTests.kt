@@ -4,7 +4,7 @@ import org.junit.Test
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.core.JsonGenerator
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.ser.std.StdSerializer
 import kotlin.test.assertEquals
@@ -47,8 +47,8 @@ class TestSequenceDeserializer {
     }
 
     class ContentSer : StdSerializer<String>(String::class.java) {
-        override fun serialize(value: String, gen: JsonGenerator, provider: SerializerProvider) {
-            provider.writeValue(gen, "$value-ser")
+        override fun serialize(value: String, gen: JsonGenerator, ctxt: SerializationContext) {
+            ctxt.writeValue(gen, "$value-ser")
         }
     }
 

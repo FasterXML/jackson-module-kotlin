@@ -192,7 +192,7 @@ class TestPropertyRequiredness {
     }
 
     private fun introspectSerialization(type: Class<*>, mapper: ObjectMapper): BeanDescription =
-            mapper._serializerProvider().introspectBeanDescription(mapper.constructType(type))
+            mapper._serializationContext().introspectBeanDescription(mapper.constructType(type))
 
     private fun introspectDeserialization(type: Class<*>, mapper: ObjectMapper): BeanDescription =
             mapper._deserializationContext().introspectBeanDescription(mapper.constructType(type))
