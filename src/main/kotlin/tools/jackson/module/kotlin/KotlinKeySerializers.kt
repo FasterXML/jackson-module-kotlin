@@ -6,7 +6,7 @@ import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.SerializationConfig
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.ser.Serializers
 import tools.jackson.databind.ser.std.StdSerializer
@@ -14,17 +14,17 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 
 internal object ValueClassUnboxKeySerializer : StdSerializer<Any>(Any::class.java) {
-    override fun serialize(value: Any, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: Any, gen: JsonGenerator, ctxt: SerializationContext) {
         val method = value::class.java.getMethod("unbox-impl")
         val unboxed = method.invoke(value)
 
         if (unboxed == null) {
-            val javaType = provider.typeFactory.constructType(method.genericReturnType)
-            provider.findNullKeySerializer(javaType, null).serialize(null, gen, provider)
+            val javaType = ctxt.typeFactory.constructType(method.genericReturnType)
+            ctxt.findNullKeySerializer(javaType, null).serialize(null, gen, ctxt)
             return
         }
 
-        provider.findKeySerializer(unboxed::class.java, null).serialize(unboxed, gen, provider)
+        ctxt.findKeySerializer(unboxed::class.java, null).serialize(unboxed, gen, ctxt)
     }
 }
 
@@ -40,15 +40,15 @@ internal class ValueClassStaticJsonKeySerializer<T>(
     private val keyType: Class<*> = staticJsonKeyGetter.returnType
     private val unboxMethod: Method = t.getMethod("unbox-impl")
 
-    override fun serialize(value: T, gen: JsonGenerator, provider: SerializerProvider) {
+    override fun serialize(value: T, gen: JsonGenerator, ctxt: SerializationContext) {
         val unboxed = unboxMethod.invoke(value)
         val jsonKey: Any? = staticJsonKeyGetter.invoke(null, unboxed)
 
         val serializer = jsonKey
-            ?.let { provider.findKeySerializer(keyType, null) }
-            ?: provider.findNullKeySerializer(provider.constructType(keyType), null)
+            ?.let { ctxt.findKeySerializer(keyType, null) }
+            ?: ctxt.findNullKeySerializer(ctxt.constructType(keyType), null)
 
-        serializer.serialize(jsonKey, gen, provider)
+        serializer.serialize(jsonKey, gen, ctxt)
     }
 
     companion object {

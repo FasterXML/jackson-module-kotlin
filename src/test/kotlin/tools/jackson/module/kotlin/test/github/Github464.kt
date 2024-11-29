@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectWriter
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.StdSerializer
@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 class Github464 {
     class UnboxTest {
         object NullValueClassKeySerializer : StdSerializer<ValueClass>(ValueClass::class.java) {
-            override fun serialize(value: ValueClass?, gen: JsonGenerator, provider: SerializerProvider) {
+            override fun serialize(value: ValueClass?, gen: JsonGenerator, ctxt: SerializationContext) {
                 gen.writeName("null-key")
             }
         }
@@ -107,7 +107,7 @@ class Github464 {
         }
 
         object NullValueSerializer : StdSerializer<Any>(Any::class.java) {
-            override fun serialize(value: Any?, gen: JsonGenerator, provider: SerializerProvider) {
+            override fun serialize(value: Any?, gen: JsonGenerator, ctxt: SerializationContext) {
                 gen.writeString("null-value")
             }
         }
@@ -156,13 +156,13 @@ class Github464 {
         value class ValueBySerializer(val value: Int)
 
         object Serializer : StdSerializer<ValueBySerializer>(ValueBySerializer::class.java) {
-            override fun serialize(value: ValueBySerializer, gen: JsonGenerator, provider: SerializerProvider) {
+            override fun serialize(value: ValueBySerializer, gen: JsonGenerator, ctxt: SerializationContext) {
                 gen.writeString(value.value.toString())
             }
         }
 
         object KeySerializer : StdSerializer<ValueBySerializer>(ValueBySerializer::class.java) {
-            override fun serialize(value: ValueBySerializer, gen: JsonGenerator, provider: SerializerProvider) {
+            override fun serialize(value: ValueBySerializer, gen: JsonGenerator, ctxt: SerializationContext) {
                 gen.writeName(value.value.toString())
             }
         }

@@ -1,7 +1,7 @@
 package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.core.JsonGenerator
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.ser.std.StdSerializer
@@ -17,7 +17,7 @@ class GitHub524 {
     @JvmInline
     value class HasSerializer(val value: Int?)
     class Serializer : StdSerializer<HasSerializer>(HasSerializer::class.java) {
-        override fun serialize(value: HasSerializer, gen: JsonGenerator, provider: SerializerProvider) {
+        override fun serialize(value: HasSerializer, gen: JsonGenerator, ctxt: SerializationContext) {
             gen.writeString(value.toString())
         }
     }

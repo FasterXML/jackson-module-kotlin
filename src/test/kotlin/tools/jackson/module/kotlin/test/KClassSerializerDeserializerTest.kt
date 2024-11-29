@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test
 import tools.jackson.core.JsonGenerator
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.DeserializationContext
-import tools.jackson.databind.SerializerProvider
+import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.ValueSerializer
 import tools.jackson.databind.module.SimpleModule
@@ -51,7 +51,7 @@ data class TestDoubleData(
 )
 
 class RoundingSerializer : ValueSerializer<Double>() {
-    override fun serialize(value: Double?, gen: JsonGenerator?, serializers: SerializerProvider?) {
+    override fun serialize(value: Double?, gen: JsonGenerator?, ctxt: SerializationContext?) {
         value?.let {
             gen?.writeNumber(BigDecimal(it).setScale(2, RoundingMode.HALF_UP))
         }
