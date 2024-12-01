@@ -83,7 +83,7 @@ internal class KotlinNamesAnnotationIntrospector(
             }
         } ?: baseType
 
-    override fun findDefaultCreator(
+    override fun findPreferredCreator(
         config: MapperConfig<*>,
         valueClass: AnnotatedClass,
         declaredConstructors: List<PotentialCreator>,
