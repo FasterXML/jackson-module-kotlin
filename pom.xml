@@ -57,8 +57,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <javac.src.version>1.8</javac.src.version>
-        <javac.target.version>1.8</javac.target.version>
+	<!-- as per [databind#4820], minimum of Java 17 for Jackson 3.0 -->
+        <javac.src.version>17</javac.src.version>
+        <javac.target.version>17</javac.target.version>
 
         <version.kotlin>1.9.24</version.kotlin>
 
