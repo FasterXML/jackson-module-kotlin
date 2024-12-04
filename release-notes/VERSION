@@ -1,0 +1,27 @@
+Project: jackson-module-kotlin
+Versions: 3.x (for earlier see VERSION-2.x)
+
+Module that adds support for Kotlin-specific data types, constructs.
+
+Active Maintainers:
+
+* WrongWrong (@k163377) (since 2.15)
+
+Co-maintainers:
+
+* Tatu Saloranta (@cowtowncoder) -- at-large Jackson Author, helps from time to time
+
+Former maintainers:
+
+* Dmitry Spikhalskiy (@Spikhalskiy)
+* Drew Stephens (@dinomite)
+* Jayson Minard (@apatrida) -- original Module Author
+* Vyacheslav Artemyev (@viartemev)
+
+------------------------------------------------------------------------
+=== Releases ===
+------------------------------------------------------------------------
+
+3.0.0 (not yet released)
+
+- Minimum Java baseline: Java 17
