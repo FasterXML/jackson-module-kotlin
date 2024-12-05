@@ -60,7 +60,7 @@ internal class KotlinValueInstantiator(
 
             val paramType = paramDef.type
             var paramVal = if (!isMissing || jsonProp.hasInjectableValueId()) {
-               buffer.getParameter(jsonProp) ?: run {
+               buffer.getParameter(ctxt, jsonProp) ?: run {
                    // Deserializer.getNullValue could not be used because there is no way to get and parse parameters
                    // from the BeanDescription and using AnnotationIntrospector would override user customization.
                    if (requireValueClassSpecialNullValue(paramDef.type.isMarkedNullable, valueDeserializer)) {
@@ -77,7 +77,7 @@ internal class KotlinValueInstantiator(
                     // do not try to create any object if it is nullable and the value is missing
                     paramType.isMarkedNullable -> null
                     // Primitive types always try to get from a buffer, considering several settings
-                    jsonProp.type.isPrimitive -> buffer.getParameter(jsonProp)
+                    jsonProp.type.isPrimitive -> buffer.getParameter(ctxt, jsonProp)
                     // to get suitable "missing" value provided by deserializer
                     else -> valueDeserializer?.getAbsentValue(ctxt)
                 }
