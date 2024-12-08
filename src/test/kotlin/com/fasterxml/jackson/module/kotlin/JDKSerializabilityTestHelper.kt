@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import junit.framework.TestCase
+import org.junit.jupiter.api.Assertions.fail
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
@@ -14,14 +14,13 @@ fun jdkSerialize(o: Any): ByteArray {
     return bytes.toByteArray()
 }
 
-fun <T> jdkDeserialize(raw: ByteArray): T? {
+fun <T> jdkDeserialize(raw: ByteArray): T {
     val objIn = ObjectInputStream(ByteArrayInputStream(raw))
     return try {
         @Suppress("UNCHECKED_CAST")
         objIn.readObject() as T
     } catch (e: ClassNotFoundException) {
-        TestCase.fail("Missing class: " + e.message)
-        null
+        fail("Missing class: " + e.message)
     } finally {
         objIn.close()
     }
