@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.defaultMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
 import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import kotlin.test.Test
 
@@ -50,12 +51,14 @@ class DeserializeByConstructorWithDefaultArgumentsTest {
         val p31: Primitive = Primitive(31)
     )
 
-    @Test(expected = KotlinReflectionInternalError::class)
+    @Test
     fun test32() {
-        assertEquals(Dst32(), defaultMapper.readValue<Dst32>("{}"))
-        // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
-        //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
-        if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
+        assertThrows<KotlinReflectionInternalError> {
+            assertEquals(Dst32(), defaultMapper.readValue<Dst32>("{}"))
+            // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
+            //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
+            if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
+        }
     }
 
     data class Dst33(
@@ -166,12 +169,14 @@ class DeserializeByConstructorWithDefaultArgumentsTest {
         val p63: Primitive = Primitive(63)
     )
 
-    @Test(expected = KotlinReflectionInternalError::class)
+    @Test
     fun test64() {
-        assertEquals(Dst64(), defaultMapper.readValue<Dst64>("{}"))
-        // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
-        //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
-        if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
+        assertThrows<KotlinReflectionInternalError> {
+            assertEquals(Dst64(), defaultMapper.readValue<Dst64>("{}"))
+            // TODO: #762 is resolved after Kotlin 2.0, so the reason why throw is done is to make CI with Kotlin 2.0 succeed.
+            //   After upgrading to Kotlin 2.0, remove exception-related descriptions.
+            if (KotlinVersion.CURRENT.major >= 2) throw KotlinReflectionInternalError("")
+        }
     }
 
     data class Dst65(

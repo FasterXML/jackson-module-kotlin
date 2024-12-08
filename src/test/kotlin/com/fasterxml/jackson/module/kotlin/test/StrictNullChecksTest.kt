@@ -9,6 +9,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Ignore
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNull
 
 class StrictNullChecksTest {
@@ -27,10 +28,12 @@ class StrictNullChecksTest {
 
     private data class ClassWithListOfInt(val samples: List<Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testListOfInt() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<ClassWithListOfInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<ClassWithListOfInt>(json)
+        }
     }
 
     private data class ClassWithNullableListOfInt(val samples: List<Int>?)
@@ -55,10 +58,12 @@ class StrictNullChecksTest {
 
     private data class ClassWithArrayOfInt(val samples: Array<Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testArrayOfInt() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<ClassWithArrayOfInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<ClassWithArrayOfInt>(json)
+        }
     }
 
     private data class ClassWithNullableArrayOfInt(val samples: Array<Int>?)
@@ -83,10 +88,12 @@ class StrictNullChecksTest {
 
     private data class ClassWithMapOfStringToInt(val samples: Map<String, Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testMapOfStringToIntWithNullValue() {
-        val json = """{ "samples": { "key": null } }"""
-        mapper.readValue<ClassWithMapOfStringToInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{ "samples": { "key": null } }"""
+            mapper.readValue<ClassWithMapOfStringToInt>(json)
+        }
     }
 
     private data class ClassWithNullableMapOfStringToInt(val samples: Map<String, Int>?)
@@ -110,10 +117,12 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testListOfGenericWithNullValue() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<TestClass<List<Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<TestClass<List<Int>>>(json)
+        }
     }
 
     @Test
@@ -124,10 +133,12 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testMapOfGenericWithNullValue() {
-        val json = """{ "samples": { "key": null } }"""
-        mapper.readValue<TestClass<Map<String, Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{ "samples": { "key": null } }"""
+            mapper.readValue<TestClass<Map<String, Int>>>(json)
+        }
     }
 
     @Test
@@ -138,9 +149,11 @@ class StrictNullChecksTest {
     }
 
     @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testArrayOfGenericWithNullValue() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<TestClass<Array<Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<TestClass<Array<Int>>>(json)
+        }
     }
 }

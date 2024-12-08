@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class TestGithub168 {
@@ -17,10 +18,12 @@ class TestGithub168 {
         assertEquals("whatever", obj.baz)
     }
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testIfRequiredIsReallyRequiredWhenAbsent() {
-        val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
-        assertEquals("whatever", obj.baz)
+        assertThrows<MissingKotlinParameterException> {
+            val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
+            assertEquals("whatever", obj.baz)
+        }
     }
 
     @Test

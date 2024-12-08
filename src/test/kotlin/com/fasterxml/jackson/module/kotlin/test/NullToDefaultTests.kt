@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
 import org.junit.Test
+import org.junit.jupiter.api.assertThrows
 
 class TestNullToDefault {
 
@@ -139,13 +140,15 @@ class TestNullToDefault {
         Assert.assertEquals(true, item.canBeProcessed)
     }
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun shouldThrowExceptionWhenProvidedNullForNotNullFieldWithoutDefault() {
-        createMapper(true).readValue<TestClass>(
-            """{
+        assertThrows<MissingKotlinParameterException> {
+            createMapper(true).readValue<TestClass>(
+                """{
 						"text": null
  				}"""
-        )
+            )
+        }
     }
 
     @Test
