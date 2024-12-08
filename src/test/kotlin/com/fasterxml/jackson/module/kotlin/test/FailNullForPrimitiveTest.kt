@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import junit.framework.TestCase.assertEquals
 import org.junit.Assert.assertThrows
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 class FailNullForPrimitiveTest {
     data class Dto(

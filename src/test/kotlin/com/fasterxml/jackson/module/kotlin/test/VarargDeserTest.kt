@@ -7,7 +7,7 @@ import junit.framework.TestCase.assertTrue
 import org.junit.Ignore
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 // from https://github.com/ProjectMapK/jackson-module-kogera/blob/0631cd3b07c7fb6971a00ac1f6811b4367a1720e/src/test/kotlin/io/github/projectmapk/jackson/module/kogera/zIntegration/deser/VarargTest.kt#L1
 @RunWith(Enclosed::class)

@@ -7,7 +7,7 @@ import org.junit.runner.RunWith
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.hasAnnotation
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue

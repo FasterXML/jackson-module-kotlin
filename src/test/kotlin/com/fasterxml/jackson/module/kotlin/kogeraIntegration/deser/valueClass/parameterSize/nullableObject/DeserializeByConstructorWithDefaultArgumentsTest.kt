@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Nu
 import org.junit.Assert.assertEquals
 import org.junit.jupiter.api.assertThrows
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 /**
  * Up to argument size 32 there is one mask argument for the default argument,

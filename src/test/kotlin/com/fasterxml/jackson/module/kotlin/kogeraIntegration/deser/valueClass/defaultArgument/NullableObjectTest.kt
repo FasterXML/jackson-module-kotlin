@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 class NullableObjectTest {
     companion object {

@@ -10,7 +10,7 @@ import org.junit.Ignore
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
 import java.lang.reflect.InvocationTargetException
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 @RunWith(Enclosed::class)
 class WithoutCustomDeserializeMethodTest {

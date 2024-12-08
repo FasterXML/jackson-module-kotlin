@@ -11,7 +11,7 @@ import org.junit.Assert.assertThrows
 import org.junit.Ignore
 import org.junit.experimental.runners.Enclosed
 import org.junit.runner.RunWith
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 @RunWith(Enclosed::class)
 class SpecifiedForObjectMapperTest {
