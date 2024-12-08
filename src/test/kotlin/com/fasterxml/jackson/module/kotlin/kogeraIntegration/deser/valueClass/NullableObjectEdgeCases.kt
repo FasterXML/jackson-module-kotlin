@@ -10,9 +10,9 @@ import com.fasterxml.jackson.module.kotlin.WrapsNullableValueClassDeserializer
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class NullableObjectEdgeCases {
     @JvmInline
@@ -61,7 +61,7 @@ class NullableObjectEdgeCases {
     // There is a problem with #51, so it is a failing test.
     @Test
     fun `Nulls_SKIP works`() {
-        assertThrows("#761(KT-57357) fixed", KotlinReflectionInternalError::class.java) {
+        assertThrows<KotlinReflectionInternalError>("#761(KT-57357) fixed") {
             val result = jacksonObjectMapper().readValue<NullsSkip>("""{"nn":null,"n":null}""")
             assertEquals(NullValue(VC("skip"), VC("skip")), result)
         }
