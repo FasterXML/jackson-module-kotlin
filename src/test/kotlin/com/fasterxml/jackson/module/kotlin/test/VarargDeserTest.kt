@@ -2,8 +2,8 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
+ import org.junit.jupiter.api.Assertions.assertEquals
+ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
