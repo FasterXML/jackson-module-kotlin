@@ -7,8 +7,8 @@ import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNull
 
@@ -116,7 +116,7 @@ class StrictNullChecksTest {
         assertThat(stateObj.samples, equalTo(listOf(1, 2)))
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
+    @Disabled // this is a hard problem to solve and is currently not addressed
     @Test
     fun testListOfGenericWithNullValue() {
         assertThrows<MissingKotlinParameterException> {
@@ -132,7 +132,7 @@ class StrictNullChecksTest {
         assertThat(stateObj.samples, equalTo(mapOf("key" to 1)))
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
+    @Disabled // this is a hard problem to solve and is currently not addressed
     @Test
     fun testMapOfGenericWithNullValue() {
         assertThrows<MissingKotlinParameterException> {
@@ -148,7 +148,7 @@ class StrictNullChecksTest {
         assertThat(stateObj.samples, equalTo(arrayOf(1, 2)))
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
+    @Disabled // this is a hard problem to solve and is currently not addressed
     @Test
     fun testArrayOfGenericWithNullValue() {
         assertThrows<MissingKotlinParameterException> {
