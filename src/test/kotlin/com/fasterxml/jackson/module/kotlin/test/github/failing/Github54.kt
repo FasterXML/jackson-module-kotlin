@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.deser.UnresolvedForwardReference
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub54 {
     @Test

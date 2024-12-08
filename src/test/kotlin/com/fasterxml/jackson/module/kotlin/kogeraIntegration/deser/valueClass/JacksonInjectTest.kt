@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class JacksonInjectTest {
     // This is specified as a getter because there is a possibility of problems if it is assigned to a field.

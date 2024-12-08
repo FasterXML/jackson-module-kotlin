@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub104 {
     abstract class SuperClass(val name: String)

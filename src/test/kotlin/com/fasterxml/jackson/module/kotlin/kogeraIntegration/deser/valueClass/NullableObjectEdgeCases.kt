@@ -12,7 +12,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import kotlin.reflect.jvm.internal.KotlinReflectionInternalError
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class NullableObjectEdgeCases {
     @JvmInline

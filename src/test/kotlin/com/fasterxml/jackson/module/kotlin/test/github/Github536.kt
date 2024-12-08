@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonKey
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.testPrettyWriter
 import junit.framework.TestCase.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class Github536 {
     @JvmInline

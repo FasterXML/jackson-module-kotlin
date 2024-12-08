@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub207 {
     open class Wrapper(@JsonValue val value: String) {

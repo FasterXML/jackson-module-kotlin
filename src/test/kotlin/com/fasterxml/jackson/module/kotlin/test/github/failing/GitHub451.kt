@@ -3,7 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test.github.failing
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
 import org.junit.ComparisonFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class GitHub451 {

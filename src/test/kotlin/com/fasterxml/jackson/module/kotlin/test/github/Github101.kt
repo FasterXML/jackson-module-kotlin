@@ -3,7 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.util.UUID
 import kotlin.test.assertEquals
 

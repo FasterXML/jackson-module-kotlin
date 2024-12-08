@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub124 {
     // test for [module-kotlin#124]: broken in 2.9.3, fixed in 2.9.6

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PrimitiveTest {
     companion object {

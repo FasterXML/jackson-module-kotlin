@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
 class ReflectionCacheTest {

@@ -11,7 +11,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversi
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

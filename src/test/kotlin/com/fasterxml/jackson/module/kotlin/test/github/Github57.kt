@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.KeyDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.module.kotlin.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub57 {
     data class Github57Data(val map: Map<Pair<String, String>, String>)

@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test
 
 import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestHelpersTest {
