@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NonNullObject
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 

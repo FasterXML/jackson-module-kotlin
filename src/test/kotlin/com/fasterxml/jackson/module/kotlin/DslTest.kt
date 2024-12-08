@@ -7,7 +7,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
-import org.junit.Assert.assertNotNull
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse

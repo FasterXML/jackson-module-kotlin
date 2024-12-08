@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.No
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 private fun Primitive.modify(): Primitive = Primitive(v + 100)

@@ -6,7 +6,7 @@ import com.fasterxml.jackson.module.kotlin.callPrimaryConstructor
 import com.fasterxml.jackson.module.kotlin.defaultMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 // Convert the property p to q (but not the value) to make it an input to the factory function.

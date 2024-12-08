@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import java.math.BigInteger
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Assert.assertThrows
+import org.junit.jupiter.api.Assertions.assertThrows
 
 internal class UnsignedNumbersTests {
 

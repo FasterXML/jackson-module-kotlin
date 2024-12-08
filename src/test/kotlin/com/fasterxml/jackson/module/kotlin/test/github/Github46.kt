@@ -1,7 +1,7 @@
 package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.module.kotlin.*
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.reflect.full.primaryConstructor
 import kotlin.test.assertEquals
@@ -19,7 +19,7 @@ class TestGithub46 {
         val rejson = mapper.writeValueAsString(data)
 
         // then
-        Assert.assertEquals(json, rejson)
+        assertEquals(json, rejson)
     }
 
     @Test fun byReflectionDo32() {
