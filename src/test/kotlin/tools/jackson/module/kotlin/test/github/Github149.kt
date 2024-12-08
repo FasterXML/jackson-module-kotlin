@@ -6,8 +6,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.jacksonMapperBuilder
-import org.junit.Test
 import tools.jackson.databind.MapperFeature
+import org.junit.jupiter.api.Test
 
 @Suppress("UNUSED_VARIABLE")
 class TestGithub149 {

@@ -5,7 +5,7 @@ import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.module.kotlin.jacksonMapperBuilder
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestIteratorSubclass {

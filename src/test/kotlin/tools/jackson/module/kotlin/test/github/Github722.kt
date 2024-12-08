@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.InjectableValues
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.jacksonObjectMapper
-import kotlin.test.Test
+import kotlin.math.exp
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class Github722 {

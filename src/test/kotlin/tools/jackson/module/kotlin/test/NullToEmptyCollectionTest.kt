@@ -4,7 +4,7 @@ import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import tools.jackson.module.kotlin.kotlinModule
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestNullToEmptyCollection {

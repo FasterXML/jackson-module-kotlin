@@ -1,8 +1,8 @@
 package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.module.kotlin.*
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 import kotlin.reflect.full.primaryConstructor
 import kotlin.test.assertEquals
 
@@ -19,7 +19,7 @@ class TestGithub46 {
         val rejson = mapper.writeValueAsString(data)
 
         // then
-        Assert.assertEquals(json, rejson)
+        assertEquals(json, rejson)
     }
 
     @Test fun byReflectionDo32() {

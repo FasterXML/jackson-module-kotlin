@@ -3,12 +3,13 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.module.kotlin.jacksonObjectMapper
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestGithub52 {
     private val mapper = jacksonObjectMapper()
 
-    @org.junit.Test
+    @Test
     fun testBooleanPropertyInConstructor() {
         data class BooleanPropertyInConstructor(
                 @JsonProperty("is_bar")
@@ -18,7 +19,7 @@ class TestGithub52 {
         assertEquals("""{"is_bar":true}""", mapper.writeValueAsString(BooleanPropertyInConstructor()))
     }
 
-    @org.junit.Test
+    @Test
     fun testIsPrefixedBooleanPropertyInConstructor() {
         data class IsPrefixedBooleanPropertyInConstructor(
                 @JsonProperty("is_bar2")
@@ -28,7 +29,7 @@ class TestGithub52 {
         assertEquals("""{"is_bar2":true}""", mapper.writeValueAsString(IsPrefixedBooleanPropertyInConstructor()))
     }
 
-    @org.junit.Test
+    @Test
     fun testIsPrefixedStringPropertyInConstructor() {
         data class IsPrefixedStringPropertyInConstructor(
                 @JsonProperty("is_lol")
@@ -38,7 +39,7 @@ class TestGithub52 {
         assertEquals("""{"is_lol":"sdf"}""", mapper.writeValueAsString(IsPrefixedStringPropertyInConstructor()))
     }
 
-    @org.junit.Test
+    @Test
     fun testBooleanPropertyInBody() {
         data class BooleanPropertyInBody(
                 @JsonIgnore val placeholder: String = "placeholder"
@@ -50,7 +51,7 @@ class TestGithub52 {
         assertEquals("""{"is_foo":true}""", mapper.writeValueAsString(BooleanPropertyInBody()))
     }
 
-    @org.junit.Test
+    @Test
     fun testIsPrefixedBooleanPropertyInBody() {
         data class IsPrefixedBooleanPropertyInBody(
                 @JsonIgnore val placeholder: String = "placeholder"

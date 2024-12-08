@@ -5,10 +5,11 @@ import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNull
 
 class StrictNullChecksTest {
@@ -24,15 +25,17 @@ class StrictNullChecksTest {
     fun testListOfNullableInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithListOfNullableInt>(json)
-        assertThat(stateObj.samples, equalTo(listOf(1, null)))
+        assertEquals(listOf(1, null), stateObj.samples)
     }
 
     private data class ClassWithListOfInt(val samples: List<Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testListOfInt() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<ClassWithListOfInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<ClassWithListOfInt>(json)
+        }
     }
 
     private data class ClassWithNullableListOfInt(val samples: List<Int>?)
@@ -52,15 +55,17 @@ class StrictNullChecksTest {
     fun testArrayOfNullableInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithArrayOfNullableInt>(json)
-        assertThat(stateObj.samples, equalTo(arrayOf(1, null)))
+        assertArrayEquals(arrayOf(1, null), stateObj.samples)
     }
 
     private data class ClassWithArrayOfInt(val samples: Array<Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testArrayOfInt() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<ClassWithArrayOfInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<ClassWithArrayOfInt>(json)
+        }
     }
 
     private data class ClassWithNullableArrayOfInt(val samples: Array<Int>?)
@@ -80,15 +85,17 @@ class StrictNullChecksTest {
     fun testMapOfStringToNullableInt() {
         val json = """{ "samples": { "key": null } }"""
         val stateObj = mapper.readValue<ClassWithMapOfStringToNullableInt>(json)
-        assertThat(stateObj.samples, equalTo(mapOf<String, Int?>("key" to null)))
+        assertEquals(mapOf<String, Int?>("key" to null), stateObj.samples)
     }
 
     private data class ClassWithMapOfStringToInt(val samples: Map<String, Int>)
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testMapOfStringToIntWithNullValue() {
-        val json = """{ "samples": { "key": null } }"""
-        mapper.readValue<ClassWithMapOfStringToInt>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{ "samples": { "key": null } }"""
+            mapper.readValue<ClassWithMapOfStringToInt>(json)
+        }
     }
 
     private data class ClassWithNullableMapOfStringToInt(val samples: Map<String, Int>?)
@@ -108,41 +115,47 @@ class StrictNullChecksTest {
     fun testListOfGeneric() {
         val json = """{"samples":[1, 2]}"""
         val stateObj = mapper.readValue<TestClass<List<Int>>>(json)
-        assertThat(stateObj.samples, equalTo(listOf(1, 2)))
+        assertEquals(listOf(1, 2), stateObj.samples)
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Disabled // this is a hard problem to solve and is currently not addressed
+    @Test
     fun testListOfGenericWithNullValue() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<TestClass<List<Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<TestClass<List<Int>>>(json)
+        }
     }
 
     @Test
     fun testMapOfGeneric() {
         val json = """{ "samples": { "key": 1 } }"""
         val stateObj = mapper.readValue<TestClass<Map<String, Int>>>(json)
-        assertThat(stateObj.samples, equalTo(mapOf("key" to 1)))
+        assertEquals(mapOf("key" to 1), stateObj.samples)
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Disabled // this is a hard problem to solve and is currently not addressed
+    @Test
     fun testMapOfGenericWithNullValue() {
-        val json = """{ "samples": { "key": null } }"""
-        mapper.readValue<TestClass<Map<String, Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{ "samples": { "key": null } }"""
+            mapper.readValue<TestClass<Map<String, Int>>>(json)
+        }
     }
 
     @Test
     fun testArrayOfGeneric() {
         val json = """{"samples":[1, 2]}"""
         val stateObj = mapper.readValue<TestClass<Array<Int>>>(json)
-        assertThat(stateObj.samples, equalTo(arrayOf(1, 2)))
+        assertArrayEquals(arrayOf(1, 2), stateObj.samples)
     }
 
-    @Ignore // this is a hard problem to solve and is currently not addressed
-    @Test(expected = MissingKotlinParameterException::class)
+    @Disabled // this is a hard problem to solve and is currently not addressed
+    @Test
     fun testArrayOfGenericWithNullValue() {
-        val json = """{"samples":[1, null]}"""
-        mapper.readValue<TestClass<Array<Int>>>(json)
+        assertThrows<MissingKotlinParameterException> {
+            val json = """{"samples":[1, null]}"""
+            mapper.readValue<TestClass<Array<Int>>>(json)
+        }
     }
 }

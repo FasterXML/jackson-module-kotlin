@@ -1,6 +1,6 @@
 package tools.jackson.module.kotlin
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
 

@@ -7,7 +7,7 @@ import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.test.expectFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestGithub153 {

@@ -2,15 +2,12 @@ package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonUnwrapped
-
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.*
-
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class TestGithub56 {
+private class TestGithub56 {
 
     private data class TestGalleryWidget_BAD(
             val widgetReferenceId: String,
@@ -20,7 +17,6 @@ class TestGithub56 {
     private data class TestGalleryWidget_GOOD(val widgetReferenceId: String) {
         @JsonUnwrapped lateinit var gallery: TestGallery
     }
-
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private data class TestGallery(
@@ -40,7 +36,7 @@ class TestGithub56 {
             val crops: Map<String, String>? = null
     )
 
-    lateinit var mapper: ObjectMapper
+    val mapper: ObjectMapper = jacksonObjectMapper()
 
     private val gallery = TestGallery(
             id = "id",
@@ -55,11 +51,6 @@ class TestGithub56 {
     val validJson = """
          {"widgetReferenceId":"widgetReferenceId","id":"id","headline":"headline","intro":"intro","role":"role","images":[{"id":"testImage1"},{"id":"testImage2"}]}
     """.trim()
-
-    @Before
-    fun setUp() {
-        mapper = jacksonObjectMapper()
-    }
 
     @Test
     fun serializes() {

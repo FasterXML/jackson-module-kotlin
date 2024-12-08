@@ -3,13 +3,13 @@ package tools.jackson.module.kotlin.test
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING
-import org.junit.Test
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.datatype.jsr310.JavaTimeModule
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
+import org.junit.jupiter.api.Test
 import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals

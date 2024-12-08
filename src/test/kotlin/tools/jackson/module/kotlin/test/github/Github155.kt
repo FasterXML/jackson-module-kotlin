@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub155 {
     data class Foo @JvmOverloads constructor(

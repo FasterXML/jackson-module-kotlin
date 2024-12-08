@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonValue
 import tools.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestGithub120 {

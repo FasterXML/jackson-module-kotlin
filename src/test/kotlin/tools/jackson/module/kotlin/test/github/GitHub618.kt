@@ -1,11 +1,11 @@
 package tools.jackson.module.kotlin.test.github
 
-import org.junit.Test
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.annotation.JsonSerialize
 import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.module.kotlin.jacksonObjectMapper
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class GitHub618 {

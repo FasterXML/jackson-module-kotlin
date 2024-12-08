@@ -1,11 +1,10 @@
 package tools.jackson.module.kotlin.test.github
 
-
 import com.fasterxml.jackson.annotation.JsonValue
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class TestGithub207 {
     open class Wrapper(@JsonValue val value: String) {
@@ -42,7 +41,7 @@ class TestGithub207 {
         val deserialized = objectMapper.readValue<Wrapper>(json)
 
         // then
-        Assert.assertEquals(Wrapper("foo"), deserialized)
+        assertEquals(Wrapper("foo"), deserialized)
     }
 
     @Test
@@ -54,7 +53,7 @@ class TestGithub207 {
         val serialized = objectMapper.writeValueAsString(wrapperObject)
 
         // then
-        Assert.assertEquals("\"foo\"", serialized)
+        assertEquals("\"foo\"", serialized)
     }
 
     @Test
@@ -66,7 +65,7 @@ class TestGithub207 {
         val deserialized = objectMapper.readValue<ExtendedWrapper>(json)
 
         // then
-        Assert.assertEquals(ExtendedWrapper("foo"), deserialized)
+        assertEquals(ExtendedWrapper("foo"), deserialized)
     }
 
     @Test
@@ -78,7 +77,7 @@ class TestGithub207 {
         val serialized = objectMapper.writeValueAsString(wrapperObject)
 
         // then
-        Assert.assertEquals("\"foo\"", serialized)
+        assertEquals("\"foo\"", serialized)
     }
 
 }

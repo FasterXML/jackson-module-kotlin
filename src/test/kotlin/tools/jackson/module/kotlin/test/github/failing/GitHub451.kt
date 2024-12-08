@@ -2,8 +2,9 @@ package tools.jackson.module.kotlin.test.github.failing
 
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.test.expectFailure
-import org.junit.ComparisonFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.opentest4j.AssertionFailedError
 import kotlin.test.assertEquals
 
 class GitHub451 {
@@ -25,7 +26,7 @@ class GitHub451 {
 
         val src = Target("a", "b")
         val json = mapper.writeValueAsString(src)
-        expectFailure<ComparisonFailure>("GitHub #451 has been fixed!") {
+        assertThrows<AssertionFailedError>("GitHub #451 has been fixed!") {
             assertEquals(expected, json)
         }
     }

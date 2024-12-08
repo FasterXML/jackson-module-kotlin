@@ -6,8 +6,8 @@ import tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NonNullObj
 import tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
 import tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 private fun Primitive.modify(): Primitive = Primitive(v + 100)
 private fun NonNullObject.modify(): NonNullObject = NonNullObject("$v-creator")

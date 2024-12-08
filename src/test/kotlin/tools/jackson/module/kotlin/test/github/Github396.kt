@@ -2,7 +2,7 @@ package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.dataformat.xml.XmlMapper
 import tools.jackson.module.kotlin.kotlinModule
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class Github396 {

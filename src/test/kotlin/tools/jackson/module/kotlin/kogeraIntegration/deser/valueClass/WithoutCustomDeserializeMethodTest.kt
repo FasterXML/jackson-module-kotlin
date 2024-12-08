@@ -3,24 +3,21 @@ package tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass
 import tools.jackson.module.kotlin.defaultMapper
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
-import org.junit.Ignore
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Test
 import java.lang.reflect.InvocationTargetException
-import kotlin.test.Test
 
-@RunWith(Enclosed::class)
 class WithoutCustomDeserializeMethodTest {
-    @Ignore
     companion object {
         val mapper = jacksonObjectMapper()
         val throwable = IllegalArgumentException("test")
     }
 
-    class DirectDeserializeTest {
+    @Nested
+    inner class DirectDeserializeTest {
         @Test
         fun primitive() {
             val result = defaultMapper.readValue<Primitive>("1")
@@ -34,7 +31,8 @@ class WithoutCustomDeserializeMethodTest {
         }
 
         @Suppress("ClassName")
-        class NullableObject_ {
+        @Nested
+        inner class NullableObject_ {
             @Test
             fun value() {
                 val result = defaultMapper.readValue<NullableObject>(""""foo"""")
@@ -44,32 +42,14 @@ class WithoutCustomDeserializeMethodTest {
             // failing
             @Test
             fun nullString() {
-                // #209 has been fixed.
-                assertThrows(NullPointerException::class.java) {
+                org.junit.jupiter.api.assertThrows<NullPointerException>("#209 has been fixed.") {
                     val result = defaultMapper.readValue<NullableObject>("null")
                     assertEquals(NullableObject(null), result)
                 }
             }
         }
-
-        @Ignore
-        @JvmInline
-        value class HasCheckConstructor(val value: Int) {
-            init {
-                if (value < 0) throw throwable
-            }
-        }
-
-        @Test
-        fun callConstructorCheckTest() {
-            val e = assertThrows(InvocationTargetException::class.java) {
-                defaultMapper.readValue<HasCheckConstructor>("-1")
-            }
-            assertTrue(e.cause === throwable)
-        }
     }
 
-    @Ignore
     data class Dst(
         val pNn: Primitive,
         val pN: Primitive?,
@@ -79,38 +59,49 @@ class WithoutCustomDeserializeMethodTest {
         val noN: NullableObject?
     )
 
-    class InParameterDeserialize {
-        @Test
-        fun withoutNull() {
-            val expected = Dst(
-                Primitive(1),
-                Primitive(2),
-                NonNullObject("foo"),
-                NonNullObject("bar"),
-                NullableObject("baz"),
-                NullableObject("qux")
-            )
-            val src = mapper.writeValueAsString(expected)
-            val result = mapper.readValue<Dst>(src)
+    @Test
+    fun withoutNull() {
+        val expected = Dst(
+            Primitive(1),
+            Primitive(2),
+            NonNullObject("foo"),
+            NonNullObject("bar"),
+            NullableObject("baz"),
+            NullableObject("qux")
+        )
+        val src = mapper.writeValueAsString(expected)
+        val result = mapper.readValue<Dst>(src)
 
-            assertEquals(expected, result)
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun withNull() {
+        val expected = Dst(
+            Primitive(1),
+            null,
+            NonNullObject("foo"),
+            null,
+            NullableObject(null),
+            null
+        )
+        val src = mapper.writeValueAsString(expected)
+        val result = mapper.readValue<Dst>(src)
+
+        assertEquals(expected, result)
+    }
+
+    @JvmInline
+    value class HasCheckConstructor(val value: Int) {
+        init {
+            if (value < 0) throw throwable
         }
+    }
 
-        @Test
-        fun withNull() {
-            val expected = Dst(
-                Primitive(1),
-                null,
-                NonNullObject("foo"),
-                null,
-                NullableObject(null),
-                null
-            )
-            val src = mapper.writeValueAsString(expected)
-            val result = mapper.readValue<Dst>(src)
-
-            assertEquals(expected, result)
-        }
+    @Test
+    fun callConstructorCheckTest() {
+        val e = assertThrows<InvocationTargetException> { defaultMapper.readValue<HasCheckConstructor>("-1") }
+        assertTrue(e.cause === throwable)
     }
 
     // If all JsonCreator tests are OK, no need to check throws from factory functions.

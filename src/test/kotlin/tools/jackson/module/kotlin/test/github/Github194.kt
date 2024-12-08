@@ -1,11 +1,8 @@
 package tools.jackson.module.kotlin.test.github
 
-import java.util.UUID
-
 import kotlin.test.assertEquals
-
-import org.junit.Test
-
+import org.junit.jupiter.api.Test
+import java.util.UUID
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import tools.jackson.databind.MapperFeature

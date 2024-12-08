@@ -5,7 +5,7 @@ import tools.jackson.databind.exc.InvalidDefinitionException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.test.expectFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestGithub50 {

@@ -5,7 +5,7 @@ import tools.jackson.module.kotlin.assertReflectEquals
 import tools.jackson.module.kotlin.callPrimaryConstructor
 import tools.jackson.module.kotlin.defaultMapper
 import tools.jackson.module.kotlin.readValue
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 // Convert the property p to q (but not the value) to make it an input to the factory function.

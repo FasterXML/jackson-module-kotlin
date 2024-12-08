@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import tools.jackson.databind.exc.InvalidDefinitionException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
 
 // Test on the case of deserialization by ValueClassBoxDeserializer
 class HandledByKogeraTest {

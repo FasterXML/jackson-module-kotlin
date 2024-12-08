@@ -11,9 +11,8 @@ import tools.jackson.module.kotlin.addDeserializer
 import tools.jackson.module.kotlin.addSerializer
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.readValue
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -28,8 +27,8 @@ class KClassSerializerDeserializerTest {
     fun `test custom serializer expecting object serialized with rounding serializer applied`() {
         val jsonString = objectMapper.writeValueAsString(TestDoubleData(nonNullVal = 1.5567, nullVal = 1.5678))
         val testResult = objectMapper.readValue(jsonString, TestDoubleData::class.java)
-        assertThat(testResult.nonNullVal, equalTo(1.56))
-        assertThat(testResult.nullVal, equalTo(1.57))
+        assertEquals(1.56, testResult.nonNullVal)
+        assertEquals(1.57, testResult.nullVal)
     }
 
     @Test
@@ -40,8 +39,8 @@ class KClassSerializerDeserializerTest {
                 "nullVal":1.5678
             }
         """.trimIndent())
-        assertThat(testResult.nonNullVal, equalTo(1.56))
-        assertThat(testResult.nullVal, equalTo(1.57))
+        assertEquals(1.56, testResult.nonNullVal)
+        assertEquals(1.57, testResult.nullVal)
     }
 }
 

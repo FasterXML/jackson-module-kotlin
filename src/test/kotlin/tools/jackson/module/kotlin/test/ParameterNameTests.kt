@@ -6,10 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.PropertyNamingStrategies
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.module.kotlin.*
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Test
 import tools.jackson.databind.MapperFeature
+import org.junit.jupiter.api.Test
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
@@ -36,12 +34,12 @@ class ParameterNameTests {
             createDtField: Date = createdDt,
             isNameField: Boolean = isName,
         ) {
-            assertThat(nameField, equalTo("Frank"))
-            assertThat(ageField, equalTo(30))
-            assertThat(addressField, equalTo("something here"))
-            assertThat(wrongNameField, equalTo(true))
-            assertThat(createDtField, equalTo(Date(1477419948000)))
-            assertThat(isNameField, equalTo(false))
+            assertEquals("Frank", nameField)
+            assertEquals(30, ageField)
+            assertEquals("something here", addressField)
+            assertEquals(true, wrongNameField)
+            assertEquals(Date(1477419948000), createDtField)
+            assertFalse(isNameField)
         }
     }
 
@@ -118,7 +116,7 @@ class ParameterNameTests {
         val test1out = StringWriter()
         normalCasedMapper.writeValue(test1out, stateObj)
 
-        assertThat(test1out.getBuffer().toString(), equalTo(normalCasedJson))
+        assertEquals(normalCasedJson, test1out.getBuffer().toString())
     }
 
     // ==================
@@ -139,7 +137,7 @@ class ParameterNameTests {
         stateObj.validate()
 
         val test1out = normalCasedMapper.writeValueAsString(stateObj)
-        assertThat(test1out, equalTo(normalCasedJson))
+        assertEquals(normalCasedJson, test1out)
     }
 
     // ==================
@@ -207,7 +205,7 @@ class ParameterNameTests {
         stateObj.validate()
 
         val test1out = pascalCasedMapper.writeValueAsString(stateObj)
-        assertThat(test1out, equalTo(pascalCasedJson))
+        assertEquals(pascalCasedJson, test1out)
     }
 
     private class HasSameParamNameConstructor(val value: Int) {
@@ -281,8 +279,7 @@ class ParameterNameTests {
     @Test fun findingFactoryMethod2() {
         try {
             normalCasedMapper.readValue(normalCasedJson, StateObjectWithFactoryNoParamAnnotations::class.java)
-        }
-        catch (ex: Exception) {
+        } catch (ex: Exception) {
             ex.printStackTrace()
             fail("Exception not expected")
         }
@@ -351,4 +348,3 @@ class ParameterNameTests {
         assertTrue(Gh14FailureWithEnum::class.java.isKotlinClass())
     }
 }
-

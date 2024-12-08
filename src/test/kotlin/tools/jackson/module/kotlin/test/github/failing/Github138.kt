@@ -8,8 +8,8 @@ import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.dataformat.xml.annotation.JacksonXmlText
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.test.expectFailure
-import org.junit.Test
 import tools.jackson.module.kotlin.kotlinModule
+import org.junit.jupiter.api.Test
 
 class TestGithub138 {
     @JacksonXmlRootElement(localName = "sms")

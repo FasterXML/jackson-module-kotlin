@@ -3,9 +3,9 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.junit.jupiter.api.Test
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Test
 
 //TODO : Fix @JsonIgnore
 class TestGithub124 {

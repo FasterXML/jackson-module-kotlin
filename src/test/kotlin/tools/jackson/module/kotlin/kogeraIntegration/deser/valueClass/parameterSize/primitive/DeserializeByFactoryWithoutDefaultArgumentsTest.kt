@@ -6,8 +6,8 @@ import tools.jackson.module.kotlin.callPrimaryConstructor
 import tools.jackson.module.kotlin.defaultMapper
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
-import org.junit.Assert.assertEquals
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 // Convert the property p to q (but not the value) to make it an input to the factory function.
 private fun replacePQ(src: String) = src.replace(Regex("""p\d+":""")) { "q" + it.value.substring(1) }

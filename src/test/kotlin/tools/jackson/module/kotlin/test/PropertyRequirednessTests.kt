@@ -5,7 +5,7 @@ import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.jacksonMapperBuilder
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 

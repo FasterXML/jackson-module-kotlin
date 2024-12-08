@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import tools.jackson.module.kotlin.*
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 

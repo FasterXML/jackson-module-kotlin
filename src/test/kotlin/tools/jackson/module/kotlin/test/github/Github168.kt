@@ -1,11 +1,12 @@
 package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
@@ -21,10 +22,12 @@ class TestGithub168 {
         assertEquals("whatever", obj.baz)
     }
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun testIfRequiredIsReallyRequiredWhenAbsent() {
-        val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
-        assertEquals("whatever", obj.baz)
+        assertThrows<MissingKotlinParameterException> {
+            val obj = jacksonObjectMapper().readValue<TestClass>("""{"baz":"whatever"}""")
+            assertEquals("whatever", obj.baz)
+        }
     }
 
     @Test

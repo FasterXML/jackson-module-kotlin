@@ -7,7 +7,7 @@ import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.exc.MismatchedInputException
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.test.SealedClassTest.SuperClass.B
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

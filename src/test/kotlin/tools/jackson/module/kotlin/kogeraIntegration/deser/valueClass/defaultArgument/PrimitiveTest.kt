@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class PrimitiveTest {
     companion object {

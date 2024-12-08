@@ -1,12 +1,12 @@
 package tools.jackson.module.kotlin.test
 
-import junit.framework.TestCase.assertEquals
-import org.junit.Assert.assertThrows
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.exc.MismatchedInputException
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.readValue
-import kotlin.test.Test
+ import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Test
 
 class FailNullForPrimitiveTest {
     data class Dto(

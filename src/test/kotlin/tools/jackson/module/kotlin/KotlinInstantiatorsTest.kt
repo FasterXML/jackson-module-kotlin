@@ -1,10 +1,8 @@
 package tools.jackson.module.kotlin
 
 import tools.jackson.databind.deser.std.StdValueInstantiator
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertThrows
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class KotlinInstantiatorsTest {
     private val mapper = jacksonObjectMapper()

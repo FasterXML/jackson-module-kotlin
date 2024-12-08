@@ -3,7 +3,7 @@ package tools.jackson.module.kotlin.test.github
 import com.fasterxml.jackson.annotation.JsonTypeInfo
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.jsonMapper
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type")

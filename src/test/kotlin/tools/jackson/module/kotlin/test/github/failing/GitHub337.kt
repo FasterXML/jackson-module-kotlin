@@ -2,11 +2,11 @@ package tools.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
+import org.junit.jupiter.api.Disabled
 import tools.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY
 import tools.jackson.module.kotlin.jsonMapper
 import tools.jackson.module.kotlin.testPrettyWriter
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 /**
@@ -20,7 +20,7 @@ class TestGitHub337 {
     private val writer = mapper.testPrettyWriter()
 
     @Test
-    @Ignore
+    @Disabled
     fun test_ClassWithIsFields() {
         data class ClassWithIsFields(
             val isBooleanField: Boolean,
@@ -37,7 +37,7 @@ class TestGitHub337 {
     }
 
     @Test
-    @Ignore
+    @Disabled
     fun test_AnnotatedClassWithIsFields() {
         data class ClassWithIsFields(
             @JsonProperty("isBooleanField") val isBooleanField: Boolean,

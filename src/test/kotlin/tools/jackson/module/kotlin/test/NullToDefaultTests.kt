@@ -5,8 +5,9 @@ import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import tools.jackson.module.kotlin.MissingKotlinParameterException
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class TestNullToDefault {
 	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
@@ -47,12 +48,12 @@ class TestNullToDefault {
 				}"""
         )
 
-        Assert.assertEquals(-1, item.sku)
-        Assert.assertEquals("plain", item.text)
-        Assert.assertEquals("some image", item.images)
-        Assert.assertEquals("uk", item.language)
-		Assert.assertTrue(item.temperature == 24.7)
-		Assert.assertEquals(true, item.canBeProcessed)
+        assertEquals(-1, item.sku)
+        assertEquals("plain", item.text)
+        assertEquals("some image", item.images)
+        assertEquals("uk", item.language)
+		assertTrue(item.temperature == 24.7)
+		assertEquals(true, item.canBeProcessed)
     }
 
     @Test
@@ -68,12 +69,12 @@ class TestNullToDefault {
 				}"""
         )
 
-        Assert.assertEquals(0, item.sku)
-        Assert.assertEquals("plain", item.text)
-        Assert.assertEquals("image1", item.images)
-        Assert.assertEquals("pl", item.language)
-        Assert.assertTrue(item.temperature == 0.0)
-        Assert.assertEquals(false, item.canBeProcessed)
+        assertEquals(0, item.sku)
+        assertEquals("plain", item.text)
+        assertEquals("image1", item.images)
+        assertEquals("pl", item.language)
+        assertTrue(item.temperature == 0.0)
+        assertEquals(false, item.canBeProcessed)
     }
 
     @Test
@@ -89,12 +90,12 @@ class TestNullToDefault {
 				}"""
         )
 
-        Assert.assertEquals(974, item.sku)
-        Assert.assertEquals("plain", item.text)
-        Assert.assertEquals(null, item.images)
-        Assert.assertEquals("pl", item.language)
-		Assert.assertTrue(item.temperature == 36.6)
-        Assert.assertEquals(false, item.canBeProcessed)
+        assertEquals(974, item.sku)
+        assertEquals("plain", item.text)
+        assertEquals(null, item.images)
+        assertEquals("pl", item.language)
+		assertTrue(item.temperature == 36.6)
+        assertEquals(false, item.canBeProcessed)
     }
 
 	@Test
@@ -108,10 +109,10 @@ class TestNullToDefault {
 				}"""
 		)
 
-		Assert.assertEquals(0, item.sku)
-		Assert.assertEquals("plain", item.text)
-		Assert.assertTrue(item.temperature == 0.0)
-		Assert.assertEquals(false, item.canBeProcessed)
+		assertEquals(0, item.sku)
+		assertEquals("plain", item.text)
+		assertTrue(item.temperature == 0.0)
+		assertEquals(false, item.canBeProcessed)
 	}
 
     @Test
@@ -122,10 +123,10 @@ class TestNullToDefault {
 				}"""
         )
 
-        Assert.assertEquals(-1, item.sku)
-        Assert.assertEquals("plain", item.text)
-        Assert.assertTrue(item.temperature == 24.7)
-        Assert.assertEquals(true, item.canBeProcessed)
+        assertEquals(-1, item.sku)
+        assertEquals("plain", item.text)
+        assertTrue(item.temperature == 24.7)
+        assertEquals(true, item.canBeProcessed)
     }
 
     @Test
@@ -136,21 +137,23 @@ class TestNullToDefault {
 				}"""
         )
 
-        Assert.assertEquals(-1, item.sku)
-        Assert.assertEquals("plain", item.text)
-        Assert.assertEquals("some image", item.images)
-        Assert.assertEquals("uk", item.language)
-		Assert.assertTrue(item.temperature == 24.7)
-        Assert.assertEquals(true, item.canBeProcessed)
+        assertEquals(-1, item.sku)
+        assertEquals("plain", item.text)
+        assertEquals("some image", item.images)
+        assertEquals("uk", item.language)
+		assertTrue(item.temperature == 24.7)
+        assertEquals(true, item.canBeProcessed)
     }
 
-    @Test(expected = MissingKotlinParameterException::class)
+    @Test
     fun shouldThrowExceptionWhenProvidedNullForNotNullFieldWithoutDefault() {
-        createMapper(true).readValue<TestClass>(
-            """{
+        assertThrows<MissingKotlinParameterException> {
+            createMapper(true).readValue<TestClass>(
+                """{
 						"text": null
  				}"""
-        )
+            )
+        }
     }
 
     @Test
@@ -165,6 +168,6 @@ class TestNullToDefault {
         )
 
         val expectedResult = OuterDataClass(InnerDataClass("someString"))
-        Assert.assertEquals(expectedResult, outerDataClassInstance)
+        assertEquals(expectedResult, outerDataClassInstance)
     }
 }

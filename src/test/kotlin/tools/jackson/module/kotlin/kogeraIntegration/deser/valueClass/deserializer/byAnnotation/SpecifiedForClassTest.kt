@@ -6,8 +6,8 @@ import tools.jackson.databind.annotation.JsonDeserialize
 import tools.jackson.databind.deser.std.StdDeserializer
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
-import org.junit.Assert.assertEquals
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 class SpecifiedForClassTest {
     @JsonDeserialize(using = Value.Deserializer::class)

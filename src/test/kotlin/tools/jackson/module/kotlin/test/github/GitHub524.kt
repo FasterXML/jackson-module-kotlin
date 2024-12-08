@@ -8,8 +8,7 @@ import tools.jackson.databind.ser.std.StdSerializer
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.testPrettyWriter
-
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 // Most of the current behavior has been tested on GitHub464, so only serializer-related behavior is tested here.

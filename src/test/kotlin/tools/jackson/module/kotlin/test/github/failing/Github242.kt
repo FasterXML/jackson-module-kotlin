@@ -1,8 +1,8 @@
 package tools.jackson.module.kotlin.test.github.failing
 
-import org.junit.Test
 import tools.jackson.module.kotlin.jacksonObjectMapper
 import tools.jackson.module.kotlin.readValue
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 // Also see https://github.com/FasterXML/jackson-databind/issues/3392

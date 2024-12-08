@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonValue
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.testPrettyWriter
 import kotlin.test.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class GitHub530 {
     // At the moment, the output is the same with or without `JsonValue`,

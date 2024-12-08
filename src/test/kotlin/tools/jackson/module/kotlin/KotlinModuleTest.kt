@@ -1,11 +1,11 @@
 package tools.jackson.module.kotlin
 
 import tools.jackson.module.kotlin.KotlinFeature.*
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertTrue
-import org.junit.Test
 import tools.jackson.databind.json.JsonMapper
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 import kotlin.test.assertNotNull
 
 class KotlinModuleTest {

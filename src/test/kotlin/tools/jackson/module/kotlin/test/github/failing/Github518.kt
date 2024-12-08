@@ -7,7 +7,7 @@ import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.test.expectFailure
 import kotlin.test.assertSame
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 /**
  * An empty object should be deserialized as *the* Unit instance for a nullable Unit reference Type.
