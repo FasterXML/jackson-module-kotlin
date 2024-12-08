@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TestGithub160 {
     data class DataClass(val blah: String)

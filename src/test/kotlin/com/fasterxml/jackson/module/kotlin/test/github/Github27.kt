@@ -6,12 +6,11 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue
 import kotlin.test.fail
-
 
 class TestGithub27 {
     val mapper: ObjectMapper = jacksonObjectMapper().configure(SerializationFeature.INDENT_OUTPUT, false)
@@ -21,7 +20,7 @@ class TestGithub27 {
     @Test fun testNullableInt() {
         val json = """{"sample":null}"""
         val stateObj = mapper.readValue<ClassWithNullableInt>(json)
-        assertThat(stateObj, equalTo(ClassWithNullableInt(null)))
+        assertEquals(ClassWithNullableInt(null), stateObj)
     }
 
     private data class ClassWithInt(val sample: Int)
@@ -29,7 +28,7 @@ class TestGithub27 {
     @Test fun testInt() {
         val json = """{"sample":null}"""
         val stateObj = mapper.readValue<ClassWithInt>(json)
-        assertThat(stateObj, equalTo(ClassWithInt(0)))
+        assertEquals(ClassWithInt(0), stateObj)
     }
 
     private data class ClassWithListOfNullableInt(val samples: List<Int?>)
@@ -37,7 +36,7 @@ class TestGithub27 {
     @Test fun testListOfNullableInt() {
         val json = """{"samples":[1, null]}"""
         val stateObj = mapper.readValue<ClassWithListOfInt>(json)
-        assertThat(stateObj.samples, equalTo(listOf(1, null)))
+        assertEquals(listOf(1, null), stateObj.samples)
     }
 
     private data class ClassWithListOfInt(val samples: List<Int>)

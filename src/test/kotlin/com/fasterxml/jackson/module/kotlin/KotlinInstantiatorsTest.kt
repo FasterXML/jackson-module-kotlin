@@ -1,8 +1,8 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.databind.deser.std.StdValueInstantiator
-import org.junit.Assert.*
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 
 class KotlinInstantiatorsTest {
     private val mapper = jacksonObjectMapper()

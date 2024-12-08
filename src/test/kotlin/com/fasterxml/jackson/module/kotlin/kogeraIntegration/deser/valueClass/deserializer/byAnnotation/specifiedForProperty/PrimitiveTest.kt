@@ -4,20 +4,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.Primitive
-import org.junit.Assert.assertEquals
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
-import kotlin.test.Ignore
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-@RunWith(Enclosed::class)
 class PrimitiveTest {
-    @Ignore
     companion object {
         val mapper = jacksonObjectMapper()
     }
 
-    @Ignore
     data class NonNull(
         @get:JsonDeserialize(using = Primitive.Deserializer::class)
         val getterAnn: Primitive,
@@ -25,22 +20,19 @@ class PrimitiveTest {
         val fieldAnn: Primitive
     )
 
-    class NonNullTest {
-        @Test
-        fun nonNull() {
-            val result = mapper.readValue<NonNull>(
-                """
+    @Test
+    fun nonNull() {
+        val result = mapper.readValue<NonNull>(
+            """
                 {
                   "getterAnn" : 1,
                   "fieldAnn" : 2
                 }
             """.trimIndent()
-            )
-            assertEquals(NonNull(Primitive(101), Primitive(102)), result)
-        }
+        )
+        assertEquals(NonNull(Primitive(101), Primitive(102)), result)
     }
 
-    @Ignore
     data class Nullable(
         @get:JsonDeserialize(using = Primitive.Deserializer::class)
         val getterAnn: Primitive?,
@@ -48,7 +40,8 @@ class PrimitiveTest {
         val fieldAnn: Primitive?
     )
 
-    class NullableTest {
+    @Nested
+    inner class NullableTest {
         @Test
         fun nonNullInput() {
             val result = mapper.readValue<Nullable>(

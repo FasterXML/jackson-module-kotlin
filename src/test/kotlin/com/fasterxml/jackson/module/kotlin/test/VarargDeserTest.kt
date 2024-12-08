@@ -2,25 +2,19 @@ package com.fasterxml.jackson.module.kotlin.test
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertTrue
-import org.junit.Ignore
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
-import kotlin.test.Test
+ import org.junit.jupiter.api.Assertions.assertEquals
+ import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-// from https://github.com/ProjectMapK/jackson-module-kogera/blob/0631cd3b07c7fb6971a00ac1f6811b4367a1720e/src/test/kotlin/io/github/projectmapk/jackson/module/kogera/zIntegration/deser/VarargTest.kt#L1
-@RunWith(Enclosed::class)
+// from https://github.com/ProjectMapK/jackson-module-kogera/blob/7872116052c9a4744c6d4e84ddd5cab6bb525024/src/test/kotlin/io/github/projectmapk/jackson/module/kogera/zIntegration/deser/VarargTest.kt
 class VarargDeserTest {
-    @Ignore
-    companion object {
-        val mapper = jacksonObjectMapper()
-    }
+    val mapper = jacksonObjectMapper()
 
-    @Ignore
     class OnlyVararg(vararg val v: Int)
 
-    class OnlyVarargTest {
+    @Nested
+    inner class OnlyVarargTest {
         @Test
         fun hasArgs() {
             val r = mapper.readValue<OnlyVararg>("""{"v":[1,2,3]}""")
@@ -40,10 +34,10 @@ class VarargDeserTest {
         }
     }
 
-    @Ignore
     class HeadVararg(vararg val v: Int?, val i: Int)
 
-    class HeadVarargTest {
+    @Nested
+    inner class HeadVarargTest {
         @Test
         fun hasArgs() {
             val r = mapper.readValue<HeadVararg>("""{"i":0,"v":[1,2,null]}""")
@@ -66,10 +60,10 @@ class VarargDeserTest {
         }
     }
 
-    @Ignore
     class TailVararg(val i: Int, vararg val v: String)
 
-    class TailVarargTest {
+    @Nested
+    inner class TailVarargTest {
         @Test
         fun hasArgs() {
             val r = mapper.readValue<TailVararg>("""{"i":0,"v":["foo","bar","baz"]}""")
@@ -92,10 +86,10 @@ class VarargDeserTest {
         }
     }
 
-    @Ignore
     class HasDefaultVararg(vararg val v: String? = arrayOf("foo", "bar"))
 
-    class HasDefaultVarargTest {
+    @Nested
+    inner class HasDefaultVarargTest {
         @Test
         fun hasArgs() {
             val r = mapper.readValue<HasDefaultVararg>("""{"v":["foo","bar",null]}""")

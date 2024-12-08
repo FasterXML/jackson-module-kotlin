@@ -4,20 +4,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NonNullObject
-import org.junit.Assert.assertEquals
-import org.junit.Ignore
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-@RunWith(Enclosed::class)
 class NonNullObjectTest {
-    @Ignore
     companion object {
         val mapper = jacksonObjectMapper()
     }
 
-    @Ignore
     data class NonNull(
         @get:JsonDeserialize(using = NonNullObject.Deserializer::class)
         val getterAnn: NonNullObject,
@@ -25,22 +20,19 @@ class NonNullObjectTest {
         val fieldAnn: NonNullObject
     )
 
-    class NonNullTest {
-        @Test
-        fun nonNull() {
-            val result = mapper.readValue<NonNull>(
-                """
+    @Test
+    fun nonNull() {
+        val result = mapper.readValue<NonNull>(
+            """
                 {
                   "getterAnn" : "foo",
                   "fieldAnn" : "bar"
                 }
             """.trimIndent()
-            )
-            assertEquals(NonNull(NonNullObject("foo-deser"), NonNullObject("bar-deser")), result)
-        }
+        )
+        assertEquals(NonNull(NonNullObject("foo-deser"), NonNullObject("bar-deser")), result)
     }
 
-    @Ignore
     data class Nullable(
         @get:JsonDeserialize(using = NonNullObject.Deserializer::class)
         val getterAnn: NonNullObject?,
@@ -48,7 +40,8 @@ class NonNullObjectTest {
         val fieldAnn: NonNullObject?
     )
 
-    class NullableTest {
+    @Nested
+    inner class NullableTest {
         @Test
         fun nonNullInput() {
             val result = mapper.readValue<Nullable>(

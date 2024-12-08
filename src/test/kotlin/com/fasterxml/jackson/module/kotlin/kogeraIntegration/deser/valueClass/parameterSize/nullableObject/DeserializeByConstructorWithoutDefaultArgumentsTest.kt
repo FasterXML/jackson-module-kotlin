@@ -5,8 +5,8 @@ import com.fasterxml.jackson.module.kotlin.callPrimaryConstructor
 import com.fasterxml.jackson.module.kotlin.defaultMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
-import org.junit.Assert.assertEquals
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 /**
  * Up to argument size 32 there is one mask argument for the default argument,

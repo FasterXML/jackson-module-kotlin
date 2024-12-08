@@ -5,8 +5,7 @@ import com.fasterxml.jackson.module.kotlin.jsonMapper
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.test.expectFailure
-import org.junit.ComparisonFailure
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class GitHub478Test {
@@ -19,14 +18,14 @@ class GitHub478Test {
 
     @Test
     fun omitsDefaultValueWhenSerializing() {
-        expectFailure<ComparisonFailure>("GitHub478 has been fixed!") {
+        expectFailure<AssertionError>("GitHub478 has been fixed!") {
             assertEquals("""{}""", mapper.writeValueAsString(Data()))
         }
     }
 
     @Test
     fun serializesNonDefaultValue() {
-        expectFailure<ComparisonFailure>("GitHub478 has been fixed!") {
+        expectFailure<AssertionError>("GitHub478 has been fixed!") {
             assertEquals("""{"flag": false}""", mapper.writeValueAsString(Data(flag = false)))
         }
     }

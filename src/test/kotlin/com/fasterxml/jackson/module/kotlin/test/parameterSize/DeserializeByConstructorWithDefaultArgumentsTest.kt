@@ -3,7 +3,7 @@ package com.fasterxml.jackson.module.kotlin.test.parameterSize
 import com.fasterxml.jackson.module.kotlin.assertReflectEquals
 import com.fasterxml.jackson.module.kotlin.defaultMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 /**

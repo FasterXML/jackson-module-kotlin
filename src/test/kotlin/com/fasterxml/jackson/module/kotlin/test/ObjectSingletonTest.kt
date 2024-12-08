@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.kotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Test
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 class TestObjectSingleton {
@@ -22,7 +21,7 @@ class TestObjectSingleton {
         val js = mapper.writeValueAsString(Singleton)
         val newSingleton = mapper.readValue<Singleton>(js)
 
-        assertThat(newSingleton, equalTo(Singleton))
+        assertEquals(Singleton, newSingleton)
     }
 
     @Test
@@ -34,22 +33,22 @@ class TestObjectSingleton {
         // mutate the in-memory singleton state
         val after = initial + 1
         Singleton.content = after
-        assertThat(Singleton.content, equalTo(after))
+        assertEquals(Singleton.content, after)
 
         // read back persisted state resets singleton state
         val newSingleton = mapper.readValue<Singleton>(js)
-        assertThat(newSingleton.content, equalTo(initial))
-        assertThat(Singleton.content, equalTo(initial))
+        assertEquals(initial, Singleton.content)
+        assertEquals(initial, newSingleton.content)
     }
 
     @Test
     fun deserializedObjectsBehaveLikeSingletons() {
         val js = mapper.writeValueAsString(Singleton)
         val newSingleton = mapper.readValue<Singleton>(js)
-        assertThat(newSingleton.content, equalTo(Singleton.content))
+        assertEquals(Singleton.content, newSingleton.content)
 
         newSingleton.content += 1
 
-        assertThat(Singleton.content, equalTo(newSingleton.content))
+        assertEquals(Singleton.content, newSingleton.content)
     }
 }

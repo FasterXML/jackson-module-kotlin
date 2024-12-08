@@ -1,24 +1,28 @@
 package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonCreator
-import org.junit.Ignore
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.Nested
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.hasAnnotation
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-
-@RunWith(Enclosed::class)
 class ArgumentBucketTest {
-    class Normal {
-        @Ignore
-        data class Constructor(val foo: String, val bar: String)
+    data class Constructor(val foo: String, val bar: String)
 
+    data class Method(val foo: String, val bar: String) {
+        companion object {
+            @JvmStatic
+            @JsonCreator
+            fun of(foo: String, bar: String): Method = Method(foo, bar)
+        }
+    }
+
+    @Nested
+    inner class Normal {
         @Test
         fun constructorTest() {
             val function: KFunction<*> = ::Constructor
@@ -43,15 +47,6 @@ class ArgumentBucketTest {
             assertEquals(2, bucket.size)
             assertTrue(bucket.isFullInitialized)
             assertEquals("bar", bucket[params[1]])
-        }
-
-        @Ignore
-        data class Method(val foo: String, val bar: String) {
-            companion object {
-                @JvmStatic
-                @JsonCreator
-                fun of(foo: String, bar: String): Method = Method(foo, bar)
-            }
         }
 
         @Test

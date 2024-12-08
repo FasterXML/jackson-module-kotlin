@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.convertValue
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertNull
 
 class GitHub757 {

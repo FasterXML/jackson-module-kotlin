@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @Suppress("UNUSED_VARIABLE")
 class TestGithub149 {

@@ -4,20 +4,15 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser.valueClass.NullableObject
-import org.junit.Assert.assertEquals
-import org.junit.Ignore
-import org.junit.experimental.runners.Enclosed
-import org.junit.runner.RunWith
-import kotlin.test.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 
-@RunWith(Enclosed::class)
 class NullableObjectTest {
-    @Ignore
     companion object {
         val mapper = jacksonObjectMapper()
     }
 
-    @Ignore
     data class NonNull(
         @get:JsonDeserialize(using = NullableObject.DeserializerWrapsNullable::class)
         val getterAnn: NullableObject,
@@ -25,22 +20,19 @@ class NullableObjectTest {
         val fieldAnn: NullableObject
     )
 
-    class NonNullTest {
-        @Test
-        fun nonNull() {
-            val result = mapper.readValue<NonNull>(
-                """
+    @Test
+    fun nonNull() {
+        val result = mapper.readValue<NonNull>(
+            """
                 {
                   "getterAnn" : "foo",
                   "fieldAnn" : "bar"
                 }
             """.trimIndent()
-            )
-            assertEquals(NonNull(NullableObject("foo-deser"), NullableObject("bar-deser")), result)
-        }
+        )
+        assertEquals(NonNull(NullableObject("foo-deser"), NullableObject("bar-deser")), result)
     }
 
-    @Ignore
     data class Nullable(
         @get:JsonDeserialize(using = NullableObject.DeserializerWrapsNullable::class)
         val getterAnn: NullableObject?,
@@ -48,7 +40,8 @@ class NullableObjectTest {
         val fieldAnn: NullableObject?
     )
 
-    class NullableTest {
+    @Nested
+    inner class NullableTest {
         @Test
         fun nonNullInput() {
             val result = mapper.readValue<Nullable>(
