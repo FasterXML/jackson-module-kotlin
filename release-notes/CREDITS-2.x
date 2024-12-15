@@ -18,6 +18,7 @@ Contributors:
 # 2.19.0 (not yet released)
 
 WrongWrong (@k163377)
+* #868: Added test case for FAIL_ON_NULL_FOR_PRIMITIVES
 * #866: Upgrade to JUnit5
 * #861: Update Kotlin to 1.9.24
 * #858: Refactor findDefaultCreator
