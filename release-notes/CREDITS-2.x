@@ -28,6 +28,7 @@ WrongWrong (@k163377)
 # 2.18.0 (26-Sep-2024)
 
 WrongWrong (@k163377)
+* #869: Replaced Enum.values with Enum.entries
 * #818: Optimize the search process for creators
 * #817: Fixed nullability of convertValue function argument
 * #782: Organize deprecated contents
