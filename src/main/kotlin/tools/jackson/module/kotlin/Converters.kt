@@ -34,7 +34,7 @@ internal object KotlinToJavaDurationConverter : StdConverter<KotlinDuration, Jav
 /**
  * Currently it is not possible to deduce type of [kotlin.time.Duration] fields therefore explicit annotation is needed on fields in order to properly deserialize POJO.
  *
- * @see [com.fasterxml.jackson.module.kotlin.test.DurationTests]
+ * @see [tools.jackson.module.kotlin.test.DurationTests]
  */
 internal object JavaToKotlinDurationConverter : StdConverter<JavaDuration, KotlinDuration>() {
     override fun convert(value: JavaDuration) = value.toKotlinDuration()

@@ -1,11 +1,12 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package tools.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.readValue
+import tools.jackson.databind.ObjectMapper
+import tools.jackson.module.kotlin.KotlinModule
+import tools.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.json.JsonMapper
 import kotlin.test.assertEquals
 
 class GitHub832 {
@@ -24,9 +25,10 @@ class GitHub832 {
                     "debug": "on"
                  }
              }     """.trimMargin()
-        val jacksonMapper = ObjectMapper()
-        jacksonMapper.registerModules(KotlinModule.Builder().build())
-        val anySetter = jacksonMapper.readValue<AnySetter>(json)
+        val mapper = JsonMapper.builder()
+            .addModule(KotlinModule.Builder().build())
+            .build()
+        val anySetter = mapper.readValue<AnySetter>(json)
         assertEquals("widget", anySetter.anything.entries.first().key)
     }
 }

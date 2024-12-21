@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test.github
+package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature
