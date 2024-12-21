@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class GitHub832 {
