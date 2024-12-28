@@ -36,7 +36,7 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
                 if (!optionsNode.isArray) {
                     throw IllegalStateException("Expected an array of strings for RegexOptions, but type was ${node.nodeType}")
                 }
-                optionsNode.elements().asSequence().map { RegexOption.valueOf(it.asText()) }.toSet()
+                optionsNode.iterator().asSequence().map { RegexOption.valueOf(it.asText()) }.toSet()
             } else {
                 emptySet()
             }
