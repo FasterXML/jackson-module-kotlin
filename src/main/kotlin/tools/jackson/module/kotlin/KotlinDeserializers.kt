@@ -27,16 +27,16 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Regex {
         val node = ctxt.readTree(p)
 
-        if (node.isTextual) {
-            return Regex(node.asText())
+        if (node.isString) {
+            return Regex(node.asString())
         } else if (node.isObject) {
-            val pattern = node.get("pattern").asText()
+            val pattern = node.get("pattern").asString()
             val options = if (node.has("options")) {
                 val optionsNode = node.get("options")
                 if (!optionsNode.isArray) {
                     throw IllegalStateException("Expected an array of strings for RegexOptions, but type was ${node.nodeType}")
                 }
-                optionsNode.iterator().asSequence().map { RegexOption.valueOf(it.asText()) }.toSet()
+                optionsNode.iterator().asSequence().map { RegexOption.valueOf(it.asString()) }.toSet()
             } else {
                 emptySet()
             }
@@ -51,7 +51,7 @@ object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.shortValue.asUByte() ?: throw InputCoercionException(
             p,
-            "Numeric value (${p.text}) out of range of UByte (0 - ${UByte.MAX_VALUE}).",
+            "Numeric value (${p.string}) out of range of UByte (0 - ${UByte.MAX_VALUE}).",
             VALUE_NUMBER_INT,
             UByte::class.java
         )
@@ -61,7 +61,7 @@ object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.intValue.asUShort() ?: throw InputCoercionException(
             p,
-            "Numeric value (${p.text}) out of range of UShort (0 - ${UShort.MAX_VALUE}).",
+            "Numeric value (${p.string}) out of range of UShort (0 - ${UShort.MAX_VALUE}).",
             VALUE_NUMBER_INT,
             UShort::class.java
         )
@@ -71,7 +71,7 @@ object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.longValue.asUInt() ?: throw InputCoercionException(
             p,
-            "Numeric value (${p.text}) out of range of UInt (0 - ${UInt.MAX_VALUE}).",
+            "Numeric value (${p.string}) out of range of UInt (0 - ${UInt.MAX_VALUE}).",
             VALUE_NUMBER_INT,
             UInt::class.java
         )
@@ -81,7 +81,7 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.bigIntegerValue.asULong() ?: throw InputCoercionException(
             p,
-            "Numeric value (${p.text}) out of range of ULong (0 - ${ULong.MAX_VALUE}).",
+            "Numeric value (${p.string}) out of range of ULong (0 - ${ULong.MAX_VALUE}).",
             VALUE_NUMBER_INT,
             ULong::class.java
         )
