@@ -78,8 +78,8 @@ internal class KotlinValueInstantiator(
                     paramType.isMarkedNullable -> null
                     // Primitive types always try to get from a buffer, considering several settings
                     jsonProp.type.isPrimitive -> buffer.getParameter(ctxt, jsonProp)
-                    // to get suitable "missing" value provided by deserializer
-                    else -> valueDeserializer?.getAbsentValue(ctxt)
+                    // to get suitable "missing" value provided by nullValueProvider
+                    else -> jsonProp.nullValueProvider?.getAbsentValue(ctxt)
                 }
             }
 
