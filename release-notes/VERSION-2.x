@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#878: Fixed a problem where settings like `@JsonSetter(nulls = AS_EMPTY)` were not being applied when the input was `undefined`.
 #869: By using Enum.entries in the acquisition of KotlinFeature.defaults, the initialization load was reduced, albeit slightly.
 #861: Kotlin has been upgraded to 1.9.24.
 #858: Minor performance improvement of findDefaultCreator in edge cases.
