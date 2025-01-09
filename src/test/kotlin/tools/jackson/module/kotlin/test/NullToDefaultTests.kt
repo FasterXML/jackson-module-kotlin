@@ -8,6 +8,7 @@ import tools.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import tools.jackson.databind.DeserializationFeature
 
 class TestNullToDefault {
 	private fun createMapper(allowDefaultingByNull: Boolean) = JsonMapper.builder()
@@ -100,7 +101,11 @@ class TestNullToDefault {
 
 	@Test
 	fun shouldUseDefaultPrimitiveValuesInsteadOfDefaultsWhenProvidingNullForNotNullPrimitives() {
-		val item = createMapper(false).readValue<TestClassWithNotNullPrimitives>(
+		val item = createMapper(false)
+            .rebuild()
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build()
+            .readValue<TestClassWithNotNullPrimitives>(
 			"""{
 					"sku": null,
 					"text": "plain",
