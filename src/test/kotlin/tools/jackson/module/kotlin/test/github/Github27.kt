@@ -8,6 +8,7 @@ import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.DeserializationFeature
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
@@ -26,8 +27,12 @@ class TestGithub27 {
     private data class ClassWithInt(val sample: Int)
 
     @Test fun testInt() {
+        val disabledMapper = mapper.rebuild()
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build();
+
         val json = """{"sample":null}"""
-        val stateObj = mapper.readValue<ClassWithInt>(json)
+        val stateObj = disabledMapper.readValue<ClassWithInt>(json)
         assertEquals(ClassWithInt(0), stateObj)
     }
 

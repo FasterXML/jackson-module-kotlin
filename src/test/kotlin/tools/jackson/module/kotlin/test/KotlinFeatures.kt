@@ -9,6 +9,7 @@ import tools.jackson.module.kotlin.readValue
 import tools.jackson.databind.MapperFeature
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.DeserializationFeature
 import kotlin.properties.Delegates
 import kotlin.test.assertNull
 import kotlin.test.fail
@@ -16,7 +17,7 @@ import kotlin.test.fail
 private data class DataClassPerson(val name: String, val age: Int)
 
 private class TestM11Changes {
-    val mapper = jacksonObjectMapper()
+    val MAPPER = jacksonObjectMapper()
     val mapperWithFinalFieldsAsMutators = jacksonMapperBuilder()
         .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
         .build()
@@ -27,8 +28,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_One_Constructor("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_With_One_Constructor>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_With_One_Constructor>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
@@ -41,8 +42,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_Data_Annotation_With_One_Constructor("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_Data_Annotation_With_One_Constructor>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_Data_Annotation_With_One_Constructor>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson, newPerson)
@@ -78,8 +79,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_Init_Constructor_And_Ignored_Property("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_With_Init_Constructor_And_Ignored_Property>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_With_Init_Constructor_And_Ignored_Property>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson, newPerson)
@@ -93,8 +94,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_With_No_Field_Parameters_But_Field_Declared_Inside_initialized_from_parameter>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
@@ -114,8 +115,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = ClassFor_testDataClass_WithOnlySecondaryConstructor("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<ClassFor_testDataClass_WithOnlySecondaryConstructor>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<ClassFor_testDataClass_WithOnlySecondaryConstructor>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
@@ -131,8 +132,8 @@ private class TestM11Changes {
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_WithPrimaryAndSecondaryConstructor("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_WithPrimaryAndSecondaryConstructor>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_WithPrimaryAndSecondaryConstructor>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
@@ -145,17 +146,21 @@ private class TestM11Changes {
     )
 
     @Test fun testDataClass_WithPrimaryAndSecondaryConstructorBothCouldBeUsedToDeserialize() {
+        val disabledMapper = jacksonMapperBuilder()
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build();
+
         val expectedJson = """{"name":"John Smith","age":30}"""
         val expectedPerson = Class_WithPrimaryAndSecondaryConstructorAnnotated("John Smith", 30)
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>(actualJson)
+        val actualJson = disabledMapper.writeValueAsString(expectedPerson)
+        val newPerson = disabledMapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
         assertEquals(expectedPerson.age, newPerson.age)
 
-        val newPerson2 = mapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>("""{"name":"John Smith"}""")
+        val newPerson2 = disabledMapper.readValue<Class_WithPrimaryAndSecondaryConstructorAnnotated>("""{"name":"John Smith"}""")
         assertEquals(0, newPerson2.age)
         assertEquals("John Smith", newPerson2.name)
     }
@@ -171,8 +176,8 @@ private class TestM11Changes {
         val expectedPerson = Class_WithPartialFieldsInConstructor("John Smith", 30)
         expectedPerson.phone = "1234567890"
 
-        val actualJson = mapper.writeValueAsString(expectedPerson)
-        val newPerson = mapper.readValue<Class_WithPartialFieldsInConstructor>(actualJson)
+        val actualJson = MAPPER.writeValueAsString(expectedPerson)
+        val newPerson = MAPPER.readValue<Class_WithPartialFieldsInConstructor>(actualJson)
 
         assertEquals(expectedJson, actualJson)
         assertEquals(expectedPerson.name, newPerson.name)
@@ -181,7 +186,7 @@ private class TestM11Changes {
         assertEquals(expectedPerson.primaryAddress, newPerson.primaryAddress)
 
         val jsonWithNullPhone = """{"name":"John Smith","age":30}"""
-        val person = mapper.readValue<Class_WithPartialFieldsInConstructor>(jsonWithNullPhone)
+        val person = MAPPER.readValue<Class_WithPartialFieldsInConstructor>(jsonWithNullPhone)
 
         try {
             person.phone
@@ -191,7 +196,7 @@ private class TestM11Changes {
     }
 
     @Test fun testNullableType() {
-        val newPerson = mapper.readValue<Class_WithPartialFieldsInConstructor?>("null")
+        val newPerson = MAPPER.readValue<Class_WithPartialFieldsInConstructor?>("null")
         assertNull(newPerson)
     }
 }

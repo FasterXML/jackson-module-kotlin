@@ -8,6 +8,7 @@ import tools.jackson.databind.SerializationFeature
 import tools.jackson.module.kotlin.*
 import tools.jackson.databind.MapperFeature
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.DeserializationFeature
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
@@ -192,8 +193,11 @@ class ParameterNameTests {
         // data class with non fields appearing as parameters in constructor, this works but null values or defaults for primitive types are passed to
         // the unrecognized fields in the constructor.  Does not work with default values for parameters, because a null does not get converted to the
         // default.
+        val disabledMapper = normalCasedMapper.rebuild()
+            .disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES)
+            .build();
 
-        val stateObj = normalCasedMapper.readValue<StateObjectAsDataClassConfusingConstructor>(normalCasedJson)
+        val stateObj = disabledMapper.readValue<StateObjectAsDataClassConfusingConstructor>(normalCasedJson)
         stateObj.validate()
     }
 
