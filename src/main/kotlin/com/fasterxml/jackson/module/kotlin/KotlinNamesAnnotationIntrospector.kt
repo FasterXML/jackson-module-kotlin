@@ -73,14 +73,12 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     override fun refineDeserializationType(config: MapperConfig<*>, a: Annotated, baseType: JavaType): JavaType =
-        (a as? AnnotatedParameter)?.let { _ ->
-            cache.findKotlinParameter(a)?.let { param ->
-                val rawType = a.rawType
-                (param.type.classifier as? KClass<*>)
-                    ?.java
-                    ?.takeIf { it.isUnboxableValueClass() && it != rawType }
-                    ?.let { config.constructType(it) }
-            }
+        findKotlinParameter(a)?.let { param ->
+            val rawType = a.rawType
+            (param.type.classifier as? KClass<*>)
+                ?.java
+                ?.takeIf { it.isUnboxableValueClass() && it != rawType }
+                ?.let { config.constructType(it) }
         } ?: baseType
 
     override fun findDefaultCreator(
@@ -106,6 +104,9 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     private fun findKotlinParameterName(param: AnnotatedParameter): String? = cache.findKotlinParameter(param)?.name
+
+    private fun findKotlinParameter(param: Annotated) = (param as? AnnotatedParameter)
+        ?.let { cache.findKotlinParameter(it) }
 }
 
 // If it is not a Kotlin class or an Enum, Creator is not used
