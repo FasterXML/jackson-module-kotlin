@@ -254,7 +254,15 @@
                             <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#getSingletonSupport()</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.SingletonSupport</exclude>
                             <!-- internal -->
-
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean)
+                            </exclude>
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinValueInstantiator#KotlinValueInstantiator(com.fasterxml.jackson.databind.deser.std.StdValueInstantiator,com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean,boolean,boolean,boolean)
+                            </exclude>
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinInstantiators#KotlinInstantiators(com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean,boolean,boolean,boolean)
+                            </exclude>
                         </excludes>
                     </parameter>
                 </configuration>
