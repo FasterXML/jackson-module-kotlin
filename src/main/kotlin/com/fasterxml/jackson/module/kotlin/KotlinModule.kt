@@ -95,7 +95,7 @@ class KotlinModule private constructor(
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault))
 
         if (singletonSupport) {
             context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
