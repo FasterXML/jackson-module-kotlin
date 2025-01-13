@@ -13,7 +13,6 @@ class KotlinInstantiatorsTest {
         nullToEmptyCollection = false,
         nullToEmptyMap = false,
         nullIsSameAsDefault = false,
-        strictNullChecks = false
     )
 
     @Test
