@@ -1,12 +1,13 @@
 package tools.jackson.module.kotlin
 
 import tools.jackson.core.JsonParser
-import tools.jackson.databind.exc.MismatchedInputException
+import tools.jackson.databind.DatabindException
+import tools.jackson.databind.exc.InvalidNullException
 import java.io.Closeable
 import kotlin.reflect.KParameter
 
 /**
- * Specialized [JsonMappingException] sub-class used to indicate that a mandatory Kotlin constructor
+ * Specialized [DatabindException] sub-class used to indicate that a mandatory Kotlin constructor
  * parameter was missing or null.
  */
 @Deprecated(
@@ -30,8 +31,12 @@ class MissingKotlinParameterException(
     val parameter: KParameter,
     processor: JsonParser? = null,
     msg: String
-) : MismatchedInputException(processor, msg) {
-    @Deprecated("Use main constructor", ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"))
+) : InvalidNullException(processor, msg, null) {
+    @Deprecated(
+        "Use main constructor, ",
+        ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"),
+        DeprecationLevel.ERROR,
+    )
     constructor(
             parameter: KParameter,
             processor: Closeable? = null,
