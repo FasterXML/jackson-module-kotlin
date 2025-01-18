@@ -2,7 +2,7 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.JsonMappingException
-import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.fasterxml.jackson.databind.exc.InvalidNullException
 import java.io.Closeable
 import kotlin.reflect.KParameter
 
@@ -31,7 +31,7 @@ class MissingKotlinParameterException(
     val parameter: KParameter,
     processor: JsonParser? = null,
     msg: String
-) : MismatchedInputException(processor, msg) {
+) : InvalidNullException(processor, msg, null) {
     @Deprecated(
         "Use main constructor, ",
         ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"),
