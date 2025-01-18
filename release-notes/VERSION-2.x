@@ -17,7 +17,8 @@ Co-maintainers:
 ------------------------------------------------------------------------
 
 2.19.0 (not yet released)
-
+#883: The deprecation level has been raised to error for the `MissingKotlinParameterException` secondary constructor.
+ This is a problematic process that has been marked as deprecated for a very long time and will be removed in 2.20 or later.
 #878: Fixed a problem where settings like `@JsonSetter(nulls = AS_EMPTY)` were not being applied when the input was `undefined`.
 #869: By using Enum.entries in the acquisition of KotlinFeature.defaults, the initialization load was reduced, albeit slightly.
 #861: Kotlin has been upgraded to 1.9.24.
