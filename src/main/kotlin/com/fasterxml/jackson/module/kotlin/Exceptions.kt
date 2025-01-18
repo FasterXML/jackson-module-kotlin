@@ -32,7 +32,11 @@ class MissingKotlinParameterException(
     processor: JsonParser? = null,
     msg: String
 ) : MismatchedInputException(processor, msg) {
-    @Deprecated("Use main constructor", ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"))
+    @Deprecated(
+        "Use main constructor, ",
+        ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"),
+        DeprecationLevel.ERROR,
+    )
     constructor(
             parameter: KParameter,
             processor: Closeable? = null,
