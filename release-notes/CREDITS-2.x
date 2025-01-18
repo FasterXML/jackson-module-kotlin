@@ -18,6 +18,7 @@ Contributors:
 # 2.19.0 (not yet released)
 
 WrongWrong (@k163377)
+* #884: Changed the base class of MissingKotlinParameterException to InvalidNullException
 * #878: Fix for #876
 * #868: Added test case for FAIL_ON_NULL_FOR_PRIMITIVES
 * #866: Upgrade to JUnit5

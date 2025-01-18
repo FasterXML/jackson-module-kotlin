@@ -17,6 +17,9 @@ Co-maintainers:
 ------------------------------------------------------------------------
 
 2.19.0 (not yet released)
+#884: The base class for `MissingKotlinParameterException` has been changed to `InvalidNullException`.
+ If you do not catch this exception or catch `MismatchedInputException`, the behavior is unchanged.
+ If you are catching both `MismatchedKotlinParameterException` and `InvalidNullException`, you must catch `MismatchedKotlinParameterException` first.
 #883: The deprecation level has been raised to error for the `MissingKotlinParameterException` secondary constructor.
  This is a problematic process that has been marked as deprecated for a very long time and will be removed in 2.20 or later.
 #878: Fixed a problem where settings like `@JsonSetter(nulls = AS_EMPTY)` were not being applied when the input was `undefined`.
