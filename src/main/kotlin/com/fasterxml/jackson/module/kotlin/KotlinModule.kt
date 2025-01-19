@@ -125,7 +125,9 @@ class KotlinModule private constructor(
             nullIsSameAsDefault,
             useJavaDurationConversion
         ))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(cache, kotlinPropertyNameAsImplicitName))
+        context.appendAnnotationIntrospector(
+            KotlinNamesAnnotationIntrospector(cache, newStrictNullChecks, kotlinPropertyNameAsImplicitName)
+        )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)
