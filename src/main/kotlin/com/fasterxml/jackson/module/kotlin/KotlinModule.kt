@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.SingletonSupport
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature.NewStrictNullChecks
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
 import java.util.*
@@ -42,9 +43,10 @@ class KotlinModule private constructor(
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
-    val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
+    strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
+    private val newStrictNullChecks: Boolean = NewStrictNullChecks.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
     /*
      * Prior to 2.18, an older Enum called SingletonSupport was used to manage feature.
@@ -63,6 +65,19 @@ class KotlinModule private constructor(
         replaceWith = ReplaceWith("singletonSupport")
     )
     val enabledSingletonSupport: Boolean get() = singletonSupport
+
+    private val oldStrictNullChecks: Boolean = strictNullChecks
+
+    // To reduce the amount of destructive changes, no properties will be added to the public.
+    val strictNullChecks: Boolean = if (strictNullChecks) {
+        if (newStrictNullChecks) {
+            throw IllegalArgumentException("Enabling both StrictNullChecks and NewStrictNullChecks is not permitted.")
+        }
+
+        true
+    } else {
+        newStrictNullChecks
+    }
 
     companion object {
         // Increment when option is added
@@ -84,6 +99,7 @@ class KotlinModule private constructor(
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),
+        builder.isEnabled(NewStrictNullChecks),
     )
 
     override fun setupModule(context: SetupContext) {
@@ -95,7 +111,7 @@ class KotlinModule private constructor(
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, oldStrictNullChecks))
 
         if (singletonSupport) {
             context.addBeanDeserializerModifier(KotlinBeanDeserializerModifier)
@@ -109,7 +125,9 @@ class KotlinModule private constructor(
             nullIsSameAsDefault,
             useJavaDurationConversion
         ))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(cache, kotlinPropertyNameAsImplicitName))
+        context.appendAnnotationIntrospector(
+            KotlinNamesAnnotationIntrospector(cache, newStrictNullChecks, kotlinPropertyNameAsImplicitName)
+        )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)

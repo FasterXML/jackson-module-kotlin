@@ -1,5 +1,7 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.JsonSetter
+import com.fasterxml.jackson.databind.exc.InvalidNullException
 import java.util.BitSet
 
 /**
@@ -40,6 +42,11 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
      * may contain null values after deserialization.
      * Enabling it protects against this but has significant performance impact.
      */
+    @Deprecated(
+        level = DeprecationLevel.WARNING,
+        message = "This option will be migrated to the new backend in 2.21.",
+        replaceWith = ReplaceWith("NewStrictNullChecks")
+    )
     StrictNullChecks(enabledByDefault = false),
 
     /**
@@ -66,7 +73,23 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
      * `@JsonFormat` annotations need to be declared either on getter using `@get:JsonFormat` or field using `@field:JsonFormat`.
      * See [jackson-module-kotlin#651] for details.
      */
-    UseJavaDurationConversion(enabledByDefault = false);
+    UseJavaDurationConversion(enabledByDefault = false),
+
+    /**
+     * New [StrictNullChecks] feature with improved throughput.
+     * Internally, it will be the same as if [JsonSetter] (contentNulls = FAIL) had been granted.
+     * Benchmarks show that it can check for illegal nulls with throughput nearly identical to the default (see [jackson-module-kotlin#719]).
+     *
+     * Note that in the new backend, the exception thrown has changed from [MissingKotlinParameterException] to [InvalidNullException].
+     * The message will be changed accordingly.
+     * Since 2.19, the base class of [MissingKotlinParameterException] has also been changed to [InvalidNullException],
+     * so be careful when catching it.
+     *
+     * This is a temporary option for a phased backend migration,
+     * which will eventually be merged into [StrictNullChecks].
+     * Also, specifying both this and [StrictNullChecks] is not permitted.
+     */
+    NewStrictNullChecks(enabledByDefault = false);
 
     internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 

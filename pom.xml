@@ -254,7 +254,9 @@
                             <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#getSingletonSupport()</exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.SingletonSupport</exclude>
                             <!-- internal -->
-
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean)
+                            </exclude>
                         </excludes>
                     </parameter>
                 </configuration>
