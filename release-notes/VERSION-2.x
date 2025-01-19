@@ -17,6 +17,10 @@ Co-maintainers:
 ------------------------------------------------------------------------
 
 2.19.0 (not yet released)
+#885: A new `StrictNullChecks` option(KotlinFeature.NewStrictNullChecks) has been added which greatly improves throughput.
+ Benchmarks show a consistent throughput drop of less than 2% when enabled (prior to the improvement, the worst throughput drop was more than 30%).
+ Note that the new backend changes the exception thrown to `InvalidNullException` and with it the error message.
+ Also note that the base class for `MissingKotlinParameterException` was changed to `InvalidNullException` in #884.
 #884: The base class for `MissingKotlinParameterException` has been changed to `InvalidNullException`.
  If you do not catch this exception or catch `MismatchedInputException`, the behavior is unchanged.
  If you are catching both `MismatchedKotlinParameterException` and `InvalidNullException`, you must catch `MismatchedKotlinParameterException` first.
