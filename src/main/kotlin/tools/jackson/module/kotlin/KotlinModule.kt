@@ -36,10 +36,24 @@ class KotlinModule private constructor(
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
-    val strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
+    strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
+    private val newStrictNullChecks: Boolean = NewStrictNullChecks.enabledByDefault,
 ) : SimpleModule(KotlinModule::class.java.name, PackageVersion.VERSION) {
+
+    private val oldStrictNullChecks: Boolean = strictNullChecks
+
+    // To reduce the amount of destructive changes, no properties will be added to the public.
+    val strictNullChecks: Boolean = if (strictNullChecks) {
+        if (newStrictNullChecks) {
+            throw IllegalArgumentException("Enabling both StrictNullChecks and NewStrictNullChecks is not permitted.")
+        }
+
+        true
+    } else {
+        newStrictNullChecks
+    }
 
     companion object {
         // Increment when option is added
@@ -61,6 +75,7 @@ class KotlinModule private constructor(
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),
+        builder.isEnabled(NewStrictNullChecks),
     )
 
     override fun setupModule(context: SetupContext) {
@@ -72,7 +87,7 @@ class KotlinModule private constructor(
 
         val cache = ReflectionCache(reflectionCacheSize)
 
-        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, strictNullChecks))
+        context.addValueInstantiators(KotlinInstantiators(cache, nullToEmptyCollection, nullToEmptyMap, nullIsSameAsDefault, oldStrictNullChecks))
 
         if (singletonSupport) {
             // [module-kotlin#225]: keep Kotlin singletons as singletons
@@ -87,7 +102,9 @@ class KotlinModule private constructor(
             nullIsSameAsDefault,
             useJavaDurationConversion
         ))
-        context.appendAnnotationIntrospector(KotlinNamesAnnotationIntrospector(cache, kotlinPropertyNameAsImplicitName))
+        context.appendAnnotationIntrospector(
+            KotlinNamesAnnotationIntrospector(cache, newStrictNullChecks, kotlinPropertyNameAsImplicitName)
+        )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
         context.addKeyDeserializers(KotlinKeyDeserializers)

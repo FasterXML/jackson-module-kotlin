@@ -6,7 +6,7 @@ import tools.jackson.module.kotlin.KotlinFeature.NullIsSameAsDefault
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyCollection
 import tools.jackson.module.kotlin.KotlinFeature.NullToEmptyMap
 import tools.jackson.module.kotlin.KotlinFeature.SingletonSupport
-import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import tools.jackson.module.kotlin.KotlinFeature.NewStrictNullChecks
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -35,7 +35,7 @@ class DslTest {
             enable(NullToEmptyMap)
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
         }
 
         assertNotNull(module)

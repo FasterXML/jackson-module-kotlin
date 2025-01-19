@@ -6,9 +6,24 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNotNull
 
 class KotlinModuleTest {
+    // After the final migration is complete, this test will be removed.
+    @Test
+    fun strictNullChecksTests() {
+        assertTrue(kotlinModule { enable(StrictNullChecks) }.strictNullChecks)
+        assertTrue(kotlinModule { enable(NewStrictNullChecks) }.strictNullChecks)
+
+        assertThrows<IllegalArgumentException> {
+            kotlinModule {
+                enable(StrictNullChecks)
+                enable(NewStrictNullChecks)
+            }
+        }
+    }
+
     @Test
     fun builder_Defaults() {
         val module = KotlinModule.Builder().build()

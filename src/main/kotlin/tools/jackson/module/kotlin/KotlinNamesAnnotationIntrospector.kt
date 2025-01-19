@@ -1,6 +1,8 @@
 package tools.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSetter
+import com.fasterxml.jackson.annotation.Nulls
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.cfg.MapperConfig
 import tools.jackson.databind.introspect.Annotated
@@ -12,8 +14,10 @@ import tools.jackson.databind.introspect.NopAnnotationIntrospector
 import tools.jackson.databind.introspect.PotentialCreator
 import java.lang.reflect.Constructor
 import java.util.Locale
+import kotlin.collections.getOrNull
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
+import kotlin.reflect.KParameter
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -22,6 +26,7 @@ import kotlin.reflect.jvm.javaType
 
 internal class KotlinNamesAnnotationIntrospector(
     private val cache: ReflectionCache,
+    private val strictNullChecks: Boolean,
     private val kotlinPropertyNameAsImplicitName: Boolean
 ) : NopAnnotationIntrospector() {
     private fun getterNameFromJava(member: AnnotatedMethod): String? {
@@ -73,15 +78,25 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     override fun refineDeserializationType(config: MapperConfig<*>, a: Annotated, baseType: JavaType): JavaType =
-        (a as? AnnotatedParameter)?.let { _ ->
-            cache.findKotlinParameter(a)?.let { param ->
-                val rawType = a.rawType
-                (param.type.classifier as? KClass<*>)
-                    ?.java
-                    ?.takeIf { it.isUnboxableValueClass() && it != rawType }
-                    ?.let { config.constructType(it) }
-            }
+        findKotlinParameter(a)?.let { param ->
+            val rawType = a.rawType
+            (param.type.classifier as? KClass<*>)
+                ?.java
+                ?.takeIf { it.isUnboxableValueClass() && it != rawType }
+                ?.let { config.constructType(it) }
         } ?: baseType
+
+    override fun findSetterInfo(config: MapperConfig<*>, ann: Annotated): JsonSetter.Value = ann.takeIf { strictNullChecks }
+        ?.let { _ ->
+            findKotlinParameter(ann)?.let { param ->
+                if (param.requireStrictNullCheck(ann.type)) {
+                    JsonSetter.Value.forContentNulls(Nulls.FAIL)
+                } else {
+                    null
+                }
+            }
+        }
+        ?: super.findSetterInfo(config, ann)
 
     override fun findPreferredCreator(
         config: MapperConfig<*>,
@@ -106,7 +121,17 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 
     private fun findKotlinParameterName(param: AnnotatedParameter): String? = cache.findKotlinParameter(param)?.name
+
+    private fun findKotlinParameter(param: Annotated) = (param as? AnnotatedParameter)
+        ?.let { cache.findKotlinParameter(it) }
 }
+
+private fun KParameter.markedNonNullAt(index: Int) = type.arguments.getOrNull(index)?.type?.isMarkedNullable == false
+
+private fun KParameter.requireStrictNullCheck(type: JavaType): Boolean =
+    ((type.isArrayType || type.isCollectionLikeType) && this.markedNonNullAt(0)) ||
+            (type.isMapLikeType && this.markedNonNullAt(1))
+
 
 // If it is not a Kotlin class or an Enum, Creator is not used
 private fun AnnotatedClass.creatableKotlinClass(): KClass<*>? = annotated
