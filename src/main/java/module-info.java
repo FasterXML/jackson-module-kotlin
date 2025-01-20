@@ -1,5 +1,5 @@
 // Kotlin module-info for Main artifact
-module com.fasterxml.jackson.kotlin
+module tools.jackson.module.kotlin
 {
     requires java.desktop;
 
