@@ -5,6 +5,7 @@ module tools.jackson.module.kotlin
 
     requires kotlin.reflect;
     requires kotlin.stdlib;
+    requires org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
     requires tools.jackson.databind;

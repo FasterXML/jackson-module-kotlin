@@ -61,7 +61,7 @@
         <javac.src.version>17</javac.src.version>
         <javac.target.version>17</javac.target.version>
 
-        <version.kotlin>1.9.24</version.kotlin>
+        <version.kotlin>1.9.25</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
         <packageVersion.dir>tools/jackson/module/kotlin</packageVersion.dir>

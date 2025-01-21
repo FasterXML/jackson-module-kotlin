@@ -14,7 +14,10 @@ module com.fasterxml.jackson.kotlin
     requires tools.jackson.databind;
 
     // Additional test lib/framework dependencies
-    requires junit; // JUnit 4
+    requires kotlin.test;
+    requires kotlin.test.junit;
+    requires org.junit.jupiter.api;
+    requires org.junit.jupiter.params;
 
     // Other test deps
 
