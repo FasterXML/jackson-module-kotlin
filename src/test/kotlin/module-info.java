@@ -4,8 +4,6 @@ module com.fasterxml.jackson.kotlin
     // Since we are not split from Main artifact, will not
     // need to depend on Main artifact -- but need its dependencies
 
-    requires java.desktop;
-
     requires kotlin.reflect;
     requires kotlin.stdlib;
     requires org.jetbrains.annotations;
