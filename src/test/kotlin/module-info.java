@@ -1,4 +1,4 @@
-// Kotline module-info for (unit) Tests
+// Kotlin module-info for (unit) Tests
 module com.fasterxml.jackson.kotlin
 {
     // Since we are not split from Main artifact, will not
@@ -13,7 +13,6 @@ module com.fasterxml.jackson.kotlin
 
     // Additional test lib/framework dependencies
     requires kotlin.test;
-    requires kotlin.test.junit;
     requires org.junit.jupiter.api;
     requires org.junit.jupiter.params;
 
