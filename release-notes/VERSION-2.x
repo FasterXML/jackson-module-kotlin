@@ -17,6 +17,8 @@ Co-maintainers:
 ------------------------------------------------------------------------
 
 2.19.0 (not yet released)
+
+#889: Kotlin has been upgraded to 1.9.25.
 #885: A new `StrictNullChecks` option(KotlinFeature.NewStrictNullChecks) has been added which greatly improves throughput.
  Benchmarks show a consistent throughput drop of less than 2% when enabled (prior to the improvement, the worst throughput drop was more than 30%).
  Note that the new backend changes the exception thrown to `InvalidNullException` and with it the error message.
@@ -28,7 +30,6 @@ Co-maintainers:
  This is a problematic process that has been marked as deprecated for a very long time and will be removed in 2.20 or later.
 #878: Fixed a problem where settings like `@JsonSetter(nulls = AS_EMPTY)` were not being applied when the input was `undefined`.
 #869: By using Enum.entries in the acquisition of KotlinFeature.defaults, the initialization load was reduced, albeit slightly.
-#861: Kotlin has been upgraded to 1.9.24.
 #858: Minor performance improvement of findDefaultCreator in edge cases.
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
