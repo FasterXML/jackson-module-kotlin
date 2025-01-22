@@ -1,5 +1,5 @@
 // Kotlin module-info for (unit) Tests
-module com.fasterxml.jackson.kotlin
+module tools.jackson.module.kotlin
 {
     // Since we are not split from Main artifact, will not
     // need to depend on Main artifact -- but need its dependencies
@@ -9,7 +9,9 @@ module com.fasterxml.jackson.kotlin
     requires org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
+    requires tools.jackson.core;
     requires tools.jackson.databind;
+    requires tools.jackson.module.kotlin;
 
     // Additional test lib/framework dependencies
     requires kotlin.test;

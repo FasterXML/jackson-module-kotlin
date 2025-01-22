@@ -6,6 +6,7 @@ module tools.jackson.module.kotlin
     requires org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
+    requires tools.jackson.core;
     requires tools.jackson.databind;
 
     exports tools.jackson.module.kotlin;
