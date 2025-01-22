@@ -26,10 +26,10 @@ jobs:
       max-parallel: 5
       matrix:
         java_version: ['17', '21', '23']
-        kotlin_version: ['1.9.24', '2.0.21', '2.1.0']
+        kotlin_version: ['1.9.25', '2.0.21', '2.1.0']
         include:
           - java_version: '17'
-            kotlin_version: '1.9.24'
+            kotlin_version: '1.9.25'
             release_build: 'R'
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
