@@ -16,7 +16,6 @@ module tools.jackson.module.kotlin
     // Additional test lib/framework dependencies
     requires kotlin.test;
     requires org.junit.jupiter.api;
-    requires org.junit.jupiter.params;
 
     // Other test deps
 
