@@ -1,3 +1,5 @@
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.jackson.module/jackson-module-kotlin/badge.svg)](https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin)
+[![Change log](https://img.shields.io/badge/change%20log-%E2%96%A4-yellow.svg)](./release-notes/VERSION-2.x)
 [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](https://slack.kotlinlang.org/)
 
 # Overview
@@ -256,8 +258,8 @@ See the [main Jackson contribution guidelines](https://github.com/FasterXML/jack
 
 If you are going to write code, choose the appropriate base branch:
 
-- `2.17` for bugfixes against the current stable version
-- `2.18` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
+- `2.18` for bugfixes against the current stable version
+- `2.19` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `master` for significant changes to existing behavior, which will be part of Jackson 3.0
 
 ### Failing tests
