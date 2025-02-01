@@ -1,8 +1,8 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass
+package tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass
 
 import com.fasterxml.jackson.annotation.JsonKey
-import com.fasterxml.jackson.module.kotlin.jacksonMapperBuilder
-import com.fasterxml.jackson.module.kotlin.testPrettyWriter
+import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.testPrettyWriter
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

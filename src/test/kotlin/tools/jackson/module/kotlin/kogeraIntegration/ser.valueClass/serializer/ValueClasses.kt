@@ -1,13 +1,13 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer
+package tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer
 
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.ser.std.StdSerializer
+import tools.jackson.core.JsonGenerator
+import tools.jackson.databind.SerializationContext
+import tools.jackson.databind.ser.std.StdSerializer
 
 @JvmInline
 value class Primitive(val v: Int) {
     class Serializer : StdSerializer<Primitive>(Primitive::class.java) {
-        override fun serialize(value: Primitive, gen: JsonGenerator, provider: SerializerProvider) {
+        override fun serialize(value: Primitive, gen: JsonGenerator, provider: SerializationContext) {
             gen.writeNumber(value.v + 100)
         }
     }
@@ -16,7 +16,7 @@ value class Primitive(val v: Int) {
 @JvmInline
 value class NonNullObject(val v: String) {
     class Serializer : StdSerializer<NonNullObject>(NonNullObject::class.java) {
-        override fun serialize(value: NonNullObject, gen: JsonGenerator, provider: SerializerProvider) {
+        override fun serialize(value: NonNullObject, gen: JsonGenerator, provider: SerializationContext) {
             gen.writeString("${value.v}-ser")
         }
     }
@@ -25,7 +25,7 @@ value class NonNullObject(val v: String) {
 @JvmInline
 value class NullableObject(val v: String?) {
     class Serializer : StdSerializer<NullableObject>(NullableObject::class.java) {
-        override fun serialize(value: NullableObject, gen: JsonGenerator, provider: SerializerProvider) {
+        override fun serialize(value: NullableObject, gen: JsonGenerator, provider: SerializationContext) {
             gen.writeString(value.v?.let { "$it-ser" } ?: "NULL")
         }
     }

@@ -1,20 +1,16 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.byAnnotation.primitive
+package tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.byAnnotation.primitive
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.testPrettyWriter
-import com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.Primitive
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.testPrettyWriter
+import tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.Primitive
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
 class ByAnnotationTest {
     companion object {
-        val writer = KotlinModule.Builder()
-            .build()
-            .let { ObjectMapper().registerModule(it) }
-            .testPrettyWriter()
+        val writer = jacksonObjectMapper().testPrettyWriter()
     }
 
     data class NonNullFailingSrc(

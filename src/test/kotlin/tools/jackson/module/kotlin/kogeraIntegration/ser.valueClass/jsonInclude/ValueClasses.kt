@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.jsonInclude
+package tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.jsonInclude
 
 @JvmInline
 value class Primitive(val v: Int)

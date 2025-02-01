@@ -1,9 +1,9 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.byAnnotation.nonNullObject
+package tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.byAnnotation.nonNullObject
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.testPrettyWriter
-import com.fasterxml.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.NonNullObject
+import tools.jackson.databind.annotation.JsonSerialize
+import tools.jackson.module.kotlin.jacksonObjectMapper
+import tools.jackson.module.kotlin.testPrettyWriter
+import tools.jackson.module.kotlin.kogeraIntegration.ser.valueClass.serializer.NonNullObject
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
