@@ -15,6 +15,11 @@ Authors:
 
 Contributors:
 
+# 2.18.3 (not yet released)
+
+WrongWrong (@k163377)
+* #900: Fixed an issue where some tests were not running
+
 # 2.18.0 (26-Sep-2024)
 
 WrongWrong (@k163377)
