@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.test
+package tools.jackson.module.kotlin.test
 
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature.StrictNullChecks
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNull
 
-class StrictNullChecksTest {
+class StrictNullChecksTestOld {
     private val mapper = JsonMapper.builder()
         .addModule(kotlinModule { enable(StrictNullChecks) })
         .build()
