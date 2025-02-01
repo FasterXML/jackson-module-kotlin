@@ -1,4 +1,4 @@
-package com.fasterxml.jackson.module.kotlin.kogeraIntegration.deser
+package tools.jackson.module.kotlin.kogeraIntegration.deser
 
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
