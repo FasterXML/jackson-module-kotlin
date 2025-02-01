@@ -175,7 +175,7 @@
                         This setting is necessary because the project includes tests that do not match the default run target class name.
                         https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html#inclusions
                         -->
-                        <include>com.fasterxml.jackson.module.kotlin.**</include>
+                        <include>tools.jackson.module.kotlin.**</include>
                     </includes>
                 </configuration>
             </plugin>
