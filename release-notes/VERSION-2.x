@@ -16,6 +16,10 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.18.3 (not yet released)
+
+#904: An error that occurred when serializing a `value class` that wraps a `Map`(#873) has been fixed.
+
 2.18.2 (27-Nov-2024)
 2.18.1 (28-Oct-2024)
 
