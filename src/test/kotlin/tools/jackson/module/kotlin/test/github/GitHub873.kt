@@ -2,9 +2,20 @@ package tools.jackson.module.kotlin.test.github
 
 import tools.jackson.module.kotlin.defaultMapper
 import tools.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.annotation.JsonValue
 import kotlin.test.Test
 
 class GitHub873 {
+    @JvmInline
+    value class Person(
+        val properties: Map<String, Any>,
+    )
+
+    data class TimestampedPerson(
+        val timestamp: Long,
+        val person: Person,
+    )
+
     @Test
     fun `should serialize value class`() {
 
@@ -34,12 +45,18 @@ class GitHub873 {
     }
 
     @JvmInline
-    value class Person(
-        val properties: Map<String, Any>,
-    )
+    value class MapAsJsonValue(val value: String) {
+        @get:JsonValue
+        val jsonValue get() = mapOf("key" to value)
+    }
 
-    data class TimestampedPerson(
-        val timestamp: Long,
-        val person: Person,
-    )
+    data class JsonValueWrapper(val value: MapAsJsonValue)
+
+    @Test
+    fun `JsonValue is serialized in the same way`() {
+        val data = JsonValueWrapper(MapAsJsonValue("value"))
+        val json = defaultMapper.writeValueAsString(data)
+
+        assert("""{"value":{"key":"value"}}""" == json)
+    }
 }
