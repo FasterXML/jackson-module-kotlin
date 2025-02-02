@@ -34,6 +34,10 @@ Co-maintainers:
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
 
+2.18.3 (not yet released)
+
+#904: An error that occurred when serializing a `value class` that wraps a `Map`(#873) has been fixed.
+
 2.18.2 (27-Nov-2024)
 2.18.1 (28-Oct-2024)
 

@@ -62,7 +62,7 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
             return
         }
 
-        provider.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, provider)
+        provider.defaultSerializeValue(unboxed, gen)
     }
 }
 
