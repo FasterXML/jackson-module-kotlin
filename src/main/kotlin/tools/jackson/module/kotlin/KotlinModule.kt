@@ -105,7 +105,7 @@ class KotlinModule private constructor(
         )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
-        context.addKeyDeserializers(KotlinKeyDeserializers)
+        context.addKeyDeserializers(KotlinKeyDeserializers(cache))
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 
