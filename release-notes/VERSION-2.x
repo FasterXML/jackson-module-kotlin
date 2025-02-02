@@ -18,7 +18,9 @@ Co-maintainers:
 
 2.18.3 (not yet released)
 
-#904: An error that occurred when serializing a `value class` that wraps a `Map`(#873) has been fixed.
+#904: Fixed a problem where context was not being propagated properly when serializing an unboxed value of `value class`
+  or a value retrieved with `JsonValue`.
+  This fixes a problem where an error would occur when serializing a `value class` that wraps a `Map`(#873).
 
 2.18.2 (27-Nov-2024)
 2.18.1 (28-Oct-2024)
