@@ -56,7 +56,7 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
             return
         }
 
-        ctxt.findValueSerializer(unboxed::class.java).serialize(unboxed, gen, ctxt)
+        ctxt.writeValue(gen, unboxed)
     }
 }
 
