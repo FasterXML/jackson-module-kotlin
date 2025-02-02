@@ -18,6 +18,7 @@ Contributors:
 # 2.18.3 (not yet released)
 
 WrongWrong (@k163377)
+* #905: Additional fixes related to #907.
 * #904: Fixed an error when serializing a `value class` that wraps a `Map`
 * #900: Fixed an issue where some tests were not running
 
