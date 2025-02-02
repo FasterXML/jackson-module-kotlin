@@ -58,7 +58,7 @@ object ValueClassUnboxSerializer : StdSerializer<Any>(Any::class.java) {
         val unboxed = value::class.java.getMethod("unbox-impl").invoke(value)
 
         if (unboxed == null) {
-            provider.findNullValueSerializer(null).serialize(null, gen, provider)
+            provider.defaultSerializeNull(gen)
             return
         }
 
@@ -77,8 +77,8 @@ internal sealed class ValueClassSerializer<T : Any>(t: Class<T>) : StdSerializer
             // As shown in the processing of the factory function, jsonValueGetter is always a static method.
             val jsonValue: Any? = staticJsonValueGetter.invoke(null, unboxed)
             jsonValue
-                ?.let { provider.findValueSerializer(it::class.java).serialize(it, gen, provider) }
-                ?: provider.findNullValueSerializer(null).serialize(null, gen, provider)
+                ?.let { provider.defaultSerializeValue(it, gen) }
+                ?: provider.defaultSerializeNull(gen)
         }
     }
 
