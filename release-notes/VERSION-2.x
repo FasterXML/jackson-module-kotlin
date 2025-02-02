@@ -18,6 +18,8 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#910: A default `KeySerializer` for `value class` has been added.
+ This eliminates the need to have a custom `KeySerializer` for each `value class` when using it as a key in a `Map`, if only simple boxing is needed.
 #889: Kotlin has been upgraded to 1.9.25.
 #885: A new `StrictNullChecks` option(KotlinFeature.NewStrictNullChecks) has been added which greatly improves throughput.
  Benchmarks show a consistent throughput drop of less than 2% when enabled (prior to the improvement, the worst throughput drop was more than 30%).
