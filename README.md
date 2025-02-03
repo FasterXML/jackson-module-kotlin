@@ -1,5 +1,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.fasterxml.jackson.module/jackson-module-kotlin/badge.svg)](https://mvnrepository.com/artifact/com.fasterxml.jackson.module/jackson-module-kotlin)
 [![Change log](https://img.shields.io/badge/change%20log-%E2%96%A4-yellow.svg)](./release-notes/VERSION-2.x)
+[![Tidelift](https://tidelift.com/badges/package/maven/com.fasterxml.jackson.module:jackson-module-kotlin)](https://tidelift.com/subscription/pkg/maven-com-fasterxml-jackson-module-jackson-module-kotlin?utm_source=maven-com-fasterxml-jackson-module-jackson-module-kotlin&utm_medium=referral&utm_campaign=readme)
 [![Kotlin Slack](https://img.shields.io/badge/chat-kotlin%20slack-orange.svg)](https://slack.kotlinlang.org/)
 
 # Overview

@@ -19,8 +19,6 @@ fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class
  *  using the default value provided in Kotlin.
  * @property singletonSupport        Default: false.  Mode for singleton handling.
  *  See [KotlinFeature.SingletonSupport]
- * @property enabledSingletonSupport Default: false.  A temporary property that is maintained until the return value of `singletonSupport` is changed.
- *  It will be removed in 2.21.
  * @property strictNullChecks        Default: false.  Whether to check deserialized collections.  With this disabled,
  *  the default, collections which are typed to disallow null members
  *  (e.g. List<String>) may contain null values after deserialization.  Enabling it
@@ -107,7 +105,7 @@ class KotlinModule private constructor(
         )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
-        context.addKeyDeserializers(KotlinKeyDeserializers)
+        context.addKeyDeserializers(KotlinKeyDeserializers(cache))
         context.addSerializers(KotlinSerializers())
         context.addKeySerializers(KotlinKeySerializers())
 

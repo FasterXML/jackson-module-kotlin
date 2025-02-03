@@ -18,6 +18,7 @@ Contributors:
 # 2.19.0 (not yet released)
 
 WrongWrong (@k163377)
+* #910: Add default KeyDeserializer for value class
 * #885: Performance improvement of strictNullChecks
 * #884: Changed the base class of MissingKotlinParameterException to InvalidNullException
 * #878: Fix for #876
@@ -27,6 +28,13 @@ WrongWrong (@k163377)
 * #858: Refactor findDefaultCreator
 * #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName
 * #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport
+
+# 2.18.3 (not yet released)
+
+WrongWrong (@k163377)
+* #908: Additional fixes related to #904.
+* #904: Fixed an error when serializing a `value class` that wraps a `Map`
+* #900: Fixed an issue where some tests were not running
 
 # 2.18.0 (26-Sep-2024)
 

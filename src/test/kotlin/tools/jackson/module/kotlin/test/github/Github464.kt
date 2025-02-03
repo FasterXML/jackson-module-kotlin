@@ -1,5 +1,6 @@
 package tools.jackson.module.kotlin.test.github
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder
 import tools.jackson.core.JsonGenerator
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectWriter
@@ -39,6 +40,20 @@ class Github464 {
         fun <T> getXyzzy() = quux
     }
 
+    @JsonPropertyOrder(
+        "foo",
+        "bar",
+        "baz",
+        "qux",
+        "quux",
+        "corge",
+        "grault",
+        "garply",
+        "waldo",
+        "fred",
+        "plugh",
+        "xyzzy"
+    )
     class Poko(
         val foo: ValueClass,
         val bar: ValueClass?,
@@ -107,8 +122,8 @@ class Github464 {
                         "1" : null,
                         "null-key" : null
                       },
-                      "xyzzy" : 0,
-                      "plugh" : 0
+                      "plugh" : 0,
+                      "xyzzy" : 0
                     }
                 """.trimIndent(),
                 writer.writeValueAsString(target)
@@ -145,8 +160,8 @@ class Github464 {
                         "1" : "null-value",
                         "null-key" : "null-value"
                       },
-                      "xyzzy" : 0,
-                      "plugh" : 0
+                      "plugh" : 0,
+                      "xyzzy" : 0
                     }
                 """.trimIndent(),
                 writer.writeValueAsString(target)
