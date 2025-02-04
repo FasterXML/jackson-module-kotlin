@@ -1,13 +1,15 @@
 // Kotlin module-info for Main artifact
 module tools.jackson.module.kotlin
 {
-    requires java.desktop;
+    requires java.desktop; // for @Transient
 
     requires kotlin.reflect;
-    requires kotlin.stdlib;
+    requires transitive kotlin.stdlib;
+    requires org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
-    requires tools.jackson.databind;
+    requires tools.jackson.core;
+    requires transitive tools.jackson.databind;
 
     exports tools.jackson.module.kotlin;
 
