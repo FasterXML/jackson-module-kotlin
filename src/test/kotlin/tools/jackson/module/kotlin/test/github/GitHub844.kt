@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.jsonMapper
 import org.junit.jupiter.api.Test
+import tools.jackson.module.kotlin.jacksonObjectMapper
 import kotlin.test.assertEquals
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "_type")
@@ -21,7 +22,7 @@ class GitHub844 {
         }
         """
 
-        val jacksonObjectMapper = jsonMapper()
+        val jacksonObjectMapper = jacksonObjectMapper()
         val message = jacksonObjectMapper.readValue<BaseClass>(json)
 
         assertEquals(ChildClass("Test"), message)
