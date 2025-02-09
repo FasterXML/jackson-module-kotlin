@@ -10,8 +10,6 @@ import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.deser.std.StdDeserializer;
 
-import java.io.IOException;
-
 /**
  * An interface to be inherited by JsonDeserializer that handles value classes that may wrap nullable.
  */

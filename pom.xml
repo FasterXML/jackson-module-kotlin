@@ -91,6 +91,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>26.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${version.kotlin}</version>
@@ -133,8 +139,8 @@
         <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
-                <artifactId>kotlin-maven-plugin</artifactId>
                 <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${version.kotlin}</version>
 
                 <executions>
@@ -160,24 +166,13 @@
                             <goal>test-compile</goal>
                         </goals>
                         <configuration>
-                            <args>
-                            </args>
+                            <sourceDirs>
+                                <source>${project.basedir}/src/test/java</source>
+                                <source>${project.basedir}/src/test/kotlin</source>
+                            </sourceDirs>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <!--
-                        This setting is necessary because the project includes tests that do not match the default run target class name.
-                        https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html#inclusions
-                        -->
-                        <include>tools.jackson.module.kotlin.**</include>
-                    </includes>
-                </configuration>
             </plugin>
             <plugin>
                 <!-- Inherited from oss-base. Generate PackageVersion.java.-->
@@ -198,12 +193,6 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>
-            </plugin>
-
-            <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
-            <plugin>
-                <groupId>org.moditect</groupId>
-                <artifactId>moditect-maven-plugin</artifactId>
             </plugin>
 
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
@@ -261,7 +250,21 @@
                         </goals>
                         <configuration>
                             <sources>
+                                <source>src/main/java</source>
                                 <source>src/main/kotlin</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/test/java</source>
+                                <source>src/test/kotlin</source>
                             </sources>
                         </configuration>
                     </execution>
