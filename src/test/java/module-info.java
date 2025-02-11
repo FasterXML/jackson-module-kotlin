@@ -11,13 +11,13 @@ module tools.jackson.module.kotlin
     requires com.fasterxml.jackson.annotation;
     requires tools.jackson.core;
     requires tools.jackson.databind;
-    requires tools.jackson.module.kotlin;
 
     // Additional test lib/framework dependencies
     requires kotlin.test;
     requires org.junit.jupiter.api;
 
     // Other test deps
+    requires tools.jackson.dataformat.xml;
 
     // Further, need to open up test packages for JUnit et al
 
