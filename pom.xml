@@ -255,19 +255,6 @@
                             </sources>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>add-test-source</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>src/test/java</source>
-                                <source>src/test/kotlin</source>
-                            </sources>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
         </plugins>
