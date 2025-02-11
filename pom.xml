@@ -250,7 +250,6 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>src/main/java</source>
                                 <source>src/main/kotlin</source>
                             </sources>
                         </configuration>
