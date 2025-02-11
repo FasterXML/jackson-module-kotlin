@@ -18,6 +18,7 @@ module tools.jackson.module.kotlin
 
     // Other test deps
     requires tools.jackson.dataformat.xml;
+    requires tools.jackson.datatype.javatime;
 
     // Further, need to open up test packages for JUnit et al
 
