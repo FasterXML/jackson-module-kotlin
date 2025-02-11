@@ -18,6 +18,7 @@ Contributors:
 # 2.19.0 (not yet released)
 
 WrongWrong (@k163377)
+* #914: Add test case to serialize Nothing? (for #314)
 * #910: Add default KeyDeserializer for value class
 * #885: Performance improvement of strictNullChecks
 * #884: Changed the base class of MissingKotlinParameterException to InvalidNullException
