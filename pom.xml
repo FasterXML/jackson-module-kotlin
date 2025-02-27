@@ -9,12 +9,12 @@
     <parent>
         <groupId>tools.jackson</groupId>
         <artifactId>jackson-base</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-rc1-SNAPSHOT</version>
     </parent>
     <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <name>jackson-module-kotlin</name>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-rc1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Add-on module for Jackson (https://github.com/FasterXML/jackson/) to support
         Kotlin language, specifically introspection of method/constructor parameter names,
@@ -55,12 +55,6 @@
     </scm>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-	<!-- as per [databind#4820], minimum of Java 17 for Jackson 3.0 -->
-        <javac.src.version>17</javac.src.version>
-        <javac.target.version>17</javac.target.version>
-
         <version.kotlin>1.9.25</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
@@ -84,7 +78,6 @@
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -189,12 +182,6 @@
                 <!-- Inherited from oss-base. Generate PackageVersion.java.-->
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
-                <executions>
-                    <execution>
-                        <id>process-packageVersion</id>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -227,7 +214,7 @@
                         <dependency>
                             <groupId>tools.jackson.module</groupId>
                             <artifactId>jackson-module-kotlin</artifactId>
-                            <version>3.0.0-SNAPSHOT</version>
+                            <version>3.0.0-rc1-SNAPSHOT</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
