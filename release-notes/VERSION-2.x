@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.18.3 (not yet released)
+2.18.3 (28-Feb-2025)
 
 #904: Fixed a problem where context was not being propagated properly when serializing an unboxed value of `value class`
   or a value retrieved with `JsonValue`.
