@@ -36,7 +36,7 @@ Co-maintainers:
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
 
-2.18.3 (not yet released)
+2.18.3 (28-Feb-2025)
 
 #904: Fixed a problem where context was not being propagated properly when serializing an unboxed value of `value class`
   or a value retrieved with `JsonValue`.
