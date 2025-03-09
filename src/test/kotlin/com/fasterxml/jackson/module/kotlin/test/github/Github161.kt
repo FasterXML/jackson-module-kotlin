@@ -19,7 +19,7 @@ class TestGithub161 {
         try {
             objectMapper.readValue(json, Foo::class.java)
             fail("Expected an error on the missing primitive value")
-        } catch (ex: MismatchedInputException) {
+        } catch (_: MismatchedInputException) {
             // success
         }
     }

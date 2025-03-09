@@ -56,8 +56,7 @@ internal class KotlinNamesAnnotationIntrospector(
 
         return member.member.declaringClass.takeIf { it.isKotlinClass() }?.let { clazz ->
             // For edge case, methods must be compared by name, not directly.
-            clazz.kotlin.memberProperties.find { it.javaGetter?.name == getterName }
-                ?.let { it.name }
+            clazz.kotlin.memberProperties.find { it.javaGetter?.name == getterName }?.name
         }
     }
 
