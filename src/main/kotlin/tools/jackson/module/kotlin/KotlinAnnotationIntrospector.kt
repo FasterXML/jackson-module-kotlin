@@ -56,7 +56,7 @@ internal class KotlinAnnotationIntrospector(
                     }
                     else -> null
                 }
-            } catch (ex: UnsupportedOperationException) {
+            } catch (_: UnsupportedOperationException) {
                 null
             }
     }
@@ -111,7 +111,7 @@ internal class KotlinAnnotationIntrospector(
     }
 
     private fun AccessibleObject.isRequiredByAnnotation(): Boolean? = annotations
-        ?.firstOrNull { it.annotationClass == JsonProperty::class }
+        .firstOrNull { it.annotationClass == JsonProperty::class }
         ?.let { it as JsonProperty }
         ?.required
 

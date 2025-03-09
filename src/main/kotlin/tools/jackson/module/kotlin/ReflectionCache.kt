@@ -170,7 +170,7 @@ private fun Constructor<*>.valueClassAwareKotlinFunction(): KFunction<*>? {
         declaringClass
             .getDeclaredConstructor(*parameterTypes, defaultConstructorMarker)
             .kotlinFunction
-    } catch (t: Throwable) {
+    } catch (_: Throwable) {
         null
     }
 }
