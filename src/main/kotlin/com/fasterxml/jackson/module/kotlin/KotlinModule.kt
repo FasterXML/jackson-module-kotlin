@@ -9,7 +9,6 @@ import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.KotlinPropertyNameAsImplicitName
 import com.fasterxml.jackson.module.kotlin.KotlinFeature.UseJavaDurationConversion
 import java.util.*
-import kotlin.reflect.KClass
 
 fun Class<*>.isKotlinClass(): Boolean = this.isAnnotationPresent(Metadata::class.java)
 
