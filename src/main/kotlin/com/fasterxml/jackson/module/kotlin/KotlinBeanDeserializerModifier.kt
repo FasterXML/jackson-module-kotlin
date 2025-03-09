@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 object KotlinBeanDeserializerModifier : BeanDeserializerModifier() {
+    private fun readResolve(): Any = KotlinBeanDeserializerModifier
+
     override fun modifyDeserializer(
             config: DeserializationConfig,
             beanDesc: BeanDescription,
