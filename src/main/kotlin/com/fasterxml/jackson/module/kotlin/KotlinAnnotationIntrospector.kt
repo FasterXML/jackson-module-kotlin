@@ -50,7 +50,7 @@ internal class KotlinAnnotationIntrospector(
                     }
                     else -> null
                 }
-            } catch (ex: UnsupportedOperationException) {
+            } catch (_: UnsupportedOperationException) {
                 null
             }
         }
