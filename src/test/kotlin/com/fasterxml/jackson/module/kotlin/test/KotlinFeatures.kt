@@ -199,7 +199,7 @@ class TestM11Changes {
         try {
             person.phone
             fail("While person can be deserialized without a phone, phone must be set before attempting to access it")
-        } catch(_: IllegalStateException) { // expected
+        } catch (_: IllegalStateException) { // expected
         }
     }
 
