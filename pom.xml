@@ -158,24 +158,13 @@
                             <goal>test-compile</goal>
                         </goals>
                         <configuration>
-                            <args>
-                            </args>
+                            <sourceDirs>
+                                <source>${project.basedir}/src/test/java</source>
+                                <source>${project.basedir}/src/test/kotlin</source>
+                            </sourceDirs>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <!--
-                        This setting is necessary because the project includes tests that do not match the default run target class name.
-                        https://maven.apache.org/surefire/maven-surefire-plugin/examples/inclusion-exclusion.html#inclusions
-                        -->
-                        <include>tools.jackson.module.kotlin.**</include>
-                    </includes>
-                </configuration>
             </plugin>
             <plugin>
                 <!-- Inherited from oss-base. Generate PackageVersion.java.-->
@@ -190,12 +179,6 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>
-            </plugin>
-
-            <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
-            <plugin>
-                <groupId>org.moditect</groupId>
-                <artifactId>moditect-maven-plugin</artifactId>
             </plugin>
 
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
