@@ -36,8 +36,10 @@ internal class KotlinAnnotationIntrospector(
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
 
-    override fun hasRequiredMarker(m: AnnotatedMember): Boolean? {
-        val hasRequired = cache.javaMemberIsRequired(m) {
+    override fun hasRequiredMarker(
+        m: AnnotatedMember
+    ): Boolean? = m.takeIf { it.member.declaringClass.isKotlinClass() }?.let { _ ->
+        cache.javaMemberIsRequired(m) {
             try {
                 when {
                     nullToEmptyCollection && m.type.isCollectionLikeType -> false
@@ -54,7 +56,6 @@ internal class KotlinAnnotationIntrospector(
                 null
             }
         }
-        return hasRequired
     }
 
     override fun findSerializationConverter(a: Annotated): Converter<*, *>? = when (a) {
