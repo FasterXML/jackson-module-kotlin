@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.BeanDescription
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import org.junit.jupiter.api.Assertions.assertTrue
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class GitHub922 {
     private inline fun <reified T : Any> ObjectMapper.introspectSerialization(): BeanDescription =
