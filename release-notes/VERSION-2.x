@@ -18,6 +18,18 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#929: Added consideration of `JsonProperty.isRequired` added in `2.19` in `hasRequiredMarker` processing.
+  Previously `JsonProperty.required` was defined as `Boolean` with default `false`,
+  so `KotlinModule` was forced to override it if the value was `false`.
+  This made it impossible for users to override the parsed result by `KotlinModule`.
+  The new `JsonProperty.isRequired` is defined with three values, including the default,
+  so `KotlinModule` can now respect user specifications.
+#929: Fixed a problem with the `NullToEmptyCollection` and `NullToEmptyMap` options overriding annotated specifications
+  in the `hasRequiredMarker` process.
+#929: Fixed a problem with the `NullToEmptyCollection` and `NullToEmptyMap` options being applied to non-parameters
+  in the `hasRequiredMarker` process.
+  They currently do not work for setters or fields and are not related to serialization,
+  but were being incorrectly applied to their `required` decisions.
 #910: A default `KeyDeserializer` for `value class` has been added.
  This eliminates the need to have a custom `KeyDeserializer` for each `value class` when using it as a key in a `Map`, if only simple boxing is needed.
 #889: Kotlin has been upgraded to 1.9.25.
