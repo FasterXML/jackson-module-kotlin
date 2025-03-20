@@ -1,6 +1,7 @@
 package tools.jackson.module.kotlin
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.OptBoolean
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
 import tools.jackson.databind.cfg.MapperConfig
@@ -42,21 +43,27 @@ internal class KotlinAnnotationIntrospector(
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
 
+    // If a new isRequired is explicitly specified or the old required is true, those values take precedence.
+    // In other cases, override is done by KotlinModule.
+    private fun JsonProperty.forceRequiredByAnnotation(): Boolean? = when {
+        isRequired != OptBoolean.DEFAULT -> isRequired.asBoolean()
+        required -> true
+        else -> null
+    }
+
+    private fun AccessibleObject.forceRequiredByAnnotation(): Boolean? =
+        getAnnotation(JsonProperty::class.java)?.forceRequiredByAnnotation()
+
     override fun hasRequiredMarker(
         cfg : MapperConfig<*>,
         m: AnnotatedMember
     ): Boolean? = m.takeIf { it.member.declaringClass.isKotlinClass() }?.let { _ ->
         cache.javaMemberIsRequired(m) {
             try {
-                when {
-                    nullToEmptyCollection && m.type.isCollectionLikeType -> false
-                    nullToEmptyMap && m.type.isMapLikeType -> false
-                    m.member.declaringClass.isKotlinClass() -> when (m) {
-                        is AnnotatedField -> m.hasRequiredMarker()
-                        is AnnotatedMethod -> m.hasRequiredMarker()
-                        is AnnotatedParameter -> m.hasRequiredMarker()
-                        else -> null
-                    }
+                when (m) {
+                    is AnnotatedField -> m.hasRequiredMarker()
+                    is AnnotatedMethod -> m.hasRequiredMarker()
+                    is AnnotatedParameter -> m.hasRequiredMarker()
                     else -> null
                 }
             } catch (_: UnsupportedOperationException) {
@@ -108,28 +115,9 @@ internal class KotlinAnnotationIntrospector(
         }
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
-        val byAnnotation = (member as Field).isRequiredByAnnotation()
-        val byNullability = (member as Field).kotlinProperty?.returnType?.isRequired()
-
-        return requiredAnnotationOrNullability(byAnnotation, byNullability)
-    }
-
-    private fun AccessibleObject.isRequiredByAnnotation(): Boolean? = annotations
-        .firstOrNull { it.annotationClass == JsonProperty::class }
-        ?.let { it as JsonProperty }
-        ?.required
-
-    private fun requiredAnnotationOrNullability(byAnnotation: Boolean?, byNullability: Boolean?): Boolean? {
-        if (byAnnotation != null && byNullability != null) {
-            return byAnnotation || byNullability
-        } else if (byNullability != null) {
-            return byNullability
-        }
-        return byAnnotation
-    }
-
-    private fun Method.isRequiredByAnnotation(): Boolean? {
-        return (this.annotations.firstOrNull { it.annotationClass.java == JsonProperty::class.java } as? JsonProperty)?.required
+        val field = member as Field
+        return field.forceRequiredByAnnotation()
+            ?: field.kotlinProperty?.returnType?.isRequired()
     }
 
     // Since Kotlin's property has the same Type for each field, getter, and setter,
@@ -144,9 +132,7 @@ internal class KotlinAnnotationIntrospector(
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty ->
             if (kProperty.javaGetter == this.member || (kProperty as? KMutableProperty1)?.javaSetter == this.member) {
-                val byAnnotation = this.member.isRequiredByAnnotation()
-                val byNullability = kProperty.isRequiredByNullability()
-                return requiredAnnotationOrNullability(byAnnotation, byNullability)
+                return member.forceRequiredByAnnotation() ?: kProperty.isRequiredByNullability()
             }
         }
         return null
@@ -154,10 +140,11 @@ internal class KotlinAnnotationIntrospector(
 
     // Is the member method a regular method of the data class or
     private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = cache.kotlinFromJava(this)?.let { func ->
-        val byAnnotation = this.isRequiredByAnnotation()
-        return when {
-            func.isGetterLike() -> requiredAnnotationOrNullability(byAnnotation, func.returnType.isRequired())
-            func.isSetterLike() -> requiredAnnotationOrNullability(byAnnotation, func.valueParameters[0].isRequired())
+        forceRequiredByAnnotation() ?: when {
+            func.isGetterLike() -> func.returnType.isRequired()
+            // If nullToEmpty could be supported for setters,
+            // a branch similar to AnnotatedParameter.hasRequiredMarker should be added.
+            func.isSetterLike() -> func.valueParameters[0].isRequired()
             else -> null
         }
     }
@@ -165,12 +152,15 @@ internal class KotlinAnnotationIntrospector(
     private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
     private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
-    private fun AnnotatedParameter.hasRequiredMarker(): Boolean? {
-        val byAnnotation = this.getAnnotation(JsonProperty::class.java)?.required
-        val byNullability = cache.findKotlinParameter(this)?.isRequired()
-
-        return requiredAnnotationOrNullability(byAnnotation, byNullability)
-    }
+    private fun AnnotatedParameter.hasRequiredMarker(): Boolean? = getAnnotation(JsonProperty::class.java)
+        ?.forceRequiredByAnnotation()
+        ?: run {
+            when {
+                nullToEmptyCollection && type.isCollectionLikeType -> false
+                nullToEmptyMap && type.isMapLikeType -> false
+                else -> cache.findKotlinParameter(this)?.isRequired()
+            }
+        }
 
     private fun AnnotatedMethod.findValueClassReturnType() = cache.findValueClassReturnType(this)
 
