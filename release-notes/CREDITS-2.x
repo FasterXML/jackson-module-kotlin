@@ -33,6 +33,7 @@ WrongWrong (@k163377)
 # 2.18.4 (not yet released)
 
 WrongWrong (@k163377)
+* #923: Fixed hasRequiredMarker to only process content defined in Kotlin
 * #920: Minor refactors that do not affect behavior
 
 # 2.18.3 (28-Feb-2025)
