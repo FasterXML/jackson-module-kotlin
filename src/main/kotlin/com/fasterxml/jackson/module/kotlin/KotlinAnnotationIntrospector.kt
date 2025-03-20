@@ -44,13 +44,12 @@ internal class KotlinAnnotationIntrospector(
                 when {
                     nullToEmptyCollection && m.type.isCollectionLikeType -> false
                     nullToEmptyMap && m.type.isMapLikeType -> false
-                    m.member.declaringClass.isKotlinClass() -> when (m) {
+                    else -> when (m) {
                         is AnnotatedField -> m.hasRequiredMarker()
                         is AnnotatedMethod -> m.hasRequiredMarker()
                         is AnnotatedParameter -> m.hasRequiredMarker()
                         else -> null
                     }
-                    else -> null
                 }
             } catch (_: UnsupportedOperationException) {
                 null
