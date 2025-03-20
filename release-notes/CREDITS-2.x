@@ -21,6 +21,7 @@ Tatu Saloranta (@cowtowncoder)
 * #889: Upgrade kotlin dep to 1.9.25 (from 1.9.24)
 
 WrongWrong (@k163377)
+* #929: Bug fixes to hasRequiredMarker and added isRequired considerations
 * #914: Add test case to serialize Nothing? (for #314)
 * #910: Add default KeyDeserializer for value class
 * #885: Performance improvement of strictNullChecks
