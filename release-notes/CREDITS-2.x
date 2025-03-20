@@ -17,6 +17,9 @@ Contributors:
 
 # 2.19.0 (not yet released)
 
+Tatu Saloranta (@cowtowncoder)
+* #889: Upgrade kotlin dep to 1.9.25 (from 1.9.24)
+
 WrongWrong (@k163377)
 * #914: Add test case to serialize Nothing? (for #314)
 * #910: Add default KeyDeserializer for value class
