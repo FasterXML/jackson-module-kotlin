@@ -17,6 +17,9 @@ Contributors:
 
 # 2.19.0 (not yet released)
 
+Tatu Saloranta (@cowtowncoder)
+* #889: Upgrade kotlin dep to 1.9.25 (from 1.9.24)
+
 WrongWrong (@k163377)
 * #914: Add test case to serialize Nothing? (for #314)
 * #910: Add default KeyDeserializer for value class
@@ -33,6 +36,7 @@ WrongWrong (@k163377)
 # 2.18.4 (not yet released)
 
 WrongWrong (@k163377)
+* #923: Fixed hasRequiredMarker to only process content defined in Kotlin
 * #920: Minor refactors that do not affect behavior
 
 # 2.18.3 (28-Feb-2025)
