@@ -28,7 +28,7 @@ jobs:
       max-parallel: 5
       matrix:
         java_version: ['8', '11', '17', '21', '23']
-        kotlin_version: ['1.9.25', '2.0.21', '2.1.10']
+        kotlin_version: ['1.9.25', '2.0.21', '2.1.20']
         include:
           - java_version: '8'
             kotlin_version: '1.9.25'
