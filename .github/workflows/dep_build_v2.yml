@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java_version: ['8', '17', '21', '23']
+        java_version: ['8', '17', '21', '24']
         # Versions need to align with ones in 'main.yml' workflow
         kotlin_version: ['1.9.24', '2.0.21', '2.1.20']
     env:
