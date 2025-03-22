@@ -22,6 +22,9 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.0.0-rc2 (not yet released)
+#936: `StrictNullChecks` and `SingletonSupport` are now enabled by default
+
 3.0.0-rc1 (07-Mar-2025)
 
 - Minimum Java baseline: Java 17
