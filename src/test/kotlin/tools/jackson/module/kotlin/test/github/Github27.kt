@@ -9,12 +9,14 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import tools.jackson.databind.DeserializationFeature
+import tools.jackson.module.kotlin.KotlinFeature
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
 class TestGithub27 {
-    val mapper = jacksonMapperBuilder().disable(SerializationFeature.INDENT_OUTPUT)
-            .build()
+    val mapper = jacksonMapperBuilder { disable(KotlinFeature.NewStrictNullChecks) }
+        .disable(SerializationFeature.INDENT_OUTPUT)
+        .build()
 
     private data class ClassWithNullableInt(val sample: Int?)
 

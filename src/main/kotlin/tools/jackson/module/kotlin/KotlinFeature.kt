@@ -25,15 +25,14 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
     NullIsSameAsDefault(enabledByDefault = false),
 
     /**
-     * By default, there's no special handling of singletons (pre-2.10 behavior).
-     * Each time a Singleton object is deserialized a new instance is created.
-     *
-     * When this feature is enabled, it will deserialize then canonicalize (was the default in 2.10).
+     * When this feature is enabled, it will deserialize then canonicalize.
      * Deserializing a singleton overwrites the value of the single instance.
+     *
+     * The 2.x default was disabled, and a new instance was created each time a singleton object was deserialized.
      *
      * See [jackson-module-kotlin#225]: keep Kotlin singletons as singletons.
      */
-    SingletonSupport(enabledByDefault = false),
+    SingletonSupport(enabledByDefault = true),
 
     /**
      * This feature represents whether to check deserialized collections.
@@ -88,8 +87,10 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
      * This is a temporary option for a phased backend migration,
      * which will eventually be merged into [StrictNullChecks].
      * Also, specifying both this and [StrictNullChecks] is not permitted.
+     *
+     * Since 3.0, this option is enabled by default.
      */
-    NewStrictNullChecks(enabledByDefault = false);
+    NewStrictNullChecks(enabledByDefault = true);
 
     internal val bitSet: BitSet = (1 shl ordinal).toBitSet()
 
