@@ -46,7 +46,7 @@ class KotlinModuleTest {
             enable(NullToEmptyMap)
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
             enable(KotlinPropertyNameAsImplicitName)
             enable(UseJavaDurationConversion)
         }.build()
@@ -100,7 +100,7 @@ class KotlinModuleTest {
     @Test
     fun builder_EnableStrictNullChecks() {
         val module = KotlinModule.Builder().apply {
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
         }.build()
 
         assertTrue(module.strictNullChecks)
@@ -114,7 +114,7 @@ class KotlinModuleTest {
             enable(NullToEmptyMap)
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
         }.build()
 
         val serialized = jdkSerialize(module)
