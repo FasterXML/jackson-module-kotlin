@@ -1,9 +1,8 @@
 package com.fasterxml.jackson.module.kotlin.test
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinFeature.StrictNullChecks
+import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import com.fasterxml.jackson.module.kotlin.kotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -13,7 +12,10 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertNull
 
 class StrictNullChecksTestOld {
-    private val mapper = ObjectMapper().registerModule(kotlinModule { enable(StrictNullChecks) })
+    private val mapper = jacksonObjectMapper {
+        disable(KotlinFeature.NewStrictNullChecks)
+        enable(KotlinFeature.StrictNullChecks)
+    }
 
     /** collection tests */
 
