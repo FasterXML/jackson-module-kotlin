@@ -70,7 +70,13 @@ inline fun <reified T> Any?.checkTypeMismatch(): T {
 
 inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
     .checkTypeMismatch()
-inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> {
+    val values = readValues(jp, jacksonTypeRef<T>())
+
+    return object : MappingIterator<T>(values) {
+        override fun nextValue(): T = super.nextValue().checkTypeMismatch()
+    }
+}
 
 inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
 inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
@@ -89,7 +95,13 @@ inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(f
 
 inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
     .checkTypeMismatch()
-inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> = readValues(jp, jacksonTypeRef<T>())
+inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> {
+    val values = readValues(jp, jacksonTypeRef<T>())
+
+    return object : Iterator<T> by values {
+        override fun next(): T = values.next().checkTypeMismatch<T>()
+    }
+}
 inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
 
 inline fun <reified T, reified U> ObjectMapper.addMixIn(): ObjectMapper = this.addMixIn(T::class.java, U::class.java)
