@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonDeserializer
+import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.MappingIterator
@@ -50,20 +51,44 @@ fun ObjectMapper.registerKotlinModule(initializer: KotlinModule.Builder.() -> Un
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReference<T>() {}
 
+/**
+ * It is public due to Kotlin restrictions, but should not be used externally.
+ */
+inline fun <reified T> Any?.checkTypeMismatch(): T {
+    // Basically, this check assumes that T is non-null and the value is null.
+    // Since this can be caused by both input or ObjectMapper implementation errors,
+    // a more abstract JsonMappingException is thrown.
+    if (this !is T) {
+        throw JsonMappingException(
+            null,
+            "Deserialized value did not match the specified type; " +
+                    "specified ${T::class.qualifiedName} but was ${this?.let { it::class.qualifiedName }}"
+        )
+    }
+    return this
+}
+
 inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
+    .checkTypeMismatch()
 inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> = readValues(jp, jacksonTypeRef<T>())
 
-inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>())
-inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
 inline fun <reified T> ObjectMapper.readValue(content: String): T = readValue(content, jacksonTypeRef<T>())
-inline fun <reified T> ObjectMapper.readValue(src: Reader): T = readValue(src, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+inline fun <reified T> ObjectMapper.readValue(src: Reader): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
 inline fun <reified T> ObjectMapper.readValue(src: InputStream): T = readValue(src, jacksonTypeRef<T>())
+    .checkTypeMismatch()
 inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src, jacksonTypeRef<T>())
+    .checkTypeMismatch()
 
 inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
+    .checkTypeMismatch()
 inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(from, jacksonTypeRef<T>())
+    .checkTypeMismatch()
 
 inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
+    .checkTypeMismatch()
 inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> = readValues(jp, jacksonTypeRef<T>())
 inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
 
