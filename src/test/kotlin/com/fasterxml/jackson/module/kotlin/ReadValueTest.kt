@@ -1,6 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
-import com.fasterxml.jackson.databind.JsonMappingException
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException
 import com.fasterxml.jackson.databind.node.NullNode
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -13,15 +13,15 @@ class ReadValueTest {
         @Test
         fun jsonParser() {
             val src = defaultMapper.createParser("null")
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
-            }
+            }.printStackTrace()
         }
 
         @Test
         fun file() {
             val src = createTempJson("null")
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
             }
         }
@@ -34,7 +34,7 @@ class ReadValueTest {
         @Test
         fun string() {
             val src = "null"
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
             }
         }
@@ -42,7 +42,7 @@ class ReadValueTest {
         @Test
         fun reader() {
             val src = StringReader("null")
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
             }
         }
@@ -50,7 +50,7 @@ class ReadValueTest {
         @Test
         fun inputStream() {
             val src = "null".byteInputStream()
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
             }
         }
@@ -58,21 +58,21 @@ class ReadValueTest {
         @Test
         fun byteArray() {
             val src = "null".toByteArray()
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.readValue<String>(src)
             }
         }
 
         @Test
         fun treeToValueTreeNode() {
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.treeToValue<String>(NullNode.instance)
             }
         }
 
         @Test
         fun convertValueAny() {
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 defaultMapper.convertValue<String>(null)
             }
         }
@@ -81,7 +81,7 @@ class ReadValueTest {
         fun readValueTypedJsonParser() {
             val reader = defaultMapper.reader()
             val src = reader.createParser("null")
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 reader.readValueTyped<String>(src)
             }
         }

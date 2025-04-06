@@ -2,7 +2,6 @@ package com.fasterxml.jackson.module.kotlin
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
@@ -46,7 +45,7 @@ class ReadValuesTest {
             val itr = mapper.readValues<String>(src)
 
             assertEquals("foo", itr.nextValue())
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 itr.nextValue()
             }
         }
@@ -58,7 +57,7 @@ class ReadValuesTest {
             val itr = reader.readValuesTyped<String>(src)
 
             assertEquals("foo", itr.next())
-            assertThrows<JsonMappingException> {
+            assertThrows<RuntimeJsonMappingException> {
                 itr.next()
             }
         }

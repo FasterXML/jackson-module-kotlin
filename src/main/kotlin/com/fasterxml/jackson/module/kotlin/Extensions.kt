@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.core.TreeNode
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.fasterxml.jackson.databind.JsonMappingException
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.MappingIterator
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.node.ArrayNode
@@ -57,10 +57,11 @@ inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object: TypeReferenc
 inline fun <reified T> Any?.checkTypeMismatch(): T {
     // Basically, this check assumes that T is non-null and the value is null.
     // Since this can be caused by both input or ObjectMapper implementation errors,
-    // a more abstract JsonMappingException is thrown.
+    // a more abstract RuntimeJsonMappingException is thrown.
     if (this !is T) {
-        throw JsonMappingException(
-            null,
+        // Since the databind implementation of MappingIterator throws RuntimeJsonMappingException,
+        // JsonMappingException was not used to unify the behavior.
+        throw RuntimeJsonMappingException(
             "Deserialized value did not match the specified type; " +
                     "specified ${T::class.qualifiedName} but was ${this?.let { it::class.qualifiedName }}"
         )
