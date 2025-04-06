@@ -59,11 +59,13 @@ inline fun <reified T> Any?.checkTypeMismatch(): T {
     // Since this can be caused by both input or ObjectMapper implementation errors,
     // a more abstract RuntimeJsonMappingException is thrown.
     if (this !is T) {
+        val nullability = if (null is T) "?" else "(non-null)"
+
         // Since the databind implementation of MappingIterator throws RuntimeJsonMappingException,
         // JsonMappingException was not used to unify the behavior.
         throw RuntimeJsonMappingException(
             "Deserialized value did not match the specified type; " +
-                    "specified ${T::class.qualifiedName} but was ${this?.let { it::class.qualifiedName }}"
+                    "specified ${T::class.qualifiedName}${nullability} but was ${this?.let { it::class.qualifiedName }}"
         )
     }
     return this
