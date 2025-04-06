@@ -119,12 +119,16 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <scope>test</scope>
         </dependency>
+	<!-- 06-Apr-2025, tatu: JSR-310 module merged in jackson-databind
+             for 3.0.0-rc3
+          -->
+        <!--
         <dependency>
-            <!-- needed for kotlin.time.Duration converter test -->
             <groupId>tools.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <scope>test</scope>
         </dependency>
+          -->
     </dependencies>
 
     <build>

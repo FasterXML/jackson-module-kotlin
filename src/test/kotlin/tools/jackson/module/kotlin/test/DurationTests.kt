@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING
 import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
-import tools.jackson.datatype.jsr310.JavaTimeModule
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
@@ -24,7 +23,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration using Java time module`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
@@ -35,7 +34,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize Kotlin duration`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val result = mapper.readValue<KotlinDuration>("\"PT1H\"")
 
@@ -44,7 +43,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration inside list using Java time module`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
@@ -55,7 +54,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize Kotlin duration inside list`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val result = mapper.readValue<List<KotlinDuration>>("""["PT1H","PT2H","PT3H"]""")
 
@@ -64,7 +63,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration inside map using Java time module`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
@@ -81,7 +80,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize Kotlin duration inside map`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val result = mapper.readValue<Map<String, KotlinDuration>>("""{"a":"PT1H","b":"PT2H","c":"PT3H"}""")
 
@@ -109,7 +108,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration inside data class using Java time module`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
@@ -121,7 +120,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize Kotlin duration inside data class`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val result = mapper.readValue<Meeting>("""{"start":"2023-06-20T14:00:00Z","duration":"PT1H30M"}""")
 
@@ -131,7 +130,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize Kotlin duration inside data class using mixin`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .addMixIn(Meeting::class.java, MeetingMixin::class.java)
             .build()
 
@@ -143,7 +142,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration inside data class using Java time module and mixin`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule())
+        val mapper = mapperBuilder
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .addMixIn(Meeting::class.java, MeetingMixin::class.java)
             .build()
@@ -173,7 +172,7 @@ class DurationTests {
 
     @Test
     fun `should serialize Kotlin duration exactly as Java duration`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val jdto = JDTO()
         val kdto = KDTO()
@@ -198,7 +197,7 @@ class DurationTests {
 
     @Test
     fun `should deserialize using custom units specified by format annotation`() {
-        val mapper = mapperBuilder.addModule(JavaTimeModule()).build()
+        val mapper = mapperBuilder.build()
 
         val actual = mapper.readValue<DurationWithFormattedUnits>("""{"formatted":1,"default":1}""")
 
