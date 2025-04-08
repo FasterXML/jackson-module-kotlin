@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.19.0 (not yet released)
+2.19.0-rc2 (07-Apr-2025)
 
 #929: Added consideration of `JsonProperty.isRequired` added in `2.19` in `hasRequiredMarker` processing.
   Previously `JsonProperty.required` was defined as `Boolean` with default `false`,
