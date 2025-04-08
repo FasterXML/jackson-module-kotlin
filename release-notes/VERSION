@@ -22,6 +22,10 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.0.0-rc3 (not yet released)
+
+- Branch rename "master" -> "3.x" [JSTEP-12]
+
 3.0.0-rc2 (28-Mar-2025)
 
 #936: `StrictNullChecks` and `SingletonSupport` are now enabled by default
