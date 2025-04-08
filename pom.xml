@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- This module was also published with a richer model, Gradle metadata,  -->
     <!-- which should be used instead. Do not delete the following line which  -->
     <!-- is to indicate to Gradle or any Gradle module metadata file consumer  -->
@@ -9,12 +8,12 @@
     <parent>
         <groupId>tools.jackson</groupId>
         <artifactId>jackson-base</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-rc3-SNAPSHOT</version>
     </parent>
     <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
     <name>jackson-module-kotlin</name>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-rc3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description>Add-on module for Jackson (https://github.com/FasterXML/jackson/) to support
         Kotlin language, specifically introspection of method/constructor parameter names,
@@ -55,12 +54,6 @@
     </scm>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-	<!-- as per [databind#4820], minimum of Java 17 for Jackson 3.0 -->
-        <javac.src.version>17</javac.src.version>
-        <javac.target.version>17</javac.target.version>
-
         <version.kotlin>1.9.25</version.kotlin>
 
         <!-- Generate PackageVersion.java into this directory. -->
@@ -84,7 +77,6 @@
             <groupId>tools.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -127,12 +119,16 @@
             <artifactId>jackson-dataformat-xml</artifactId>
             <scope>test</scope>
         </dependency>
+	<!-- 06-Apr-2025, tatu: JSR-310 module merged in jackson-databind
+             for 3.0.0-rc3
+          -->
+        <!--
         <dependency>
-            <!-- needed for kotlin.time.Duration converter test -->
             <groupId>tools.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <scope>test</scope>
         </dependency>
+          -->
     </dependencies>
 
     <build>
@@ -178,12 +174,6 @@
                 <!-- Inherited from oss-base. Generate PackageVersion.java.-->
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
-                <executions>
-                    <execution>
-                        <id>process-packageVersion</id>
-                        <phase>generate-sources</phase>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -197,7 +187,7 @@
 
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
             <plugin>
-                <groupId>de.jjohannes</groupId>
+                <groupId>org.gradlex</groupId>
                 <artifactId>gradle-module-metadata-maven-plugin</artifactId>
             </plugin>
 
@@ -210,7 +200,7 @@
                         <dependency>
                             <groupId>tools.jackson.module</groupId>
                             <artifactId>jackson-module-kotlin</artifactId>
-                            <version>3.0.0-SNAPSHOT</version>
+                            <version>3.0.0-rc1-SNAPSHOT</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>

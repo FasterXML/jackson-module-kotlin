@@ -1,7 +1,6 @@
 package tools.jackson.module.kotlin
 
 import kotlin.reflect.KFunction
-import kotlin.reflect.KParameter
 import kotlin.reflect.full.extensionReceiverParameter
 import kotlin.reflect.full.instanceParameter
 import kotlin.reflect.jvm.isAccessible

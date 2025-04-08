@@ -7,6 +7,8 @@ import tools.jackson.databind.deser.ValueDeserializerModifier
 
 // [module-kotlin#225]: keep Kotlin singletons as singletons
 object KotlinValueDeserializerModifier : ValueDeserializerModifier() {
+    private fun readResolve(): Any = KotlinValueDeserializerModifier
+
     override fun modifyDeserializer(
             config: DeserializationConfig,
             beanDesc: BeanDescription,

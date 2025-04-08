@@ -13,7 +13,12 @@ class KotlinModuleTest {
     // After the final migration is complete, this test will be removed.
     @Test
     fun strictNullChecksTests() {
-        assertTrue(kotlinModule { enable(StrictNullChecks) }.strictNullChecks)
+        assertTrue(
+            kotlinModule {
+                disable(NewStrictNullChecks)
+                enable(StrictNullChecks)
+            }.strictNullChecks
+        )
         assertTrue(kotlinModule { enable(NewStrictNullChecks) }.strictNullChecks)
 
         assertThrows<IllegalArgumentException> {
@@ -32,8 +37,8 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyCollection)
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
-        assertFalse(module.singletonSupport)
-        assertFalse(module.strictNullChecks)
+        assertTrue(module.singletonSupport)
+        assertTrue(module.strictNullChecks)
         assertFalse(module.kotlinPropertyNameAsImplicitName)
         assertFalse(module.useJavaDurationConversion)
     }
@@ -46,7 +51,7 @@ class KotlinModuleTest {
             enable(NullToEmptyMap)
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
             enable(KotlinPropertyNameAsImplicitName)
             enable(UseJavaDurationConversion)
         }.build()
@@ -100,7 +105,7 @@ class KotlinModuleTest {
     @Test
     fun builder_EnableStrictNullChecks() {
         val module = KotlinModule.Builder().apply {
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
         }.build()
 
         assertTrue(module.strictNullChecks)
@@ -114,7 +119,7 @@ class KotlinModuleTest {
             enable(NullToEmptyMap)
             enable(NullIsSameAsDefault)
             enable(SingletonSupport)
-            enable(StrictNullChecks)
+            enable(NewStrictNullChecks)
         }.build()
 
         val serialized = jdkSerialize(module)

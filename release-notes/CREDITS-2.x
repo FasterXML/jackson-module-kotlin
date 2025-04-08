@@ -17,7 +17,12 @@ Contributors:
 
 # 2.19.0 (not yet released)
 
+Tatu Saloranta (@cowtowncoder)
+* #889: Upgrade kotlin dep to 1.9.25 (from 1.9.24)
+
 WrongWrong (@k163377)
+* #930: Add tests for #917
+* #929: Bug fixes to hasRequiredMarker and added isRequired considerations
 * #914: Add test case to serialize Nothing? (for #314)
 * #910: Add default KeyDeserializer for value class
 * #885: Performance improvement of strictNullChecks
@@ -30,7 +35,13 @@ WrongWrong (@k163377)
 * #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName
 * #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport
 
-# 2.18.3 (not yet released)
+# 2.18.4 (not yet released)
+
+WrongWrong (@k163377)
+* #923: Fixed hasRequiredMarker to only process content defined in Kotlin
+* #920: Minor refactors that do not affect behavior
+
+# 2.18.3 (28-Feb-2025)
 
 WrongWrong (@k163377)
 * #908: Additional fixes related to #904.

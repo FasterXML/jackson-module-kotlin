@@ -22,7 +22,11 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-3.0.0 (not yet released)
+3.0.0-rc2 (28-Mar-2025)
+
+#936: `StrictNullChecks` and `SingletonSupport` are now enabled by default
+
+3.0.0-rc1 (07-Mar-2025)
 
 #887: Change 3.0 to use `module-info.java` directly [JSTEP-11]
 - Minimum Java baseline: Java 17
