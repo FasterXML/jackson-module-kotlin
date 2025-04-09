@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Test
 import java.lang.reflect.InvocationTargetException
+import kotlin.test.assertNotEquals
 
 class WithoutCustomDeserializeMethodTest {
     companion object {
@@ -42,10 +43,8 @@ class WithoutCustomDeserializeMethodTest {
             // failing
             @Test
             fun nullString() {
-                org.junit.jupiter.api.assertThrows<NullPointerException>("#209 has been fixed.") {
-                    val result = defaultMapper.readValue<NullableObject>("null")
-                    assertEquals(NullableObject(null), result)
-                }
+                val result = defaultMapper.readValue<NullableObject?>("null")
+                assertNotEquals(NullableObject(null), result, "kogera #209 has been fixed.")
             }
         }
     }
