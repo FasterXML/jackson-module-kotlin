@@ -3,12 +3,12 @@ package tools.jackson.module.kotlin.test
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING
-import tools.jackson.databind.SerializationFeature
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.module.kotlin.KotlinFeature
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Test
+import tools.jackson.databind.cfg.DateTimeFeature
 import java.time.Instant
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -24,7 +24,7 @@ class DurationTests {
     @Test
     fun `should serialize Kotlin duration using Java time module`() {
         val mapper = mapperBuilder
-            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
         val result = mapper.writeValueAsString(1.hours)
@@ -44,7 +44,7 @@ class DurationTests {
     @Test
     fun `should serialize Kotlin duration inside list using Java time module`() {
         val mapper = mapperBuilder
-            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
         val result = mapper.writeValueAsString(listOf(1.hours, 2.hours, 3.hours))
@@ -64,7 +64,7 @@ class DurationTests {
     @Test
     fun `should serialize Kotlin duration inside map using Java time module`() {
         val mapper = mapperBuilder
-            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
         val result = mapper.writeValueAsString(
@@ -109,8 +109,8 @@ class DurationTests {
     @Test
     fun `should serialize Kotlin duration inside data class using Java time module`() {
         val mapper = mapperBuilder
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
             .build()
 
         val result = mapper.writeValueAsString(Meeting(Instant.parse("2023-06-20T14:00:00Z"), 1.5.hours))
@@ -143,7 +143,7 @@ class DurationTests {
     @Test
     fun `should serialize Kotlin duration inside data class using Java time module and mixin`() {
         val mapper = mapperBuilder
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
             .addMixIn(Meeting::class.java, MeetingMixin::class.java)
             .build()
 
