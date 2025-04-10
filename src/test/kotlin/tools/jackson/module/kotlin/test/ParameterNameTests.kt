@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import tools.jackson.databind.PropertyNamingStrategies
-import tools.jackson.databind.SerializationFeature
 import tools.jackson.module.kotlin.*
 import tools.jackson.databind.MapperFeature
 import org.junit.jupiter.api.Test
 import tools.jackson.databind.DeserializationFeature
+import tools.jackson.databind.cfg.DateTimeFeature
 import java.io.StringWriter
 import java.util.*
 import kotlin.properties.Delegates
@@ -49,11 +49,11 @@ class ParameterNameTests {
 
     private val normalCasedMapper = jacksonMapperBuilder()
             .enable(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS)
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build()
 
     private val pascalCasedMapper = jacksonMapperBuilder()
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
             .propertyNamingStrategy(PropertyNamingStrategies.UPPER_CAMEL_CASE)
             .build()
 
