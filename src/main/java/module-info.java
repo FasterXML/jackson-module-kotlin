@@ -1,10 +1,9 @@
 // Kotlin module-info for Main artifact
 module tools.jackson.module.kotlin
 {
-    requires java.desktop;
-
     requires kotlin.reflect;
     requires transitive kotlin.stdlib;
+    requires org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
     requires tools.jackson.core;
