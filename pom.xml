@@ -181,6 +181,10 @@
                         -->
                         <include>tools.jackson.module.kotlin.**</include>
                     </includes>
+                    <!-- 11-Apr-2025, tatu: Cannot make JPMS work here, no matter what.
+                            So... turn it off
+                      -->
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
             <plugin>
