@@ -157,10 +157,10 @@ inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(f
     .checkTypeMismatch()
 
 /**
- * Shorthand for [ObjectReader.forType].
+ * Shorthand for [ObjectReader.readValue].
  * @throws DatabindException Especially if [T] is non-null and the value read is null.
  *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ *   due to an incorrect customization to [ObjectReader].
  */
 inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = forType(jacksonTypeRef<T>()).readValue<T>(jp)
     .checkTypeMismatch()
@@ -168,7 +168,7 @@ inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = forType(
  * Shorthand for [ObjectReader.readValues].
  * @throws DatabindException Especially if [T] is non-null and the value read is null.
  *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ *   due to an incorrect customization to [ObjectReader].
  */
 inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> {
     val values = readValues(jp, jacksonTypeRef<T>())
