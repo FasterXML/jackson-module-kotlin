@@ -162,8 +162,10 @@
                             <goal>test-compile</goal>
                         </goals>
                         <configuration>
-                            <args>
-                            </args>
+                            <sourceDirs>
+                                <source>${project.basedir}/src/test/java</source>
+                                <source>${project.basedir}/src/test/kotlin</source>
+                            </sourceDirs>
                         </configuration>
                     </execution>
                 </executions>
@@ -179,6 +181,10 @@
                         -->
                         <include>tools.jackson.module.kotlin.**</include>
                     </includes>
+                    <!-- 11-Apr-2025, tatu: Cannot make JPMS work here, no matter what.
+                            So... turn it off
+                      -->
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
             <plugin>
@@ -194,12 +200,6 @@
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
                 </configuration>
-            </plugin>
-
-            <!-- 02-Nov-2020, tatu: Add JDK9+ module info with Moditect -->
-            <plugin>
-                <groupId>org.moditect</groupId>
-                <artifactId>moditect-maven-plugin</artifactId>
             </plugin>
 
             <!-- 05-Jul-2020, tatu: Add generation of Gradle Module Metadata -->
