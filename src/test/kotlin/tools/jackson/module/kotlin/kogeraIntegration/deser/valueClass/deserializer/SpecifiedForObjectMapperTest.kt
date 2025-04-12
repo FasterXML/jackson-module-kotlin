@@ -9,6 +9,7 @@ import tools.jackson.module.kotlin.jacksonMapperBuilder
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import kotlin.test.assertNotEquals
 
 class SpecifiedForObjectMapperTest {
     companion object {
@@ -48,10 +49,8 @@ class SpecifiedForObjectMapperTest {
             // failing
             @Test
             fun nullString() {
-                org.junit.jupiter.api.assertThrows<NullPointerException>("#209 has been fixed.") {
-                    val result = mapper.readValue<NullableObject>("null")
-                    assertEquals(NullableObject("null-value-deser"), result)
-                }
+                val result = mapper.readValue<NullableObject?>("null")
+                assertNotEquals(NullableObject("null-value-deser"), result, "kogera #209 has been fixed.")
             }
         }
     }

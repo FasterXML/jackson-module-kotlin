@@ -1,5 +1,6 @@
 package tools.jackson.module.kotlin
 
+import tools.jackson.databind.util.ClassUtil
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.extensionReceiverParameter
 import kotlin.reflect.full.instanceParameter
@@ -39,7 +40,7 @@ internal class MethodValueCreator<T> private constructor(
                 possibleCompanion.java.enclosingClass.declaredFields
                     .firstOrNull { it.type.kotlin.isCompanion }
                     ?.let {
-                        it.isAccessible = true
+                        ClassUtil.checkAndFixAccess(it, false)
 
                         // If the instance of the companion object cannot be obtained, accessibility will always be false
                         it.get(null) to false
