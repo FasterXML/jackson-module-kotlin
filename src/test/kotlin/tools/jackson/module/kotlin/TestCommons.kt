@@ -5,6 +5,10 @@ import tools.jackson.core.util.DefaultIndenter
 import tools.jackson.core.util.DefaultPrettyPrinter
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectWriter
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStreamWriter
+import java.nio.charset.StandardCharsets
 import kotlin.reflect.KParameter
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
@@ -30,4 +34,17 @@ internal inline fun <reified T : Any> assertReflectEquals(expected: T, actual: T
     T::class.memberProperties.forEach {
         assertEquals(it.get(expected), it.get(actual))
     }
+}
+
+internal fun createTempJson(json: String): File {
+    val file = File.createTempFile("temp", ".json")
+    file.deleteOnExit()
+    OutputStreamWriter(
+        FileOutputStream(file),
+        StandardCharsets.UTF_8
+    ).use { writer ->
+        writer.write(json)
+        writer.flush()
+    }
+    return file
 }
