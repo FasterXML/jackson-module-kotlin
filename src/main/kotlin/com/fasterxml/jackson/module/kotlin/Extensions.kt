@@ -157,18 +157,18 @@ inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(f
     .checkTypeMismatch()
 
 /**
- * Shorthand for [ObjectMapper.readValue].
+ * Shorthand for [ObjectReader.readValue].
  * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
  *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ *   due to an incorrect customization to [ObjectReader].
  */
 inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
     .checkTypeMismatch()
 /**
- * Shorthand for [ObjectMapper.readValues].
+ * Shorthand for [ObjectReader.readValues].
  * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
  *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ *   due to an incorrect customization to [ObjectReader].
  */
 inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> {
     val values = readValues(jp, jacksonTypeRef<T>())
