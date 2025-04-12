@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.*
 import com.fasterxml.jackson.databind.deser.std.StdKeyDeserializer
 import com.fasterxml.jackson.databind.deser.std.StdKeyDeserializers
 import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
+import com.fasterxml.jackson.databind.util.ClassUtil
 import java.lang.reflect.Method
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
@@ -78,7 +79,7 @@ internal class ValueClassKeyDeserializer<S, D : Any>(
     private val unboxedClass: Class<*> = creator.parameterTypes[0]
 
     init {
-        creator.apply { if (!this.isAccessible) this.isAccessible = true }
+        ClassUtil.checkAndFixAccess(creator, false)
     }
 
     // Based on databind error
