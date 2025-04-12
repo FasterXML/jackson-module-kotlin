@@ -11,6 +11,7 @@ import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.Deserializers
 import tools.jackson.databind.deser.std.StdDeserializer
 import tools.jackson.databind.exc.InvalidDefinitionException
+import tools.jackson.databind.util.ClassUtil
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.full.primaryConstructor
@@ -94,7 +95,7 @@ internal class WrapsNullableValueClassBoxDeserializer<S, D : Any>(
     private val inputType: Class<*> = creator.parameterTypes[0]
 
     init {
-        creator.apply { if (!this.isAccessible) this.isAccessible = true }
+        ClassUtil.checkAndFixAccess(creator, false)
     }
 
     // Cache the result of wrapping null, since the result is always expected to be the same.

@@ -4,6 +4,7 @@ import tools.jackson.databind.JavaType
 import tools.jackson.databind.deser.std.StdConvertingDeserializer
 import tools.jackson.databind.ser.std.StdDelegatingSerializer
 import tools.jackson.databind.type.TypeFactory
+import tools.jackson.databind.util.ClassUtil
 import tools.jackson.databind.util.StdConverter
 import kotlin.reflect.KClass
 import kotlin.time.toJavaDuration
@@ -51,7 +52,7 @@ internal class ValueClassBoxConverter<S : Any?, D : Any>(
     val boxedClass: KClass<D>
 ) : StdConverter<S, D>() {
     private val boxMethod = boxedClass.java.getDeclaredMethod("box-impl", unboxedClass).apply {
-        if (!this.isAccessible) this.isAccessible = true
+        ClassUtil.checkAndFixAccess(this, false)
     }
 
     @Suppress("UNCHECKED_CAST")
