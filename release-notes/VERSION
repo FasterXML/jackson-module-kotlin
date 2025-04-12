@@ -24,6 +24,7 @@ Former maintainers:
 
 3.0.0-rc3 (not yet released)
 
+#887: Change 3.0 to use `module-info.java` directly [JSTEP-11]
 - Branch rename "master" -> "3.x" [JSTEP-12]
 
 3.0.0-rc2 (28-Mar-2025)
@@ -32,5 +33,4 @@ Former maintainers:
 
 3.0.0-rc1 (07-Mar-2025)
 
-#887: Change 3.0 to use `module-info.java` directly [JSTEP-11]
 - Minimum Java baseline: Java 17
