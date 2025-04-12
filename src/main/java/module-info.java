@@ -3,7 +3,8 @@ module tools.jackson.module.kotlin
 {
     requires kotlin.reflect;
     requires transitive kotlin.stdlib;
-    requires org.jetbrains.annotations;
+    // compile-time only:
+    requires static org.jetbrains.annotations;
 
     requires com.fasterxml.jackson.annotation;
     requires tools.jackson.core;
