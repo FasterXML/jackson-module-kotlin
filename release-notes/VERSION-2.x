@@ -16,6 +16,14 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+2.19.0 (not yet released)
+
+#937: For `readValue` and other shorthands for `ObjectMapper` deserialization methods,
+  type consistency checks have been added.
+  A `RuntimeJsonMappingException` will be thrown in case of inconsistency.
+  This fixes a problem that broke `Kotlin` null safety by reading null as a value even if the type parameter was specified as non-null.
+  It also checks for custom errors in ObjectMapper that cause a different value to be read than the specified type parameter.
+
 2.19.0-rc2 (07-Apr-2025)
 
 #929: Added consideration of `JsonProperty.isRequired` added in `2.19` in `hasRequiredMarker` processing.

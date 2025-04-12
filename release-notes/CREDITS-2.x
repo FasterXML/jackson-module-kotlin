@@ -17,6 +17,9 @@ Contributors:
 
 # 2.19.0 (not yet released)
 
+WrongWrong (@k163377)
+* #937: Added type match check to read functions
+
 Tatu Saloranta (@cowtowncoder)
 * #889: Upgrade kotlin dep to 1.9.25 (from 1.9.24)
 
