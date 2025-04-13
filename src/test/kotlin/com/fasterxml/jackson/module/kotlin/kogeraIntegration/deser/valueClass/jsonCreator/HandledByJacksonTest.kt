@@ -27,20 +27,20 @@ class HandledByJacksonTest {
     }
 
     @JvmInline
-    value class NullableObjectMiltiParamCreator(val value: Int?) {
+    value class NullableObjectMultiParamCreator(val value: Int?) {
         companion object {
             // Avoiding unboxing by making the return value of Creator nullable
             @JvmStatic
             @JsonCreator
-            fun creator(first: Int, second: Int): NullableObjectMiltiParamCreator? =
-                NullableObjectMiltiParamCreator(first + second)
+            fun creator(first: Int, second: Int): NullableObjectMultiParamCreator? =
+                NullableObjectMultiParamCreator(first + second)
         }
     }
 
     @Test
     fun nullableObjectNullableCreatorTest() {
         val mapper = jacksonObjectMapper()
-        val r: NullableObjectMiltiParamCreator = mapper.readValue("""{"first":1,"second":2}""")
-        assertEquals(NullableObjectMiltiParamCreator(3), r)
+        val r: NullableObjectMultiParamCreator = mapper.readValue("""{"first":1,"second":2}""")
+        assertEquals(NullableObjectMultiParamCreator(3), r)
     }
 }
