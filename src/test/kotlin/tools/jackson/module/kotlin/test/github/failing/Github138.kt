@@ -1,10 +1,10 @@
 package tools.jackson.module.kotlin.test.github.failing
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonRootName
 import tools.jackson.databind.exc.InvalidDefinitionException
 import tools.jackson.dataformat.xml.XmlMapper
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.dataformat.xml.annotation.JacksonXmlText
 import tools.jackson.module.kotlin.readValue
 import tools.jackson.module.kotlin.test.expectFailure
@@ -12,7 +12,7 @@ import tools.jackson.module.kotlin.kotlinModule
 import org.junit.jupiter.api.Test
 
 class TestGithub138 {
-    @JacksonXmlRootElement(localName = "sms")
+    @JsonRootName("sms")
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class Sms(
             @JacksonXmlProperty(localName = "Phone", isAttribute = true)

@@ -1,17 +1,17 @@
 package tools.jackson.module.kotlin.test.github
 
+import com.fasterxml.jackson.annotation.JsonRootName
 import tools.jackson.databind.exc.InvalidDefinitionException
 import tools.jackson.dataformat.xml.XmlMapper
 import tools.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import tools.jackson.dataformat.xml.annotation.JacksonXmlProperty
-import tools.jackson.dataformat.xml.annotation.JacksonXmlRootElement
 import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.test.expectFailure
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TestGithub153 {
-    @JacksonXmlRootElement(localName = "MyPojo")
+    @JsonRootName("MyPojo")
     class MyPojo {
         @JacksonXmlElementWrapper(localName = "elements")
         @JacksonXmlProperty(localName = "element")
@@ -23,7 +23,7 @@ class TestGithub153 {
         var value: String? = null
     }
 
-    @JacksonXmlRootElement(localName = "MyPojo")
+    @JsonRootName("MyPojo")
     data class MyDataPojo (
             @JacksonXmlElementWrapper(localName = "elements")
             @JacksonXmlProperty(localName = "element")
