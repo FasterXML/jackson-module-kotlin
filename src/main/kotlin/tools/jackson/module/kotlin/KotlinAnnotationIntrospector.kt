@@ -1,7 +1,5 @@
 package tools.jackson.module.kotlin
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.OptBoolean
 import tools.jackson.databind.DeserializationFeature
 import tools.jackson.databind.JacksonModule
 import tools.jackson.databind.cfg.MapperConfig
@@ -14,7 +12,6 @@ import tools.jackson.databind.introspect.AnnotatedParameter
 import tools.jackson.databind.introspect.NopAnnotationIntrospector
 import tools.jackson.databind.jsontype.NamedType
 import tools.jackson.databind.util.Converter
-import java.lang.reflect.AccessibleObject
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import kotlin.reflect.KFunction
@@ -43,19 +40,8 @@ internal class KotlinAnnotationIntrospector(
     // TODO: implement nullIsSameAsDefault flag, which represents when TRUE that if something has a default value, it can be passed a null to default it
     //       this likely impacts this class to be accurate about what COULD be considered required
 
-    // If a new isRequired is explicitly specified or the old required is true, those values take precedence.
-    // In other cases, override is done by KotlinModule.
-    private fun JsonProperty.forceRequiredByAnnotation(): Boolean? = when {
-        isRequired != OptBoolean.DEFAULT -> isRequired.asBoolean()
-        required -> true
-        else -> null
-    }
-
-    private fun AccessibleObject.forceRequiredByAnnotation(): Boolean? =
-        getAnnotation(JsonProperty::class.java)?.forceRequiredByAnnotation()
-
     override fun hasRequiredMarker(
-        cfg : MapperConfig<*>,
+        cfg: MapperConfig<*>,
         m: AnnotatedMember
     ): Boolean? = m.takeIf { it.member.declaringClass.isKotlinClass() }?.let { _ ->
         cache.javaMemberIsRequired(m) {
@@ -105,7 +91,7 @@ internal class KotlinAnnotationIntrospector(
      * Subclasses can be detected automatically for sealed classes, since all possible subclasses are known
      * at compile-time to Kotlin. This makes [com.fasterxml.jackson.annotation.JsonSubTypes] redundant.
      */
-    override fun findSubtypes(cfg : MapperConfig<*>, a: Annotated): MutableList<NamedType>? = a.rawType
+    override fun findSubtypes(cfg: MapperConfig<*>, a: Annotated): MutableList<NamedType>? = a.rawType
         .takeIf { it.isKotlinClass() }
         ?.let { rawType ->
             rawType.kotlin.sealedSubclasses
@@ -116,8 +102,7 @@ internal class KotlinAnnotationIntrospector(
 
     private fun AnnotatedField.hasRequiredMarker(): Boolean? {
         val field = member as Field
-        return field.forceRequiredByAnnotation()
-            ?: field.kotlinProperty?.returnType?.isRequired()
+        return field.kotlinProperty?.returnType?.isRequired()
     }
 
     // Since Kotlin's property has the same Type for each field, getter, and setter,
@@ -132,7 +117,7 @@ internal class KotlinAnnotationIntrospector(
     private fun AnnotatedMethod.getRequiredMarkerFromCorrespondingAccessor(): Boolean? {
         member.declaringClass.kotlin.declaredMemberProperties.forEach { kProperty ->
             if (kProperty.javaGetter == this.member || (kProperty as? KMutableProperty1)?.javaSetter == this.member) {
-                return member.forceRequiredByAnnotation() ?: kProperty.isRequiredByNullability()
+                return kProperty.isRequiredByNullability()
             }
         }
         return null
@@ -140,7 +125,7 @@ internal class KotlinAnnotationIntrospector(
 
     // Is the member method a regular method of the data class or
     private fun Method.getRequiredMarkerFromAccessorLikeMethod(): Boolean? = cache.kotlinFromJava(this)?.let { func ->
-        forceRequiredByAnnotation() ?: when {
+        when {
             func.isGetterLike() -> func.returnType.isRequired()
             // If nullToEmpty could be supported for setters,
             // a branch similar to AnnotatedParameter.hasRequiredMarker should be added.
@@ -152,15 +137,11 @@ internal class KotlinAnnotationIntrospector(
     private fun KFunction<*>.isGetterLike(): Boolean = parameters.size == 1
     private fun KFunction<*>.isSetterLike(): Boolean = parameters.size == 2 && returnType == UNIT_TYPE
 
-    private fun AnnotatedParameter.hasRequiredMarker(): Boolean? = getAnnotation(JsonProperty::class.java)
-        ?.forceRequiredByAnnotation()
-        ?: run {
-            when {
-                nullToEmptyCollection && type.isCollectionLikeType -> false
-                nullToEmptyMap && type.isMapLikeType -> false
-                else -> cache.findKotlinParameter(this)?.isRequired()
-            }
-        }
+    private fun AnnotatedParameter.hasRequiredMarker(): Boolean? = when {
+        nullToEmptyCollection && type.isCollectionLikeType -> false
+        nullToEmptyMap && type.isMapLikeType -> false
+        else -> cache.findKotlinParameter(this)?.isRequired()
+    }
 
     private fun AnnotatedMethod.findValueClassReturnType() = cache.findValueClassReturnType(this)
 
