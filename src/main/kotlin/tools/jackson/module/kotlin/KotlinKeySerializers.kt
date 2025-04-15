@@ -61,7 +61,7 @@ internal class KotlinKeySerializers : Serializers.Base() {
     override fun findSerializer(
         config: SerializationConfig,
         type: JavaType,
-        beanDesc: BeanDescription,
+        beanDescRef: BeanDescription.Supplier,
         formatOverrides: JsonFormat.Value?
     ): ValueSerializer<*>? = when {
         type.rawClass.isUnboxableValueClass() -> ValueClassStaticJsonKeySerializer.createOrNull(type.rawClass)

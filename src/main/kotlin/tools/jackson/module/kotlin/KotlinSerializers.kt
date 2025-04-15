@@ -83,7 +83,7 @@ internal class KotlinSerializers : Serializers.Base() {
     override fun findSerializer(
         config: SerializationConfig?,
         type: JavaType,
-        beanDesc: BeanDescription?,
+        beanDescRef: BeanDescription.Supplier?,
         formatOverrides: JsonFormat.Value?
     ): ValueSerializer<*>? {
         val rawClass = type.rawClass
