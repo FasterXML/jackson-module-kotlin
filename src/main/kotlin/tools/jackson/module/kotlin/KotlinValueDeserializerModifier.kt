@@ -11,12 +11,12 @@ object KotlinValueDeserializerModifier : ValueDeserializerModifier() {
 
     override fun modifyDeserializer(
             config: DeserializationConfig,
-            beanDesc: BeanDescription,
+            beanDescRef: BeanDescription.Supplier,
             deserializer: ValueDeserializer<*>
     ): ValueDeserializer<out Any> {
-        val modifiedFromParent = super.modifyDeserializer(config, beanDesc, deserializer)
+        val modifiedFromParent = super.modifyDeserializer(config, beanDescRef, deserializer)
 
-        val objectSingletonInstance = objectSingletonInstance(beanDesc.beanClass)
+        val objectSingletonInstance = objectSingletonInstance(beanDescRef.beanClass)
         return if (objectSingletonInstance != null) {
             KotlinObjectSingletonDeserializer(objectSingletonInstance, modifiedFromParent)
         } else {
