@@ -145,7 +145,7 @@ internal class KotlinDeserializers(
     override fun findBeanDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?,
+        beanDescRef: BeanDescription.Supplier?,
     ): ValueDeserializer<*>? {
         val rawClass = type.rawClass
 

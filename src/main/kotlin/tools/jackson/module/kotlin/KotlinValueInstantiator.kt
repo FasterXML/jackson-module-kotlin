@@ -150,10 +150,10 @@ internal class KotlinInstantiators(
 ) : ValueInstantiators.Base() {
     override fun modifyValueInstantiator(
         deserConfig: DeserializationConfig,
-        beanDescriptor: BeanDescription,
+        beanDescriptorRef: BeanDescription.Supplier,
         defaultInstantiator: ValueInstantiator
     ): ValueInstantiator {
-        return if (beanDescriptor.beanClass.isKotlinClass()) {
+        return if (beanDescriptorRef.beanClass.isKotlinClass()) {
             if (defaultInstantiator::class == StdValueInstantiator::class) {
                 KotlinValueInstantiator(
                     defaultInstantiator as StdValueInstantiator,
