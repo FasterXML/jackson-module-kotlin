@@ -22,7 +22,7 @@ class KotlinInstantiatorsTest {
         val defaultInstantiator = StdValueInstantiator(deserConfig, javaType)
         val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType),
+            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType).supplier(),
             defaultInstantiator
         )
 
@@ -36,7 +36,7 @@ class KotlinInstantiatorsTest {
         val javaType = mapper.constructType(TestClass::class.java)
         val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType),
+            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType).supplier(),
             StdValueInstantiator(deserConfig, javaType)
         )
 
@@ -58,7 +58,7 @@ class KotlinInstantiatorsTest {
             kotlinInstantiators.modifyValueInstantiator(
                 deserConfig,
                 deserConfig.classIntrospectorInstance()
-                    .introspectForDeserialization(mapper.constructType(TestClass::class.java)),
+                    .introspectForDeserialization(mapper.constructType(TestClass::class.java)).supplier(),
                 subClassInstantiator
             )
         }
