@@ -257,6 +257,7 @@
                                 com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean)
                             </exclude>
                             <exclude>com.fasterxml.jackson.module.kotlin.KotlinKeyDeserializers#INSTANCE</exclude>
+                            <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache$BooleanTriState</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
