@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#954: Replaced `OptBoolean` of internal caching with a common implementation.
 #944: Common util is now used for member accessibility overrides.
 #937: For `readValue` and other shorthands for `ObjectMapper` deserialization methods,
   type consistency checks have been added.

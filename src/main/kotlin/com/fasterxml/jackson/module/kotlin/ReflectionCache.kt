@@ -1,5 +1,6 @@
 package com.fasterxml.jackson.module.kotlin
 
+import com.fasterxml.jackson.annotation.OptBoolean
 import com.fasterxml.jackson.databind.introspect.AnnotatedConstructor
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember
 import com.fasterxml.jackson.databind.introspect.AnnotatedMethod
@@ -22,32 +23,12 @@ import kotlin.reflect.jvm.kotlinFunction
 internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
     companion object {
         // Increment is required when properties that use LRUMap are changed.
-        private const val serialVersionUID = 3L
-    }
-
-    sealed class BooleanTriState(val value: Boolean?) {
-        class True : BooleanTriState(true)
-        class False : BooleanTriState(false)
-        class Empty : BooleanTriState(null)
-
-        companion object {
-            private val TRUE = True()
-            private val FALSE = False()
-            private val EMPTY = Empty()
-
-            fun fromBoolean(value: Boolean?): BooleanTriState {
-                return when (value) {
-                    null -> EMPTY
-                    true -> TRUE
-                    false -> FALSE
-                }
-            }
-        }
+        private const val serialVersionUID = 4L
     }
 
     private val javaExecutableToKotlin = LRUMap<Executable, KFunction<*>>(reflectionCacheSize, reflectionCacheSize)
     private val javaExecutableToValueCreator = LRUMap<Executable, ValueCreator<*>>(reflectionCacheSize, reflectionCacheSize)
-    private val javaMemberIsRequired = LRUMap<AnnotatedMember, BooleanTriState?>(reflectionCacheSize, reflectionCacheSize)
+    private val javaMemberIsRequired = LRUMap<AnnotatedMember, OptBoolean?>(reflectionCacheSize, reflectionCacheSize)
 
     // Initial size is 0 because the value class is not always used
     private val valueClassReturnTypeCache: LRUMap<AnnotatedMethod, Optional<KClass<*>>> =
@@ -102,8 +83,8 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
         )
     } // we cannot reflect this method so do the default Java-ish behavior
 
-    fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.value
-            ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, BooleanTriState.fromBoolean(it))?.value ?: it }
+    fun javaMemberIsRequired(key: AnnotatedMember, calc: (AnnotatedMember) -> Boolean?): Boolean? = javaMemberIsRequired.get(key)?.asBoolean()
+            ?: calc(key).let { javaMemberIsRequired.putIfAbsent(key, OptBoolean.fromBoolean(it))?.asBoolean() ?: it }
 
     private fun AnnotatedMethod.getValueClassReturnType(): KClass<*>? {
         val getter = this.member.apply {
