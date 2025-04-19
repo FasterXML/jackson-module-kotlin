@@ -22,6 +22,8 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.0.0-rc4 (not yet released)
+
 3.0.0-rc3 (13-Apr-2025)
 
 #887: Change 3.0 to use `module-info.java` directly [JSTEP-11]

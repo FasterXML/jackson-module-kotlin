@@ -17,11 +17,13 @@ Authors:
 
 Contributors:
 
-# 3.0.0-rc3 (not yet released)
+# 3.0.0-rc4 (not yet released)
+
+# 3.0.0-rc3 (13-Apr-2025)
 WrongWrong (@k163377)
 * #945: Replace JacksonXmlRootElement used in the test with JsonRootName
 
-# 3.0.0-rc2 (not yet released)
+# 3.0.0-rc2 (28-Mar-2025)
 
 WrongWrong (@k163377)
 * #936: Change of default settings for 3.0
@@ -35,5 +37,3 @@ Yusuf Arfan Ismail (RealYusufIsmail@github)
 
 * Contributed #596: Rename "com.fasterxml.jackson" -> "tools.jackson"
  [3.0.0]
-
-
