@@ -33,8 +33,6 @@ Co-maintainers:
   This made it impossible for users to override the parsed result by `KotlinModule`.
   The new `JsonProperty.isRequired` is defined with three values, including the default,
   so `KotlinModule` can now respect user specifications.
-#929: Fixed a problem with the `NullToEmptyCollection` and `NullToEmptyMap` options overriding annotated specifications
-  in the `hasRequiredMarker` process.
 #929: Fixed a problem with the `NullToEmptyCollection` and `NullToEmptyMap` options being applied to non-parameters
   in the `hasRequiredMarker` process.
   They currently do not work for setters or fields and are not related to serialization,
