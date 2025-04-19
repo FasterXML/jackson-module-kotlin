@@ -108,8 +108,6 @@ internal class KotlinNamesAnnotationIntrospector(
         cfg: MapperConfig<*>,
         m: AnnotatedMember
     ): Boolean? = m.takeIf { it.member.declaringClass.isKotlinClass() }?.let { _ ->
-        println(m)
-
         cache.javaMemberIsRequired(m) {
             try {
                 when (m) {
