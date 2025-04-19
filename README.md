@@ -13,7 +13,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.18.2` (for Jackson `2.18.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.18)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.18)
+* release `2.18.3` (for Jackson `2.18.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.18)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.18)
 * release `2.17.3` (for Jackson `2.17.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.17)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.17)
 * release `2.16.2` (for Jackson `2.16.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.16)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.16)
 * release `2.15.4` (for Jackson `2.15.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.15)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.15)
@@ -261,7 +261,7 @@ If you are going to write code, choose the appropriate base branch:
 
 - `2.18` for bugfixes against the current stable version
 - `2.19` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
-- `master` for significant changes to existing behavior, which will be part of Jackson 3.0
+- `3.x` for significant changes to existing behavior, which will be part of Jackson 3.0
 
 ### Failing tests
 
