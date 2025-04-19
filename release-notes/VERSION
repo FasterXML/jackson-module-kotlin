@@ -24,6 +24,11 @@ Former maintainers:
 
 3.0.0-rc4 (not yet released)
 
+#952: The `isRequired` result from `kotlin-module` no longer overrides the result from
+  `JacksonAnnotationIntrospector` or other `AnnotationIntrospector`s.
+  Tests have confirmed that `@JsonProperty(required = true)` for nullable parameters has been changed to be
+  determined as `required`.
+
 3.0.0-rc3 (13-Apr-2025)
 
 #887: Change 3.0 to use `module-info.java` directly [JSTEP-11]
