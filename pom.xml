@@ -235,8 +235,8 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
-                          <!-- Since it is not compatible with 2.x and the official release of 3.x is not yet available, compatibility checks have been disabled. -->
-                          <exclude>*</exclude>
+                            <!-- Since it is not compatible with 2.x and the official release of 3.x is not yet available, compatibility checks have been disabled. -->
+                            <exclude>*</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
