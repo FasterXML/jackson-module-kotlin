@@ -19,7 +19,11 @@ Contributors:
 
 # 3.0.0-rc4 (not yet released)
 
+WrongWrong (@k163377)
+* #952: Change the `hasRequiredMarker` implementation to the 3.x specification
+
 # 3.0.0-rc3 (13-Apr-2025)
+
 WrongWrong (@k163377)
 * #945: Replace JacksonXmlRootElement used in the test with JsonRootName
 

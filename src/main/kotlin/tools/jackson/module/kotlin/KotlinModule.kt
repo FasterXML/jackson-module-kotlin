@@ -92,16 +92,17 @@ class KotlinModule private constructor(
             context.addDeserializerModifier(KotlinValueDeserializerModifier)
         }
 
-        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(
-            context,
-            cache,
-            nullToEmptyCollection,
-            nullToEmptyMap,
-            nullIsSameAsDefault,
-            useJavaDurationConversion
-        ))
+        context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(cache, useJavaDurationConversion))
         context.appendAnnotationIntrospector(
-            KotlinNamesAnnotationIntrospector(cache, newStrictNullChecks, kotlinPropertyNameAsImplicitName)
+            KotlinNamesAnnotationIntrospector(
+                context = context,
+                cache = cache,
+                nullToEmptyCollection = nullToEmptyCollection,
+                nullToEmptyMap = nullToEmptyMap,
+                nullIsSameAsDefault = nullIsSameAsDefault,
+                strictNullChecks = newStrictNullChecks,
+                kotlinPropertyNameAsImplicitName = kotlinPropertyNameAsImplicitName
+            )
         )
 
         context.addDeserializers(KotlinDeserializers(cache, useJavaDurationConversion))
