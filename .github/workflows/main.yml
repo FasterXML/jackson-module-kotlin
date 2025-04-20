@@ -20,7 +20,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: 'ubuntu-22.04'
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       max-parallel: 5
