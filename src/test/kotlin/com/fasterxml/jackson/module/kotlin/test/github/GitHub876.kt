@@ -2,6 +2,7 @@ package com.fasterxml.jackson.module.kotlin.test.github
 
 import com.fasterxml.jackson.annotation.JsonSetter
 import com.fasterxml.jackson.annotation.Nulls
+import com.fasterxml.jackson.module.kotlin.configOverride
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Nested
@@ -89,9 +90,9 @@ class GitHub876 {
     @Nested
     inner class WithoutAnnotationWithoutDefaultTest {
         val mapper = jacksonObjectMapper().apply {
-            configOverride(List::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
-            configOverride(Map::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
-            configOverride(String::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<List<*>>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<Map<*, *>>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<String>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
         }
 
         @Test
@@ -124,9 +125,9 @@ class GitHub876 {
     @Nested
     inner class WithoutAnnotationWithDefaultTest {
         val mapper = jacksonObjectMapper().apply {
-            configOverride(List::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
-            configOverride(Map::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
-            configOverride(String::class.java).setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<List<*>>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<Map<*, *>>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
+            configOverride<String>().setterInfo = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY)
         }
 
         @Test

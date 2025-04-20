@@ -7,9 +7,11 @@ import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.MappingIterator
+import com.fasterxml.jackson.databind.Module
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.ObjectReader
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException
+import com.fasterxml.jackson.databind.cfg.MutableConfigOverride
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.node.ArrayNode
@@ -226,3 +228,7 @@ fun <T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, deserializer: Json
     kClass.javaPrimitiveType?.let { addDeserializer(it, deserializer) }
     addDeserializer(kClass.javaObjectType, deserializer)
 }
+
+inline fun <reified T : Any> ObjectMapper.configOverride(): MutableConfigOverride = configOverride(T::class.java)
+inline fun <reified T : Any> Module.SetupContext.configOverride(): MutableConfigOverride =
+    configOverride(T::class.java)
