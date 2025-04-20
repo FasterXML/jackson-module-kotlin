@@ -18,6 +18,7 @@ Co-maintainers:
 
 2.19.0 (not yet released)
 
+#959: Extension functions has been added to simplify `configOverride` calls to `ObjectMapper` and `Module.SetupContext`.
 #954: Replaced `OptBoolean` of internal caching with a common implementation.
 #944: Common util is now used for member accessibility overrides.
 #937: For `readValue` and other shorthands for `ObjectMapper` deserialization methods,
