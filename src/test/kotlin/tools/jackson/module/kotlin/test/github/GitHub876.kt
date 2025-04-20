@@ -7,6 +7,7 @@ import tools.jackson.module.kotlin.readValue
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import tools.jackson.module.kotlin.jacksonMapperBuilder
+import tools.jackson.module.kotlin.withConfigOverride
 import kotlin.test.assertEquals
 
 class GitHub876 {
@@ -90,9 +91,9 @@ class GitHub876 {
     @Nested
     inner class WithoutAnnotationWithoutDefaultTest {
         val mapper = jacksonMapperBuilder()
-            .withConfigOverride(List::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
-            .withConfigOverride(Map::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
-            .withConfigOverride(String::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<List<*>> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<Map<*, *>> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<String> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
             .build()
 
         @Test
@@ -125,9 +126,9 @@ class GitHub876 {
     @Nested
     inner class WithoutAnnotationWithDefaultTest {
         val mapper = jacksonMapperBuilder()
-            .withConfigOverride(List::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
-            .withConfigOverride(Map::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
-            .withConfigOverride(String::class.java) { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<List<*>> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<Map<*, *>> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
+            .withConfigOverride<String> { it.nullHandling = JsonSetter.Value.forValueNulls(Nulls.AS_EMPTY) }
             .build()
 
         @Test

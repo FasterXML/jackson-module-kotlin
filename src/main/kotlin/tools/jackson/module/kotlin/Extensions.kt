@@ -4,12 +4,14 @@ import tools.jackson.core.JsonParser
 import tools.jackson.core.TreeNode
 import tools.jackson.core.type.TypeReference
 import tools.jackson.databind.DatabindException
+import tools.jackson.databind.JacksonModule
 import tools.jackson.databind.JsonNode
 import tools.jackson.databind.MappingIterator
 import tools.jackson.databind.ObjectMapper
 import tools.jackson.databind.ObjectReader
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.ValueSerializer
+import tools.jackson.databind.cfg.MutableConfigOverride
 import tools.jackson.databind.json.JsonMapper
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.databind.node.ArrayNode
@@ -20,6 +22,7 @@ import java.io.Reader
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
+import java.util.function.Consumer
 import kotlin.reflect.KClass
 
 fun kotlinModule(initializer: KotlinModule.Builder.() -> Unit = {}): KotlinModule {
@@ -225,3 +228,10 @@ inline fun <reified T : Any> SimpleModule.addDeserializer(kClass: KClass<T>, des
     kClass.javaPrimitiveType?.let { addDeserializer(it, deserializer) }
     addDeserializer(kClass.javaObjectType, deserializer)
 }
+
+inline fun <reified T : Any>  JsonMapper.Builder.withConfigOverride(
+    handler: Consumer<MutableConfigOverride>
+): JsonMapper.Builder = withConfigOverride(T::class.java, handler)
+
+inline fun <reified T : Any> JacksonModule.SetupContext.configOverride(): MutableConfigOverride =
+    configOverride(T::class.java)
