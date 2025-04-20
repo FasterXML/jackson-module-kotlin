@@ -55,10 +55,8 @@ fun jacksonMapperBuilder(initializer: KotlinModule.Builder.() -> Unit = {}): Jso
 
 inline fun <reified T> jacksonTypeRef(): TypeReference<T> = object : TypeReference<T>() {}
 
-/**
- * It is public due to Kotlin restrictions, but should not be used externally.
- */
-inline fun <reified T> Any?.checkTypeMismatch(): T {
+@PublishedApi
+internal inline fun <reified T> Any?.checkTypeMismatch(): T {
     // Basically, this check assumes that T is non-null and the value is null.
     // Since this can be caused by both input or ObjectMapper implementation errors,
     // a more abstract DatabindException is thrown.
