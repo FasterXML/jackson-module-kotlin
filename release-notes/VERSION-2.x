@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.19.0 (not yet released)
+2.19.0 (24-Apr-2025)
 
 #959: Extension functions has been added to simplify `configOverride` calls to `ObjectMapper` and `Module.SetupContext`.
 #954: Replaced `OptBoolean` of internal caching with a common implementation.
@@ -26,9 +26,6 @@ Co-maintainers:
   A `RuntimeJsonMappingException` will be thrown in case of inconsistency.
   This fixes a problem that broke `Kotlin` null safety by reading null as a value even if the type parameter was specified as non-null.
   It also checks for custom errors in ObjectMapper that cause a different value to be read than the specified type parameter.
-
-2.19.0-rc2 (07-Apr-2025)
-
 #929: Added consideration of `JsonProperty.isRequired` added in `2.19` in `hasRequiredMarker` processing.
   Previously `JsonProperty.required` was defined as `Boolean` with default `false`,
   so `KotlinModule` was forced to override it if the value was `false`.
