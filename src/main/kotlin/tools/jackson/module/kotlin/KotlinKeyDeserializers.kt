@@ -114,7 +114,7 @@ internal class KotlinKeyDeserializers(private val cache: ReflectionCache) : JDKK
     override fun findKeyDeserializer(
         type: JavaType,
         config: DeserializationConfig?,
-        beanDesc: BeanDescription?,
+        beanDescRef: BeanDescription.Supplier?,
     ): KeyDeserializer? {
         val rawClass = type.rawClass
 
