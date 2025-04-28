@@ -15,7 +15,14 @@ Authors:
 
 Contributors:
 
-# 2.19.0 (not yet released)
+# 2.20.0 (not yet released)
+
+WrongWrong (@k163377)
+* #967: Update settings for 2.20
+
+# 2.19.1 (not yet released)
+
+# 2.19.0 (24-Apr-2025)
 
 WrongWrong (@k163377)
 * #959: Add extensions for configOverride
