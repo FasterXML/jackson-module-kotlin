@@ -245,6 +245,11 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
+                            <!-- public -->
+                            <!-- removed -->
+                            <exclude>
+                                com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException#MissingKotlinParameterException(kotlin.reflect.KParameter,java.io.Closeable,java.lang.String)
+                            </exclude>
                         </excludes>
                     </parameter>
                 </configuration>
