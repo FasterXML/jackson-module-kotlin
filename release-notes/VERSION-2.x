@@ -20,6 +20,8 @@ Co-maintainers:
 
 -
 
+2.19.1 (not yet released)
+
 2.19.0 (24-Apr-2025)
 
 #959: Extension functions has been added to simplify `configOverride` calls to `ObjectMapper` and `Module.SetupContext`.
