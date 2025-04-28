@@ -3,7 +3,6 @@ package tools.jackson.module.kotlin
 import tools.jackson.core.JsonParser
 import tools.jackson.databind.DatabindException
 import tools.jackson.databind.exc.InvalidNullException
-import java.io.Closeable
 import kotlin.reflect.KParameter
 
 /**
@@ -31,15 +30,4 @@ class MissingKotlinParameterException(
     val parameter: KParameter,
     processor: JsonParser? = null,
     msg: String
-) : InvalidNullException(processor, msg, null) {
-    @Deprecated(
-        "Use main constructor, ",
-        ReplaceWith("MissingKotlinParameterException(KParameter, JsonParser?, String)"),
-        DeprecationLevel.ERROR,
-    )
-    constructor(
-            parameter: KParameter,
-            processor: Closeable? = null,
-            msg: String
-    ) : this(parameter, processor as JsonParser, msg)
-}
+) : InvalidNullException(processor, msg, null)
