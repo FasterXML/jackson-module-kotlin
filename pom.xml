@@ -232,7 +232,7 @@
                             -->
                             <!-- 30-Sep-2023, wrongwrong: For 2.16, compare to 2.15.2 baseline
                             -->
-                            <version>2.18.0</version>
+                            <version>2.19.0</version>
                             <type>jar</type>
                         </dependency>
                     </oldVersion>
@@ -245,19 +245,6 @@
                         <breakBuildOnBinaryIncompatibleModifications>true</breakBuildOnBinaryIncompatibleModifications>
                         <breakBuildOnSourceIncompatibleModifications>true</breakBuildOnSourceIncompatibleModifications>
                         <excludes>
-                            <!-- public -->
-                            <!-- removed -->
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinModule#getUseKotlinPropertyNameForGetter()
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinModule#getSingletonSupport()</exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.SingletonSupport</exclude>
-                            <!-- internal -->
-                            <exclude>
-                                com.fasterxml.jackson.module.kotlin.KotlinNamesAnnotationIntrospector#KotlinNamesAnnotationIntrospector(com.fasterxml.jackson.module.kotlin.ReflectionCache,boolean)
-                            </exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.KotlinKeyDeserializers#INSTANCE</exclude>
-                            <exclude>com.fasterxml.jackson.module.kotlin.ReflectionCache$BooleanTriState</exclude>
                         </excludes>
                     </parameter>
                 </configuration>
