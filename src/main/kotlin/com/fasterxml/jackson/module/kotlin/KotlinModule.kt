@@ -43,6 +43,7 @@ class KotlinModule private constructor(
     val nullToEmptyMap: Boolean = NullToEmptyMap.enabledByDefault,
     val nullIsSameAsDefault: Boolean = NullIsSameAsDefault.enabledByDefault,
     val singletonSupport: Boolean = SingletonSupport.enabledByDefault,
+    @Suppress("DEPRECATION_ERROR")
     strictNullChecks: Boolean = StrictNullChecks.enabledByDefault,
     val kotlinPropertyNameAsImplicitName: Boolean = KotlinPropertyNameAsImplicitName.enabledByDefault,
     val useJavaDurationConversion: Boolean = UseJavaDurationConversion.enabledByDefault,
@@ -59,7 +60,7 @@ class KotlinModule private constructor(
      * Now that 2 is complete, deprecation is in progress for 3.
      */
     @Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "This property is scheduled to be removed in 2.21 or later" +
                 " in order to unify the use of KotlinFeature.",
         replaceWith = ReplaceWith("singletonSupport")
@@ -96,6 +97,7 @@ class KotlinModule private constructor(
         builder.isEnabled(NullToEmptyMap),
         builder.isEnabled(NullIsSameAsDefault),
         builder.isEnabled(SingletonSupport),
+        @Suppress("DEPRECATION_ERROR")
         builder.isEnabled(StrictNullChecks),
         builder.isEnabled(KotlinPropertyNameAsImplicitName),
         builder.isEnabled(UseJavaDurationConversion),

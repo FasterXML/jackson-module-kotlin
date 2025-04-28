@@ -43,7 +43,7 @@ enum class KotlinFeature(internal val enabledByDefault: Boolean) {
      * Enabling it protects against this but has significant performance impact.
      */
     @Deprecated(
-        level = DeprecationLevel.WARNING,
+        level = DeprecationLevel.ERROR,
         message = "This option will be migrated to the new backend in 2.21.",
         replaceWith = ReplaceWith("NewStrictNullChecks")
     )

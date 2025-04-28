@@ -18,6 +18,7 @@ Contributors:
 # 2.20.0 (not yet released)
 
 WrongWrong (@k163377)
+* #969: Cleanup of deprecated contents
 * #967: Update settings for 2.20
 
 # 2.19.1 (not yet released)
