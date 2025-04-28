@@ -18,7 +18,7 @@ Co-maintainers:
 
 2.20.0 (not yet released)
 
--
+#967: Kotlin has been upgraded to 2.0.21.
 
 2.19.1 (not yet released)
 
