@@ -13,7 +13,7 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
-* release `2.19.0` (for Jackson `2.19.0`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.19)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.19)
+* release `2.19.0` (for Jackson `2.19.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.19)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.19)
 * release `2.18.3` (for Jackson `2.18.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.18)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.18)
 * release `2.17.3` (for Jackson `2.17.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.17)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.17)
 
@@ -130,12 +130,12 @@ Any fields not present in the constructor will be set after the constructor call
 An example of these concepts:
 
 ```kotlin
-   @JsonInclude(JsonInclude.Include.NON_EMPTY)
-   class StateObjectWithPartialFieldsInConstructor(val name: String, @JsonProperty("age") val years: Int)    {
-        @JsonProperty("address") lateinit var primaryAddress: String   // set after construction
-        var createdDt: DateTime by Delegates.notNull()                // set after construction
-        var neverSetProperty: String? = null                          // not in JSON so must be nullable with default
-    }
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
+class StateObjectWithPartialFieldsInConstructor(val name: String, @JsonProperty("age") val years: Int) {
+    @JsonProperty("address") lateinit var primaryAddress: String // set after construction
+    var createdDt: DateTime by Delegates.notNull()               // set after construction
+    var neverSetProperty: String? = null                         // not in JSON so must be nullable with default
+}
 ```
 
 Note that using `lateinit` or `Delegates.notNull()` will ensure that the value is never `null` when read, while letting it be instantiated after the construction of the class.
@@ -173,11 +173,11 @@ at compile-time to Kotlin. This makes `com.fasterxml.jackson.annotation.JsonSubT
 A `com.fasterxml.jackson.annotation.@JsonTypeInfo` annotation at the base-class is still necessary. 
 
 ```kotlin
-  @JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-  sealed class SuperClass{
-      class A: SuperClass()
-      class B: SuperClass()
-  }
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
+sealed class SuperClass{
+    class A: SuperClass()
+    class B: SuperClass()
+}
 
 ...
 val mapper = jacksonObjectMapper()
@@ -187,7 +187,6 @@ when(root){
     is B -> "It's B"
 }
 ```
-
 
 # Configuration
 
@@ -255,8 +254,8 @@ See the [main Jackson contribution guidelines](https://github.com/FasterXML/jack
 
 If you are going to write code, choose the appropriate base branch:
 
-- `2.18` for bugfixes against the current stable version
-- `2.19` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
+- `2.19` for bugfixes against the current stable version
+- `2.x` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `3.x` for significant changes to existing behavior, which will be part of Jackson 3.0
 
 ### Failing tests
