@@ -13,16 +13,15 @@ and those with secondary constructors or static factories are also supported.
 
 # Status
 
+* release `2.19.0` (for Jackson `2.19.0`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.19)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.19)
 * release `2.18.3` (for Jackson `2.18.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.18)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.18)
 * release `2.17.3` (for Jackson `2.17.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.17)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.17)
-* release `2.16.2` (for Jackson `2.16.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.16)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.16)
-* release `2.15.4` (for Jackson `2.15.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.15)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.15)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 Gradle:
 ```
-implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.18.+"
+implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.19.+"
 ```
 
 Maven:
@@ -30,7 +29,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.18.3</version>
+    <version>2.19.0</version>
 </dependency>
 ```
 
@@ -116,10 +115,6 @@ Here is an incomplete list of supported versions:
 * Jackson 2.19.x: Kotlin-core 1.9 - 2.1
 * Jackson 2.18.x: Kotlin-core 1.8 - 2.1
 * Jackson 2.17.x: Kotlin-core 1.7 - 2.0
-* Jackson 2.16.x: Kotlin-core 1.6 - 1.9
-* Jackson 2.15.x: Kotlin-core 1.5 - 1.8
-* Jackson 2.14.x: Kotlin-core 1.4 - 1.8
-* Jackson 2.13.x: Kotlin-core 1.4 - 1.7
 
 Please note that the versions supported by 2.17 are tentative and may change depending on the release date.
 
