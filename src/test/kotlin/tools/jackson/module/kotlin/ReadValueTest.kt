@@ -15,7 +15,7 @@ class ReadValueTest {
             val src = defaultMapper.createParser("null")
             assertThrows<DatabindException> {
                 defaultMapper.readValue<String>(src)
-            }.printStackTrace()
+            }
         }
 
         @Test
