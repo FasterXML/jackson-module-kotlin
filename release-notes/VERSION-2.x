@@ -20,6 +20,7 @@ Co-maintainers:
 
 #969: Deprecated content has been cleaned up with the version upgrade.
 #967: Kotlin has been upgraded to 2.0.21.
+- Generate SBOMs [JSTEP-14]
 
 2.19.1 (not yet released)
 
