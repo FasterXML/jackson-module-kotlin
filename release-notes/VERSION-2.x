@@ -16,7 +16,7 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.18.4 (not yet released)
+2.18.4 (06-May-2025)
 
 #923: Fixed a problem where the result of processing `hasRequiredMarker ` by a `KotlinModule` would also apply to
   classes defined in `Java` when `NullToEmptyCollection` or `NullToEmptyMap` was enabled.
