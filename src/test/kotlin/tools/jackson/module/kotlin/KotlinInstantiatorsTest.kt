@@ -20,9 +20,11 @@ class KotlinInstantiatorsTest {
     fun `Provides default instantiator for Java class`() {
         val javaType = mapper.constructType(String::class.java)
         val defaultInstantiator = StdValueInstantiator(deserConfig, javaType)
+        val classIntrospector = deserConfig.classIntrospectorInstance()
         val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType).supplier(),
+            classIntrospector.introspectForDeserialization(javaType,
+                classIntrospector.introspectClassAnnotations(javaType)).supplier(),
             defaultInstantiator
         )
 
@@ -34,9 +36,11 @@ class KotlinInstantiatorsTest {
         class TestClass
 
         val javaType = mapper.constructType(TestClass::class.java)
+        val classIntrospector = deserConfig.classIntrospectorInstance()
         val instantiator = kotlinInstantiators.modifyValueInstantiator(
             deserConfig,
-            deserConfig.classIntrospectorInstance().introspectForDeserialization(javaType).supplier(),
+            classIntrospector.introspectForDeserialization(javaType,
+                classIntrospector.introspectClassAnnotations(javaType)).supplier(),
             StdValueInstantiator(deserConfig, javaType)
         )
 
@@ -55,10 +59,12 @@ class KotlinInstantiatorsTest {
         ) {}
 
         assertThrows(IllegalStateException::class.java) {
+            val javaType = mapper.constructType(TestClass::class.java)
+            val classIntrospector = deserConfig.classIntrospectorInstance()
             kotlinInstantiators.modifyValueInstantiator(
                 deserConfig,
-                deserConfig.classIntrospectorInstance()
-                    .introspectForDeserialization(mapper.constructType(TestClass::class.java)).supplier(),
+                classIntrospector.introspectForDeserialization(javaType,
+                    classIntrospector.introspectClassAnnotations(javaType)).supplier(),
                 subClassInstantiator
             )
         }
