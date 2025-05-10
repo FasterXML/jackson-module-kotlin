@@ -33,24 +33,28 @@ class JacksonInjectTest {
 
     @Test
     fun test() {
-        val injectables = InjectableValues.Std(
-            mapOf(
-                "pNn" to Primitive(0),
-                "pN" to Primitive(1),
-                "nnoNn" to NonNullObject("nnoNn"),
-                "nnoN" to NonNullObject("nnoN"),
-                "noNnNn" to NullableObject("noNnNn"),
-                "noNnN" to NullableObject(null),
-                "noNNn" to NullableObject("noNNn"),
-                "noNN" to NullableObject(null)
-            )
+        val injectables = mapOf(
+            "pNn" to Primitive(0),
+            "pN" to Primitive(1),
+            "nnoNn" to NonNullObject("nnoNn"),
+            "nnoN" to NonNullObject("nnoN"),
+            "noNnNn" to NullableObject("noNnNn"),
+            "noNnN" to NullableObject(null),
+            "noNNn" to NullableObject("noNNn"),
+            "noNN" to NullableObject(null)
         )
 
         val reader = jacksonObjectMapper()
             .readerFor(Dto::class.java)
-            .with(injectables)
+            .with(InjectableValues.Std(injectables))
 
-        println(reader.readValue<Dto>("{}"))
+        val result = reader.readValue<Dto>("{}")
+        val expected = ::Dto.let { ctor ->
+            val args = ctor.parameters.associateWith { injectables[it.name] }
+            ctor.callBy(args)
+        }
+
+        assertEquals(expected, result)
     }
 
     data class DataBind4218FailingDto(
