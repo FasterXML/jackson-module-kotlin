@@ -107,13 +107,6 @@ inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jac
  *   Other cases where the read value is of a different type than [T]
  *   due to an incorrect customization to [ObjectMapper].
  */
-inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
-/**
- * Shorthand for [ObjectMapper.readValue].
- * @throws DatabindException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
- */
 inline fun <reified T> ObjectMapper.readValue(content: String): T = readValue(content, jacksonTypeRef<T>())
     .checkTypeMismatch()
 /**
