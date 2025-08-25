@@ -144,6 +144,6 @@ class KotlinModuleTest {
     @Test
     fun findAndRegisterModulesTest() {
         val mapper = JsonMapper.builder().findAndAddModules().build()
-        assertTrue(mapper.registeredModules.any { it is KotlinModule })
+        assertTrue(mapper.registeredModules.toList().any { it is KotlinModule })
     }
 }
