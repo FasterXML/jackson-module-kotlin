@@ -45,7 +45,7 @@ class KotlinModuleTest {
         assertFalse(module.nullToEmptyMap)
         assertFalse(module.nullIsSameAsDefault)
         assertTrue(module.singletonSupport)
-        assertTrue(module.strictNullChecks)
+        assertFalse(module.strictNullChecks)
         assertFalse(module.kotlinPropertyNameAsImplicitName)
         assertFalse(module.useJavaDurationConversion)
     }
