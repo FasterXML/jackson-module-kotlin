@@ -19,6 +19,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 import java.util.Locale
+import java.util.Optional
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction
 import kotlin.reflect.KMutableProperty1
@@ -193,7 +194,8 @@ internal class KotlinNamesAnnotationIntrospector(
         config: MapperConfig<*>,
         valueClass: AnnotatedClass,
         declaredConstructors: List<PotentialCreator>,
-        declaredFactories: List<PotentialCreator>
+        declaredFactories: List<PotentialCreator>,
+        zeroParamsConstructor: Optional<PotentialCreator>
     ): PotentialCreator? {
         val kClass = valueClass.creatableKotlinClass() ?: return null
 
