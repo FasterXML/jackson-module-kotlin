@@ -11,6 +11,8 @@ class TestGithub56 {
     data class TestGalleryWidget_BAD(
             val widgetReferenceId: String,
             // IMPORTANT! Need _at least_ @get one (@param optional, not sufficient)
+            // (see https://github.com/FasterXML/jackson-databind/pull/5466 for change
+            // that made this necessary in 3.1 )
             @get:JsonUnwrapped var gallery: TestGallery
     )
 
