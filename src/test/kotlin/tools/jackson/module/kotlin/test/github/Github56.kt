@@ -10,7 +10,8 @@ import kotlin.test.assertEquals
 class TestGithub56 {
     data class TestGalleryWidget_BAD(
             val widgetReferenceId: String,
-            @JsonUnwrapped var gallery: TestGallery
+            // IMPORTANT! Need _at least_ @get one (@param optional, not sufficient)
+            @get:JsonUnwrapped var gallery: TestGallery
     )
 
     data class TestGalleryWidget_GOOD(val widgetReferenceId: String) {
