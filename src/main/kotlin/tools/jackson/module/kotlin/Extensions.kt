@@ -140,7 +140,7 @@ inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src
  *   Other cases where the read value is of a different type than [T]
  *   due to an incorrect customization to [ObjectMapper].
  */
-inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
+inline fun <reified T> ObjectMapper.treeToValue(n: JsonNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
     .checkTypeMismatch()
 /**
  * Shorthand for [ObjectMapper.convertValue].
@@ -172,7 +172,7 @@ inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T>
         override fun next(): T = values.next().checkTypeMismatch<T>()
     }
 }
-inline fun <reified T> ObjectReader.treeToValue(jp: TreeNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(jp))
+inline fun <reified T> ObjectReader.treeToValue(n: JsonNode): T? = forType(jacksonTypeRef<T>()).readValue(this.treeAsTokens(n))
 
 inline fun <reified T, reified U> JsonMapper.Builder.addMixIn(): JsonMapper.Builder = this.addMixIn(T::class.java, U::class.java)
 inline fun <M : MapperBuilder<*, M>, reified T, reified U> M.addMixIn(): M = this.addMixIn(T::class.java, U::class.java)
