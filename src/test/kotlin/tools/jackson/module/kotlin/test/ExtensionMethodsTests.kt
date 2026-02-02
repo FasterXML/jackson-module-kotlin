@@ -14,6 +14,7 @@ import tools.jackson.module.kotlin.contains
 import tools.jackson.module.kotlin.convertValue
 import tools.jackson.module.kotlin.jacksonMapperBuilder
 import tools.jackson.module.kotlin.jsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import tools.jackson.module.kotlin.minusAssign
 import tools.jackson.module.kotlin.plusAssign
 import tools.jackson.module.kotlin.readValue
@@ -116,5 +117,51 @@ private class TestExtensionMethods {
         val serializedPerson: String = mapper.writeValueAsString(Person("test"))
 
         assertEquals("", serializedPerson)
+    }
+
+    @Test
+    fun testJsonMapperReadValue() {
+        data class Person(val name: String, val age: Int)
+
+        val jsonMapper: JsonMapper = jsonMapper { addModule(kotlinModule()) }
+        val json = """{"name":"Abuzer Komurcu","age":25}"""
+
+        val inferRightSide = jsonMapper.readValue<Person>(json)
+        val inferLeftSide: Person = jsonMapper.readValue(json)
+
+        val expectedPerson = Person("Abuzer Komurcu", 25)
+
+        assertEquals(expectedPerson, inferRightSide)
+        assertEquals(expectedPerson, inferLeftSide)
+    }
+
+    @Test
+    fun testJsonMapperReadValueList() {
+        data class Item(val a: String, val b: Int)
+
+        val jsonMapper: JsonMapper = jsonMapper { addModule(kotlinModule()) }
+        val jsonStr = """[{"a": "value1", "b": 1}, {"a": "value2", "b": 2}]"""
+
+        val myList: List<Item> = jsonMapper.readValue(jsonStr)
+
+        assertEquals(listOf(Item("value1", 1), Item("value2", 2)), myList)
+    }
+
+    @Test
+    fun testJsonMapperTreeToValueAndConvertValue() {
+        data class Person(val name: String)
+
+        val jsonMapper: JsonMapper = jsonMapper { addModule(kotlinModule()) }
+        val source = """[ { "name" : "Neo" } ]"""
+        val tree = jsonMapper.readTree(source)
+
+        val readValueResult: List<Person> = jsonMapper.readValue(source)
+        assertEquals(listOf(Person("Neo")), readValueResult)
+
+        val treeToValueResult: List<Person> = jsonMapper.treeToValue(tree)
+        assertEquals(listOf(Person("Neo")), treeToValueResult)
+
+        val convertValueResult: List<Person> = jsonMapper.convertValue(tree)
+        assertEquals(listOf(Person("Neo")), convertValueResult)
     }
 }

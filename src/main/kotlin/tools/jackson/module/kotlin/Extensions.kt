@@ -152,6 +152,84 @@ inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(f
     .checkTypeMismatch()
 
 /**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.readValues].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValues(jp: JsonParser): MappingIterator<T> {
+    val values = readValues(jp, jacksonTypeRef<T>())
+
+    return object : MappingIterator<T>(values) {
+        override fun nextValue(): T = super.nextValue().checkTypeMismatch()
+    }
+}
+
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(content: String): T = readValue(content, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(src: Reader): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(src: InputStream): T = readValue(src, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.readValue(src: ByteArray): T = readValue(src, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+
+/**
+ * Shorthand for [JsonMapper.readValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.treeToValue(n: JsonNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
+    .checkTypeMismatch()
+/**
+ * Shorthand for [JsonMapper.convertValue].
+ * @throws DatabindException Especially if [T] is non-null and the value read is null.
+ *   Other cases where the read value is of a different type than [T]
+ *   due to an incorrect customization to [JsonMapper].
+ */
+inline fun <reified T> JsonMapper.convertValue(from: Any?): T = convertValue(from, jacksonTypeRef<T>())
+    .checkTypeMismatch()
+
+/**
  * Shorthand for [ObjectReader.readValue].
  * @throws DatabindException Especially if [T] is non-null and the value read is null.
  *   Other cases where the read value is of a different type than [T]
