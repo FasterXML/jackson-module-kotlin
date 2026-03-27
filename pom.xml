@@ -144,6 +144,11 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${version.kotlin}</version>
 
+                <!-- 27-Mar-2026, tatu: Apparently we do need this to avoid JVM 1.8 target -->
+                <configuration>
+                    <jvmTarget>${javac.target.version}</jvmTarget>
+                </configuration>
+
                 <executions>
                     <execution>
                         <id>compile</id>
