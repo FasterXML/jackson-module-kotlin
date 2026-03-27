@@ -22,6 +22,10 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.1.1 (27-Mar-2026)
+
+No changes since 3.1.0
+
 3.1.0 (23-Feb-2026)
 
 #1077: Increase deprecation level of NewStrictNullChecks due to version upgrade
