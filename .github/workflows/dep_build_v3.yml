@@ -16,7 +16,7 @@ jobs:
       matrix:
         java_version: ['17', '21', '25', '26']
         # Versions need to align with ones in 'main.yml' workflow
-        kotlin_version: ['2.1.21', '2.2.21', '2.3.21', '2.4.0']
+        kotlin_version: ['2.1.21', '2.2.21', '2.3.21', '2.4.20-Beta1']
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     steps:
