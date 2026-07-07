@@ -20,6 +20,7 @@ Co-maintainers:
 
 No changes since 2.22
 
+2.22.1 (07-Jul-2026)
 2.22.0 (31-May-2026)
 
 No changes since 2.21
