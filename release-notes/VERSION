@@ -31,6 +31,7 @@ No changes since 3.2
 #1164: The `UseJavaInstantConversion` feature has been added to support serialization/deserialization of `kotlin.time.Instant`.
 #1113: The deprecated `NewStrictNullChecks` option has been removed and unified under the `StrictNullChecks` option.
 
+3.1.5 (07-Jul-2026)
 3.1.4 (29-May-2026)
 3.1.3 (01-May-2026)
 3.1.2 (11-Apr-2026)
