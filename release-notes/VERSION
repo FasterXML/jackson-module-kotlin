@@ -26,6 +26,10 @@ Former maintainers:
 
 No changes since 3.2
 
+3.2.1 (10-Jul-2026)
+
+No changes since 3.2.1
+
 3.2.0 (08-Jun-2026)
 
 #1164: The `UseJavaInstantConversion` feature has been added to support serialization/deserialization of `kotlin.time.Instant`.
