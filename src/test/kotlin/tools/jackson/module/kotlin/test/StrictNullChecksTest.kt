@@ -165,12 +165,11 @@ class StrictNullChecksTest {
 
     @Test
     fun testInProjectionArray() {
-        // The check is applied regardless of the variance, so null contents are rejected
-        // even though Array<in String> may actually be Array<Any?>.
-        assertThrows<InvalidNullException> {
-            val json = """{"samples":["str", null]}"""
-            mapper.readValue<ClassWithInProjectionArray>(json)
-        }
+        // Null contents for an in projection are allowed regardless of the nullability
+        // of the type argument because Array<in String> may actually be Array<Any?>.
+        val json = """{"samples":["str", null]}"""
+        val stateObj = mapper.readValue<ClassWithInProjectionArray>(json)
+        assertEquals(listOf("str", null), stateObj.samples.toList())
     }
 
     private data class ClassWithNullableInProjectionArray(val samples: Array<in String?>)
@@ -187,19 +186,17 @@ class StrictNullChecksTest {
 
     @Test
     fun testInProjectionList() {
-        assertThrows<InvalidNullException> {
-            val json = """{"samples":["str", null]}"""
-            mapper.readValue<ClassWithInProjectionList>(json)
-        }
+        val json = """{"samples":["str", null]}"""
+        val stateObj = mapper.readValue<ClassWithInProjectionList>(json)
+        assertEquals(listOf("str", null), stateObj.samples.toList())
     }
 
     private data class ClassWithInProjectionMap(val samples: MutableMap<String, in Int>)
 
     @Test
     fun testInProjectionMapValue() {
-        assertThrows<InvalidNullException> {
-            val json = """{ "samples": { "key": null } }"""
-            mapper.readValue<ClassWithInProjectionMap>(json)
-        }
+        val json = """{ "samples": { "key": null } }"""
+        val stateObj = mapper.readValue<ClassWithInProjectionMap>(json)
+        assertEquals(mapOf<String, Int?>("key" to null), stateObj.samples.toMap())
     }
 }
