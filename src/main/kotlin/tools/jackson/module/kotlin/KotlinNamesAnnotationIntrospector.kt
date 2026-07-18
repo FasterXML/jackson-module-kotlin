@@ -26,6 +26,7 @@ import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
+import kotlin.reflect.KVariance
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.hasAnnotation
@@ -223,7 +224,18 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 }
 
-private fun KParameter.markedNonNullAt(index: Int) = type.arguments.getOrNull(index)?.type?.isMarkedNullable == false
+private fun KParameter.markedNonNullAt(index: Int): Boolean {
+    val projection = type.arguments.getOrNull(index) ?: return false
+
+    // Contents in a use-site `in` projected position are not checked
+    // because null may be entered regardless of the nullability of the type argument
+    // (e.g. Array<in String> may actually be Array<Any?>).
+    return if (projection.variance == KVariance.IN) {
+        false
+    } else {
+        projection.type?.isMarkedNullable == false
+    }
+}
 
 private fun KParameter.requireStrictNullCheck(type: JavaType): Boolean =
     ((type.isArrayType || type.isCollectionLikeType) && this.markedNonNullAt(0)) ||
