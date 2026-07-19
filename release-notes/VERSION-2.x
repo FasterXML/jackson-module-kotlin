@@ -25,6 +25,12 @@ No changes since 2.22
 
 No changes since 2.21
 
+2.21.6 (not yet released)
+
+#1192: Improved documentation for the shorthands of deserialization methods.
+  The KDoc and README now state that most of them check the deserialized value
+  to preserve `Kotlin` null safety.
+
 2.21.5 (06-Jul-2026)
 2.21.4 (28-May-2026)
 2.21.3 (28-Apr-2026)
