@@ -114,15 +114,15 @@ Since their type parameters are reified, `Class` and `TypeReference` do not need
 | `ObjectReader` | `readValueTyped`, `readValuesTyped`, `treeToValue`       |
 
 `ObjectMapper.readValue` accepts the same sources as the original,
-namely `JsonParser`, `File`, `URL`, `String`, `Reader`, `InputStream` and `ByteArray`.
+namely `JsonParser`, `File`, `String`, `Reader`, `InputStream` and `ByteArray`.
 
 Note that these are not merely shorthands: since 2.19.0,
 most of them check the deserialized value to preserve `Kotlin` null safety.  
 If a `null` is deserialized while the reified type is non-null,
-`RuntimeJsonMappingException` is thrown instead of returning it.
+`DatabindException` is thrown instead of returning it.
 
 ```kotlin
-// Throws RuntimeJsonMappingException, because String is non-null but null was deserialized
+// Throws DatabindException, because String is non-null but null was deserialized
 mapper.readValue<String>("null")
 
 // Returns null, because the reified type is nullable
