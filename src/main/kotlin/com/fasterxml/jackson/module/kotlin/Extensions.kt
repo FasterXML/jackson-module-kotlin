@@ -73,18 +73,24 @@ internal inline fun <reified T> Any?.checkTypeMismatch(): T {
 }
 
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
     .checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValues].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValues], whose iterator additionally preserves `Kotlin` null safety.
+ *
+ * Note that this function itself never throws;
+ * the check is performed per value, so [RuntimeJsonMappingException] is thrown from
+ * [MappingIterator.next] / [MappingIterator.nextValue] if [T] is non-null but `null` was deserialized.
+ * It is also thrown if the deserialized value is of a type unrelated to [T],
+ * which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<T> {
     val values = readValues(jp, jacksonTypeRef<T>())
@@ -95,81 +101,109 @@ inline fun <reified T> ObjectMapper.readValues(jp: JsonParser): MappingIterator<
 }
 
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(src: File): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(src: URL): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(content: String): T = readValue(content, jacksonTypeRef<T>())
     .checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(src: Reader): T = readValue(src, jacksonTypeRef<T>()).checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(src: InputStream): T = readValue(src, jacksonTypeRef<T>())
     .checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.readValue(src: ByteArray): T = readValue(src, jacksonTypeRef<T>())
     .checkTypeMismatch()
 
 /**
- * Shorthand for [ObjectMapper.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.treeToValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.treeToValue(n: TreeNode): T = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
     .checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectMapper.convertValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectMapper].
+ * Shorthand for [ObjectMapper.convertValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was converted.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the converted value is of a type unrelated to [T],
+ *   which indicates that [ObjectMapper] is incorrectly customized.
  */
 inline fun <reified T> ObjectMapper.convertValue(from: Any?): T = convertValue(from, jacksonTypeRef<T>())
     .checkTypeMismatch()
 
 /**
- * Shorthand for [ObjectReader.readValue].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectReader].
+ * Shorthand for [ObjectReader.readValue], which additionally preserves `Kotlin` null safety.
+ *
+ * @throws RuntimeJsonMappingException if [T] is non-null but `null` was deserialized.
+ *   Returning it as-is would silently break null safety, so it is reported as an error instead.
+ *   Also thrown if the deserialized value is of a type unrelated to [T],
+ *   which indicates that [ObjectReader] is incorrectly customized.
  */
 inline fun <reified T> ObjectReader.readValueTyped(jp: JsonParser): T = readValue(jp, jacksonTypeRef<T>())
     .checkTypeMismatch()
+
 /**
- * Shorthand for [ObjectReader.readValues].
- * @throws RuntimeJsonMappingException Especially if [T] is non-null and the value read is null.
- *   Other cases where the read value is of a different type than [T]
- *   due to an incorrect customization to [ObjectReader].
+ * Shorthand for [ObjectReader.readValues], whose iterator additionally preserves `Kotlin` null safety.
+ *
+ * Note that this function itself never throws;
+ * the check is performed per value, so [RuntimeJsonMappingException] is thrown from
+ * [Iterator.next] if [T] is non-null but `null` was deserialized.
+ * It is also thrown if the deserialized value is of a type unrelated to [T],
+ * which indicates that [ObjectReader] is incorrectly customized.
  */
 inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T> {
     val values = readValues(jp, jacksonTypeRef<T>())
@@ -178,6 +212,14 @@ inline fun <reified T> ObjectReader.readValuesTyped(jp: JsonParser): Iterator<T>
         override fun next(): T = values.next().checkTypeMismatch<T>()
     }
 }
+
+/**
+ * Shorthand for [ObjectReader.treeToValue].
+ *
+ * Unlike the other extensions in this file, this function does **not** preserve `Kotlin` null safety.
+ * Instead of throwing, it declares a nullable return type,
+ * so `null` may be returned even if [T] is non-null.
+ */
 inline fun <reified T> ObjectReader.treeToValue(n: TreeNode): T? = readValue(this.treeAsTokens(n), jacksonTypeRef<T>())
 
 inline fun <reified T, reified U> ObjectMapper.addMixIn(): ObjectMapper = this.addMixIn(T::class.java, U::class.java)
