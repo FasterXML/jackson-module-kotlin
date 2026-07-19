@@ -104,6 +104,39 @@ arrayNode += "bar".toByteArray()
 println(arrayNode.toString()) // ["foo",true,1,1.0,"YmFy"]
 ```
 
+## Shorthands for deserialization
+Shorthands for the deserialization methods of `ObjectMapper` and `ObjectReader` are provided as extension functions.  
+Since their type parameters are reified, `Class` and `TypeReference` do not need to be passed explicitly.
+
+| Receiver       | Shorthands                                               |
+|----------------|----------------------------------------------------------|
+| `ObjectMapper` | `readValue`, `readValues`, `treeToValue`, `convertValue` |
+| `ObjectReader` | `readValueTyped`, `readValuesTyped`, `treeToValue`       |
+
+`ObjectMapper.readValue` accepts the same sources as the original,
+namely `JsonParser`, `File`, `String`, `Reader`, `InputStream` and `ByteArray`.
+
+Note that these are not merely shorthands: since 2.19.0,
+most of them check the deserialized value to preserve `Kotlin` null safety.  
+If a `null` is deserialized while the reified type is non-null,
+`DatabindException` is thrown instead of returning it.
+
+```kotlin
+// Throws DatabindException, because String is non-null but null was deserialized
+mapper.readValue<String>("null")
+
+// Returns null, because the reified type is nullable
+mapper.readValue<String?>("null")
+```
+
+The same check also detects values whose type is unrelated to the reified type,
+which indicates that `ObjectMapper` is incorrectly customized.
+
+For `readValues` / `readValuesTyped`, the check is applied to each value by the returned iterator,
+so the exception is thrown from `next()` / `nextValue()` rather than from the function itself.  
+`ObjectReader.treeToValue` is the only function that does not perform the check
+and declares a nullable return type instead.
+
 # Compatibility
 ## Kotlin
 (NOTE: incomplete! Please submit corrections/additions via PRs!)

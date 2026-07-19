@@ -28,6 +28,9 @@ Former maintainers:
 
 3.2.2 (not yet released)
 
+#1192: Improved documentation for the shorthands of deserialization methods.
+  The KDoc and README now state that most of them check the deserialized value
+  to preserve `Kotlin` null safety.
 #1191: Fixed a problem where null contents in use-site `in` projected positions (e.g. `Array<in String>`)
  were rejected by `StrictNullChecks` even though they may contain null
  regardless of the nullability of the type argument.

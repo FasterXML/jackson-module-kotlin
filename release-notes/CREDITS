@@ -26,6 +26,7 @@ WrongWrong (@k163377)
 # 3.2.2 (not yet released)
 
 WrongWrong (@k163377)
+* #1192: Improved KDoc of read functions to clarify Kotlin null safety
 * #1191: Allow null contents for use-site in projections in StrictNullChecks
 
 # 3.2.0 (08-Jun-2026)
