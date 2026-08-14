@@ -26,7 +26,7 @@ Former maintainers:
 
 No changes since 3.2
 
-3.2.2 (not yet released)
+3.2.2 (14-Aug-2026)
 
 #1192: Improved documentation for the shorthands of deserialization methods.
   The KDoc and README now state that most of them check the deserialized value
