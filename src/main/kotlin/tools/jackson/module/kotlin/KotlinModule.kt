@@ -107,7 +107,9 @@ class KotlinModule private constructor(
 
     private fun installKotlinClassIntrospector(context: SetupContext) {
         val builder = context.owner as? MapperBuilder<*, *> ?: return
-        if (builder.classIntrospector() is KotlinAwareClassIntrospector) {
+        if (builder.classIntrospector() is KotlinAwareClassIntrospector ||
+            builder.classIntrospector() is KotlinAwareBasicClassIntrospector
+        ) {
             return
         }
         builder.classIntrospector(KotlinAwareClassIntrospector(builder.classIntrospector()))

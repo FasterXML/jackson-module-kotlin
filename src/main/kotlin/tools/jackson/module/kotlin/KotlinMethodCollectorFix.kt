@@ -1,11 +1,9 @@
 package tools.jackson.module.kotlin
 
-import tools.jackson.databind.util.ClassUtil
 import tools.jackson.databind.introspect.AnnotatedClass
-import tools.jackson.databind.introspect.AnnotatedMember
 import tools.jackson.databind.introspect.AnnotatedMethod
-import tools.jackson.databind.introspect.AnnotatedMethodMap
 import tools.jackson.databind.introspect.MemberKey
+import tools.jackson.databind.util.ClassUtil
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.Proxy
@@ -15,58 +13,56 @@ import java.lang.reflect.Proxy
  * prefers the more specific return type (for example `List` over `Collection`).
  */
 internal object KotlinMethodCollectorFix {
-    private val memberMethodsField = AnnotatedClass::class.java.getDeclaredField("_memberMethods").apply {
-        isAccessible = true
-    }
-
-    fun fixMethodMap(annotatedClass: AnnotatedClass) {
+    fun correctedMemberMethods(annotatedClass: AnnotatedClass): Iterable<AnnotatedMethod> {
         if (!annotatedClass.rawType.isKotlinClass()) {
-            return
+            return annotatedClass.memberMethods()
         }
 
-        annotatedClass.memberMethods()
-
-        @Suppress("UNCHECKED_CAST")
-        val originalMap = memberMethodsField.get(annotatedClass) as AnnotatedMethodMap?
-        if (originalMap == null || originalMap.size() == 0) {
-            return
+        val originalMethods = annotatedClass.memberMethods().asIterable().toList()
+        if (originalMethods.isEmpty()) {
+            return emptyList()
         }
 
         val selectedMethods = collectKotlinAwareMethods(annotatedClass.rawType)
-        val rebuilt = LinkedHashMap<MemberKey, AnnotatedMethod>(originalMap.size())
+        val rebuilt = ArrayList<AnnotatedMethod>(originalMethods.size)
 
-        for (annotatedMethod in originalMap) {
+        for (annotatedMethod in originalMethods) {
             val member = annotatedMethod.member as Method
             val key = MemberKey(member)
             val preferred = selectedMethods[key]
-            rebuilt[key] = if (preferred == null || preferred == member) {
-                annotatedMethod
-            } else {
-                AnnotatedMethod(
-                    annotatedMethod.typeContext,
-                    preferred,
-                    annotatedMethod.annotationMap,
-                    null,
-                )
-            }
+            rebuilt.add(
+                if (preferred == null || preferred == member) {
+                    annotatedMethod
+                } else {
+                    AnnotatedMethod(
+                        annotatedClass,
+                        preferred,
+                        annotatedMethod._annotationMap(),
+                        null,
+                    )
+                },
+            )
         }
 
-        memberMethodsField.set(annotatedClass, AnnotatedMethodMap(rebuilt))
+        return rebuilt
     }
 
-    private fun collectKotlinAwareMethods(rawClass: Class<*>): Map<MemberKey, Method> {
-        val methods = LinkedHashMap<MemberKey, Method>()
-        for (method in ClassUtil.getClassMethods(rawClass)) {
+    private fun collectKotlinAwareMethods(rawClass: Class<*>): Map<MemberKey, Method> =
+        selectKotlinAwareMethods(ClassUtil.getClassMethods(rawClass).asList())
+
+    internal fun selectKotlinAwareMethods(methods: Iterable<Method>): Map<MemberKey, Method> {
+        val selected = LinkedHashMap<MemberKey, Method>()
+        for (method in methods) {
             if (!isIncludableMemberMethod(method)) {
                 continue
             }
             val key = MemberKey(method)
-            val existing = methods[key]
+            val existing = selected[key]
             if (existing == null || shouldReplaceForKotlin(existing, method)) {
-                methods[key] = method
+                selected[key] = method
             }
         }
-        return methods
+        return selected
     }
 
     private fun isIncludableMemberMethod(method: Method): Boolean {
@@ -76,7 +72,7 @@ internal object KotlinMethodCollectorFix {
         return method.parameterCount <= 2
     }
 
-    private fun shouldReplaceForKotlin(current: Method, replace: Method): Boolean {
+    internal fun shouldReplaceForKotlin(current: Method, replace: Method): Boolean {
         if (accessLevel(replace) > accessLevel(current)) {
             return true
         }
@@ -109,13 +105,4 @@ internal object KotlinMethodCollectorFix {
         Modifier.isPrivate(modifiers) -> 0
         else -> 1
     }
-
-    private val AnnotatedMethod.typeContext
-        get() = AnnotatedMember::class.java.getDeclaredField("_typeContext").let {
-            it.isAccessible = true
-            it.get(this) as tools.jackson.databind.introspect.TypeResolutionContext
-        }
-
-    private val AnnotatedMethod.annotationMap
-        get() = _annotationMap()
 }

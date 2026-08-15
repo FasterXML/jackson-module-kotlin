@@ -4,6 +4,7 @@ import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.cfg.MapperConfig
 import tools.jackson.databind.introspect.AnnotatedClass
+import tools.jackson.databind.introspect.BasicClassIntrospector
 import tools.jackson.databind.introspect.ClassIntrospector
 
 internal class KotlinAwareClassIntrospector(
@@ -12,14 +13,20 @@ internal class KotlinAwareClassIntrospector(
 
     override fun forMapper(): ClassIntrospector = KotlinAwareClassIntrospector(delegate.forMapper())
 
-    override fun forOperation(config: MapperConfig<*>): ClassIntrospector =
-        KotlinAwareClassIntrospector(delegate.forOperation(config))
+    override fun forOperation(config: MapperConfig<*>): ClassIntrospector {
+        val operationDelegate = delegate.forOperation(config)
+        return when {
+            operationDelegate is KotlinAwareBasicClassIntrospector -> operationDelegate
+            operationDelegate is BasicClassIntrospector -> KotlinAwareBasicClassIntrospector(config)
+            else -> KotlinAwareClassIntrospector(operationDelegate)
+        }
+    }
 
     override fun introspectClassAnnotations(type: JavaType): AnnotatedClass =
-        delegate.introspectClassAnnotations(type).also(::fixKotlinMethodMapIfNeeded)
+        delegate.introspectClassAnnotations(type)
 
     override fun introspectDirectClassAnnotations(type: JavaType): AnnotatedClass =
-        delegate.introspectDirectClassAnnotations(type).also(::fixKotlinMethodMapIfNeeded)
+        delegate.introspectDirectClassAnnotations(type)
 
     override fun introspectForSerialization(type: JavaType, classDef: AnnotatedClass): BeanDescription =
         delegate.introspectForSerialization(type, classDef)
@@ -34,8 +41,4 @@ internal class KotlinAwareClassIntrospector(
 
     override fun introspectForCreation(type: JavaType, classDef: AnnotatedClass): BeanDescription =
         delegate.introspectForCreation(type, classDef)
-
-    private fun fixKotlinMethodMapIfNeeded(annotatedClass: AnnotatedClass) {
-        KotlinMethodCollectorFix.fixMethodMap(annotatedClass)
-    }
 }
