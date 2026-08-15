@@ -1,6 +1,7 @@
 package tools.jackson.module.kotlin
 
 import tools.jackson.databind.MapperFeature
+import tools.jackson.databind.cfg.MapperBuilder
 import tools.jackson.databind.module.SimpleModule
 import tools.jackson.module.kotlin.KotlinFeature.*
 import java.util.*
@@ -98,8 +99,18 @@ class KotlinModule private constructor(
         context.addSerializers(KotlinSerializers(cache))
         context.addKeySerializers(KotlinKeySerializers(cache))
 
+        installKotlinClassIntrospector(context)
+
         // ranges
         context.setMixIn(ClosedRange::class.java, ClosedRangeMixin::class.java)
+    }
+
+    private fun installKotlinClassIntrospector(context: SetupContext) {
+        val builder = context.owner as? MapperBuilder<*, *> ?: return
+        if (builder.classIntrospector() is KotlinAwareClassIntrospector) {
+            return
+        }
+        builder.classIntrospector(KotlinAwareClassIntrospector(builder.classIntrospector()))
     }
 
     class Builder {
