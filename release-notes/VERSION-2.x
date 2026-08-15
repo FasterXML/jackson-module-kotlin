@@ -16,16 +16,12 @@ Co-maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
-2.23.0 (not yet released)
-
-No changes since 2.22
-
 2.22.1 (07-Jul-2026)
 2.22.0 (31-May-2026)
 
 No changes since 2.21
 
-2.21.6 (not yet released)
+2.21.6 (14-Aug-2026)
 
 #1192: Improved documentation for the shorthands of deserialization methods.
   The KDoc and README now state that most of them check the deserialized value
