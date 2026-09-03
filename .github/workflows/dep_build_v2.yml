@@ -10,30 +10,11 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        java_version: ['8', '17', '21', '25', '26']
-        # Versions need to align with ones in 'main.yml' workflow
-        kotlin_version: ['2.1.21', '2.2.21', '2.3.21', '2.4.20-RC']
-    env:
-      JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
-    steps:
-    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      with:
-        ref: 2.x
-    - name: Set up JDK
-      uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
-      with:
-        distribution: 'temurin'
-        java-version: ${{ matrix.java_version }}
-        cache: 'maven'
-    - name: Build
-      # Note: build separately first using default kotlin-core
-      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
-    - name: Test
-      # Note: actual testing should use matrix kotlin-core version (note: MUST specify test phase)
-      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
+    uses: ./.github/workflows/build.yml
+    with:
+      ref: '2.x'
+      # A subset of the JDKs covered by 'main.yml'. The Kotlin axis is shared
+      # by every caller and lives in 'build.yml'.
+      java_versions: '["8", "17", "21", "25", "26"]'
 
 # No recursive rebuild (yet?)
