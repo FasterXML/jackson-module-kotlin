@@ -8,6 +8,11 @@ on:
 permissions:
   contents: read
 
+# databind pushes arrive in bursts; only the newest one is worth a full matrix.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     uses: ./.github/workflows/build.yml

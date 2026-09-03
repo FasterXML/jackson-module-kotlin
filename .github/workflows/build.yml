@@ -28,14 +28,49 @@ permissions:
   contents: read
 
 jobs:
+  # Populates the shared '~/.m2/repository' cache once, so that the matrix below
+  # starts from a warm local repository. Without this every matrix job downloads
+  # the same artifacts at the same moment, and Maven Central answers part of that
+  # burst with 429 (Too Many Requests).
+  prime-cache:
+    runs-on: ubuntu-latest
+    outputs:
+      kotlin_versions: ${{ steps.kotlin_versions.outputs.list }}
+    env:
+      JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+    steps:
+    # Single source of truth for the 'kotlin_version' axis, for every caller.
+    - name: List Kotlin versions to test against
+      id: kotlin_versions
+      run: echo 'list=["2.1.21", "2.2.21", "2.3.21", "2.4.20-RC"]' >> $GITHUB_OUTPUT
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ inputs.ref }}
+    - name: Set up JDK
+      uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+      with:
+        distribution: 'temurin'
+        # Any JDK will do: '~/.m2/repository' is shared by every matrix job
+        # because setup-java keys its Maven cache on the pom hash only.
+        java-version: '17'
+        cache: 'maven'
+    - name: Resolve build dependencies
+      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
+    - name: Resolve test dependencies of every Kotlin version
+      run: |
+        for kotlin_version in $(echo '${{ steps.kotlin_versions.outputs.list }}' | jq -r '.[]'); do
+          ./mvnw -B -q -ff -ntp -Dversion.kotlin="$kotlin_version" \
+            org.apache.maven.plugins:maven-dependency-plugin:3.11.0:resolve
+        done
+
   build:
+    needs: prime-cache
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         java_version: ${{ fromJSON(inputs.java_versions) }}
-        # Single source of truth for the Kotlin axis, for every caller.
-        kotlin_version: ['2.1.21', '2.2.21', '2.3.21', '2.4.20-RC']
+        kotlin_version: ${{ fromJSON(needs.prime-cache.outputs.kotlin_versions) }}
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
       # Only the combination matching the pom's default 'version.kotlin' deploys.

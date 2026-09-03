@@ -15,6 +15,13 @@ on:
 permissions:
   contents: read
 
+# One matrix run is a sizable burst of Maven Central traffic, so do not keep
+# superseded runs of the same PR alive. Pushes to '2.*' are not cancelled
+# because their last job deploys a snapshot.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     uses: ./.github/workflows/build.yml
