@@ -18,8 +18,9 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       ref: '2.x'
-      # A subset of the JDKs covered by 'main.yml'. The Kotlin axis is shared
-      # by every caller and lives in 'build.yml'.
+      # A subset of the JDKs covered by 'main.yml'. The Kotlin versions need to
+      # align with the ones there.
       java_versions: '["8", "17", "21", "25", "26"]'
+      kotlin_versions: '["2.1.21", "2.2.21", "2.3.21", "2.4.20-RC3"]'
 
 # No recursive rebuild (yet?)
