@@ -1,0 +1,119 @@
+name: Build
+
+# Shared implementation of the build matrix. 'main.yml', 'dep_build_v2.yml' and
+# 'dep_build_v3.yml' differ only in what they check out, which JDK and Kotlin
+# versions they cover and whether they deploy a snapshot, so everything else
+# lives here.
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "Ref to check out. Empty means the ref that triggered the caller."
+        type: string
+        default: ''
+      java_versions:
+        description: "JSON array of JDK versions to run the matrix over."
+        type: string
+        required: true
+      kotlin_versions:
+        description: "JSON array of Kotlin versions to run the matrix over."
+        type: string
+        required: true
+      deploy_snapshot:
+        description: "Whether the release build combination should deploy a snapshot."
+        type: boolean
+        default: false
+      release_java_version:
+        description: "JDK version of the release build combination. Read only when 'deploy_snapshot' is set."
+        type: string
+        default: ''
+      release_kotlin_version:
+        description: "Kotlin version of the release build combination. Read only when 'deploy_snapshot' is set."
+        type: string
+        default: ''
+    secrets:
+      CENTRAL_DEPLOY_USERNAME:
+        required: false
+      CENTRAL_DEPLOY_PASSWORD:
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Populates the shared '~/.m2/repository' cache once, so that the matrix below
+  # starts from a warm local repository. Without this every matrix job downloads
+  # the same artifacts at the same moment, and Maven Central answers part of that
+  # burst with 429 (Too Many Requests).
+  prime-cache:
+    runs-on: ubuntu-latest
+    env:
+      JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ inputs.ref }}
+    - name: Set up JDK
+      uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+      with:
+        distribution: 'temurin'
+        # Any JDK will do: '~/.m2/repository' is shared by every matrix job
+        # because setup-java keys its Maven cache on the pom hash only.
+        java-version: '17'
+        cache: 'maven'
+    - name: Resolve build dependencies
+      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
+    - name: Resolve test dependencies of every Kotlin version
+      run: |
+        for kotlin_version in $(echo '${{ inputs.kotlin_versions }}' | jq -r '.[]'); do
+          ./mvnw -B -q -ff -ntp -Dversion.kotlin="$kotlin_version" \
+            org.apache.maven.plugins:maven-dependency-plugin:3.11.0:resolve
+        done
+
+  build:
+    needs: prime-cache
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java_version: ${{ fromJSON(inputs.java_versions) }}
+        kotlin_version: ${{ fromJSON(inputs.kotlin_versions) }}
+    env:
+      JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
+      # The release build is the combination the pom builds with by default, and
+      # it is the only one allowed to deploy.
+      RELEASE_BUILD: ${{ inputs.deploy_snapshot && matrix.java_version == inputs.release_java_version && matrix.kotlin_version == inputs.release_kotlin_version }}
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      with:
+        ref: ${{ inputs.ref }}
+    - name: Set up JDK
+      uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+      with:
+        distribution: 'temurin'
+        java-version: ${{ matrix.java_version }}
+        cache: 'maven'
+        server-id: central-snapshots
+        server-username: CI_DEPLOY_USERNAME
+        server-password: CI_DEPLOY_PASSWORD
+        # See https://github.com/actions/setup-java/blob/v2/docs/advanced-usage.md#Publishing-using-Apache-
+        # gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
+        # gpg-passphrase: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+
+    - name: Build
+      # Note: build separately first using default kotlin-core
+      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
+    - name: Test
+      # Note: actual testing should use matrix kotlin-core version (note: MUST specify test phase)
+      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
+    - name: Extract project Maven version
+      id: projectVersion
+      if: ${{ env.RELEASE_BUILD == 'true' }}
+      run: echo "version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.5.1:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
+    - name: Deploy snapshot
+      if: ${{ env.RELEASE_BUILD == 'true' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT') }}
+      env:
+        CI_DEPLOY_USERNAME: ${{ secrets.CENTRAL_DEPLOY_USERNAME }}
+        CI_DEPLOY_PASSWORD: ${{ secrets.CENTRAL_DEPLOY_PASSWORD }}
+        # MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+      run: ./mvnw -B -q -ff -DskipTests -ntp source:jar deploy
