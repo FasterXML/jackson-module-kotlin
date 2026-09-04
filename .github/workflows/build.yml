@@ -42,7 +42,7 @@ jobs:
     # Single source of truth for the 'kotlin_version' axis, for every caller.
     - name: List Kotlin versions to test against
       id: kotlin_versions
-      run: echo 'list=["2.1.21", "2.2.21", "2.3.21", "2.4.20-RC"]' >> $GITHUB_OUTPUT
+      run: echo 'list=["2.1.21", "2.2.21", "2.3.21", "2.4.20-RC3"]' >> $GITHUB_OUTPUT
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       with:
         ref: ${{ inputs.ref }}
