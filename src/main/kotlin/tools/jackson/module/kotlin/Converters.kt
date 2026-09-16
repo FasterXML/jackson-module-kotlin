@@ -163,7 +163,7 @@ internal sealed class ValueClassUnboxConverter<S : Any, D : Any?> : StdConverter
     final override fun getInputType(typeFactory: TypeFactory): JavaType = typeFactory.constructType(valueClass)
     final override fun getOutputType(typeFactory: TypeFactory): JavaType = typeFactory.constructType(unboxedType)
 
-    val delegatingSerializer: StdDelegatingSerializer by lazy { StdDelegatingSerializer(this) }
+    val serializer: ValueClassUnboxSerializer by lazy { ValueClassUnboxSerializer(this) }
 
     companion object {
         fun create(valueClass: Class<*>): ValueClassUnboxConverter<*, *> {
