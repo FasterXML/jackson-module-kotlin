@@ -25,6 +25,13 @@ Former maintainers:
 3.3.0 (not yet released)
 
 #1185: Minimum supported Kotlin version has been upgraded to 2.2.
+#1227: Unsigned integer types and value classes now support polymorphic type handling
+  (default typing / `@JsonTypeInfo`), e.g. when stored in an `Any` property or as collection contents.
+  Previously serialization failed with "Type id handling not implemented", or the value class identity
+  was silently dropped. The type id written is that of the value class itself, with the unboxed value
+  as a scalar, e.g. `["pkg.ValueClass","unboxed"]` for `As.PROPERTY`.
+  The unsigned integer serializers/deserializers now extend `StdScalarSerializer`/`StdScalarDeserializer`
+  and implement `acceptJsonFormatVisitor`/`logicalType`.
 
 3.2.2 (14-Aug-2026)
 
