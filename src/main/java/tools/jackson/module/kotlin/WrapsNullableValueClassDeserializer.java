@@ -9,6 +9,7 @@ import tools.jackson.core.JsonParser;
 import tools.jackson.databind.DeserializationContext;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.deser.std.StdDeserializer;
+import tools.jackson.databind.jsontype.TypeDeserializer;
 
 /**
  * An interface to be inherited by JsonDeserializer that handles value classes that may wrap nullable.
@@ -50,4 +51,20 @@ public abstract class WrapsNullableValueClassDeserializer<D> extends StdDeserial
 
     @Override
     public abstract D deserialize(@NotNull JsonParser p, @NotNull DeserializationContext ctxt) throws JacksonException;
+
+    /**
+     * A value class is serialized as its unboxed value, i.e. as a scalar-shaped value
+     * (see {@code ValueClassUnboxSerializer}), so polymorphic type information is read
+     * the same way as for other scalar values.
+     *
+     * @since 3.3
+     */
+    @Override
+    public Object deserializeWithType(
+            @NotNull JsonParser p,
+            @NotNull DeserializationContext ctxt,
+            @NotNull TypeDeserializer typeDeserializer
+    ) throws JacksonException {
+        return typeDeserializer.deserializeTypedFromScalar(p, ctxt);
+    }
 }

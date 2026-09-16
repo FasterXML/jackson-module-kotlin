@@ -71,3 +71,8 @@ Yusuf Arfan Ismail (RealYusufIsmail@github)
 
 * Contributed #596: Rename "com.fasterxml.jackson" -> "tools.jackson"
  [3.0.0]
+
+PJ Fanning (pjfanning@github)
+
+* Contributed #1227: Support polymorphic type info for unsigned integers and value classes
+ [3.3.0]

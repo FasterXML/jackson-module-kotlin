@@ -10,7 +10,9 @@ import tools.jackson.databind.JavaType
 import tools.jackson.databind.ValueDeserializer
 import tools.jackson.databind.deser.Deserializers
 import tools.jackson.databind.deser.std.StdDeserializer
+import tools.jackson.databind.deser.std.StdScalarDeserializer
 import tools.jackson.databind.exc.InvalidDefinitionException
+import tools.jackson.databind.type.LogicalType
 import tools.jackson.databind.util.ClassUtil
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
@@ -53,7 +55,12 @@ object RegexDeserializer : StdDeserializer<Regex>(Regex::class.java) {
     }
 }
 
-object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
+// Unsigned integer deserializers extend StdScalarDeserializer so that polymorphic type information
+// (e.g. default typing on an `Any` property) is read as for other scalar values.
+object UByteDeserializer : StdScalarDeserializer<UByte>(UByte::class.java) {
+    /** @since 3.3 */
+    override fun logicalType(): LogicalType = LogicalType.Integer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.shortValue.asUByte() ?: throw InputCoercionException(
             p,
@@ -63,7 +70,10 @@ object UByteDeserializer : StdDeserializer<UByte>(UByte::class.java) {
         )
 }
 
-object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
+object UShortDeserializer : StdScalarDeserializer<UShort>(UShort::class.java) {
+    /** @since 3.3 */
+    override fun logicalType(): LogicalType = LogicalType.Integer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.intValue.asUShort() ?: throw InputCoercionException(
             p,
@@ -73,7 +83,10 @@ object UShortDeserializer : StdDeserializer<UShort>(UShort::class.java) {
         )
 }
 
-object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
+object UIntDeserializer : StdScalarDeserializer<UInt>(UInt::class.java) {
+    /** @since 3.3 */
+    override fun logicalType(): LogicalType = LogicalType.Integer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.longValue.asUInt() ?: throw InputCoercionException(
             p,
@@ -83,7 +96,10 @@ object UIntDeserializer : StdDeserializer<UInt>(UInt::class.java) {
         )
 }
 
-object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
+object ULongDeserializer : StdScalarDeserializer<ULong>(ULong::class.java) {
+    /** @since 3.3 */
+    override fun logicalType(): LogicalType = LogicalType.Integer
+
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext) =
         p.bigIntegerValue.asULong() ?: throw InputCoercionException(
             p,
