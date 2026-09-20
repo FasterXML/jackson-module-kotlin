@@ -15,7 +15,7 @@ Authors:
 
 Contributors:
 
-# 2.21.6 (not yet released)
+# 2.21.6 (14-Aug-2026)
 
 WrongWrong (@k163377)
 * #1192: Improved KDoc of read functions to clarify Kotlin null safety
