@@ -22,7 +22,7 @@ Co-maintainers:
 
 No changes since 2.21
 
-2.21.7 (not yet released)
+2.21.7 (21-Sep-2026)
 
 #1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
   with "Type id handling not implemented" when polymorphic type information was required for them,
