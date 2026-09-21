@@ -15,6 +15,11 @@ Authors:
 
 Contributors:
 
+# 2.21.7 (not yet released)
+
+PJ Fanning (@pjfanning)
+* #1228: Support polymorphic type info for unsigned integer types
+
 # 2.21.6 (14-Aug-2026)
 
 WrongWrong (@k163377)
