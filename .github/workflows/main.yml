@@ -27,7 +27,7 @@ jobs:
     uses: ./.github/workflows/build.yml
     with:
       java_versions: '["17", "21", "25", "26"]'
-      kotlin_versions: '["2.2.21", "2.3.21", "2.4.20-RC3"]'
+      kotlin_versions: '["2.2.21", "2.3.21", "2.4.20"]'
       deploy_snapshot: ${{ github.event_name != 'pull_request' }}
       release_java_version: '17'
       release_kotlin_version: '2.2.21'

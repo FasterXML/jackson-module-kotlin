@@ -3,12 +3,15 @@ package tools.jackson.module.kotlin
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonValue
 import tools.jackson.core.JsonGenerator
+import tools.jackson.core.JsonParser.NumberType
 import tools.jackson.databind.BeanDescription
 import tools.jackson.databind.JavaType
 import tools.jackson.databind.SerializationConfig
 import tools.jackson.databind.SerializationContext
 import tools.jackson.databind.ValueSerializer
+import tools.jackson.databind.jsonFormatVisitors.JsonFormatVisitorWrapper
 import tools.jackson.databind.ser.Serializers
+import tools.jackson.databind.ser.std.StdScalarSerializer
 import tools.jackson.databind.ser.std.StdSerializer
 import java.lang.invoke.MethodHandle
 import java.lang.invoke.MethodHandles
@@ -16,31 +19,50 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.math.BigInteger
 
-object UByteSerializer : StdSerializer<UByte>(UByte::class.java) {
+// The unsigned integer serializers extend StdScalarSerializer so that polymorphic type information
+// (e.g. default typing on an `Any` property) is written as for other scalar values,
+// and report the integer format to schema generators (StdScalarSerializer assumes a string by default).
+object UByteSerializer : StdScalarSerializer<UByte>(UByte::class.java) {
     override fun serialize(value: UByte, gen: JsonGenerator, ctxt: SerializationContext) {
         gen.writeNumber(value.toShort())
     }
+
+    override fun acceptJsonFormatVisitor(visitor: JsonFormatVisitorWrapper, typeHint: JavaType?) {
+        visitIntFormat(visitor, typeHint, NumberType.INT)
+    }
 }
 
-object UShortSerializer : StdSerializer<UShort>(UShort::class.java) {
+object UShortSerializer : StdScalarSerializer<UShort>(UShort::class.java) {
     override fun serialize(value: UShort, gen: JsonGenerator, ctxt: SerializationContext) {
         gen.writeNumber(value.toInt())
     }
-}
 
-object UIntSerializer : StdSerializer<UInt>(UInt::class.java) {
-    override fun serialize(value: UInt, gen: JsonGenerator, ctxt: SerializationContext) {
-        gen.writeNumber(value.toLong())
+    override fun acceptJsonFormatVisitor(visitor: JsonFormatVisitorWrapper, typeHint: JavaType?) {
+        visitIntFormat(visitor, typeHint, NumberType.INT)
     }
 }
 
-object ULongSerializer : StdSerializer<ULong>(ULong::class.java) {
+object UIntSerializer : StdScalarSerializer<UInt>(UInt::class.java) {
+    override fun serialize(value: UInt, gen: JsonGenerator, ctxt: SerializationContext) {
+        gen.writeNumber(value.toLong())
+    }
+
+    override fun acceptJsonFormatVisitor(visitor: JsonFormatVisitorWrapper, typeHint: JavaType?) {
+        visitIntFormat(visitor, typeHint, NumberType.LONG)
+    }
+}
+
+object ULongSerializer : StdScalarSerializer<ULong>(ULong::class.java) {
     override fun serialize(value: ULong, gen: JsonGenerator, ctxt: SerializationContext) {
         val longValue = value.toLong()
         when {
             longValue >= 0 -> gen.writeNumber(longValue)
             else -> gen.writeNumber(BigInteger(value.toString()))
         }
+    }
+
+    override fun acceptJsonFormatVisitor(visitor: JsonFormatVisitorWrapper, typeHint: JavaType?) {
+        visitIntFormat(visitor, typeHint, NumberType.BIG_INTEGER)
     }
 }
 
