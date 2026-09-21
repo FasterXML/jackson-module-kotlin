@@ -32,6 +32,11 @@ Dmitry Sulman (@dmitrysulman)
 WrongWrong (@k163377)
 * #1113: Remove NewStrictNullChecks option
 
+# 3.1.7 (not yet released)
+
+PJ Fanning (@pjfanning)
+* #1228: Support polymorphic type info for unsigned integer types
+
 # 3.1.0 (23-Feb-2026)
 
 WrongWrong (@k163377)

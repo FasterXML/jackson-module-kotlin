@@ -22,6 +22,14 @@ Co-maintainers:
 
 No changes since 2.21
 
+2.21.7 (not yet released)
+
+#1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
+  with "Type id handling not implemented" when polymorphic type information was required for them,
+  e.g. in an `Any` property under default typing or in a property annotated with `@JsonTypeInfo`.
+  Their serializers now also report the integer format to schema generators (`acceptJsonFormatVisitor`)
+  instead of "any".
+
 2.21.6 (14-Aug-2026)
 
 #1192: Improved documentation for the shorthands of deserialization methods.
@@ -124,6 +132,7 @@ No changes since 2.19.0
 #839: Remove useKotlinPropertyNameForGetter and unify with kotlinPropertyNameAsImplicitName.
 #835: Remove old SingletonSupport class and unified with KotlinFeature.SingletonSupport.
 
+2.18.11 (20-Sep-2026)
 2.18.10 (15-Aug-2026)
 2.18.9 (07-Jul-2026)
 2.18.8 (28-May-2026)
