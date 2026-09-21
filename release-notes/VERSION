@@ -22,6 +22,14 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.1.7 (not yet released)
+
+#1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
+  with "Type id handling not implemented" when polymorphic type information was required for them,
+  e.g. in an `Any` property under default typing or in a property annotated with `@JsonTypeInfo`.
+  Their serializers now also report the integer format to schema generators (`acceptJsonFormatVisitor`)
+  instead of "any".
+
 3.1.6 (14-Aug-2026)
 
 No changes since 3.1.5
