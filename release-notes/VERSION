@@ -44,7 +44,7 @@ No changes since 3.2.1
 #1164: The `UseJavaInstantConversion` feature has been added to support serialization/deserialization of `kotlin.time.Instant`.
 #1113: The deprecated `NewStrictNullChecks` option has been removed and unified under the `StrictNullChecks` option.
 
-3.1.7 (not yet released)
+3.1.7 (21-Sep-2026)
 
 #1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
   with "Type id handling not implemented" when polymorphic type information was required for them,
