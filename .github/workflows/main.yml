@@ -26,8 +26,9 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      java_versions: '["17", "21", "25", "26"]'
-      kotlin_versions: '["2.1.21", "2.2.21", "2.3.21", "2.4.20"]'
+      java_versions: '["17", "21", "25", "27"]'
+      # Exclude 2.5.0-Beta1: Duration reflection fails (https://youtrack.jetbrains.com/issue/KT-89918).
+      kotlin_versions: '["2.1.21", "2.2.21", "2.3.21", "2.4.21-RC"]'
       deploy_snapshot: ${{ github.event_name != 'pull_request' }}
       release_java_version: '17'
       release_kotlin_version: '2.1.21'
