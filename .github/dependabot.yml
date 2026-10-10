@@ -2,6 +2,7 @@ version: 2
 updates:
   - package-ecosystem: "github-actions"
     directory: "/"
+    target-branch: "2.21"
     schedule:
       interval: "monthly"
     groups:
