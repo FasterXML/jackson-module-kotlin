@@ -22,4 +22,4 @@ jobs:
       # align with the ones there.
       java_versions: '["17", "21", "25", "27"]'
       # Exclude 2.5.0-Beta1: Duration reflection fails (https://youtrack.jetbrains.com/issue/KT-89918).
-      kotlin_versions: '["2.2.21", "2.3.21", "2.4.21-RC"]'
+      kotlin_versions: '["2.2.21", "2.3.21", "2.4.21"]'
