@@ -23,6 +23,10 @@ Co-maintainers:
 
 No changes since 2.21
 
+2.21.8 (17-Oct-2026)
+
+No changes since 2.21.7
+
 2.21.7 (21-Sep-2026)
 
 #1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
