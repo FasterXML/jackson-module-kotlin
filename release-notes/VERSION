@@ -22,6 +22,10 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.1.8 (17-Oct-2026)
+
+No changes since 3.1.7
+
 3.1.7 (21-Sep-2026)
 
 #1228: Fixed a problem where unsigned integer types (`UByte`, `UShort`, `UInt`, `ULong`) failed to serialize
