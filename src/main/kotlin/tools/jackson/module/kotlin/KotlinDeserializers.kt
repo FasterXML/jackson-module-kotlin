@@ -1,6 +1,7 @@
 package tools.jackson.module.kotlin
 
 import tools.jackson.core.JsonParser
+import tools.jackson.core.JsonToken.VALUE_NULL
 import tools.jackson.core.JsonToken.VALUE_NUMBER_INT
 import tools.jackson.core.exc.InputCoercionException
 import tools.jackson.databind.BeanDescription
@@ -93,12 +94,41 @@ object ULongDeserializer : StdDeserializer<ULong>(ULong::class.java) {
         )
 }
 
+/**
+ * Reads the value wrapped by a value class with the deserializer of [inputType].
+ *
+ * The deserializer is looked up once and then reused.
+ * `p.readValueAs(inputType)` looks it up for every value instead, and that lookup is not cached
+ * for deserializers that are not cachable (e.g. `BigDecimal`, `UUID` or `java.time` types),
+ * so they were constructed again for every value (#1250).
+ */
+internal class WrappedValueReader(private val inputType: Class<*>) {
+    // Looked up on first use, like `readValueAs()` did, so that the lookup (and any error it reports)
+    // still happens only when a value is actually read.
+    @Volatile
+    private var deserializer: ValueDeserializer<Any>? = null
+
+    private fun findDeserializer(ctxt: DeserializationContext): ValueDeserializer<Any> {
+        val type = ctxt.constructType(inputType)
+        return ctxt.findRootValueDeserializer(type)
+            ?: ctxt.reportBadDefinition(type, "Could not find `ValueDeserializer` for type ${ClassUtil.getTypeDescription(type)}")
+    }
+
+    // Same handling as DeserializationContext.readValue, which `p.readValueAs()` delegates to.
+    fun read(p: JsonParser, ctxt: DeserializationContext): Any? {
+        val deser = deserializer ?: findDeserializer(ctxt).also { deserializer = it }
+        if (!p.hasCurrentToken()) p.nextToken()
+        return if (p.hasToken(VALUE_NULL)) deser.getNullValue(ctxt) else deser.deserialize(p, ctxt)
+    }
+}
+
 // If the creator does not perform type conversion, implement a unique deserializer for each for fast invocation.
 internal sealed class NoConversionCreatorBoxDeserializer<S, D : Any>(
     creator: Method,
     converter: ValueClassBoxConverter<S, D>,
+    inputType: Class<*>,
 ) : WrapsNullableValueClassDeserializer<D>(converter.boxedClass) {
-    protected abstract val inputType: Class<*>
+    private val reader = WrappedValueReader(inputType)
     protected val handle: MethodHandle = MethodHandles
         .filterReturnValue(unreflectWithAccessibilityModification(creator), converter.boxHandle)
 
@@ -118,15 +148,13 @@ internal sealed class NoConversionCreatorBoxDeserializer<S, D : Any>(
 
     final override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D {
         @Suppress("UNCHECKED_CAST")
-        return invokeExact(p.readValueAs(inputType) as S)
+        return invokeExact(reader.read(p, ctxt) as S)
     }
 
     internal class WrapsInt<D : Any>(
         creator: Method,
         converter: IntValueClassBoxConverter<D>,
-    ) : NoConversionCreatorBoxDeserializer<Int, D>(creator, converter) {
-        override val inputType get() = Int::class.java
-
+    ) : NoConversionCreatorBoxDeserializer<Int, D>(creator, converter, Int::class.java) {
         @Suppress("UNCHECKED_CAST")
         override fun invokeExact(value: Int): D = handle.invokeExact(value) as D
     }
@@ -134,9 +162,7 @@ internal sealed class NoConversionCreatorBoxDeserializer<S, D : Any>(
     internal class WrapsLong<D : Any>(
         creator: Method,
         converter: LongValueClassBoxConverter<D>,
-    ) : NoConversionCreatorBoxDeserializer<Long, D>(creator, converter) {
-        override val inputType get() = Long::class.java
-
+    ) : NoConversionCreatorBoxDeserializer<Long, D>(creator, converter, Long::class.java) {
         @Suppress("UNCHECKED_CAST")
         override fun invokeExact(value: Long): D = handle.invokeExact(value) as D
     }
@@ -144,9 +170,7 @@ internal sealed class NoConversionCreatorBoxDeserializer<S, D : Any>(
     internal class WrapsString<D : Any>(
         creator: Method,
         converter: StringValueClassBoxConverter<D>,
-    ) : NoConversionCreatorBoxDeserializer<String?, D>(creator, converter) {
-        override val inputType get() = String::class.java
-
+    ) : NoConversionCreatorBoxDeserializer<String?, D>(creator, converter, String::class.java) {
         @Suppress("UNCHECKED_CAST")
         override fun invokeExact(value: String?): D = handle.invokeExact(value) as D
     }
@@ -154,9 +178,7 @@ internal sealed class NoConversionCreatorBoxDeserializer<S, D : Any>(
     internal class WrapsJavaUuid<D : Any>(
         creator: Method,
         converter: JavaUuidValueClassBoxConverter<D>,
-    ) : NoConversionCreatorBoxDeserializer<UUID?, D>(creator, converter) {
-        override val inputType get() = UUID::class.java
-
+    ) : NoConversionCreatorBoxDeserializer<UUID?, D>(creator, converter, UUID::class.java) {
         @Suppress("UNCHECKED_CAST")
         override fun invokeExact(value: UUID?): D = handle.invokeExact(value) as D
     }
@@ -199,10 +221,9 @@ internal class HasConversionCreatorWrapsSpecifiedBoxDeserializer<S, D : Any>(
     @Suppress("UNCHECKED_CAST")
     private fun instantiate(input: Any?): D = handle.invokeExact(input) as D
 
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D {
-        val input = p.readValueAs(inputType)
-        return instantiate(input)
-    }
+    private val reader = WrappedValueReader(inputType)
+
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D = instantiate(reader.read(p, ctxt))
 }
 
 internal class WrapsAnyValueClassBoxDeserializer<S, D : Any>(
@@ -229,10 +250,9 @@ internal class WrapsAnyValueClassBoxDeserializer<S, D : Any>(
     @Suppress("UNCHECKED_CAST")
     private fun instantiate(input: Any?): D = handle.invokeExact(input) as D
 
-    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D {
-        val input = p.readValueAs(inputType)
-        return instantiate(input)
-    }
+    private val reader = WrappedValueReader(inputType)
+
+    override fun deserialize(p: JsonParser, ctxt: DeserializationContext): D = instantiate(reader.read(p, ctxt))
 }
 
 private fun invalidCreatorMessage(m: Method): String =
