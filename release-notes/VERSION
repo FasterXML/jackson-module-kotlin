@@ -36,7 +36,9 @@ No changes since 3.1.7
 
 3.1.6 (14-Aug-2026)
 
-No changes since 3.1.5
+#1192: Improved documentation for the shorthands of deserialization methods.
+  The KDoc and README now state that most of them check the deserialized value
+  to preserve `Kotlin` null safety.
 
 3.1.5 (07-Jul-2026)
 3.1.4 (29-May-2026)
@@ -48,10 +50,16 @@ No changes since 3.1.0
 
 3.1.0 (23-Feb-2026)
 
+#1090: The `treeToValue` extension functions for `ObjectMapper` and `ObjectReader` now take `JsonNode`
+  instead of `TreeNode`, following the corresponding change in `jackson-databind` (databind#5485).
+ (@cowtowncoder)
 #1077: Increase deprecation level of NewStrictNullChecks due to version upgrade
  (@k163377)
 
 3.0.4 (21-Jan-2026)
+
+#1085: The addMixIn extension function is now available in the generic MapperBuilder.
+
 3.0.3 (28-Nov-2025)
 3.0.2 (07-Nov-2025)
 3.0.1 (21-Oct-2025)
