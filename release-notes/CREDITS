@@ -18,7 +18,7 @@ Authors:
 
 Contributors:
 
-# 3.2.2 (not yet released)
+# 3.2.2 (14-Aug-2026)
 
 WrongWrong (@k163377)
 * #1191: Allow null contents for use-site in projections in StrictNullChecks
