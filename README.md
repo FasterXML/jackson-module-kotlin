@@ -12,15 +12,15 @@ With this module, single constructor classes can be used automatically,
 and those with secondary constructors or static factories are also supported.
 
 # Status
-* release `2.22.0` (for Jackson `2.22.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.22)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.22)
-* release `2.21.4` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
-* release `2.20.2` (for Jackson `2.20.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.20)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.20)
+* release `2.23.0` (for Jackson `2.23.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.23)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.23)
+* release `2.22.4` (for Jackson `2.22.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.22)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.22)
+* release `2.21.8` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
 Gradle:
 ```
-implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.22.+"
+implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.23.+"
 ```
 
 Maven:
@@ -28,7 +28,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.22.0</version>
+    <version>2.23.0</version>
 </dependency>
 ```
 
@@ -144,10 +144,10 @@ and declares a nullable return type instead.
 Different `kotlin-core` versions are supported by different Jackson Kotlin module minor versions.
 Here is an incomplete list of supported versions:
 
+* Jackson 2.23.x: Kotlin-core 2.1 - 2.4
 * Jackson 2.22.x: Kotlin-core 2.1 - 2.4
 * Jackson 2.21.x: Kotlin-core 2.1 - 2.3
   * Starting with version 2.21.2, compatibility with Kotlin 1.9 is provided(see [#1129](https://github.com/FasterXML/jackson-module-kotlin/issues/1129)).
-* Jackson 2.20.x: Kotlin-core 2.0 - 2.2
 
 Please note that the versions supported by 2.17 are tentative and may change depending on the release date.
 
