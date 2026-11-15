@@ -149,8 +149,6 @@ Here is an incomplete list of supported versions:
 * Jackson 2.20.x: Kotlin-core 2.0 - 2.2
 * Jackson 2.19.x: Kotlin-core 1.9 - 2.1
 
-Please note that the versions supported by 2.17 are tentative and may change depending on the release date.
-
 ## Android
 Supported Android SDK versions are determined by `jackson-databind`.
 Please see [this link](https://github.com/FasterXML/jackson-databind#android) for details.
