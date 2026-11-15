@@ -12,6 +12,7 @@ With this module, single constructor classes can be used automatically,
 and those with secondary constructors or static factories are also supported.
 
 # Status
+* release `3.3.0` (for Jackson `3.3.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=3.3)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A3.3)
 * release `3.2.4` (for Jackson `3.2.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=3.2)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A3.2)
 * release `3.1.8` (for Jackson `3.1.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=3.1)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A3.1)
 * release `2.21.8` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
@@ -20,7 +21,7 @@ Releases require that you have included Kotlin stdlib and reflect libraries alre
 
 Gradle:
 ```
-implementation "tools.jackson.module:jackson-module-kotlin:3.2.+"
+implementation "tools.jackson.module:jackson-module-kotlin:3.3.+"
 ```
 
 Maven:
@@ -28,7 +29,7 @@ Maven:
 <dependency>
     <groupId>tools.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>3.2.4</version>
+    <version>3.3.0</version>
 </dependency>
 ```
 
@@ -288,7 +289,7 @@ See the [main Jackson contribution guidelines](https://github.com/FasterXML/jack
 If you are going to write code, choose the appropriate base branch:
 
 - `3.1` for bugfixes against the LTS version
-- `3.2` for bugfixes against the current stable version
+- `3.3` for bugfixes against the current stable version
 - `3.x` for additive functionality & features or [minor](https://semver.org), backwards compatible changes to existing behavior to be included in the next minor version release
 - `2.x`/`2.21` for bugfixes against the LTS version
 
