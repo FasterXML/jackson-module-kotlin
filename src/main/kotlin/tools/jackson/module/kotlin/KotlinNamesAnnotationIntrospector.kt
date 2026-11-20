@@ -26,6 +26,7 @@ import kotlin.reflect.KMutableProperty1
 import kotlin.reflect.KParameter
 import kotlin.reflect.KProperty1
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVariance
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.declaredMemberProperties
@@ -182,7 +183,10 @@ internal class KotlinNamesAnnotationIntrospector(
     override fun findSetterInfo(config: MapperConfig<*>, ann: Annotated): JsonSetter.Value = ann.takeIf { strictNullChecks }
         ?.let { _ ->
             findKotlinParameter(ann)?.let { param ->
-                if (param.requireStrictNullCheck(ann.type)) {
+                val type = ann.type
+                if (!param.type.hasNestedContainer(type) &&
+                    param.type.contentProjection(type)?.requiresStrictNullCheck == true
+                ) {
                     JsonSetter.Value.forContentNulls(Nulls.FAIL)
                 } else {
                     null
@@ -224,23 +228,23 @@ internal class KotlinNamesAnnotationIntrospector(
     }
 }
 
-private fun KParameter.markedNonNullAt(index: Int): Boolean {
-    val projection = type.arguments.getOrNull(index) ?: return false
-
-    // Contents in a use-site `in` projected position are not checked
-    // because null may be entered regardless of the nullability of the type argument
-    // (e.g. Array<in String> may actually be Array<Any?>).
-    return if (projection.variance == KVariance.IN) {
-        false
-    } else {
-        projection.type?.isMarkedNullable == false
-    }
+internal fun KType.contentProjection(type: JavaType): KTypeProjection? = when {
+    type.isArrayType || type.isCollectionLikeType -> arguments.getOrNull(0)
+    type.isMapLikeType -> arguments.getOrNull(1)
+    else -> null
 }
 
-private fun KParameter.requireStrictNullCheck(type: JavaType): Boolean =
-    ((type.isArrayType || type.isCollectionLikeType) && this.markedNonNullAt(0)) ||
-            (type.isMapLikeType && this.markedNonNullAt(1))
+// An in-projected argument may stand for a supertype that allows null (for example, Array<Any?>).
+internal val KTypeProjection.allowsNestedChecks: Boolean
+    get() = variance != KVariance.IN
 
+internal val KTypeProjection.requiresStrictNullCheck: Boolean
+    get() = allowsNestedChecks && type?.isMarkedNullable == false
+
+internal fun KType.hasNestedContainer(type: JavaType): Boolean {
+    val projection = contentProjection(type) ?: return false
+    return projection.allowsNestedChecks && projection.type != null && type.contentType?.isContainerType == true
+}
 
 // If it is not a Kotlin class or an Enum, Creator is not used
 private fun AnnotatedClass.creatableKotlinClass(): KClass<*>? = annotated

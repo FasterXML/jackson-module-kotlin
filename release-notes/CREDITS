@@ -18,6 +18,11 @@ Authors:
 
 Contributors:
 
+# 3.4.0 (unreleased)
+
+@yuhoyuho
+* #1064: Apply strict null checks independently to nested container contents
+
 # 3.3.0 (07-Nov-2026)
 
 WrongWrong (@k163377)

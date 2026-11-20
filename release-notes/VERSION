@@ -22,6 +22,10 @@ Former maintainers:
 === Releases ===
 ------------------------------------------------------------------------
 
+3.4.0 (unreleased)
+
+#1064: Apply Kotlin strict null checks independently to each level of nested containers.
+
 3.3.0 (07-Nov-2026)
 
 #1185: Minimum supported Kotlin version has been upgraded to 2.2.
