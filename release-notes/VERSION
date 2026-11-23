@@ -49,6 +49,11 @@ No changes since 3.2.0
 #1164: The `UseJavaInstantConversion` feature has been added to support serialization/deserialization of `kotlin.time.Instant`.
 #1113: The deprecated `NewStrictNullChecks` option has been removed and unified under the `StrictNullChecks` option.
 
+3.1.9 (not yet released)
+
+#1268: Fixed a problem where serializing a property whose type is a value class without `@JvmInline`
+  (e.g. a full value class, an experimental feature since Kotlin 2.5) failed with `NoSuchMethodException` for `box-impl`.
+
 3.1.8 (17-Oct-2026)
 
 No changes since 3.1.7
