@@ -109,9 +109,6 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
 
         // Since there was no way to directly determine whether returnType is a value class or not,
         // Class is restored and processed.
-        // Only value classes annotated with JvmInline are unboxed in the getter.
-        // Value classes without JvmInline (e.g. full value classes since Kotlin 2.5) are compiled as regular classes,
-        // and do not have a box-impl method, so they must not be processed here.
         return kotlinReturnType.takeIf { it.java.isUnboxableValueClass() }
     }
 
