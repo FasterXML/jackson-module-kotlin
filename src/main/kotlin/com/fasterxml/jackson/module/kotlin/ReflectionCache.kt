@@ -109,7 +109,7 @@ internal class ReflectionCache(reflectionCacheSize: Int) : Serializable {
 
         // Since there was no way to directly determine whether returnType is a value class or not,
         // Class is restored and processed.
-        return kotlinReturnType.takeIf { it.isValue }
+        return kotlinReturnType.takeIf { it.java.isUnboxableValueClass() }
     }
 
     fun findValueClassReturnType(getter: AnnotatedMethod): KClass<*>? {
