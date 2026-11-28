@@ -92,13 +92,17 @@ internal class KotlinValueInstantiator(
 
                     // Since #310 reported that the calculation cost is high, isGenericTypeVar is determined last.
                     if (isMissingAndRequired || (!paramType.isMarkedNullable && !paramType.isGenericTypeVar())) {
-                        throw KotlinInvalidNullException(
+                        val exc = KotlinInvalidNullException(
                             paramDef.name,
                             this.valueClass,
                             ctxt.parser,
                             "Instantiation of ${this.valueTypeDesc} value failed for JSON property $pname due to missing (therefore NULL) value for creator parameter ${paramDef.name} which is a non-nullable type",
                             jsonProp.fullName,
                         ).wrapWithPath(this.valueClass, pname)
+                        // Give DeserializationProblemHandlers a chance to recover from the illegal null (gh-875).
+                        // If unhandled, this call rethrows the same exception as before;
+                        // otherwise the returned value is used for the parameter and deserialization continues.
+                        paramVal = ctxt.handleInstantiationProblem(jsonProp.type.rawClass, paramVal, exc)
                     }
                 }
             }
