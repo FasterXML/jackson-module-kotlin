@@ -5,10 +5,12 @@ on:
     paths-ignore:
     - "README.md"
     - "release-notes/*"
+    - "docs/**"
   pull_request:
     paths-ignore:
     - "README.md"
     - "release-notes/*"
+    - "docs/**"
   # just for testing
   workflow_dispatch:
 
