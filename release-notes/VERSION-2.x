@@ -28,7 +28,7 @@ No changes since 2.22
 
 No changes since 2.21
 
-2.21.9 (not yet released)
+2.21.9 (24-Nov-2026)
 
 #1268: Fixed a problem where serializing a property whose type is a value class without `@JvmInline`
   (e.g. a full value class, an experimental feature since Kotlin 2.5) failed with `NoSuchMethodException` for `box-impl`.

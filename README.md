@@ -14,7 +14,7 @@ and those with secondary constructors or static factories are also supported.
 # Status
 * release `3.1.8` (for Jackson `3.1.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=3.1)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A3.1)
 * release `3.0.4` (for Jackson `3.0.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=3.0)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A3.0)
-* release `2.21.8` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
+* release `2.21.9` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
 
 Releases require that you have included Kotlin stdlib and reflect libraries already.
 
@@ -148,8 +148,6 @@ Here is an incomplete list of supported versions:
 * Jackson 3.0.x: Kotlin-core 2.1 - 2.3
 * Jackson 2.21.x: Kotlin-core 2.1 - 2.3
   * Starting with version 2.21.2, compatibility with Kotlin 1.9 is provided(see [#1129](https://github.com/FasterXML/jackson-module-kotlin/issues/1129)).
-
-Please note that the versions supported by 2.17 are tentative and may change depending on the release date.
 
 ## Android
 Supported Android SDK versions are determined by `jackson-databind`.
