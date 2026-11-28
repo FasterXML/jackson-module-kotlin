@@ -120,9 +120,8 @@ jobs:
         path: ${{ env.MAVEN_CACHE_PATH }}
         key: ${{ steps.key.outputs.key }}
 
-  # Runs on what 'prime-cache' resolved. Every Maven call passes '-nsu', so that
-  # all jobs use the snapshots resolved there instead of each looking for newer
-  # ones.
+  # Runs on what 'prime-cache' resolved, snapshots included: every Maven call
+  # passes '$SNAPSHOT_FLAG', which is '-nsu' unless that cache entry is missing.
   build:
     needs: prime-cache
     runs-on: ubuntu-latest
@@ -145,6 +144,8 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
+        # Without it, every job downloads the JDKs the runner image lacks.
+        cache-jdk: true
         server-id: central-snapshots
         server-username-env-var: CI_DEPLOY_USERNAME
         server-password-env-var: CI_DEPLOY_PASSWORD
@@ -152,6 +153,7 @@ jobs:
         # gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         # gpg-passphrase-env-var: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
     - name: Restore the Maven cache
+      id: restore
       uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ env.MAVEN_CACHE_PATH }}
@@ -159,21 +161,32 @@ jobs:
         # Only used when the entry 'prime-cache' named is missing, e.g. because
         # saving it failed. Whatever the older entry lacks is then downloaded.
         restore-keys: ${{ needs.prime-cache.outputs.cache-key-prefix }}
+    - name: Choose how to update snapshots
+      # On an exact hit, '-nsu' keeps the job on the snapshots 'prime-cache'
+      # resolved. An older entry can hold older snapshots, so then '-U' looks
+      # for newer ones, as 'prime-cache' does.
+      run: |
+        if [ '${{ steps.restore.outputs.cache-hit }}' = 'true' ]; then
+          echo 'SNAPSHOT_FLAG=-nsu' >> "$GITHUB_ENV"
+        else
+          echo "::warning::Cache entry '${{ needs.prime-cache.outputs.cache-key }}' was not found, so this job resolves on its own."
+          echo 'SNAPSHOT_FLAG=-U' >> "$GITHUB_ENV"
+        fi
 
     - name: Build
       # Note: build separately first using default kotlin-core
-      run: ./mvnw -B -q -ff -ntp -nsu -DskipTests clean package
+      run: ./mvnw -B -q -ff -ntp $SNAPSHOT_FLAG -DskipTests clean package
     - name: Test
       # Note: actual testing should use matrix kotlin-core version (note: MUST specify test phase)
-      run: ./mvnw -B -q -ff -ntp -nsu -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
+      run: ./mvnw -B -q -ff -ntp $SNAPSHOT_FLAG -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
     - name: Extract project Maven version
       id: projectVersion
       if: ${{ env.RELEASE_BUILD == 'true' }}
-      run: echo "version=$(./mvnw -nsu org.apache.maven.plugins:maven-help-plugin:3.6.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
+      run: echo "version=$(./mvnw $SNAPSHOT_FLAG org.apache.maven.plugins:maven-help-plugin:3.6.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
     - name: Deploy snapshot
       if: ${{ env.RELEASE_BUILD == 'true' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT') }}
       env:
         CI_DEPLOY_USERNAME: ${{ secrets.CENTRAL_DEPLOY_USERNAME }}
         CI_DEPLOY_PASSWORD: ${{ secrets.CENTRAL_DEPLOY_PASSWORD }}
         # MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      run: ./mvnw -B -q -ff -DskipTests -ntp -nsu source:jar deploy
+      run: ./mvnw -B -q -ff -DskipTests -ntp $SNAPSHOT_FLAG source:jar deploy
