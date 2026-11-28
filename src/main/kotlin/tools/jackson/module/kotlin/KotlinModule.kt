@@ -80,6 +80,10 @@ class KotlinModule private constructor(
             context.addDeserializerModifier(KotlinValueDeserializerModifier)
         }
 
+        if (strictNullChecks) {
+            context.addDeserializerModifier(KotlinNestedNullChecks(cache))
+        }
+
         context.insertAnnotationIntrospector(KotlinAnnotationIntrospector(cache, useJavaDurationConversion, useJavaInstantConversion))
         context.appendAnnotationIntrospector(
             KotlinNamesAnnotationIntrospector(
