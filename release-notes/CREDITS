@@ -17,7 +17,7 @@ Authors:
 
 Contributors:
 
-# 3.1.9 (not yet released)
+# 3.1.9 (24-Nov-2026)
 
 WrongWrong (@k163377)
 * #1268: Do not treat value classes without JvmInline as unboxed getter return types
