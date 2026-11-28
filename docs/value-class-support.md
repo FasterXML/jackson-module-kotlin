@@ -1,5 +1,6 @@
 `jackson-module-kotlin` supports many use cases of `value class` (`inline class`).  
-This page summarizes the basic policy and points to note regarding the use of the `value class`.
+This page summarizes the basic policy and points to note regarding the use of the `value class` with `@JvmInline`.  
+For full value classes, see [here](#full-value-classes).
 
 For technical details on `value class` handling, please see [here](./value-class-handling.md).
 
@@ -158,3 +159,7 @@ value class PrimitiveMultiParamCreator(val value: Int) {
     }
 }
 ```
+
+# Full value classes
+Full value classes (`value class` without `@JvmInline`, experimental since `Kotlin 2.5`) are compiled into regular classes,
+so they are handled in the same way as normal classes.

@@ -21,4 +21,4 @@ jobs:
       # A subset of the JDKs covered by 'main.yml'. The Kotlin versions need to
       # align with the ones there.
       java_versions: '["17", "21", "25", "27"]'
-      kotlin_versions: '["2.2.21", "2.3.21", "2.4.21", "2.5.0-RC"]'
+      kotlin_versions: '["2.2.21", "2.3.21", "2.4.21", "2.5.0-RC2"]'
