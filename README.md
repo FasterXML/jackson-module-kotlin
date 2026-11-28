@@ -12,7 +12,7 @@ With this module, single constructor classes can be used automatically,
 and those with secondary constructors or static factories are also supported.
 
 # Status
-* release `2.21.8` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
+* release `2.21.9` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
 * release `2.20.2` (for Jackson `2.20.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.20)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.20)
 * release `2.19.4` (for Jackson `2.19.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.19)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.19)
 
@@ -28,7 +28,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.21.8</version>
+    <version>2.21.9</version>
 </dependency>
 ```
 
