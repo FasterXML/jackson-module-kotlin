@@ -12,7 +12,7 @@ With this module, single constructor classes can be used automatically,
 and those with secondary constructors or static factories are also supported.
 
 # Status
-* release `2.21.8` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
+* release `2.21.9` (for Jackson `2.21.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.21)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.21)
 * release `2.20.2` (for Jackson `2.20.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.20)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.20)
 * release `2.19.4` (for Jackson `2.19.x`) [![GitHub Actions build](https://github.com/FasterXML/jackson-module-kotlin/actions/workflows/main.yml/badge.svg?branch=2.19)](https://github.com/FasterXML/jackson-module-kotlin/actions?query=branch%3A2.19)
 
@@ -28,7 +28,7 @@ Maven:
 <dependency>
     <groupId>com.fasterxml.jackson.module</groupId>
     <artifactId>jackson-module-kotlin</artifactId>
-    <version>2.21.8</version>
+    <version>2.21.9</version>
 </dependency>
 ```
 
@@ -148,8 +148,6 @@ Here is an incomplete list of supported versions:
   * Starting with version 2.21.2, compatibility with Kotlin 1.9 is provided(see [#1129](https://github.com/FasterXML/jackson-module-kotlin/issues/1129)).
 * Jackson 2.20.x: Kotlin-core 2.0 - 2.2
 * Jackson 2.19.x: Kotlin-core 1.9 - 2.1
-
-Please note that the versions supported by 2.17 are tentative and may change depending on the release date.
 
 ## Android
 Supported Android SDK versions are determined by `jackson-databind`.
@@ -292,11 +290,11 @@ If you are going to write code, choose the appropriate base branch:
 
 ### Failing tests
 
-There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
+There are a number of tests for functionality that is broken, mostly in the [failing](https://github.com/FasterXML/jackson-module-kotlin/tree/2.x/src/test/kotlin/com/fasterxml/jackson/module/kotlin/test/github/failing)
 package but a few as part of other test suites.  Instead of ignoring these tests (with JUnit's `@Ignore` annotation)
 or excluding them from being run as part of automated testing, the tests are written to demonstrate the failure
 (either making a call that throws an exception or with an assertion that fails) but not fail the build, except if the
 underlying issue is fixed.  This allows us to know when the tested functionality has been incidentally fixed by
 unrelated code changes.
 
-See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/tree/master/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.
+See the [tests readme](https://github.com/FasterXML/jackson-module-kotlin/blob/2.x/src/test/kotlin/com/fasterxml/jackson/module/kotlin/README.md) for more information.
