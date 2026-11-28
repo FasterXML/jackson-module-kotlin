@@ -40,13 +40,33 @@ on:
 permissions:
   contents: read
 
+env:
+  # 'actions/cache' restores an entry only with the exact paths it was saved
+  # with, so both jobs take them from here.
+  MAVEN_CACHE_PATH: |
+    ~/.m2/repository
+    ~/.m2/wrapper
+
 jobs:
-  # Populates the shared '~/.m2/repository' cache once, so that the matrix below
-  # starts from a warm local repository. Without this every matrix job downloads
-  # the same artifacts at the same moment, and Maven Central answers part of that
-  # burst with 429 (Too Many Requests).
+  # Every matrix job needs the same artifacts from Maven Central, and when all of
+  # them request those at once, Central answers part of the burst with 429 (Too
+  # Many Requests). This job resolves what every matrix job resolves, once, and
+  # hands it to them as a cache entry. What only the release build uses is left
+  # to that single job.
+  #
+  # What has to be resolved depends not only on the pom but also on the
+  # 'kotlin_versions' input and on the parent pom snapshots, so no key computed
+  # beforehand can tell whether an entry is complete. The key is computed from
+  # what the local repository holds after resolving instead, and a new entry is
+  # saved whenever that differs from the restored one. The key prefix, taken
+  # from the pom and the Maven wrapper, only picks the entry to start from: when
+  # it changes, resolution starts from an empty repository, which drops
+  # artifacts that are no longer used.
   prime-cache:
     runs-on: ubuntu-latest
+    outputs:
+      cache-key-prefix: ${{ steps.prefix.outputs.prefix }}
+      cache-key: ${{ steps.key.outputs.key }}
     env:
       JAVA_OPTS: "-XX:+TieredCompilation -XX:TieredStopAtLevel=1"
     steps:
@@ -57,19 +77,51 @@ jobs:
       uses: actions/setup-java@d1374f8ac74474200d16ef8ecee22c7ae7a51880 # v6.3.0
       with:
         distribution: 'temurin'
-        # Any JDK will do: '~/.m2/repository' is shared by every matrix job
-        # because setup-java keys its Maven cache on the pom hash only.
+        # Any JDK will do: no profile in the pom or its parents is activated by
+        # the JDK, so every matrix job resolves the same artifacts.
         java-version: '17'
-        cache: 'maven'
+    - name: Compute the cache key prefix
+      id: prefix
+      run: echo "prefix=maven-$RUNNER_OS-${{ hashFiles('**/pom.xml', '.mvn/wrapper/maven-wrapper.properties') }}-" >> "$GITHUB_OUTPUT"
+    - name: Restore the Maven cache
+      id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.MAVEN_CACHE_PATH }}
+        # No saved key equals the prefix, so this always takes the newest entry
+        # matching 'restore-keys'.
+        key: ${{ steps.prefix.outputs.prefix }}
+        restore-keys: ${{ steps.prefix.outputs.prefix }}
     - name: Resolve build dependencies
-      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
+      # '-U' because the matrix jobs do not look for newer snapshots themselves.
+      run: ./mvnw -B -q -ff -ntp -U -DskipTests clean package
     - name: Resolve test dependencies of every Kotlin version
+      # The matrix job's 'Test' step, run on one small test class: Surefire
+      # resolves its JUnit Platform provider only when it has a test to run.
+      # A failing test is left for the matrix job to report, since failing here
+      # would skip the whole matrix. A class that no longer exists still fails.
       run: |
         for kotlin_version in $(echo '${{ inputs.kotlin_versions }}' | jq -r '.[]'); do
           ./mvnw -B -q -ff -ntp -Dversion.kotlin="$kotlin_version" \
-            org.apache.maven.plugins:maven-dependency-plugin:3.11.0:resolve
+            -Dtest=KotlinModuleTest -Dmaven.test.failure.ignore=true surefire:test
         done
+    - name: Compute the cache key
+      id: key
+      # File names are enough to tell contents apart: a released artifact never
+      # changes, and a new snapshot gets a new timestamped file. '*.lastUpdated'
+      # files only record lookups, so they are left out.
+      run: |
+        hash=$(find ~/.m2/repository ~/.m2/wrapper -type f ! -name '*.lastUpdated' | sort | sha256sum | cut -c1-16)
+        echo "key=${{ steps.prefix.outputs.prefix }}$hash" >> "$GITHUB_OUTPUT"
+    - name: Save the Maven cache
+      if: ${{ steps.key.outputs.key != steps.restore.outputs.cache-matched-key }}
+      uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.MAVEN_CACHE_PATH }}
+        key: ${{ steps.key.outputs.key }}
 
+  # Runs on what 'prime-cache' resolved, snapshots included: every Maven call
+  # passes '$SNAPSHOT_FLAG', which is '-nsu' unless that cache entry is missing.
   build:
     needs: prime-cache
     runs-on: ubuntu-latest
@@ -92,28 +144,49 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java_version }}
-        cache: 'maven'
+        # Without it, every job downloads the JDKs the runner image lacks.
+        cache-jdk: true
         server-id: central-snapshots
         server-username-env-var: CI_DEPLOY_USERNAME
         server-password-env-var: CI_DEPLOY_PASSWORD
         # See https://github.com/actions/setup-java/blob/v2/docs/advanced-usage.md#Publishing-using-Apache-
         # gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }} # Value of the GPG private key to import
         # gpg-passphrase-env-var: MAVEN_GPG_PASSPHRASE # env variable for GPG private key passphrase
+    - name: Restore the Maven cache
+      id: restore
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ env.MAVEN_CACHE_PATH }}
+        key: ${{ needs.prime-cache.outputs.cache-key }}
+        # Only used when the entry 'prime-cache' named is missing, e.g. because
+        # saving it failed. Whatever the older entry lacks is then downloaded.
+        restore-keys: ${{ needs.prime-cache.outputs.cache-key-prefix }}
+    - name: Choose how to update snapshots
+      # On an exact hit, '-nsu' keeps the job on the snapshots 'prime-cache'
+      # resolved. An older entry can hold older snapshots, so then '-U' looks
+      # for newer ones, as 'prime-cache' does.
+      run: |
+        if [ '${{ steps.restore.outputs.cache-hit }}' = 'true' ]; then
+          echo 'SNAPSHOT_FLAG=-nsu' >> "$GITHUB_ENV"
+        else
+          echo "::warning::Cache entry '${{ needs.prime-cache.outputs.cache-key }}' was not found, so this job resolves on its own."
+          echo 'SNAPSHOT_FLAG=-U' >> "$GITHUB_ENV"
+        fi
 
     - name: Build
       # Note: build separately first using default kotlin-core
-      run: ./mvnw -B -q -ff -ntp -DskipTests clean package
+      run: ./mvnw -B -q -ff -ntp $SNAPSHOT_FLAG -DskipTests clean package
     - name: Test
       # Note: actual testing should use matrix kotlin-core version (note: MUST specify test phase)
-      run: ./mvnw -B -q -ff -ntp -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
+      run: ./mvnw -B -q -ff -ntp $SNAPSHOT_FLAG -Dversion.kotlin=${{ matrix.kotlin_version }} surefire:test
     - name: Extract project Maven version
       id: projectVersion
       if: ${{ env.RELEASE_BUILD == 'true' }}
-      run: echo "version=$(./mvnw org.apache.maven.plugins:maven-help-plugin:3.6.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
+      run: echo "version=$(./mvnw $SNAPSHOT_FLAG org.apache.maven.plugins:maven-help-plugin:3.6.0:evaluate -DforceStdout -Dexpression=project.version -q)" >> $GITHUB_OUTPUT
     - name: Deploy snapshot
       if: ${{ env.RELEASE_BUILD == 'true' && endsWith(steps.projectVersion.outputs.version, '-SNAPSHOT') }}
       env:
         CI_DEPLOY_USERNAME: ${{ secrets.CENTRAL_DEPLOY_USERNAME }}
         CI_DEPLOY_PASSWORD: ${{ secrets.CENTRAL_DEPLOY_PASSWORD }}
         # MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
-      run: ./mvnw -B -q -ff -DskipTests -ntp source:jar deploy
+      run: ./mvnw -B -q -ff -DskipTests -ntp $SNAPSHOT_FLAG source:jar deploy
